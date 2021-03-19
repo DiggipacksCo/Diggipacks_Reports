@@ -6,7 +6,24 @@
 # Node artifact files
 node_modules/
 dist/
-
+packexcel/
+assets/all_labels/
+.git/
+application/config/config.php
+application/config/database.php   
+.editorconfig
+assets/phpqrcode/cache/
+application/models-backup/
+application/languageff
+application/language1
+application/views/views--
+application/views/faq1
+assets/item_uploads/
+assets/pickupfile/
+assets/sellerupload/
+assets/semantic/
+phpqrcode/cache/
+user_guide/
 # Compiled Java class files
 *.class
 

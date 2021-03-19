@@ -1,0 +1,15 @@
+@import "compass";
+@import url("https://fonts.googleapis.com/css?family=Open+Sans");
+
+
+  .error {
+    color:red;
+  }
+}
+
+.article-reference {
+  margin-top: 15px;
+  a {
+    color: $buttonBg;
+  }
+}
