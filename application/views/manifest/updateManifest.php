@@ -19,7 +19,8 @@
 
 
         <!-- Page container -->
-        <div class="page-container" ng-controller="scanInventory" ng-init="GetUrlData('<?= $result[0]['uniqueid']; ?>',<?= $result[0]['seller_id']; ?>);" >
+     
+        <div class="page-container" ng-controller="scanInventory"  <?php if(!empty($result)) { ?> ng-init="GetUrlData('<?= $result[0]['uniqueid']; ?>','<?= $result[0]['seller_id']; ?>');" <?php } ?> >
 
             <!-- Page content -->
             <div class="page-content">
@@ -50,7 +51,11 @@
                                             <div class="panel panel-default">
                                                 <div class="panel-body">
 
-
+                                                <?php if(!empty($result)) {?>
+        <div  >
+<?php }  else { ?>
+    <div  class="alert alert-warning">Update Sku details First Storage type and capacity may be not set.  <a href="<?=base_url('Item'); ?>"> Click Here </a>   </div>
+<?php exit; } ?>
                                                     <param name="SRC" value="y" />
                                                     <div style="display:none">
                                                         <audio id="audio" controls>
@@ -95,7 +100,7 @@
 
 
 
-
+                                                   
 
                                                         <div class="form-group">
                                                             <a class="btn btn-info" ng-show="ExportBtnShow" type="button" id="btnExport" >Export Report</a>
@@ -111,7 +116,12 @@
 
                                                     <div class="col-lg-12">
 
+                                                    
+                                                    <div ng-if='warning1' class="alert alert-warning"> Stock location Not Added for this seller/sku, Please Add Stock Location. <a href="<?=base_url('generateStockLocation')?>">click here </a> to add stock location. </div>
 
+
+                                                    <div ng-if='warning2' class="alert alert-warning"> Only {{countarray}} Stock location is Available for seller/sku, Required {{countbox}}, Please Add {{countbox-countarray}} more Stock Location. <a href="<?=base_url('generateStockLocation')?>">click here </a> to add stock location. </div>
+                                                   
                                                         <div ng-if='warning' class="alert alert-warning">{{warning}} </div>
                                                         <div ng-if='Message' class="alert alert-success">{{Message}} </div>
                                                     </div>

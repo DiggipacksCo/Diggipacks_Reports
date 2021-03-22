@@ -71,19 +71,32 @@ var app = angular.module('updateManifest', [])
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 
                     }).then(function (response) {
-                        // console.log(response.data.result); 
+                         console.log(response.data.result); 
 
-                        if (response.data.length == 0)
+                        if (response.data.result.length === 0)  
                         {
                             $scope.Message = null;
-                            $scope.warning = "Record Not Found";
+                            $scope.warning1 = true;
                             //  alert($scope.warning);
 
-                            responsiveVoice.speak($scope.warning);
+                            //responsiveVoice.speak($scope.warning);
                         } else
                         {
-                            if ($scope.UpdateInventoryCheck == 0)
+                            $scope.warning1 = false;
+                            if(response.data.countarray!=response.data.countbox)
                             {
+                                $scope.warning2 = true;
+                                $scope.countarray=response.data.countarray;
+                                $scope.countbox=response.data.countbox;
+                                response.data=[];
+
+                            }
+                            
+                            else if ($scope.UpdateInventoryCheck == 0)
+                            {
+                                $scope.countarray=response.data.countarray;
+                                $scope.countbox=response.data.countbox;
+                                $scope.warning2 = false;
                                 $scope.ExportBtnShow = false;
                                 $scope.AddInventoryBtn = false;
                                 $scope.cust_nameBtn = true;
@@ -160,10 +173,12 @@ var app = angular.module('updateManifest', [])
 
                 //   alert($scope.oldlocationIndex);
 
+                console.log(1);
 //alert($scope.skuMainArrayIndex);
                 if ($scope.arrayIndexnew1 == -1)
                 {
 
+                    console.log(2);
                     $scope.scan.stock_location = null;
                     $scope.Message = null;
                     $scope.warning = "Stock Location Not Found";
@@ -172,9 +187,11 @@ var app = angular.module('updateManifest', [])
                     if ($scope.oldlocationIndex == -1)
                     {
 
+                        console.log(3);
 
                         if (parseInt($scope.AlltotalCount) < parseInt($scope.Menidata[$scope.arrayIndexnew1].total_location))
                         {
+                            console.log(4);
                             $scope.singleStockLocationIndex = $scope.arrayIndexnew1;
 
                             $scope.oldStockLocationArr.push({'sku': $scope.scan.sku, 'stockLocation': $scope.scan.stock_location})
@@ -182,7 +199,7 @@ var app = angular.module('updateManifest', [])
                             $scope.AlltotalCount = parseInt($scope.AlltotalCount) + 1;
                             $scope.Menidata[$scope.arrayIndexnew1].l_status = "completed"
                             //$scope.scan.stock_location = null;
-                            $('#scan_shelve_id').focus();
+                           // $('#scan_shelve_id').focus();
                             $scope.cust_nameBtn = true;
                             $scope.location_nameBtn = true;
                             $scope.shelve_nameBtn = false;
@@ -191,9 +208,9 @@ var app = angular.module('updateManifest', [])
 
                             if (parseInt($scope.AlltotalCount) == parseInt($scope.Menidata[$scope.arrayIndexnew1].total_location))
                             {
+                                console.log(5);
 
-
-                                // $('#scan_shelve_id').focus();
+                                $('#scan_shelve_id').focus();
 
 
                                 $scope.Message = null;
@@ -202,14 +219,19 @@ var app = angular.module('updateManifest', [])
                                 //responsiveVoisce.speak($scope.warning);   
                             } else
                             {
+                               
+
+                                $('#scan_shelve_id').focus();
                                 $scope.warning = null;
                                 $scope.Message = 'Scaned!';
                                 //responsiveVoice.speak($scope.message);    
                                 responsiveVoice.speak('Scaned!');
+                                console.log(6);
                             }
                         } else
                         {
 
+                            $('#scan_shelve_id').focus();
                             $scope.Message = null;
                             $scope.warning = 'Extra Item Scaned';
                             responsiveVoice.speak($scope.warning);
@@ -229,85 +251,20 @@ var app = angular.module('updateManifest', [])
 
 
             $scope.GetCheckShelveNoScan = function () {
-                $scope.arrayIndexnew1 = $scope.Menidata.findIndex(record => (record.sku === $scope.scan.sku && record.stockLocation.toUpperCase() === $scope.scan.stock_location.toUpperCase() && record.shelveNo.toUpperCase() === $scope.scan.shelve.toUpperCase()));
+               
+                $scope.AlltotalCount_shelve = parseInt($scope.AlltotalCount_shelve) + 1;
+                $scope.arrayIndexnew1 = $scope.Menidata.findIndex(record => (record.sku === $scope.scan.sku && record.stockLocation.toUpperCase() === $scope.scan.stock_location.toUpperCase()));
 
-
-
-                if ($scope.arrayIndexnew1 == -1)
-                {
-
-                    $http({
-                        url: URLBASE + "Manifest/GetCheckShelveNoForAddInventory",
-                        method: "POST",
-                        data: {list: $scope.scan, stockArr: $scope.MatchStockLocation, shelveArr: $scope.MatchShelveArrr},
-                        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-
-                    }).then(function (response) {
-                        if (response.data == 'true')
-                        {
-                            var Oldshelve = $scope.Menidata[$scope.singleStockLocationIndex].shelveNo;
-                            var OldSelveIndexKey = $scope.MatchShelveArrr.findIndex(record => (record === Oldshelve));
-                           // alert(OldSelveIndexKey);
-                         
-                             //$scope.newCompeleteArr.push({'sku': $scope.Menidata[$scope.singleStockLocationIndex].sku, 'totalqty': $scope.Menidata[$scope.singleStockLocationIndex].totalqty,'capacity':$scope.Menidata[$scope.singleStockLocationIndex].capacity,'sid':$scope.Menidata[$scope.singleStockLocationIndex].sid,'uid':$scope.Menidata[$scope.singleStockLocationIndex].uid});
-                            $scope.MatchShelveArrr[OldSelveIndexKey] = $scope.scan.shelve;
-                            $scope.Menidata[$scope.singleStockLocationIndex].shelveNo = $scope.scan.shelve;
-
-                            $scope.warning = null;
-                            $scope.Message = "new shelve added in stock location " + $scope.Menidata[$scope.singleStockLocationIndex].stockLocation;
-                            
-                            $scope.AlltotalCount_shelve = parseInt($scope.AlltotalCount_shelve) + 1;
-                            $scope.TotalCountSameTime = parseInt($scope.TotalCountSameTime) + 1;
-                            $scope.Menidata[$scope.singleStockLocationIndex].s_status = "completed"
-
-                            //$scope.ExportBtnShow = true;
-                            //$scope.AddInventoryBtn = true;
-                            $scope.cust_nameBtn = false;
-                            $scope.location_nameBtn = false;
-                            $scope.shelve_nameBtn = true;
-                            $scope.nextBtnShow = true;
-                            $scope.scan.shelve = null;
-                            $scope.scan.stock_location = null;
-                        } else
-                        {
-
-                            $scope.Message = null;
-                            $scope.warning = "this shelve no. is invalid";
-                            $scope.scan.shelve = null;
-                        }
-                    });
-
-
-                } else
-                {
-                    $scope.oldshelveIndex = $scope.oldshelveArr.findIndex(record => (record.sku === $scope.scan.sku && record.shelveNo.toUpperCase() === $scope.scan.shelve.toUpperCase()));
-
-                    if ($scope.oldshelveIndex == -1)
-                    {
-
-
-                        if (parseInt($scope.AlltotalCount_shelve) < parseInt($scope.Menidata[$scope.arrayIndexnew1].total_location))
-                        {
-                            $scope.oldshelveArr.push({'sku': $scope.scan.sku, 'shelveNo': $scope.scan.shelve})
-                            $scope.AlltotalCount_shelve = parseInt($scope.AlltotalCount_shelve) + 1;
-                            $scope.TotalCountSameTime = parseInt($scope.TotalCountSameTime) + 1;
-                            $scope.Menidata[$scope.arrayIndexnew1].s_status = "completed"
-                            $scope.scan.shelve = null;
-                            $scope.scan.stock_location = null;
-                            $scope.location_nameBtn = false;
-                            $scope.cust_nameBtn = true;
-                            $scope.shelve_nameBtn = true;
-                            
-                            
-
+                console.log($scope.arrayIndexnew1);
+                //$scope.AlltotalCount_shelve=$scope.AlltotalCount_shelve+1;
                             // console.log($scope.TotalCountSameTime+"tttttt"+$scope.Menidata[$scope.arrayIndexnew1].total_location);
-                            if (parseInt($scope.AlltotalCount_shelve) == parseInt($scope.Menidata[$scope.arrayIndexnew1].total_location))
+                            if (parseInt($scope.AlltotalCount_shelve) == parseInt($scope.countarray))
                             {
                                 //console.log("sssssssssss");
 
-                                $scope.newCompeleteArr.push({'sku': $scope.Menidata[$scope.arrayIndexnew1].sku, 'totalqty': $scope.Menidata[$scope.arrayIndexnew1].totalqty,'capacity':$scope.Menidata[$scope.arrayIndexnew1].capacity,'sid':$scope.Menidata[$scope.arrayIndexnew1].sid,'uid':$scope.Menidata[$scope.arrayIndexnew1].uid});
+                                $scope.newCompeleteArr.push({'sku': $scope.Menidata[$scope.arrayIndexnew1].sku, 'totalqty': $scope.Menidata[$scope.arrayIndexnew1].totalqty,'capacity':$scope.Menidata[$scope.arrayIndexnew1].capacity,'sid':$scope.Menidata[$scope.arrayIndexnew1].sid,'uid':$scope.Menidata[$scope.arrayIndexnew1].uid,'shelveNo':$scope.scan.shelve});
 
-
+                                $scope.Menidata[$scope.arrayIndexnew1].shelveNo=$scope.scan.shelve;
                                 $scope.ExportBtnShow = true;
                                 $scope.AddInventoryBtn = true;
                                 $scope.cust_nameBtn = false;
@@ -316,6 +273,7 @@ var app = angular.module('updateManifest', [])
                                 $scope.nextBtnShow = true;
                                 $scope.sku_nameBtn = true;
                                 $scope.Message = null;
+                                $scope.Menidata[$scope.arrayIndexnew1].s_status = "completed"
                                 $('#scan_stocklocation_id').focus();
 
 
@@ -326,27 +284,27 @@ var app = angular.module('updateManifest', [])
                                 //responsiveVoisce.speak($scope.warning);   
                             } else
                             {
+                                $scope.Menidata[$scope.arrayIndexnew1].shelveNo=$scope.scan.shelve;
+                            $scope.oldshelveArr.push({'sku': $scope.scan.sku, 'shelveNo': $scope.scan.shelve})
+                           
+                            $scope.TotalCountSameTime = parseInt($scope.TotalCountSameTime) + 1;
+                            $scope.Menidata[$scope.arrayIndexnew1].s_status = "completed"
+                            $scope.scan.shelve = null;
+                            $scope.scan.stock_location = null;
+                            $scope.location_nameBtn = false;
+                            $scope.cust_nameBtn = true;
+                            $scope.shelve_nameBtn = true;
+                            
+
+                                $('#scan_stocklocation_id').focus();
+                              
                                 $scope.warning = null;
                                 $scope.Message = 'Scaned!';
                                 //responsiveVoice.speak($scope.message);    
                                 responsiveVoice.speak('Scaned!');
                             }
-                        } else
-                        {
-                            $scope.Message = null;
-                            $scope.warning = 'Extra Item Scaned';
-                            responsiveVoice.speak($scope.warning);
-                            //$scope.warning='Shipment Already scanned';
-                            var sound = document.getElementById("audio");
-                            sound.play();
+                           
                         }
-                    } else
-                    {
-                        $scope.Message = null;
-                        $scope.warning = "Shelve No. already Scanned!";
-                    }
-                }
-            }
 
 
 
@@ -385,29 +343,29 @@ var app = angular.module('updateManifest', [])
 
 
 
-                    $scope.cust_nameBtn = false;
-                    $scope.location_nameBtn = true;
-                    $scope.shelve_nameBtn = true;
+                    // $scope.cust_nameBtn = false;
+                    // $scope.location_nameBtn = true;
+                    // $scope.shelve_nameBtn = true;
 
 
-                    angular.forEach($scope.newCompeleteArr, function (value, key) {
+                    // angular.forEach($scope.newCompeleteArr, function (value, key) {
 
-                        $scope.GetremoveKeyelement(value.sku);
+                    //     $scope.GetremoveKeyelement(value.sku);
                        
 
 
-                    });
-                    $scope.Menidata = [];
-                    $scope.newCompeleteArr = [];
+                    // });
+                    // $scope.Menidata = [];
+                    // $scope.newCompeleteArr = [];
 
 
 
 
-                    $scope.UpdateInventoryCheck = 1;
+                    // $scope.UpdateInventoryCheck = 1;
 
                   //  console.log($scope.skuLoopArr);
-                     
-                    /// $window.location.reload(URLBASE+'show_assignedlist');
+                  $window.location.href =URLBASE+'show_assignedlist';
+                    
                 });
             }
 
