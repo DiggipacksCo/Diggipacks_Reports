@@ -1901,11 +1901,13 @@ class Shipment_model extends CI_Model {
         //$this->db->order_by('shipment.id','ASC');
     }
 
- public function stocklocation_details($slip_no = null) {
+    public function stocklocation_details($slip_no = null) {
         $this->db->where('diamention_fm.super_id', $this->session->userdata('user_details')['super_id']);
-        $this->db->select('deducted_shelve,sku,description,piece,cod,free_sku,cust_id,slip_no');
+        $this->db->select('diamention_fm.deducted_shelve,diamention_fm.sku,diamention_fm.description,diamention_fm.piece,diamention_fm.cod,diamention_fm.free_sku,shipment_fm.cust_id,shipment_fm.slip_no');
         $this->db->from('diamention_fm');
-        $this->db->where('slip_no', $slip_no);
+        $this->db->join('shipment_fm', 'shipment_fm.slip_no=diamention_fm.slip_no', 'LEFT' );
+        $this->db->where('diamention_fm.slip_no', $slip_no);
+        $this->db->where('diamention_fm.deleted', 'N');
         $query = $this->db->get();
 
         return $query->result_array();

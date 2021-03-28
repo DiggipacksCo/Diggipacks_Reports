@@ -190,8 +190,8 @@ class Pickup_model extends CI_Model {
         }
         
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
-        $this->db->where_in('delivered', array('5', '7'));
-        $this->db->where_in('code', array('POD', 'DL'));
+       // $this->db->where_in('delivered', array('5', '7'));
+        $this->db->where_not_in('code', array('OG', 'OC'));
         $this->db->order_by('slip_no', 'ASC');
         // $this->db->limit($limit, $start);
         $query = $this->db->get();
