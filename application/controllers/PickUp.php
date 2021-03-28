@@ -611,7 +611,7 @@ class PickUp extends MY_Controller {
                 $slip_data[$key]['shippers_ref_no'] = $responseData['awb'];
                 $slip_data[$key]['code'] = $code;
                 $slip_data[$key]['delivered'] = $new_status;
-                $slip_data[$key]['close_date'] = date('Y-m-d');
+               // $slip_data[$key]['close_date'] = date('Y-m-d');
 
 
                 //======================outbound charges=====================================///
@@ -953,6 +953,7 @@ class PickUp extends MY_Controller {
         echo json_encode($dataArray);
        
     }
+
 
     public function save_details()
         { 
