@@ -45,3 +45,67 @@ if (!function_exists('GetCourierslipnoDrop')) {
     }
 
 }
+
+function SafeArrival_Auth_cURL($counrierArr) {
+  $api_url = $counrierArr['api_url']."v1/customer/authenticate"; 
+  $postdataarray = array("username" => $counrierArr["user_name"], "password" => $counrierArr["password"], "remember_me" => true);
+   $postdata = json_encode($postdataarray);
+  
+  $headers = array(
+    'Accept: application/json',
+    'Content-Type: application/json'   
+  );
+
+  $curl = curl_init();
+
+  curl_setopt_array($curl, array(
+    CURLOPT_URL => $api_url,
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => 'POST',
+    CURLOPT_POSTFIELDS => $postdata,
+    CURLOPT_HTTPHEADER => $headers ,
+  ));
+  
+  $response = curl_exec($curl); 
+   curl_close($curl);
+   $responseArray = json_decode($response, true);
+  return $response;
+}
+
+function send_data_to_safe_curl($dataJson, $Auth_token, $API_URL) {
+  $ch1 = curl_init();
+  curl_setopt($ch1, CURLOPT_URL, $API_URL . "v2/customer/order");
+  curl_setopt($ch1, CURLOPT_RETURNTRANSFER, TRUE);
+  curl_setopt($ch1, CURLOPT_HEADER, FALSE);
+  curl_setopt($ch1, CURLOPT_POST, TRUE);
+  curl_setopt($ch1, CURLOPT_POSTFIELDS, $dataJson);
+  curl_setopt($ch1, CURLOPT_HTTPHEADER, array(
+      "Content-Type: application/json",
+      "Accept: application/json",
+      "Authorization: Bearer " . $Auth_token
+  ));
+
+  return $response = curl_exec($ch1);
+  curl_close($ch1);
+}
+
+function safearrival_label_curl($safe_arrival_ID, $Auth_token=null, $APIURL) 
+{
+      $API_URL =  $APIURL.'v1/customer/orders/airwaybill_mini?ids='.$safe_arrival_ID;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $API_URL);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_HEADER, FALSE);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            "Content-Type: application/json",
+            "Accept: application/json",
+            "Authorization: Bearer ".$Auth_token
+        ));
+
+       $response = curl_exec($ch);
+     //  echo $response; die;  
+        curl_close($ch);
+        return $response; 
+}

@@ -5,6 +5,8 @@ class CourierCompany extends MY_Controller  {
 
 
 	function __construct() {
+        // error_reporting(-1);
+		// ini_set('display_errors', 1);
 		parent::__construct(); 
 		if(menuIdExitsInPrivilageArray(22)=='N')
 		{
@@ -213,15 +215,16 @@ class CourierCompany extends MY_Controller  {
 		}else{
 			$comment = '';
 		}
-             // print_r($postData); die;
+           //  print_r($postData); die;
         if(!empty($shipmentLoopArray))
-        {
+        { 
+           
             if(!empty($postData))
             {
                 //print_r($postData);
-               $box_pieces=$postData['otherArr']['box_pieces'];
-			   $box_pieces1=$postData['box_pieces'];
-                //echo $postData['cc_id'];
+                $box_pieces=$postData['otherArr']['box_pieces'];
+			    $box_pieces1= $postData['box_pieces'];
+
              $counrierArr_table=$this->Ccompany_model->GetdeliveryCompanyUpdateQry($postData['cc_id']);
             // print_r($counrierArr); die;
              
@@ -235,6 +238,8 @@ class CourierCompany extends MY_Controller  {
                     $end_awb_sequence = $counrierArr_table['end_awb_sequence_t'];
                     $company = $counrierArr_table['company'];
                     $api_url = $counrierArr_table['api_url_t'];
+                    $create_order_url = $counrierArr_table['create_order_url']; 
+                    
                     $auth_token = $counrierArr_table['auth_token_t'];
                 } else {
                     $user_name = $counrierArr_table['user_name'];
@@ -246,6 +251,7 @@ class CourierCompany extends MY_Controller  {
                     $company = $counrierArr_table['company'];
                     $api_url = $counrierArr_table['api_url'];
                     $auth_token = $counrierArr_table['auth_token'];
+                    $create_order_url = $counrierArr_table['create_order_url']; 
                 }
                 $counrierArr['user_name'] = $user_name;
                 $counrierArr['password'] = $password;
@@ -256,6 +262,7 @@ class CourierCompany extends MY_Controller  {
                 $counrierArr['end_awb_sequence'] = $end_awb_sequence;
                 $counrierArr['company'] = $company;
                 $counrierArr['api_url'] = $api_url;
+                $counrierArr['create_order_url'] = $create_order_url;
                 $counrierArr['auth_token'] = $auth_token;
 			 
             foreach ($shipmentLoopArray as $key => $slipNo) 
@@ -290,7 +297,7 @@ class CourierCompany extends MY_Controller  {
     						$services = '';
     					}
 					if($company=='Aramex'){
-						$params = $this->Ccompany_model->AramexArray($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services);
+						$params = $this->Ccompany_model->AramexArray($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1);
 						
 						$dataJson = json_encode($params);
                        // echo " Datajson ". $dataJson; die;
@@ -299,8 +306,9 @@ class CourierCompany extends MY_Controller  {
 						
 						$url = $api_url;
 						
-						$awb_array = $this->Ccompany_model->AxamexCurl($url, $headers, $dataJson,$c_id,$ShipArr);
-						
+						 $awb_array = $this->Ccompany_model->AxamexCurl($url, $headers, $dataJson,$c_id,$ShipArr);
+		
+                        
 						$check_error = $awb_array['HasErrors'];
 
 
@@ -336,9 +344,9 @@ class CourierCompany extends MY_Controller  {
 								$generated_pdf = file_get_contents($awb_label);
 								$encoded = base64_decode($generated_pdf);
 								header('Content-Type: application/pdf');
-								file_put_contents("/var/www/html/fastcoo-tech/fulfillment/assets/all_labels/$slipNo.pdf", $generated_pdf);
+                                file_put_contents("/var/www/html/diggipack_new/demofulfillment/assets/all_labels/$slipNo.pdf", $generated_pdf);
 
-								echo $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+								 $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
 								
 								$Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
 								
@@ -346,16 +354,15 @@ class CourierCompany extends MY_Controller  {
 							}
 						}
 					}
-                    elseif($company=='Safearrival'){
+                    elseif($company=='Safearrival'){                  
+                        
 						$charge_items=array();
-						$Auth_response = SafeArrival_Auth_cURL($counrierArr);
+						 $Auth_response = SafeArrival_Auth_cURL($counrierArr);  
 						
-						$responseArray = json_decode($Auth_response, true);
-						$Auth_token = $responseArray['data']['id_token'];
-						
-						$response = $this->Ccompany_model->SafeArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id);
-						
-						$safe_response = json_decode($response, true);
+						$responseArray = json_decode($Auth_response, true);                      
+						$Auth_token = $responseArray['data']['id_token'];   						
+						$response = $this->Ccompany_model->SafeArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1);
+						$safe_response = json_decode($response, true);                     
 						
 						if ($safe_response['status'] == 'success') {
 							$safe_arrival_ID = $safe_response['data']['id'];
@@ -363,16 +370,14 @@ class CourierCompany extends MY_Controller  {
 
 							//****************************safe arrival label print cURL****************************
 							
-							$label_response = safearrival_label_curl($safe_arrival_ID, $Auth_token);
-							
-							$safe_label_response = json_decode($label_response, true);
-							$safe_Label = $safe_label_response['data']['value'];
-							$generated_pdf = file_get_contents($safe_Label);
-							$encoded = base64_decode($generated_pdf);
-							//header('Content-Type: application/pdf');
-							file_put_contents("/var/www/html/fastcoo-tech/fulfillment/assets/all_labels/$slipNo.pdf", $generated_pdf);
-
-							$fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+                                $label_response = safearrival_label_curl($safe_arrival_ID, $Auth_token,$counrierArr['api_url']);                       
+                                $safe_label_response = json_decode($label_response, true);
+                                $safe_Label = $safe_label_response['data']['value'];
+                                $generated_pdf = file_get_contents($safe_Label);
+                                $encoded = base64_decode($generated_pdf);
+                                header('Content-Type: application/pdf');
+                                file_put_contents("/var/www/html/diggipack_new/demofulfillment/assets/all_labels/$slipNo.pdf", $generated_pdf);
+                              $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf'; 
 
 							//****************************safe arrival label print cURL****************************
 
@@ -381,15 +386,50 @@ class CourierCompany extends MY_Controller  {
 							array_push($succssArray, $slipNo);
 
 							array_push($DataArray, $slipNo);
-						}else if($safe_response['status']=='error'){
+						}
+                        else if($safe_response['status']=='error'){
 							$returnArr['responseError'][] = $slipNo . ':' . $safe_response['message'];
+						}
+					}
+
+                    elseif($company=='Thabit'){                  
+                       // echo "kjhkjhkjhkj"; die;
+						$charge_items=array();
+						 $Auth_response = Thabit_Auth_cURL($counrierArr);
+						$responseArray = json_decode($Auth_response, true);                      
+						$Auth_token = $responseArray['data']['id_token'];
+						$response = $this->Ccompany_model->ThabitArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id);
+						$thabit_response = json_decode($response, true);                     
+					    	
+
+						if ($thabit_response['status'] == 'success') {
+							$thabit_order_ID = $thabit_response['data']['id'];
+							 $client_awb = $thabit_response['data']['order_number'];
+
+							//**************************** Thabit label print cURL****************************
+							    $label_response = thabit_label_curl($thabit_order_ID, $Auth_token,$counrierArr['api_url']);                       
+                                $safe_label_response = json_decode($label_response, true);
+                                $safe_Label = $safe_label_response['data']['value'];
+                                $generated_pdf = file_get_contents($safe_Label);
+                                $encoded = base64_decode($generated_pdf);
+                                header('Content-Type: application/pdf');
+                                file_put_contents( base_url() . "assets/all_labels/".$slipNo."pdf", $generated_pdf);
+                                echo  $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf'; 
+
+							//**************************** Thabit label print cURL****************************
+							$Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);							
+							array_push($succssArray, $slipNo);
+							array_push($DataArray, $slipNo);
+						}
+                        else if($thabit_response['status']=='error'){
+							$returnArr['responseError'][] = $slipNo . ':' . $thabit_response['message'];
 						}
 					}
                     elseif($company=='Esnad'){
 					    $esnad_awb_number = Get_esnad_awb($start_awb_sequence, $end_awb_sequence); 
 						//echo $esnad_awb_number; die;
 						$esnad_awb_number = $esnad_awb_number -1;
-						$response = $this->Ccompany_model->EsnadArray($ShipArr, $counrierArr, $esnad_awb_number, $complete_sku, $Auth_token,$c_id);
+						$response = $this->Ccompany_model->EsnadArray($ShipArr, $counrierArr, $esnad_awb_number, $complete_sku, $Auth_token,$c_id,$box_pieces1);
 						
 						$responseArray = json_decode($response, true);
 						
@@ -428,7 +468,7 @@ class CourierCompany extends MY_Controller  {
 									$generated_pdf = file_get_contents($esnad_awb_link);
 							$encoded = base64_decode($generated_pdf);
 							//header('Content-Type: application/pdf');
-							file_put_contents("/var/www/html/fastcoo-tech/fulfillment/assets/all_labels/$slipNo.pdf", $generated_pdf);
+							file_put_contents("/var/www/html/diggipack_new/demofulfillment/assets/all_labels/$slipNo.pdf", $generated_pdf);
 								$Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $esnad_awb_link,$c_id,1);
 							
 								array_push($succssArray, $slipNo);
@@ -445,20 +485,15 @@ class CourierCompany extends MY_Controller  {
 						}
 					}
                     elseif ($company == 'Barqfleet') {
-                            $response_ww = $this->Ccompany_model->BarqfleethArray($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services,$c_id);
-                              
-                               $response_array = json_decode($response_ww, TRUE);                        
-                                 //echo "<pre>"; print_r($response_array['message']); die; 
-                            //start
-
-                            if ($response_array['code'] != '') {
+                            $response_ww = $this->Ccompany_model->BarqfleethArray($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services,$c_id,$box_pieces1);
+                            $response_array = json_decode($response_ww, TRUE);                        
+                           if ($response_array['code'] != '') {
                                  $returnArr['responseError'][] = $slipNo . ':' .$response_array['message'];
                             } 
                             else 
                             {
                                  $Authorization = $counrierArr['auth_token'];
-                               
-                                 $request_url_label = "https://staging.barqfleet.com/api/v1/merchants/orders/airwaybill/".$response_array['id'];
+                                 $request_url_label = $counrierArr['api_url']."/orders/airwaybill/".$response_array['id'];
                                  $headers = array("Content-type:application/json");
                                  $firsthead = array(
                                     "Content-Type: application/json",
@@ -472,17 +507,14 @@ class CourierCompany extends MY_Controller  {
                                     $response_label = curl_exec($ch);                                
                                     $info = curl_getinfo($ch);
                                     curl_close($ch);
-
                                     $client_awb = $response_array['tracking_no'];                                   
                                     $slip_no = $response_array['merchant_order_id'];                                   
                                     $barq_order_id = $response_array['id'];
                                     $CURRENT_DATE = date("Y-m-d H:i:s");
                                     $CURRENT_TIME = date("H:i:s");
-
                                 $generated_pdf = file_get_contents($response_label);
                                 file_put_contents("assets/all_labels/$slipNo.pdf", $response_label);
                                 $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
-                                
 
                                 //****************************makdoom label print cURL****************************
 
@@ -492,17 +524,14 @@ class CourierCompany extends MY_Controller  {
                            }
                           
                             //end
-                        } 
+                    } 
                     elseif ($company == 'Makhdoom'){
-                        //echo "string";;die;
-
-                            $Auth_response = MakdoomArrival_Auth_cURL($counrierArr);
-                               
+                            $Auth_response = MakdoomArrival_Auth_cURL($counrierArr);                             
 
                             $responseArray = json_decode($Auth_response, true);
                             $Auth_token = $responseArray['data']['id_token'];
 
-                            $response =$this->Ccompany_model->MakdoonArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id);
+                            $response =$this->Ccompany_model->MakdoonArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1);
 
                             $safe_response = json_decode($response, true);
      
@@ -532,9 +561,7 @@ class CourierCompany extends MY_Controller  {
                             }
                     }
                     elseif ($company == 'Zajil') {
-                            //print_r($counrierArr); die;
-                            $response = $this->Ccompany_model->ZajilArray($ShipArr, $counrierArr, $complete_sku,$c_id);
-                            // print_r($response); die;
+                            $response = $this->Ccompany_model->ZajilArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1);
                             if (!empty($response['data'])) {
                                 $success = $response['data'][0]['success'];
                                 if ($response['status'] == 'OK' && $success == true) {
@@ -542,12 +569,8 @@ class CourierCompany extends MY_Controller  {
 
                                     $label_response = zajil_label_curl($auth_token, $client_awb);
                                     header("Content-type:application/pdf");
-                                    //print_r($label_response); die;
-                                    //$generated_pdf = file_get_contents($label_response);
-                                    //$encoded = base64_decode($generated_pdf);
                                     file_put_contents("assets/all_labels/$slipNo.pdf", $label_response);
                                     $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
-
                                     $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
                                     array_push($succssArray, $slipNo);
                                 } else {
@@ -558,19 +581,16 @@ class CourierCompany extends MY_Controller  {
                             }
                     }
                     elseif ($company == 'NAQEL'){
-                        $awb_array = $this->Ccompany_model->NaqelArray($ShipArr,$counrierArr, $complete_sku,$box_pieces, $Auth_token,$c_id);
+                        $awb_array = $this->Ccompany_model->NaqelArray($ShipArr,$counrierArr, $complete_sku,$box_pieces1, $Auth_token,$c_id);
                          
                          $HasError = $awb_array['HasError'];
                         $error_message = $awb_array['Message'];
                         
                         if ($awb_array['HasError'] !== true) 
                         {
-
-                             $client_awb = $awb_array['WaybillNo'];
-
+                            $client_awb = $awb_array['WaybillNo'];
                                 if (!empty($client_awb)) 
                                 {
-                                    //echo "client_awb = ". $client_awb; echo "<br> <br/>";
                                     $user_name = $counrierArr['user_name'];    
                                     $password = $counrierArr['password'];
                                     $xml_for_label = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">
@@ -603,7 +623,7 @@ class CourierCompany extends MY_Controller  {
                                         </tem:GetWaybillSticker>
                                         </soapenv:Body>
                                         </soapenv:Envelope>';
-                                      //print_r($xml_for_label);//exit;
+                                  
                                     $headers = array(
                                         "Content-type: text/xml",
                                         "Content-length: " . strlen($xml_for_label),
@@ -630,18 +650,15 @@ class CourierCompany extends MY_Controller  {
                                             $pdf_label = json_decode(json_encode((array) $mediaData), TRUE);
                                             header('Content-Type: application/pdf');
                                             $img = base64_decode($pdf_label[0]);
-
                                             $savefolder = $img;
                                             file_put_contents("assets/all_labels/$slipNo.pdf", $savefolder);
-
                                             //*********NAQEL arrival label print cURL****************************
 
                                             $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
 
                                             //****************NAQEL label print cURL****************************
                                              $CURRENT_DATE = date("Y-m-d H:i:s");
-                                                $CURRENT_TIME = date("H:i:s");
-
+                                             $CURRENT_TIME = date("H:i:s");
                                             $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
                                            array_push($succssArray, $slipNo);
                                         }
@@ -653,15 +670,15 @@ class CourierCompany extends MY_Controller  {
                         }
                     }
                     elseif ($company == 'Saee'){
-                            $response = $this->Ccompany_model->SaeeArray($ShipArr, $counrierArr, $Auth_token,$c_id);
+                            $response = $this->Ccompany_model->SaeeArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1);
                             $safe_response =  $response; 
 
                             if ($safe_response['success'] == 'true') 
                             {
                                       $client_awb = $safe_response['waybill'];
                                 //****************************Saee arrival label print cURL****************************
-
-                                $label_response = saee_label_curl($client_awb, $Auth_token);
+                                $API_URL = $counrierArr['api_url'];
+                                $label_response = saee_label_curl($client_awb, $Auth_token,$API_URL );
                                 file_put_contents("assets/all_labels/$slipNo.pdf", $label_response);
                                  $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
 
@@ -676,7 +693,7 @@ class CourierCompany extends MY_Controller  {
                     } 
                     elseif ($company == 'Smsa'){
                        
-                            $response = $this->Ccompany_model->SMSAArray($ShipArr, $counrierArr, $complete_sku,$box_pieces,$c_id);
+                            $response = $this->Ccompany_model->SMSAArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id);
                             
                             $xml2 = new SimpleXMLElement($response);
                             $again = $xml2;
@@ -736,18 +753,15 @@ class CourierCompany extends MY_Controller  {
                                 }
                             }
                     }                                         
-                    elseif ($company == 'Labaih'){
-                                             
-                            $response = $this->Ccompany_model->LabaihArray($ShipArr, $counrierArr, $complete_sku,$box_pieces,$c_id);
-                            //echo "sss";
-                            //print_r($response);
+                    elseif ($company == 'Labaih')
+                    {       
+                            $response = $this->Ccompany_model->LabaihArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id);
+                           
                             if ($response['status'] == 200) {
                                 $client_awb = $response['consignmentNo'];
                                 $shipmentLabel_url = $response['shipmentLabel'];
-                                 
+
                                 $generated_pdf = file_get_contents($shipmentLabel_url);
-                                    //$encoded = base64_decode($generated_pdf);
-                                    //header('Content-Type: application/pdf');
                                 file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
 
                                 $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
@@ -755,13 +769,13 @@ class CourierCompany extends MY_Controller  {
                                 array_push($succssArray, $slipNo);
                             } 
                             else {
-                                $returnArr['responseError'][] = $slipNo . ':' . $response['message'];
-                                 $returnArr['responseError'][] = $slipNo . ':' . $response['invalid_parameters'][0];
+                                 $returnArr['responseError'][] = $slipNo . ':' . $response['message'];
+                               //  $returnArr['responseError'][] = $slipNo . ':' . $response['invalid_parameters'][0];
                             }
                     } 
                     elseif ($company == 'Clex'){
                             
-                            $response = $this->Ccompany_model->ClexArray($ShipArr, $counrierArr, $complete_sku,$box_pieces,$c_id);
+                            $response = $this->Ccompany_model->ClexArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id);
                             //echo $this->session->userdata('user_details')['super_id'];
                          //   print_r($response);
                             if ($response['data'][0]['cn_id']) {
@@ -792,16 +806,11 @@ class CourierCompany extends MY_Controller  {
                             }
                     }
                     elseif ($company=='Emdad') {
-                            //print_r($counrierArr);exit;
-                            
-                            $response = $this->Ccompany_model->EmdadArray($ShipArr, $counrierArr, $complete_sku,$c_id);
-                            //echo $response; die;
+                            $response = $this->Ccompany_model->EmdadArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1);
                             $response = json_decode($response, true);
-                                //print_r($response);exit;
                             if($response['error']=='')
                             {
-                                $generated_pdf = file_get_contents($response['awb_print_url']);
-                                
+                                $generated_pdf = file_get_contents($response['awb_print_url']);                                
                                 file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
                                 
                                 $client_awb = $response['awb'];
@@ -812,10 +821,10 @@ class CourierCompany extends MY_Controller  {
                             } else {
                                 $returnArr['responseError'][] = $slipNo . ':' . $response['refrence_id'];
                             }
-                        }
+                    }
                     elseif ($company == 'Ajeek'){
                             
-                            $response = $this->Ccompany_model->AjeekArray($ShipArr, $counrierArr, $complete_sku,$box_pieces,$c_id);
+                            $response = $this->Ccompany_model->AjeekArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id);
                             if ($response['contents']['order_id']) {
                                  $response['contents']['order_id'];
                                  $Auth_token = $counrierArr['auth_token'];
@@ -842,10 +851,9 @@ class CourierCompany extends MY_Controller  {
                             }
                     }
                     elseif ($company == 'Aymakan'){
-                            $response = $this->Ccompany_model->AymakanArray($ShipArr, $counrierArr, $Auth_token,$c_id);
+                            $response = $this->Ccompany_model->AymakanArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1);
                             $responseArray = json_decode($response, true);
-                            //$err = $responseArray['errors']['reference'][0];
-                           
+                       
                             if (empty($responseArray['errors'])) 
                             {
                                      $client_awb = $responseArray['data']['shipping']['tracking_number'];
@@ -893,38 +901,49 @@ class CourierCompany extends MY_Controller  {
                     }
                     elseif($company == 'Shipadelivery'){
                         
-                        $response = $this->Ccompany_model->ShipadeliveryArray($ShipArr, $counrierArr, $Auth_token,$c_id);
-                        
+                       $response = $this->Ccompany_model->ShipadeliveryArray($ShipArr, $counrierArr, $Auth_token,$c_id);
+                    
                         $response_array = json_decode($response,true);    
-                          //echo "<br><pre> Response shipa = ";   print_r($response_array);
-                             // die; 
                         if(empty($response_array)){
                             $returnArr['responseError'][] = $slipNo . ':' .'Receiver City Empty ';
                         }
                         else{
-                            if($response_array[0]['code']== 0 )
+
+                            if($response_array[0]['code']== 0)
                                 {
-                                     $client_awb = $response_array[0]['deliveryInfo']['reference'];                           
+                                    $client_awb = $response_array[0]['deliveryInfo']['reference'];
+  
+                                    $responsepie = $this->Ccompany_model->ShipaDelupdatecURL($counrierArr, $ShipArr, $client_awb ,$box_pieces1);
+                                    $responsepieces = json_decode($responsepie, true); 
+                                  //  echo "<pre>"; print_r($responsepieces); // die; 
+                                   
+                                         if ($responsepieces['status']=='Success')
+                                         {
+                                            $shipaLabel = $this->Ccompany_model->ShipaDelLabelcURL($counrierArr, $client_awb);
 
-                                    $shipaLabel = $this->Ccompany_model->ShipaDelLabelcURL($counrierArr, $client_awb);
+                                            header('Content-Type: application/pdf');
 
-                                    header('Content-Type: application/pdf');
+                                            file_put_contents("assets/all_labels/$slipNo.pdf", $shipaLabel);
+                                             $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+                                            $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                            array_push($succssArray, $slipNo);
 
-                                    file_put_contents("assets/all_labels/$slipNo.pdf", $shipaLabel);
-                                    $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
-                                    $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
-                                    array_push($succssArray, $slipNo);
-                                }
-                                else{
+                                         }
+                                          else{
+
+                                                $returnArr['responseError'][] = $slipNo . ':' . $responsepieces['action'];
+                                            }
+                                } else{
 
                                     $returnArr['responseError'][] = $slipNo . ':' . $response_array['info'];
                                 }
-                        }                     
+                            }
+                                          
                             
                                 
                     }
                     elseif($company == 'Saudi Post'){
-                        $response = $this->Ccompany_model->SPArray($ShipArr, $counrierArr, $Auth_token,$c_id);
+                        $response = $this->Ccompany_model->SPArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1);
                         
                         $response = json_decode($response, true);
                                         
