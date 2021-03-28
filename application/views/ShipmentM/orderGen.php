@@ -348,13 +348,13 @@
                                                         </div></td>
                                                 </tr>
 
-                                                <tr>
+                                              <!--  <tr>
                                                     <td style="border: none;" ><div class="form-group" ><strong>Total COD Amount :</strong>
                                                             <input type="text" class="form-control" name="total_cod_amt" ng-model="ShipmentEditArr.total_cod_amt"  id="total_cod_amt" required>
                                                         </div></td>
                                                     <td style="border: none;" ><div class="form-group" >&nbsp;</td>
                                                 </tr>
-                                                <!-- <tr>
+                                                 <tr>
                                                     <td colspan="2" style="border: none;"><table class="table table-striped table-hover table-bordered">
                                                             <tr><td colspan="4" align="right"> <a ng-click="GetAddNewrowsSku();"> <i class="fa fa-plus-square fa-2x"></i></a></td></tr>
                                                             <tr>

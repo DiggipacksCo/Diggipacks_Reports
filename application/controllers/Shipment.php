@@ -3116,7 +3116,7 @@ class Shipment extends MY_Controller {
 
 
                     $dimationArray_w = array('slip_no' => $dataArray['slip_no']);
-                    $shipemntArr = array('destination' => $dataArray['destination_id'], 'booking_id' => $dataArray['booking_id'], 'reciever_name' => $dataArray['reciever_name'], 'reciever_phone' => $dataArray['reciever_phone'], 'reciever_address' => $dataArray['reciever_address'], 'total_cod_amt' => $totalCod, 'pieces' => $totalPices, 'wh_id' => $dataArray['whid']);
+                    $shipemntArr = array('destination' => $dataArray['destination_id'], 'booking_id' => $dataArray['booking_id'], 'reciever_name' => $dataArray['reciever_name'], 'reciever_phone' => $dataArray['reciever_phone'], 'reciever_address' => $dataArray['reciever_address'], 'wh_id' => $dataArray['whid']);
                     $shipemntArr_w = array('id' => $dataArray['id'], 'slip_no' => $dataArray['slip_no']);
                     ///print_r($StatusArray);
                     //print_r($shipemntArr);
