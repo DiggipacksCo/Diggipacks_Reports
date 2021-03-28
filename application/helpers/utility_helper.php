@@ -45,10 +45,9 @@ if (!function_exists('Get_esnad_awb')) {
         }
     }
 
-}
+}      
 
 function send_data_to_curl($data, $url, $header) {
-    // $header=array("Content-type:application/json");
     $curl_req = curl_init($url);
     curl_setopt($curl_req, CURLOPT_POSTFIELDS, $data);
     $curl_options = array(
@@ -263,15 +262,11 @@ function clex_label_curl($Auth_token, $client_awb) {
     curl_setopt($ch, CURLOPT_URL, $label_url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST, true);
-
     $label_response = curl_exec($ch);
     curl_close($ch);
-
     $label_json_data = json_encode($label_response);
     $label_res_array = json_decode($label_response, true);
-    //print_r($label_url);
     $label_url_new = $label_res_array['data']['awb_pdf_url'];
-    /// echo $label_url;
     return $label_url_new;
 }
 
@@ -366,7 +361,7 @@ if (!function_exists('getdestinationfieldshow_array')) {
         $ci = & get_instance();
         $ci->load->database();
         if (!empty($id)) {
-            $sql = "SELECT $field FROM country where id IN ($id) ";
+            $sql = "SELECT $field FROM country where id IN ($id) and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
             $query = $ci->db->query($sql);
             $result = $query->result_array();
             foreach ($result as $ndata) {
@@ -398,7 +393,7 @@ if (!function_exists('Print_getall3plfm')) {
             $fileArray = array();
             foreach ($status_update_data as $key => $val) {
 
-                $filePath = '/var/www/html/fastcoo-solution/track/all_labels/' . $status_update_data[$key]['slip_no'] . '.pdf';
+                $filePath = '/var/www/html/diggipack_new/demofulfillment/assets/all_labels/' . $status_update_data[$key]['slip_no'] . '.pdf';
                 if (file_exists($filePath))
                     array_push($fileArray, $filePath);
             }
@@ -624,7 +619,7 @@ if (!function_exists('Getquantitybyskuname')) {
     function Getquantitybyskuname($seller_id = null, $sku = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $inventory_dataqry = "select sum(item_inventory.quantity)as quantity from item_inventory left join items_m on item_inventory.item_sku=items_m.id where item_inventory.seller_id='" . $seller_id . "' and item_inventory.super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and items_m.sku like'" . trim($sku) . "'";
+        $inventory_dataqry = "select sum(item_inventory.quantity)as quantity from item_inventory left join items_m on item_inventory.item_sku=items_m.id where item_inventory.seller_id='" . $seller_id . "'  and  items_m.super_id='" . $ci->session->userdata('user_details')['super_id'] . "'  and item_inventory.super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and items_m.sku like'" . trim($sku) . "'";
         $query = $ci->db->query($inventory_dataqry);
         $result = $query->row_array();
         return $result['quantity'];
@@ -987,7 +982,7 @@ if (!function_exists('PrintPiclist3PL')) {
                 }
 
                 //$filePath='https://demosony.fastcoo-solutions.com/fm/assets/all_labels/SOF7362389516.pdf';
-                $filePath = '/var/www/html/fastcoo-tech/demofulfillment/assets/all_labels/' . $status_update_data[$key]['slip_no'] . '.pdf';
+                $filePath = '/var/www/html/diggipack_new/demofulfillment/assets/all_labels/' . $status_update_data[$key]['slip_no'] . '.pdf';
                 if (file_exists($filePath))
                     array_push($fileArray, $filePath);
             }
@@ -995,15 +990,24 @@ if (!function_exists('PrintPiclist3PL')) {
             require('../fpdf_new/fpdf.php');
             require('../fpdi/fpdi.php');
             //echo '<pre>';
-            //print_r($fileArray);exit;
+           // print_r($fileArray);exit;
 
             $files = $fileArray;
 
-            if (GetCourCompanynameId($frwd_company_id, 'company') == 'Esnad' || GetCourCompanynameId($frwd_company_id, 'company') == 'Labaih' || GetCourCompanynameId($frwd_company_id, 'company') == 'Clex') {
+            if (GetCourCompanynameId($frwd_company_id, 'company') == 'Esnad' || GetCourCompanynameId($frwd_company_id, 'company') == 'Labaih' || GetCourCompanynameId($frwd_company_id, 'company') == 'Clex' ) {
                 $pdf = new FPDI('P', 'mm');
-            } else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Barqfleet') {
-                $pdf = new FPDI('P', 'mm', array(110, 160));
-            } else
+            } 
+            else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Barqfleet')   
+            {
+                $pdf = new FPDI('P', 'mm', array(160, 102));   
+            }
+            else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Saee'){
+                $pdf = new FPDI('P', 'mm', array(250, 175));
+            }
+            else if ( GetCourCompanynameId($frwd_company_id, 'company') == 'Shipadelivery') {
+                $pdf = new FPDI('L', 'mm', array(102, 160));
+            }
+            else
                 $pdf = new FPDI('P', 'mm', array(101, 152));
 
             // iterate over array of files and merge
@@ -1065,7 +1069,7 @@ if (!function_exists('PrintPiclist3PL_bulk')) {
                 }
 
                 // $filePath='https://demosony.fastcoo-solutions.com/fm/assets/all_labels/SOF7362389516.pdf';
-                $filePath = '/var/www/html/fastcoo-tech/demofulfillment/assets/all_labels/' . $status_update_data[$key]['slip_no'] . '.pdf';
+                $filePath = '/var/www/html/diggipack_new/demofulfillment/assets/all_labels/' . $status_update_data[$key]['slip_no'] . '.pdf';
 
                 //echo $filePath; die();
                 if (file_exists($filePath))
@@ -1080,9 +1084,16 @@ if (!function_exists('PrintPiclist3PL_bulk')) {
 
             $files = $fileArray;
             //echo $frwd_company_id; die;
-            if (GetCourCompanynameId($frwd_company_id, 'company') == 'Esnad' || GetCourCompanynameId($frwd_company_id, 'company') == 'Labaih' || GetCourCompanynameId($frwd_company_id, 'company') == 'Clex' || GetCourCompanynameId($frwd_company_id, 'company') == 'Shipadelivery') {
+            if (GetCourCompanynameId($frwd_company_id, 'company') == 'Clex' || GetCourCompanynameId($frwd_company_id, 'company') == 'Esnad' || GetCourCompanynameId($frwd_company_id, 'company') == 'Labaih' ) {
                 $pdf = new FPDI('P', 'mm');
-            } else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Barqfleet') {
+            } 
+            else if ( GetCourCompanynameId($frwd_company_id, 'company') == 'Shipadelivery') {
+                $pdf = new FPDI('L', 'mm', array(102, 160));
+            }
+            else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Saee'){
+                $pdf = new FPDI('P', 'mm', array(250, 175));
+            }
+            else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Barqfleet' ) {
                 $pdf = new FPDI('P', 'mm', array(110, 160));
             } else {
                 $pdf = new FPDI('P', 'mm', array(102, 160));
@@ -1288,7 +1299,7 @@ if (!function_exists('Getallskudatadetails')) {
     function Getallskudatadetails($slip_no = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "select (select id from items_m where items_m.sku=diamention_fm.sku)as itmSku,piece from diamention_fm where deleted='N' and slip_no='" . $slip_no . "' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "select (select id from items_m where items_m.sku=diamention_fm.sku and items_m.super_id='" . $ci->session->userdata('user_details')['super_id'] . "')as itmSku,piece from diamention_fm where deleted='N' and slip_no='" . $slip_no . "' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
         $query = $ci->db->query($sql);
         //echo  $ci->db->last_query; die();                
         $result = $query->result_array();
@@ -1445,7 +1456,7 @@ if (!function_exists('GetCityAllDataByname')) {
     function GetCityAllDataByname($name = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT * FROM country where city='$name' ";
+        $sql = "SELECT * FROM country where city='$name' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
         $query = $ci->db->query($sql);
         //echo $ci->db->last_query();exit;
         return $query->row_array();
@@ -1459,21 +1470,6 @@ if (!function_exists('Getallsellerdata')) {
         $ci = & get_instance();
         $ci->load->database();
         $sql = "SELECT id,name,company FROM customer where  super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and company!='' and access_fm='Y'";
-        $query = $ci->db->query($sql);
-        $result = $query->result_array();
-        return $result;
-    }
-
-}
-
-if (!function_exists('GetallsellerdataInv')) {
-
-    function GetallsellerdataInv($type = null) {
-        $ci = & get_instance();
-        $ci->load->database();
-        if($type!=null)
-        $cond=" and invoice_type='".$type."'";
-       $sql = "SELECT id,name,company FROM customer where  super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and company!='' and access_fm='Y' ".$cond;
         $query = $ci->db->query($sql);
         $result = $query->result_array();
         return $result;
@@ -1554,7 +1550,7 @@ if (!function_exists('CheckStockBackorder')) {
         $ci->load->database();
 
         //echo $pieces."<br>";		 
-        $inventory_dataqry = "select item_inventory.*,items_m.sku from item_inventory left join items_m on item_inventory.item_sku=items_m.id where item_inventory.seller_id='" . $seller_id . "' and items_m.sku like'" . trim($sku) . "' and item_inventory.shelve_no!='' and item_inventory.super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and item_inventory.quantity>0 order by item_inventory.id asc";
+        $inventory_dataqry = "select item_inventory.*,items_m.sku from item_inventory left join items_m on item_inventory.item_sku=items_m.id where item_inventory.seller_id='" . $seller_id . "' and items_m.sku like'" . trim($sku) . "' and  items_m.super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and item_inventory.shelve_no!='' and item_inventory.super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and item_inventory.quantity>0 order by item_inventory.id asc";
         $qyery = $ci->db->query($inventory_dataqry);
         //$inventory_data=$this->dbh->FetchAllResults($inventory_dataqry);
         //	print_r($inventory_data); exit;  
@@ -1663,7 +1659,7 @@ if (!function_exists('CheckStockBackorder_ordergen')) {
             $current_date = date("Y-m-d");
             $conditionCheck = " and expiry='N' and expity_date>='$current_date'";
         }
-        $inventory_dataqry = "select item_inventory.*,items_m.sku from item_inventory left join items_m on item_inventory.item_sku=items_m.id where item_inventory.seller_id='" . $seller_id . "' and items_m.sku like'" . trim($sku) . "' and item_inventory.super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and item_inventory.quantity>0 $conditionCheck order by  item_inventory.id asc";
+        $inventory_dataqry = "select item_inventory.*,items_m.sku from item_inventory left join items_m on item_inventory.item_sku=items_m.id where item_inventory.seller_id='" . $seller_id . "' and items_m.sku like'" . trim($sku) . "' and item_inventory.super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and items_m.super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and item_inventory.quantity>0 $conditionCheck order by  item_inventory.id asc";
         $query = $ci->db->query($inventory_dataqry);
        
 
@@ -1790,7 +1786,7 @@ if (!function_exists('CheckStockBackorder_ordergen_new')) {
         $ci->load->database();
         // echo $slip_no; 
         //echo $pieces."<br>";		 
-        $inventory_dataqry = "select *,'" . $sku . "' as sku_name,'" . $pieces . "'  AS peice from item_inventory  where item_sku='" . trim($sku_id) . "' and item_inventory.shelve_no!='' and item_inventory.quantity>'" . $pieces . "' and item_inventory.super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and seller_id='" . $seller_id . "' order by item_inventory.id asc";
+        $inventory_dataqry = "select *,'" . $sku . "' as sku_name,'" . $pieces . "'  AS peice from item_inventory  where item_sku='" . trim($sku_id) . "' and item_inventory.shelve_no!='' and item_inventory.quantity>'" . $pieces . "'  and item_inventory.super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and seller_id='" . $seller_id . "' order by item_inventory.id asc";
         $qyery = $ci->db->query($inventory_dataqry);
         //$inventory_data=$this->dbh->FetchAllResults($inventory_dataqry);
         $inventory_data = $qyery->result_array();
@@ -2371,7 +2367,7 @@ if (!function_exists('getAllDestination')) {
     function getAllDestination($id = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT id,city FROM country where deleted='N' and city!='' ";
+        $sql = "SELECT id,city FROM country where deleted='N' and city!='' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
         $query = $ci->db->query($sql);
         $result = $query->result_array();
         return $result;
@@ -2383,7 +2379,7 @@ if (!function_exists('getdestinationfieldshow')) {
     function getdestinationfieldshow($id = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM country where id='$id' ";
+        $sql = "SELECT $field FROM country where id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result[$field];
@@ -2409,7 +2405,7 @@ if (!function_exists('getdestinationfieldshow_name')) {
     function getdestinationfieldshow_name($id = null, $field = null, $matchfield = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM country where   $matchfield='$id' ";
+        $sql = "SELECT $field FROM country where   $matchfield='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result[$field];
@@ -2593,7 +2589,7 @@ if (!function_exists('getIdfromCityName')) {
     function getIdfromCityName($city) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT id FROM country where deleted='N' and city Like '" . $city . "'";
+        $sql = "SELECT id FROM country where deleted='N' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and city Like '" . $city . "'";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result['id'];
@@ -2939,7 +2935,7 @@ function getCityCode($city_id = null) {
 
     $ci = & get_instance();
     $ci->load->database();
-    $sql = "select city_code from country where (id='" . $city_id . "' or city='" . $city_id . "') and deleted='N' ";
+    $sql = "select city_code from country where (id='" . $city_id . "' or city='" . $city_id . "') and deleted='N' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
     $query = $ci->db->query($sql);
     $statusData = $query->row_array();
     return $status = $statusData['city_code'];
@@ -3043,9 +3039,10 @@ function create_sign($param, $secKey, $customerId, $formate, $method, $signMetho
 
 function MakdoomArrival_Auth_cURL($counrierArr) {
     $ch = curl_init();
+    $apiurl = $counrierArr['api_url']."/customer/authenticate";
     $postdata = array("username" => $counrierArr['user_name'], "password" => $counrierArr['password'], "remember_me" => true);
     $postdata = json_encode($postdata);
-    curl_setopt($ch, CURLOPT_URL, "https://prodapi.shipox.com/api/v1/customer/authenticate");
+    curl_setopt($ch, CURLOPT_URL,$apiurl);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($ch, CURLOPT_HEADER, FALSE);
     curl_setopt($ch, CURLOPT_POST, TRUE);
@@ -3060,47 +3057,37 @@ function MakdoomArrival_Auth_cURL($counrierArr) {
 }
 
 function send_data_to_makdoom_curl($dataJson, $Auth_token, $API_URL) {
-    //echo "Auth_token = ".$Auth_token." API_URL = ".$API_URL." <br/><br>";
-    $ch1 = curl_init();
-    curl_setopt($ch1, CURLOPT_URL, $API_URL);
-    curl_setopt($ch1, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($ch1, CURLOPT_HEADER, FALSE);
-    curl_setopt($ch1, CURLOPT_POST, TRUE);
-    curl_setopt($ch1, CURLOPT_POSTFIELDS, $dataJson);
-    curl_setopt($ch1, CURLOPT_HTTPHEADER, array(
-        "Content-Type: application/json",
-        "Accept: application/json",
-        "Authorization: Bearer " . $Auth_token
-    ));
-    $response = curl_exec($ch1);
-
-    curl_close($ch1);
-
-    return $response;
-    // print_r($response); die;
-    //die;
-}
-
-function makdoom_label_curl($client_awb, $Auth_token) {
-    $url = "https://prodapi.shipox.com/api/v1/customer/orders/airwaybill_mini?order_numbers=" . $client_awb;
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($ch, CURLOPT_HEADER, FALSE);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-        "Content-Type: application/json",
-        "Accept: application/json",
-        "Authorization: Bearer " . $Auth_token
-    ));
-
-    $response = curl_exec($ch);
-
-    // echo $url."<br/>".$response;
-    //die; 
-
-    curl_close($ch);
-    return $response;
-}
+     $ch1 = curl_init();
+     curl_setopt($ch1, CURLOPT_URL, $API_URL);
+     curl_setopt($ch1, CURLOPT_RETURNTRANSFER, TRUE);
+     curl_setopt($ch1, CURLOPT_HEADER, FALSE);
+     curl_setopt($ch1, CURLOPT_POST, TRUE);
+     curl_setopt($ch1, CURLOPT_POSTFIELDS, $dataJson);
+     curl_setopt($ch1, CURLOPT_HTTPHEADER, array(
+         "Content-Type: application/json",
+         "Accept: application/json",
+         "Authorization: Bearer " . $Auth_token
+     ));
+     $response = curl_exec($ch1);
+     curl_close($ch1);
+     return $response;
+ }
+ 
+ function makdoom_label_curl($client_awb, $Auth_token, $counrierArr) {
+     $url = $counrierArr['api_url']."customer/orders/airwaybill_mini?order_numbers=".$client_awb;
+     $ch = curl_init();
+     curl_setopt($ch, CURLOPT_URL, $url);
+     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+     curl_setopt($ch, CURLOPT_HEADER, FALSE);
+     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+         "Content-Type: application/json",
+         "Accept: application/json",
+         "Authorization: Bearer " . $Auth_token
+     ));
+     $response = curl_exec($ch);
+     curl_close($ch);
+     return $response;
+ }
 
 if (!function_exists('GetdeliveryreportArr')) {
 
@@ -3133,8 +3120,8 @@ if (!function_exists('GetdeliveryreportArr')) {
 
 }
 
-function saee_label_curl($client_awb, $Auth_token) {
-    $url = "https://corporate.saeex.com/deliveryrequest/printsticker/pdf/" . $client_awb;
+function saee_label_curl($client_awb, $Auth_token, $API_URL) {
+    $url = $API_URL."/printsticker/pdf/" . $client_awb;
     //$url ="https://corporate.saeex.com/deliveryrequest/printsticker/pdf/OS02415896KS";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -3147,10 +3134,6 @@ function saee_label_curl($client_awb, $Auth_token) {
     ));
 
     $label_response = curl_exec($ch);
-
-    //echo $url."<br/>".$response;
-    // die; 
-
     curl_close($ch);
     return $label_response;
 }
@@ -3178,7 +3161,7 @@ if (!function_exists('Alertcountshowdata')) {
         $ci = & get_instance();
         $ci->load->database();
         if ($type == 'two')
-            $sql = "SELECT COUNT(ID) as total_cnt FROM `item_inventory` WHERE super_id='" . $ci->session->userdata('user_details')['super_id'] . "' GROUP BY `item_sku` HAVING SUM(quantity) < (SELECT less_qty from items_m where id=item_sku) ";
+            $sql = "SELECT COUNT(ID) as total_cnt FROM `item_inventory` WHERE super_id='" . $ci->session->userdata('user_details')['super_id'] . "' GROUP BY `item_sku` HAVING SUM(quantity) < (SELECT less_qty from items_m where id=item_sku and items_m.super_id='" . $ci->session->userdata('user_details')['super_id'] . "') ";
         else
             $sql = "SELECT COUNT(ID) as total_cnt FROM  item_inventory WHERE  expity_date<(CURDATE() + INTERVAL (SELECT alert_day from items_m where id=item_sku) DAY) and super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and expity_date>(CURDATE())";
         $query = $ci->db->query($sql);
@@ -3188,10 +3171,82 @@ if (!function_exists('Alertcountshowdata')) {
         else
             return $result['total_cnt'];
     }
-    
-    
-   
+}
 
+function ZidPcURL($storeID, $store_link){
+    
+    $athentication = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI2NSIsImp0aSI6IjNmMzI5MTExM2Y3Y2U4NjkxNDcwMDgwMDJkMTY4NTY4YWZkNzU5OWEwZmFlMWRkYTk4ODgzMDUxMGU3MDQ0YTZhYTZjZjE0ODkwYjI0OGY1IiwiaWF0IjoxNTk5OTg5ODkwLCJuYmYiOjE1OTk5ODk4OTAsImV4cCI6MTYzMTUyNTg5MCwic3ViIjoiMzMiLCJzY29wZXMiOlsidGhpcmQtcGFydGllcy1hcGlzIl19.VFozu9O0PEUOCzIxbFdZSVQ-mbduyEvl7JqIHpsHGKMzKmwcd8M-CFw9WyKQ9-I9yxYnFLNgzfsw9JuISjMLqzj6ePyKJw88BlTaB74bSXpD5n6FTAWafhTGETAOUNh7Eswxri9fAb5U8LCIpHLXTy0dWWUEPBb8IubxSULyMh49r1kk2p0ZOfBvnHnDQEdNXzIQe4A53Cyhuh6y6IHehY8nE6rxuw5WIItLmgdZQr-2hvzbcdkyzzD8Su0TwaBzT4E5T5LQNwr7HawfMJWayk_k4kXvRSGu-riP1CpbN0dNeRXL2T6sD79qGxi50xCV75efOlUhk-lqBVOlzmjt-JAFVogDuiMvQSFfXi4tazkzZRGC_SVPrz1pPsIW8B_Rgmpp1hlVUOhS5ywph-dlqsCbyWQa_2mkhleFFs9zwTP_ZQkM3-wSnup3hed7iXQCPVttX244SkItWqA2HBElPRo-a82H03gzBt2lCDGUrxCl_uG1go2KxIopW0TbtpnTs_Ajp6QaTuHgouFW-9GcmyoUo75kQ5RMtzQ6svEEXnV87yEUzsD5DuELkDdENpB_vZVwU9VqAxlgZaSy-LLmteBxVpCmhmv14qCxNrZ95zqZ1bZ02r21CnLJtVDCmpHL-vhq4QCvRQQTAiO-cZ8eF3hYhv5vkVjgY3Cr6c-dO3w';
+    
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => $store_link,
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => '',
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 0,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => 'GET',
+      CURLOPT_HTTPHEADER => array(
+        'Authorization: Bearer ' . $athentication,
+        'STORE-ID: '.$storeID,
+      ),
+    ));
+
+    $response = curl_exec($curl);
+
+    curl_close($curl);
+    return $response;
+}
+
+function AddSKUfromZid($data) {
+    $ci = & get_instance();
+    $ci->load->database();
+    $ci->db->insert('items_m', $data);
 }
         
-       
+function exist_zidsku_id($sku, $super_id) {
+    $ci = & get_instance();
+    $ci->load->database();
+    $sql = "select id from items_m where sku='" . $sku . "' and super_id='" . $super_id . "'";
+    $query = $ci->db->query($sql);
+    $countdata = $query->num_rows();
+    $row = $query->row_array();
+    if ($countdata > 0)
+        return $row['id'];
+    else
+        return false;
+}
+
+function update_zid_product($quantity, $pid, $token, $storeID){
+    $param = array(
+        'quantity' => $quantity,
+        'id' => $pid,
+        );
+    $param = json_encode($param);
+    $curl = curl_init();
+    $url = "https://api.zid.sa/v1/products/".$pid."/";
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => $url,
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => '',
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 0,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => 'PATCH',
+      CURLOPT_POSTFIELDS => $param,
+      CURLOPT_HTTPHEADER => array(
+        'Access-Token: '.$token,
+        'STORE-ID: '.$storeID,
+        'ROLE: Manager',
+        'Content-Type: application/json',
+        'Accept-Language: en',
+      ),
+    ));
+
+   echo $response = curl_exec($curl);
+
+    curl_close($curl);
+}
