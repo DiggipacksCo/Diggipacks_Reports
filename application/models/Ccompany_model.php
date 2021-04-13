@@ -2960,11 +2960,9 @@ array_push($itemArray,$peiceArray);
                 $weight = $ShipArr['weight'] ; 
             }
     
-        echo "<pre>";
         if (empty($receiver_city)){
-            $response = array('message' => 'receiver city empty');
-            // echo "<br><br><pre> response = ";
-            // print_r($response); die; 
+            $resp = array('msg' => 'receiver city empty');
+            $response = json_encode($resp);
             return $response ;
         }
         else {
@@ -3005,8 +3003,7 @@ array_push($itemArray,$peiceArray);
                   "method"     => $method,
                   "customerId" => $customerId,
                  );
-            echo "<pre>"; print_r($alldata); 
-           // die; 
+         
             $dataJson = json_encode($data_array);
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
@@ -3021,7 +3018,7 @@ array_push($itemArray,$peiceArray);
             $response = curl_exec($ch);
     
             curl_close($ch);
-           echo "<br><br><br> response = ".$response; die; 
+       
             return $response;
         }
     }

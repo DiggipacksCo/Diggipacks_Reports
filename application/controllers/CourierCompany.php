@@ -974,10 +974,10 @@ class CourierCompany extends MY_Controller  {
                         else
                         {
                             $response = $this->Ccompany_model->fastcooArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1);
-                            $responseArray = json_decode($response, true);                          
-                        
-                            if ($responseArray['status']==200) 
+                            $responseArray = json_decode($response, true);     
+                            if($responseArray['status']==200) 
                             {  
+                                
                                 $client_awb = $responseArray['awb_no'];                                
                                 $mediaData = $responseArray['label_print'];
                                 //****************************fastcoo label print cURL****************************
@@ -989,14 +989,15 @@ class CourierCompany extends MY_Controller  {
 
                                 $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
                                 array_push($succssArray, $slipNo);
-                            
-                            }   
+                           
+                            }                               
                             else
                             {
-                                array_push($alreadyExist, $slipNo);   
+                                array_push($alreadyExist, $slipNo); 
+                                $returnArr['responseError'][] = $slipNo . ':' . $responseArray['msg'];  
                             } 
                         }                                   
-                    } //end f 
+                    } //end company type F code 
 
                 }
                 else
