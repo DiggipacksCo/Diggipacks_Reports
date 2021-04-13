@@ -11,7 +11,7 @@ class Country_model extends CI_Model {
 
     public function datainsert($data = array(), $editid = null) {
         if ($editid > 0) {
-          //  $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+            $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
             $this->db->update('country', $data, array('id' => $editid));
            //  echo $this->db->last_query();die;
             return 2;
@@ -22,15 +22,53 @@ class Country_model extends CI_Model {
         }
        
     }
-    public function CoutrylistData()
+    
+    public function final_master_by_id($id=array())
+    {
+    
+      if(!empty($id))
+      {
+        $this->db->where('deleted', 'N');
+        $this->db->where('status', 'Y');
+      
+        $this->db->where_in("id",$id);
+        $this->db->select("  'Saudi Arabia' as country,`city`, arabic_name as title, `naqel_city_code`, `state`, `aramex_city`, `samsa_city`, `clex`, `esnad_city`, `zajil`, `barq_city`, `moovo`, `sls`, `safe_arrival`, `saudipost_id`, `aymakan`, `tamex_city`, `alamalkon`, `shipsa_city`, `saee_city`, `labaih`, `quickbox`,".$this->session->userdata('user_details')['super_id']." as super_id ");
+        $this->db->from('country_final_master');
+       // $this->db->order_by('city','ASC');
+       
+        $query = $this->db->get();
+      //  echo $this->db->last_query(); exit;
+        return $query->result_array();
+
+      }
+         // $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+      
+    }
+
+    public function country_final_master()
     {
     
          // $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('deleted', 'N');
         $this->db->where('status', 'Y');
-        $this->db->where("state=''");
-         $this->db->where("city=''");
+      
+        $this->db->where("city!=''");
+        $this->db->select('id,city');
+        $this->db->from('country_final_master');
+       // $this->db->order_by('city','ASC');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+    public function CoutrylistData()
+    {
+    
+          $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->where('deleted', 'N');
+        $this->db->where('status', 'Y');
+        //$this->db->where("state=''");
+        // $this->db->where("city=''");
         $this->db->select('id,country');
+        $this->db->group_by('country');
         $this->db->from('country');
         $query = $this->db->get();
         return $query->result_array();
@@ -40,7 +78,7 @@ class Country_model extends CI_Model {
     public function CoutrylistData_drop($country=null)
     {
     
-        //  $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+          $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('deleted', 'N');
         $this->db->where('status', 'Y');
         $this->db->where("state!=''");
@@ -60,6 +98,7 @@ class Country_model extends CI_Model {
         $this->db->where('status', 'Y');
         $this->db->select('id,country,state,city,city_code,title');
         $this->db->from('country');
+        $this->db->group_by('country');
         $query = $this->db->get();
        // echo $this->db->last_query();
         return $query->row_array();
@@ -72,7 +111,7 @@ class Country_model extends CI_Model {
              $this->db->where("id!='$id'");  
           }
           $this->db->where($field, $name);
-        //  $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+          $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
           $this->db->where('deleted', 'N');
           $this->db->where('status', 'Y');
           $this->db->where("state!=''");
@@ -94,7 +133,7 @@ class Country_model extends CI_Model {
     {
     
           $this->db->where('id', $id);
-        //  $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+          $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('deleted', 'N');
         $this->db->where('status', 'Y');
          $this->db->where("state!=''");
@@ -106,15 +145,19 @@ class Country_model extends CI_Model {
     public function ViewhublistQry($country=null)
     {
     
-         // $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+          $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
           if($country)
           {
            $this->db->where('country', $country);
+           //$this->db->group_by('country');
           }
+         
         $this->db->where('deleted', 'N');
         $this->db->where('status', 'Y');
-         $this->db->where("state!=''");
-          $this->db->where("city=''");
+        $this->db->group_by('state');
+         //$this->db->where("state!=''");
+         // $this->db->where("city=''");
+         
         $this->db->select('id,country,state');
         $this->db->from('country');
         $query = $this->db->get();
@@ -124,18 +167,43 @@ class Country_model extends CI_Model {
     public function ViewcitylistQry($country=null)
     {
     
-         // $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+          $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+          if($country)
+          {
+           $this->db->where('state', $country);
+          }
+          else
+          {
+            $this->db->where('state', '');  
+          }
+        $this->db->where('deleted', 'N');
+        $this->db->where('status', 'Y');
+       //  $this->db->where("state!=''");
+          $this->db->where("city!=''");
+        $this->db->select('id,country,state,city,city_code,title');
+        $this->db->from('country');
+        $query = $this->db->get();
+          // echo $this->db->last_query();
+        return $query->result_array();
+    }
+
+    public function previousCity($country=null)
+    {
+    
+          $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
           if($country)
           {
            $this->db->where('state', $country);
           }
         $this->db->where('deleted', 'N');
         $this->db->where('status', 'Y');
-         $this->db->where("state!=''");
+        // $this->db->where("state!=''");
           $this->db->where("city!=''");
-        $this->db->select('id,country,state,city,city_code,title');
+        $this->db->select('city');
         $this->db->from('country');
+       // $this->db->order_by('city','ASC');
         $query = $this->db->get();
+        
           // echo $this->db->last_query();
         return $query->result_array();
     }
@@ -144,7 +212,7 @@ class Country_model extends CI_Model {
      public function GetsuperIdForCountry()
     {
     
-       // $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('deleted', 'N');
         $this->db->where('status', 'Y');
         $this->db->where("state=''");
@@ -158,7 +226,7 @@ class Country_model extends CI_Model {
      public function GetCountryDatacheck($name=null,$value=null,$match)
     {
     
-        //  $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+          $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('deleted', 'N');
         $this->db->where('status', 'Y');
         $this->db->where("country",$name);
@@ -172,7 +240,7 @@ class Country_model extends CI_Model {
      public function GetCountryDatacheck_city($name=null)
     {
     
-       // $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('deleted', 'N');
         $this->db->where('status', 'Y');      
         $this->db->where("city!=''");
@@ -189,12 +257,14 @@ class Country_model extends CI_Model {
      }
       public function AddcityBatch($data=array())
      {
-      $this->db->insert_batch('country',$data);
-     // echo $this->db->last_query(); die;
+     return $this->db->insert_batch('country',$data);
+    //echo $this->db->last_query(); die;
      }
+    
+
       public function updatecodeData($data=array(),$data_w=array())
      {
-      //$this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+      $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
       $this->db->update('country',$data,$data_w);
      // echo $this->db->last_query(); die;
      }
@@ -213,17 +283,20 @@ class Country_model extends CI_Model {
     }
     
     public function GetUpdateDeliveryCOmapny($data=array()) {
-        // $this->db->where('super_id', $this->session->userdata('user_details')['super_id']); 
+         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']); 
        return $this->db->update_batch('country',$data,'id');
        //echo $this->db->last_query(); die;
     }
     
+    
+    
+    
     public function GetCourierCItyNew($city_id=null,$company=null) {
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']); 
-        $this->db->select('`id`, `cc_name`, `city_id`, `city_name`');
-        $this->db->from('courier_city');
-       $this->db->where('city_id', $city_id); 
-       $this->db->where('cc_name', $company); 
+        $this->db->select('id,city');
+        $this->db->from('country');
+       $this->db->where('id', $city_id); 
+     //  $this->db->where('cc_name', $company); 
        $query = $this->db->get();
      //  echo $this->db->last_query()."<br>"; 
          return $query->row_array();
@@ -249,15 +322,16 @@ class Country_model extends CI_Model {
          return $query->result_array();
     }
     
+    
     public function GetDataUpdateCIty_new($data=array())
     {
          $this->db->where('super_id', $this->session->userdata('user_details')['super_id']); 
-       return $this->db->update_batch('courier_city',$data,'id');
+       return $this->db->update_batch('country',$data,'id');
     }
     
     public function InsertCityData_new($data=array())
     {
-       return $this->db->insert_batch('courier_city',$data);
+       return $this->db->insert_batch('country',$data);
     }
     
     

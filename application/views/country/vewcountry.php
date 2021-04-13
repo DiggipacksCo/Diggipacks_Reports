@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>All Users</title>
+        <title><?=lang('lang_All_Users');?></title>
         <?php $this->load->view('include/file'); ?>
     </head>
 
@@ -37,15 +37,15 @@
                         <!-- Basic responsive table -->
                         <div class="panel panel-flat" > 
                             <!--style="padding-bottom:220px;background-color: lightgray;"-->
-                            <div class="panel-heading"> 
+                            <div class="panel-heading" dir="ltr"> 
                                 <!-- <h5 class="panel-title">Basic responsive table</h5> -->
-                                <h1><strong>Country List</strong> 
+                                <h1><strong><?=lang('lang_country_list');?></strong> 
                                     <?php  if(empty($ListArr))
                                     {
                                         ?>
-                                    <a class="btn btn-primary mb-10 pull-right" href="<?= base_url('Country/CountraddForm'); ?>" style="margin-left: 10px;">Add Country</a> 
+                                    <a class="btn btn-primary mb-10 pull-right" href="<?= base_url('Country/CountraddForm'); ?>" style="margin-left: 10px;"><?=lang('lang_add_country');?></a> 
                                             
-                                    <?php } ?><a class="btn btn-primary mb-10 pull-right" href="<?= base_url('Country/Hubaddform'); ?>" style="margin-left: 10px;">Add Hub</a> <a href="<?= base_url('Country/CityAddForm'); ?>" class="btn btn-primary mb-10 pull-right" >Add City</a></h1>
+                                    <?php } ?><a class="btn btn-primary mb-10 pull-right" href="<?= base_url('Country/Hubaddform'); ?>" style="margin-left: 10px;"><?=lang('lang_add_hub');?></a> <a href="<?= base_url('Country/CityAddForm'); ?>" class="btn btn-primary mb-10 pull-right" ><?=lang('lang_add_city');?></a></h1>
 
                             </div>
                             <div class="panel-body" > 
@@ -58,8 +58,8 @@
                                     <table class="table table-striped table-hover table-bordered " id="example">
                                         <thead>
                                             <tr>
-                                                <th>Sr.No.</th>
-                                                <th>Country</th>
+                                            <th><?=lang('lang_Sr_No');?>.</th>
+                                                <th><?=lang('lang_Country');?></th>
 
                                                 <th class="text-center" ><i class="icon-database-edit2"></i></th>
                                             </tr>
@@ -81,7 +81,7 @@
 
 
 
-                                                                        <li><a href="<?= site_url('Country/CountraddForm/' . $rows['id']); ?>"><i class="icon-pencil7"></i> Edit </a></li>
+                                                                        <li><a href="<?= site_url('Country/CountraddForm/' . $rows['id']); ?>"><i class="icon-pencil7"></i> <?=lang('lang_Edit');?> </a></li>
 
 
                                                                     </ul>

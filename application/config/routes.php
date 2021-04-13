@@ -136,6 +136,7 @@ $route['show_access_template'] = 'Users/show_access_template';
 //==================================================//
 
 $route['awbPrint1/(:any)'] = 'PickUp/GetlabelPrint4_6/$1';
+$route['import_from_master'] = 'Country/import_from_master';
 
 $route['returnLM'] = 'PickUp/returnLM';
 $route['cancelOrder'] = 'PickUp/CancelOrderView';

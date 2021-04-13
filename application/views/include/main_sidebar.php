@@ -536,6 +536,9 @@
                                     <?php if (menuIdExitsInPrivilageArray(91) == 'Y') { ?>
                                     <li><a href="<?= base_url('Country/Delivery_city_list'); ?>"><?= lang('lang_Delivery_Company_List'); ?></a></li>
                         <?php } ?>
+                        <?php if (menuIdExitsInPrivilageArray(91) == 'Y') { ?>
+                                    <li><a href="<?= base_url('import_from_master'); ?>">Add from Master</a></li>
+                        <?php } ?>
 
 
                             </ul>

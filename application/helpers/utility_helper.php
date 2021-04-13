@@ -12,6 +12,40 @@ if (!function_exists('asset_url()')) {
 
 }
 
+
+
+
+
+
+
+
+
+if (!function_exists('todcount')) {
+
+    function todcount($char=null,$i=null) {
+
+        $i=$i+1;
+        $ci = & get_instance();
+        $ci->load->database();
+        $SQL_esnad = "select tod_no from tods_tbl where  super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and tod_no like '".$char.$i."' order by id desc limit 1";
+        $query = $ci->db->query($SQL_esnad);
+        if( $query->num_rows()>0)
+        {
+           return todcount($char,$i);
+        }
+        else
+        {
+
+            return $i; 
+        }
+       
+
+       
+       
+    }
+
+}  
+
 function remove_phone_format($number) {
 
     $number = ltrim($number, '966 ');

@@ -141,14 +141,25 @@ class Shelve extends MY_Controller {
             $numbers = $this->input->post('stockCount');
             $charname = $this->input->post('charname');
             $insertData = array();
+            $cnt=0;
             for ($i = 0; $i < $numbers; $i++) {
 
+              
+                
+                    
+                    $cnt=todcount($charname,$i);
+                    
+                   
+
+                    $insertData[$i]['tod_no'] = strtoupper($charname.$cnt);
+            
                 //$insertData[$i]['stock_location2'] = $charname."-".$this->generateRandomString(8);
-                $insertData[$i]['tod_no'] = strtoupper($charname. abs(crc32(uniqid())));
+                
                 $insertData[$i]['super_id'] = $this->session->userdata('user_details')['super_id'];
+               
             }
-            //echo '<pre>';
-            //print_r($insertData); die;
+            // echo '<pre>';
+            // print_r($insertData); die;
             $this->Shelve_model->inserttodsLocation($insertData);
             redirect(base_url('showtods'));
         }

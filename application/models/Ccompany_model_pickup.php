@@ -86,7 +86,7 @@ class Ccompany_model_pickup extends CI_Model {
         $ci = & get_instance();
         $ci->load->database();
 
-        $sql = "SELECT $field FROM country where id='$id' ";
+        $sql = "SELECT $field FROM country where id='$id' and super_id='" . $this->session->userdata('user_details')['super_id'] . "'";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result[$field];
