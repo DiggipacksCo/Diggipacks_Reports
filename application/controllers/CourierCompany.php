@@ -238,7 +238,7 @@ class CourierCompany extends MY_Controller  {
                     $end_awb_sequence = $counrierArr_table['end_awb_sequence_t'];
                     $company = $counrierArr_table['company'];
                     $api_url = $counrierArr_table['api_url_t'];
-                    $create_order_url = $counrierArr_table['create_order_url']; 
+                    $create_order_url = $counrierArr_table['create_order_url'];
                     
                     $auth_token = $counrierArr_table['auth_token_t'];
                 } else {
@@ -344,7 +344,7 @@ class CourierCompany extends MY_Controller  {
 								$generated_pdf = file_get_contents($awb_label);
 								$encoded = base64_decode($generated_pdf);
 								header('Content-Type: application/pdf');
-                                file_put_contents("/var/www/html/diggipack_new/demofulfillment/assets/all_labels/$slipNo.pdf", $generated_pdf);
+                                file_put_contents("/var/www/html/fastcoo-tech/demofulfillment/assets/all_labels/$slipNo.pdf", $generated_pdf);
 
 								 $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
 								
@@ -376,7 +376,7 @@ class CourierCompany extends MY_Controller  {
                                 $generated_pdf = file_get_contents($safe_Label);
                                 $encoded = base64_decode($generated_pdf);
                                 header('Content-Type: application/pdf');
-                                file_put_contents("/var/www/html/diggipack_new/demofulfillment/assets/all_labels/$slipNo.pdf", $generated_pdf);
+                                file_put_contents("/var/www/html/fastcoo-tech/demofulfillment/assets/all_labels/$slipNo.pdf", $generated_pdf);
                               $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf'; 
 
 							//****************************safe arrival label print cURL****************************
@@ -468,7 +468,7 @@ class CourierCompany extends MY_Controller  {
 									$generated_pdf = file_get_contents($esnad_awb_link);
 							$encoded = base64_decode($generated_pdf);
 							//header('Content-Type: application/pdf');
-							file_put_contents("/var/www/html/diggipack_new/demofulfillment/assets/all_labels/$slipNo.pdf", $generated_pdf);
+							file_put_contents("/var/www/html/fastcoo-tech/fulfillment/assets/all_labels/$slipNo.pdf", $generated_pdf);
 								$Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $esnad_awb_link,$c_id,1);
 							
 								array_push($succssArray, $slipNo);
@@ -770,7 +770,7 @@ class CourierCompany extends MY_Controller  {
                             } 
                             else {
                                  $returnArr['responseError'][] = $slipNo . ':' . $response['message'];
-                               //  $returnArr['responseError'][] = $slipNo . ':' . $response['invalid_parameters'][0];
+                                //$returnArr['responseError'][] = $slipNo . ':' . $response['invalid_parameters'][0];
                             }
                     } 
                     elseif ($company == 'Clex'){
@@ -950,9 +950,15 @@ class CourierCompany extends MY_Controller  {
                         if($response['Items'][0]['Message']=='Success'){
                             $client_awb = $response['Items'][0]['Barcode'];
                             
-                            $fastcoolabel = '';
-                            
+                          
+                            $fastcoolabel='SP';
                             $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                            
+
+                            header('Content-Type: application/pdf');
+                            $lableSp=   file_get_contents(base_url().'awbPrint1/'.$slipNo );
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $lableSp);
+                         
                             array_push($succssArray, $slipNo);
                         }else{
                             $errre_response = $response['Items'][0]['Message'];

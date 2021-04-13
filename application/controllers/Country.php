@@ -74,6 +74,80 @@ class Country extends MY_Controller {
          $data['ListArr'] = $this->Country_model->ViewcitylistQry($name);
         $this->load->view('country/viewcitylist.php',$data);
     }
+
+    public function addmaster() {
+        $editids = $this->input->post('master_id');
+
+        $masterCity = $this->Country_model->final_master_by_id($editids);
+        if(!empty($masterCity))
+        {
+           if( $this->Country_model->AddcityBatch($masterCity)) 
+           {
+            $res=1;
+           }  
+        
+           else {
+            
+         }
+        }
+        else {
+            
+        }
+       
+        if ($res == 1) {
+            $this->session->set_flashdata('succmsg', 'has been added successfully');
+            redirect(base_url() . 'Country/ViewCountrylist');
+        } else if ($res == 2) {
+            $this->session->set_flashdata('succmsg', 'has been updated successfully');
+            redirect(base_url() . 'Country/ViewCountrylist');
+        } else {
+            $this->session->set_flashdata('errormess', 'try again');
+             redirect(base_url() . 'Country/ViewCountrylist');
+        }
+    }
+    public function import_from_master($id=null) {
+
+        $masterCity = $this->Country_model->country_final_master();
+    
+         $precity=$this->Country_model->previousCity();
+        $keyArray=array();
+      
+         // print_r( $masterCity); exit;
+         foreach($precity as $key=>$val)
+         {
+           // array_map($masterCity);
+            $key = array_search($val['city'], array_column($masterCity, 'city'));
+           
+           // echo '<br>'. $key.'//' .  $val['city']; 
+            if(!empty($key) || $key==0 )
+            {
+           
+              if(!in_array($key,$keyArray))
+              {
+                array_push($keyArray,$key);
+               // $data['pre'][]=$masterCity[$key];
+              }
+              $key=null; 
+            }
+       
+         }
+//print_r($keyArray); 
+         foreach($keyArray as $k1)
+         {
+             //echo '<pre>xx'.$k1 .print_r($masterCity[$k1]);
+           unset($masterCity[$k1]);   
+         }
+        // print_r($masterCity);
+    
+     array_values($masterCity);
+         $data['ListArr']=$masterCity;
+        
+       
+
+      
+       $this->load->view('country/import_from_master.php',$data);
+   }
+    
     
       public function Addcountry() {
          // echo "ssssss"; die;

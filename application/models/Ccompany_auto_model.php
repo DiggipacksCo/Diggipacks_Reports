@@ -47,7 +47,7 @@ class Ccompany_auto_model extends CI_Model {
 	public function getdestinationfieldshow($id=null,$field=null,$super_id){
 	
                 
-		 $sql ="SELECT $field FROM country where id='$id'";
+		 $sql ="SELECT $field FROM country where id='$id' and super_id='".$super_id."'";
 		$query = $this->db->query($sql);
 		$result=$query->row_array();
 		return $result[$field];
@@ -80,6 +80,10 @@ class Ccompany_auto_model extends CI_Model {
 		$sender_city = $this->getdestinationfieldshow($ShipArr['origin'], 'aramex_city',$super_id);
 		$reciever_city = $this->getdestinationfieldshow($ShipArr['destination'], 'aramex_city',$super_id);
 		$date = (int) microtime(true) * 1000;
+        if($ShipArr['weight']==0)
+        {  $weight= 1;
+        }
+        else { $weight = $ShipArr['weight'] ; }
 		$params = array(
 			'ClientInfo' =>array(
 				'UserName' => $counrierArr['user_name'],
@@ -214,15 +218,15 @@ class Ccompany_auto_model extends CI_Model {
 						'Dimensions' => NULL,
 						'ActualWeight' =>array(
 							'Unit' => 'KG',
-							//'Value' => $weight,
-							'Value' => '1',
+							'Value' => $weight,
+							//'Value' => '1',
 						),
 						'ChargeableWeight' => NULL,
 						'DescriptionOfGoods' => $complete_sku,
 						'GoodsOriginCountry' => 'SA',
 						'NumberOfPieces' => 1,
 						'ProductGroup' => 'DOM',
-						'ProductType' => 'ONP',
+						'ProductType' => 'CDS',
 						'PaymentType' => $pay_mode,
 						'PaymentOptions' => "",
 						'CustomsValueAmount' => NULL,
@@ -677,7 +681,7 @@ class Ccompany_auto_model extends CI_Model {
                          $response_array = json_decode($response, true);
 					        $logresponse =   json_encode($response_array);  
 					        $successres = $response_array['error'];
-					        echo "<pre>"; print_r($response_array)   ;    //die;
+					       // echo "<pre>"; print_r($response_array)   ;    //die;
 					        if($successres == 'false') 
 					        {
 					            $successstatus  = "Success";
@@ -1716,34 +1720,44 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
         
     }
     
-    public function ShipadeliveryArray(array $ShipArr, array $counrierArr, $auth_token = null, $c_id = null, $super_id = null) {
+    public function ShipadeliveryArray(array $ShipArr, array $counrierArr, $auth_token = null, $c_id = null) {
         
         ini_set('default_charset', 'UTF-8');
         $sender_city = getdestinationfieldshow($ShipArr['origin'], 'shipsa_city');
         $receiver_city = getdestinationfieldshow($ShipArr['destination'], 'shipsa_city');
+
+       // echo  "<br/>receiver_city = ".$receiver_city;
+               
         
         if ($ShipArr['mode'] == 'COD') {
             $total_cod_amt = $ShipArr['total_cod_amt'];
             $paymentMethod = 'CashOnDelivery';
-        } elseif ($ShipArr['mode'] == "CC") {
+        }elseif ($ShipArr['mode'] == "CC") {
             $total_cod_amt = 0;
             $paymentMethod = 'Prepaid';
         }
-        $description = $complete_sku;
+        $description =  $ShipArr['status_describtion'];
+
         if($description==''){
             $description = 'GOODS';
         }
         
+        $number  =  $ShipArr['reciever_phone']; 
+        $number = ltrim($number, '966 ');
+        $number = ltrim($number, '0');
+        $number = '0' . $number;
+        $number = str_replace(' ', '', $number);
+        
         $Sender = array(
             'name' => $ShipArr['sender_name'],
-            'address' => utf8_encode($ShipArr['sender_address']),
+            'address' => $ShipArr['sender_address'],
             'phone' => $ShipArr['sender_phone'],
             'email' => $ShipArr['sender_email'],
         );
         $Recipient = array(
             'name' => $ShipArr['reciever_name'],
-            'address' => utf8_encode($ShipArr['reciever_address']),
-            'phone' => $ShipArr['reciever_phone'],
+            'address' => $ShipArr['reciever_address'],
+            'phone' => $number,
             'email' => $ShipArr['reciever_email'],
             'city' => $receiver_city,
         );
@@ -1759,65 +1773,136 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
         );
         
         $paramArray = json_encode($param);
-        $curl = curl_init();
-        
-        curl_setopt_array($curl, array(
-          CURLOPT_URL => $counrierArr['api_url'].$counrierArr['auth_token'],
-          CURLOPT_RETURNTRANSFER => true,
-          CURLOPT_ENCODING => '',
-          CURLOPT_MAXREDIRS => 10,
-          CURLOPT_TIMEOUT => 0,
-          CURLOPT_FOLLOWLOCATION => true,
-          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-          CURLOPT_CUSTOMREQUEST => 'POST',
-          CURLOPT_POSTFIELDS =>$paramArray,
-          CURLOPT_HTTPHEADER => array(
-            'Content-Type: application/json',
-            'x-api-key: 4iG5n5JBJR9hGDSXAYUWWg5ZZwgOhfQ8',
-            'Accept: application/json'
-          ),
-        ));
 
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-         $logresponse =   json_encode($response);  
-         $response_array = json_decode($response, true);
-        $successres = $response_array[0]['code'];
-        //echo "<pre>"; print_r($logresponse)   ;    die;
-        if($successres==0) 
+       //echo "<br><pre> city = "; print_r($param); 
+        //die; 
+        if (empty($param[0]['recipient']['city']))
         {
-            $successstatus  = "Success";
-        }else {
-            $successstatus  = "Fail";
+            //echo "<br><pre> Response if = "; print_r($response);  die; 
+            $response = $this->shipmentLog($c_id,'receiver city empty ','Fail', $ShipArr['slip_no']);
+            return $response;
+        }
+        else {
+             //echo "<br><pre> Response else = "; die; 
+              $curl = curl_init();        
+                  curl_setopt_array($curl, array(
+                  CURLOPT_URL => $counrierArr['api_url']."?apikey=".$counrierArr['auth_token'],
+                  CURLOPT_RETURNTRANSFER => true,
+                  CURLOPT_ENCODING => '',
+                  CURLOPT_MAXREDIRS => 10,
+                  CURLOPT_TIMEOUT => 0,
+                  CURLOPT_FOLLOWLOCATION => true,
+                  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                  CURLOPT_CUSTOMREQUEST => 'POST',
+                  CURLOPT_POSTFIELDS =>$paramArray,
+                  CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/json',
+                    'x-api-key:'.$counrierArr['auth_token'],
+                    'Accept: application/json'
+                  ),
+                ));
+
+                $response = curl_exec($curl);
+                 curl_close($curl);
+                 $logresponse =   json_encode($response);  
+                 // echo "<pre>"; print_r($response);   // die;
+                 $response_array = json_decode($response, true);
+                 $successres = $response_array[0]['code'];
+                    if($successres==0) 
+                        {
+                           $successstatus  = "Success";
+                        }
+                    else 
+                        {
+                            $successstatus  = "Fail";
+                        }
+
+                $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
+                return $response;
         }
 
-           $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$super_id);
-        return $response;
-    }
-    
-    public function ShipaDelLabelcURL(array $counrierArr, $client_awb = null) {
-        $cURL12 = "https://sandbox-api.shipadelivery.com/orders?apikey=";
-        $cURL1 = str_replace("?apikey=", "/$client_awb/pdf?apikey=", $cURL12);
+
         
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-          CURLOPT_URL => $cURL1.$counrierArr['auth_token'],
-          CURLOPT_RETURNTRANSFER => true,
-          CURLOPT_ENCODING => '',
-          CURLOPT_MAXREDIRS => 10,
-          CURLOPT_TIMEOUT => 0,
-          CURLOPT_FOLLOWLOCATION => true,
-          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-          CURLOPT_CUSTOMREQUEST => 'GET',
-        ));
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-        return $response;
+      
     }
+   
+    public function ShipaDelupdatecURL(array $counrierArr,array $ShipArr,$client_awb = null) {
+                    
+
+        if ($ShipArr['mode'] == 'COD') {
+           $total_cod_amt = $ShipArr['total_cod_amt'];
+           $paymentMethod = 'CashOnDelivery';
+       }
+       elseif ($ShipArr['mode'] == "CC") {
+           $total_cod_amt = 0;
+           $paymentMethod = 'Prepaid';
+       }
+      // $client_awb = "SD001351088";
+       $valpiecesarray =  array (
+             'ready' => true,
+             'weight' => (float)$ShipArr['weight'],
+             'quantity' => (int)$ShipArr['pieces']                     
+           );
+
+      // echo "<br/> <pre>"; print_r($valpiecesarray);  exit;
+
+       $valpieces =  json_encode($valpiecesarray);
+     // $client_awb = "SD001351088"; 
+           
+           $curl = curl_init();
+         $client_awb = trim($client_awb); 
+
+           curl_setopt_array($curl, array(
+             CURLOPT_URL => $counrierArr['api_url'].'/'.$client_awb."?apikey=".$counrierArr['auth_token'],
+             CURLOPT_RETURNTRANSFER => true,
+             CURLOPT_ENCODING => '',
+             CURLOPT_MAXREDIRS => 10,
+             CURLOPT_TIMEOUT => 0,
+             CURLOPT_FOLLOWLOCATION => true,
+             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+             CURLOPT_CUSTOMREQUEST => 'PATCH',
+             CURLOPT_POSTFIELDS => $valpieces,
+             CURLOPT_HTTPHEADER => array(
+               'Accept: application/json',
+               'Content-Type: application/json',
+               'x-api-key:'. $counrierArr['auth_token']
+             ),
+           ));
+
+           $responsepieces = curl_exec($curl);
+               curl_close($curl);
+          //  $responsepie = json_encode($responsepieces);
+          // echo "responsepieces = "; $responsepieces;  die; 
+          return  $responsepieces;                         
+         
+
+
+}
+public function ShipaDelLabelcURL(array $counrierArr, $client_awb = null) 
+{
+
+$cURL12 = $counrierArr['api_url'].'/'.$client_awb."/pdf?apikey=".$counrierArr['auth_token']."&template=sticker-6x4&copies=1";
+
+// https://sandbox-api.shipadelivery.com/orders/{orderId}/pdf
+// $cURL1 = str_replace("?apikey=", "/$client_awb/pdf?apikey=", $cURL12);        
+$curl = curl_init();
+
+curl_setopt_array($curl, array(
+CURLOPT_URL => $cURL12,
+CURLOPT_RETURNTRANSFER => true,
+CURLOPT_ENCODING => '',
+CURLOPT_MAXREDIRS => 10,
+CURLOPT_TIMEOUT => 0,
+CURLOPT_FOLLOWLOCATION => true,
+CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+CURLOPT_CUSTOMREQUEST => 'GET',
+));
+
+$response = curl_exec($curl);
+
+curl_close($curl);
+return $response;
+}
     
     public function SPArray(array $ShipArr, array $counrierArr, $complete_sku = null, $c_id = null, $super_id = null){
         
