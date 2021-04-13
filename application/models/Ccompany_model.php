@@ -2141,8 +2141,8 @@ class Ccompany_model extends CI_Model {
 
     //Naqel Start
 
- public function NaqelArray(array $ShipArr, array $counrierArr, $complete_sku = null, $box_pieces1 = null, $Auth_token = null, $c_id = null) 
- {
+public function NaqelArray(array $ShipArr, array $counrierArr, $complete_sku = null, $box_pieces1 = null, $Auth_token = null, $c_id = null) 
+{
         $sender_city = getdestinationfieldshow($ShipArr['origin'], 'naqel_city_code');
         $receiver_city = getdestinationfieldshow($ShipArr['destination'], 'naqel_city_code');
             if ($ShipArr['mode'] == 'CC') {
@@ -2274,7 +2274,7 @@ class Ccompany_model extends CI_Model {
                 }
             
 
-    }
+}
     public function ShipsyArray(array $ShipArr, array $counrierArr, $complete_sku = null, $box_pieces1 = null, $c_id = null) {
         //print_r($ShipArr);exit;
         $sender_city = getdestinationfieldshow($ShipArr['origin'], 'shipsy_city');

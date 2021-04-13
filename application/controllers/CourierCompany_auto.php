@@ -768,6 +768,76 @@ class CourierCompany_auto extends CI_Controller {
                                     $returnArr['responseError'][] = $slipNo . ':' . $errre_response;
                                 }
                             }
+                            elseif ($company_type== 'F')
+                    { // for all fastcoo clients treat as a CC 
+                      
+                        if ($company=='Ejack' ) 
+                        {
+                                $response = $this->Ccompany_auto_model->Ejack($ShipArr, $counrierArr, $complete_sku,$c_id,$super_id);
+                                $response = json_decode($response, true);
+                                if($response['error']=='')
+                                {
+                                    $generated_pdf = file_get_contents($response['awb_print_url']);                                
+                                    file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                                    
+                                    $client_awb = $response['awb'];
+        
+                                    $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
+                                    $Update_data = $this->Ccompany_auto_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                    array_push($succssArray, $slipNo);
+                                } else {
+                                    $returnArr['responseError'][] = $slipNo . ':' . $response['refrence_id'];
+                                }
+                            
+                        }
+
+                        else if ($company=='Emdad' )
+                        {
+                            $response = $this->Ccompany_auto_model->EmdadArray($ShipArr, $counrierArr, $complete_sku,$c_id, $super_id);
+                            $response = json_decode($response, true);
+                            if($response['error']=='')
+                            {
+                                $generated_pdf = file_get_contents($response['awb_print_url']);                                
+                                file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                                
+                                $client_awb = $response['awb'];
+
+                                $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
+                                $Update_data = $this->Ccompany_auto_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                array_push($succssArray, $slipNo);
+                            } else {
+                                $returnArr['responseError'][] = $slipNo . ':' . $response['refrence_id'];
+                            }
+                        
+                        }
+
+                        else
+                        {
+                            $response = $this->Ccompany_auto_model->fastcooArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$super_id);
+                            $responseArray = json_decode($response, true);     
+                            if($responseArray['status']==200) 
+                            {  
+                                
+                                $client_awb = $responseArray['awb_no'];                                
+                                $mediaData = $responseArray['label_print'];
+                                //****************************fastcoo label print cURL****************************
+                                file_put_contents("assets/all_labels/$slipNo.pdf", file_get_contents($mediaData));
+                                $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+                                //****************************fastcoo label print cURL****************************
+                                $CURRENT_DATE = date("Y-m-d H:i:s");
+                                $CURRENT_TIME = date("H:i:s");
+
+                                $Update_data = $this->Ccompany_auto_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                array_push($succssArray, $slipNo);
+                           
+                            }                               
+                            else
+                            {
+                                array_push($alreadyExist, $slipNo); 
+                                $returnArr['responseError'][] = $slipNo . ':' . $responseArray['msg'];  
+                            } 
+                        }                                   
+                    } //end company type F code
                         } else {
                             array_push($invalid_slipNO, $slipNo);
                         }
