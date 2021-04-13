@@ -226,6 +226,7 @@ class CourierCompany extends MY_Controller  {
 			    $box_pieces1= $postData['box_pieces'];
                 $counrierArr_table=$this->Ccompany_model->GetdeliveryCompanyUpdateQry($postData['cc_id']);       
                 $c_id=$counrierArr_table['id'];
+
               if ($counrierArr_table['type'] == 'test') {
                     $user_name = $counrierArr_table['user_name_t'];
                     $password = $counrierArr_table['password_t'];
@@ -236,8 +237,7 @@ class CourierCompany extends MY_Controller  {
                     $company = $counrierArr_table['company'];
                     $api_url = $counrierArr_table['api_url_t'];
                     $company_type  = $counrierArr_table['company_type'];
-                    $create_order_url = $counrierArr_table['create_order_url'];
-                    
+                    $create_order_url = $counrierArr_table['create_order_url'];                    
                     $auth_token = $counrierArr_table['auth_token_t'];
                 } else {
                     $user_name = $counrierArr_table['user_name'];
