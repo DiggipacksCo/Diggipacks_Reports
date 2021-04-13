@@ -1028,28 +1028,35 @@ class Ccompany_model extends CI_Model {
         $headers = array(
             "Content-type:application/json",
             "Access-token:$access_token");
-
-        $ch = curl_init($comp_api_url);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataJson);
-        $response = curl_exec($ch);
-        curl_close($ch);
-
-        $response_array = json_decode($response, true);
-        $logresponse =   json_encode($response_array);  
-        $successres = $response_array['message'];
-
-        if($successres == 'Succesfully added.') 
-        {
-            $successstatus  = "Success";
-        }else {
-            $successstatus  = "Fail";
+        
+        if(empty($receiver_city)){
+            $response = array('message' => 'Receiver city is empty ');
+            return $response; 
         }
+        else{
 
-        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
-        return $response_array;
+            $ch = curl_init($comp_api_url);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $dataJson);
+            $response = curl_exec($ch);
+            curl_close($ch);
+
+            $response_array = json_decode($response, true);
+            $logresponse =   json_encode($response_array);  
+            $successres = $response_array['message'];
+
+            if($successres == 'Succesfully added.') 
+            {
+                $successstatus  = "Success";
+            }else {
+                $successstatus  = "Fail";
+            }
+
+            $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
+            return $response_array;
+        }
     }
 
     public function AjeekArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1, $c_id) {
@@ -1808,28 +1815,35 @@ class Ccompany_model extends CI_Model {
         $live_url = $API_URL."/new?secret=$Secretkey";
         $headers = array("Content-type:application/json");
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $live_url);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $all_param_data);
-        $response = curl_exec($ch);
-        curl_close($ch);      
-
-        $response = json_decode($response, true);
-        $logresponse =   json_encode($response);  
-        $successres = $response['success']; 
-
-        if($successres == 'true') 
-        {
-            $successstatus  = "Success";
-        }else {
-            $successstatus  = "Fail";
+        if(empty($receiver_city)){
+            $response = array('error' => 'Receiver city is empty ');
+            return $response; 
         }
+        else{
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $live_url);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $all_param_data);
+            $response = curl_exec($ch);
+            curl_close($ch);
+        // echo  $response  ;    
 
-        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
-        return $response;
+            $response = json_decode($response, true); //die; 
+            $logresponse =   json_encode($response);  
+            $successres = $response['success']; 
+
+            if($successres == 'true') 
+            {
+                $successstatus  = "Success";
+            }else {
+                $successstatus  = "Fail";
+            }
+
+            $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
+            return $response;
+        }
     }
 
 
@@ -1902,27 +1916,42 @@ class Ccompany_model extends CI_Model {
         $headers = array(
             "Accept:application/json",
             "Authorization: $api_key");
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $API_URL);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $all_param_data);
-        $response = curl_exec($ch);
-        curl_close($ch);
-        $responseArray = json_decode($response, true);
-        $logresponse =   json_encode($response);  
-        $successres = $responseArray['errors'];
 
-        if(empty($successres)) 
+        if(empty($receiver_city))
         {
-            $successstatus  = "Success";
-        }else {
-            $successstatus  = "Fail";
+            $resp = array(
+                'errors' => array(
+                    'reference' => array(                       
+                             'Receiver city is empty'                       
+                    ),
+                ),
+            );
+            $response =   json_encode($resp); 
+            return $response; 
         }
+        else{
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $API_URL);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $all_param_data);
+            $response = curl_exec($ch);
+            curl_close($ch);
+            $responseArray = json_decode($response, true);
+            $logresponse =   json_encode($response);  
+            $successres = $responseArray['errors'];
 
-        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
-        return $response;
+            if(empty($successres)) 
+            {
+                $successstatus  = "Success";
+            }else {
+                $successstatus  = "Fail";
+            }
+
+            $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
+            return $response;
+        }
     }
 
     public function SMSAArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id) {
@@ -2205,7 +2234,11 @@ class Ccompany_model extends CI_Model {
                     "Content-type: text/xml",
                     "Content-length: ".strlen($xml_new),
                 );
-
+                if(empty($receiver_city)){
+                    $awb_array = array('Message' => 'Receiver city is empty ');
+                    return $awb_array; 
+                }
+                else{
                 $url = $API_URL;
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $url);
@@ -2237,10 +2270,8 @@ class Ccompany_model extends CI_Model {
                     }
 
                     $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
-                           
-
-                return $awb_array;
-            
+                     return $awb_array;
+                }
             
 
     }

@@ -647,9 +647,9 @@ class CourierCompany extends MY_Controller  {
                         }
                     }
                     elseif ($company == 'Saee'){
-                            $response = $this->Ccompany_model->SaeeArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1);
-                            $safe_response =  $response; 
-
+                             $response = $this->Ccompany_model->SaeeArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1);
+                             $safe_response =  $response; 
+                            // echo "<pre>";  print_r($safe_response); 
                             if ($safe_response['success'] == 'true') 
                             {
                                       $client_awb = $safe_response['waybill'];
@@ -661,12 +661,16 @@ class CourierCompany extends MY_Controller  {
 
                                 //****************************Saee label print cURL****************************
                                  $CURRENT_DATE = date("Y-m-d H:i:s");
-                                    $CURRENT_TIME = date("H:i:s");
+                                 $CURRENT_TIME = date("H:i:s");
 
                                 $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
-                               array_push($succssArray, $slipNo);
+                                array_push($succssArray, $slipNo);
                               
-                            }                                       
+                            }  
+                            else {
+                                $returnArr['responseError'][] = $slipNo . ':' . $response['error'];
+                               //$returnArr['responseError'][] = $slipNo . ':' . $response['invalid_parameters'][0];
+                           }                                     
                     } 
                     elseif ($company == 'Smsa'){
                        
@@ -813,7 +817,7 @@ class CourierCompany extends MY_Controller  {
                     elseif ($company == 'Aymakan'){
                             $response = $this->Ccompany_model->AymakanArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1);
                             $responseArray = json_decode($response, true);
-                       
+
                             if (empty($responseArray['errors'])) 
                             {
                                      $client_awb = $responseArray['data']['shipping']['tracking_number'];
