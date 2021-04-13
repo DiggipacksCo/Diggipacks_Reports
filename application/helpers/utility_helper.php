@@ -12,14 +12,6 @@ if (!function_exists('asset_url()')) {
 
 }
 
-
-
-
-
-
-
-
-
 if (!function_exists('todcount')) {
 
     function todcount($char=null,$i=null) {
