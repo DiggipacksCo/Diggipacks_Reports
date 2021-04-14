@@ -3066,7 +3066,19 @@ array_push($itemArray,$peiceArray);
                 return $query->result();
             }
         else {
-            $sellerCC = $this->getsellerCC($id); 
+           
+           if($this->getsellerCC($id))
+           {
+                $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+                $this->db->where('cust_id', $id);
+                $this->db->order_by('id', 'desc');	
+                $this->db->order_by('deleted', 'N');		  
+                $query = $this->db->get('courier_company_seller');
+                //echo $this->db->last_query(); die;
+                if($query->num_rows()>0){
+                        return $query->result();
+                    }
+           }
         }
 
     }	
@@ -3075,7 +3087,7 @@ array_push($itemArray,$peiceArray);
     {
         $ccdata = $this->all();
         foreach($ccdata as $couSel){
-            $sellearray = array(
+            $sellearray[] = array(
                 'image' =>$couSel ->image,
                 'user_name' =>$couSel ->user_name,
                 'company_url' => $couSel ->company_url,
@@ -3107,13 +3119,11 @@ array_push($itemArray,$peiceArray);
                 'delivery_days' => $couSel ->delivery_days,
                 'cust_id' => $cust_id,
 
-            );
-           // echo "<pre> ";   print_r($sellearray);
-          
+            );     
         }
 
-       $output =  $this->$db->insert_batch('courier_company_seller', $sellearray);
-       return $output; 
+       $output =   $this->db->insert_batch('courier_company_seller', $sellearray);
+          return $output; 
        // die; 
     }
 
