@@ -196,6 +196,204 @@ var app = angular.module('CourierAppPage', [])
 
         })
 
+        .controller('CourierComapnySeller', function ($scope, $http, $window, $location) {
+            $scope.baseUrl = new $window.URL($location.absUrl()).origin;
+            $scope.CompanyListArr = {};
+            $scope.EditDataArr = {};
+            $scope.UpdateStatusArr = {};
+            $scope.UpdateliveArr = {};
+            $scope.filterData = {};
+            $scope.companyArr = {};
+            $scope.loadershow = false;
+
+            $scope.DeliveryDropArr = {};
+            $scope.userselected = {};
+            $scope.awbArray = [];
+            $scope.scan = {};
+            $scope.newarray = [];
+
+            $scope.GetAllCompanyList = function(id)
+            {
+                // alert("ssssss");
+                $http({
+                    url: URLBASE + "CourierCompany/GetshowcompanySeller",
+                    method: "POST",
+                    data: { id : id },
+
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+
+                }).then(function (response) {
+                    $scope.CompanyListArr = response.data;
+
+
+                });
+
+
+            };
+
+            $scope.GetshowEditModelPOp = function (data)
+            {
+                $scope.EditDataArr = data;
+                $("#Showeditpopid").modal({backdrop: 'static', keyboard: false});
+            };
+            $scope.GetCompanyChnagesSave = function ()
+            {
+
+                $http({
+                    url: URLBASE + "CourierCompany/GetCompanyChnagesSave",
+                    method: "POST",
+                    data: $scope.EditDataArr,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+
+                }).then(function (response) {
+                    alert("Successfully Updated!");
+                    $('#Showeditpopid').modal('hide');
+                    window.location.reload()
+
+
+
+                });
+
+
+            };
+
+            $scope.GetCompanylistDrop = function ()
+            {
+                $http({
+                    url: URLBASE + "CourierCompany/GetCompanylistDrop",
+                    method: "POST",
+                    data: $scope.UpdateStatusArr,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+
+                }).then(function (response) {
+
+                    $scope.DeliveryDropArr = response.data;
+
+                });
+
+
+
+
+            };
+            $scope.Getactivecompany = function (id, status)
+            {
+
+                $scope.UpdateStatusArr.id = id;
+                $scope.UpdateStatusArr.status = status;
+
+                $http({
+                    url: URLBASE + "CourierCompany/GetUpdateActiveStatus",
+                    method: "POST",
+                    data: $scope.UpdateStatusArr,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+
+                }).then(function (response) {
+                    alert("Successfully Updated!");
+                    $('#Showeditpopid').modal('hide');
+                    window.location.reload()
+
+
+
+                });
+
+
+            };
+
+            $scope.scan_awb = function () {
+
+                $scope.scan.awbArray = removeDumplicateValue($scope.userselected.slip_no.split("\n"));
+                // console.log($scope.scan.awbArray); 
+                $scope.userselected.slip_no = $scope.scan.awbArray.join('\n');
+                if ($scope.scan.awbArray.length > 20) {
+                    $scope.userselected = {};
+                }
+
+                //  $scope.validateOrder();
+            }
+
+            function removeDumplicateValue(myArray) {
+                var newArray = [];
+                angular.forEach(myArray, function (value, key) {
+                    var exists = false;
+                    angular.forEach(newArray, function (val2, key) {
+                        if (angular.equals(value, val2)) {
+                            exists = true
+                        }
+                        ;
+                    });
+                    if (exists == false && value != "") {
+                        newArray.push(value);
+                    }
+                });
+
+                return newArray;
+            }
+            $scope.invalidSslip_no = {};
+            $scope.Success_msg = {};
+            $scope.Error_msg = {};
+            $scope.BulkForwardCompany = function ()
+            {
+                disableScreen(1);
+                $scope.loadershow = true;
+                console.log($scope.userselected);
+                //   $scope.isVisible.loading = true;
+
+                $http({
+                    url: URLBASE + "CourierCompany/BulkForwardCompanyReady",
+                    method: "POST",
+                    data: $scope.userselected,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+
+                }).then(function (response) {
+                    disableScreen(0);
+                    $scope.loadershow = false;
+                    $scope.userselected = {};
+                    $scope.scan.awbArray = {};
+                    $scope.invalidSslip_no = response.data.invalid_slipNO;
+                    $scope.Success_msg = response.data.Success_msg;
+                    $scope.Error_msg = response.data.Error_msg;
+
+
+
+                }, function (data) {
+                    disableScreen(0);
+                    $scope.loadershow = false;
+                });
+
+
+            };
+
+
+            $scope.Getlivemodecompany = function (id, status)
+            {
+                //alert(id);
+
+
+                $scope.UpdateliveArr.id = id;
+                $scope.UpdateliveArr.status = status;
+
+                $http({
+                    url: URLBASE + "CourierCompany/GetUpdateLIveStatus",
+                    method: "POST",
+                    data: $scope.UpdateliveArr,
+
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                }).then(function (response) {
+                    alert("Successfully Updated!");
+                    $('#Showeditpopid').modal('hide');
+                    window.location.reload()
+
+                });
+
+
+
+
+            };
+
+
+
+        })
+
 
         .controller('forward_shipment_view', function ($scope, $http) {
 

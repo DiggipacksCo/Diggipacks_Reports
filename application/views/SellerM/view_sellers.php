@@ -107,6 +107,7 @@ echo '<div class="alert alert-success">'.$this->session->flashdata('msg').' <but
                               <li><a href="<?= site_url('Seller/edit_view/'.$seller->id);?>"><i class="icon-pencil7"></i> Edit </a></li>
                                <li><a href="<?= site_url('Seller/set_courier/'.$seller->id);?>"><i class="icon-pencil7"></i> Set Courier Companies</a></li>
                                <li><a href="<?= site_url('Seller/storage_charges/'.$seller->id);?>"><i class="icon-pencil7"></i> Set Storages Charges</a></li>
+                               <li><a href="<?= site_url('Seller/add_courier_company/'.$seller->id);?>"><i class="icon-pencil7"></i> Add Courier Company </a></li>
                           
                             </ul>
                           </li>

@@ -47,6 +47,14 @@ class CourierCompany extends MY_Controller  {
             echo json_encode($return);
             
         }
+ 
+    public function GetshowcompanySeller()
+    {
+        $postArr = json_decode(file_get_contents('php://input'), true);
+        $return = $this->Ccompany_model->all_ccSeller($postArr['id']);
+        echo json_encode($return);
+        
+    }
         
     public function forwardedfilter() {
         //print("heelo"); 
