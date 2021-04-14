@@ -3054,20 +3054,69 @@ array_push($itemArray,$peiceArray);
         }
     }
     
-	public function all_ccSeller($id= null ){
+	public function all_ccSeller($id= null )
+    {
 		$this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
-	//	 $this->db->where('access_fm', 'Y');
          $this->db->where('cust_id', $id);
-	  $this->db->order_by('id', 'desc');
-		   
-   $query = $this->db->get('courier_company_seller');
-   //echo $this->db->last_query(); die;
-   if($query->num_rows()>0){
-		   return $query->result();
-	   
-	   }
+	     $this->db->order_by('id', 'desc');	
+         $this->db->order_by('deleted', 'N');		  
+        $query = $this->db->get('courier_company_seller');
+        //echo $this->db->last_query(); die;
+        if($query->num_rows()>0){
+                return $query->result();
+            }
+        else {
+            $sellerCC = $this->getsellerCC($id); 
+        }
 
     }	
+
+    public function getsellerCC($cust_id = null)
+    {
+        $ccdata = $this->all();
+        foreach($ccdata as $couSel){
+            $sellearray = array(
+                'image' =>$couSel ->image,
+                'user_name' =>$couSel ->user_name,
+                'company_url' => $couSel ->company_url,
+                'password' =>$couSel ->password,
+                'courier_account_no' => $couSel ->courier_account_no,
+                'courier_pin_no' => $couSel ->courier_pin_no,
+                'start_awb_sequence' =>$couSel ->start_awb_sequence,
+                'end_awb_sequence' => $couSel ->end_awb_sequence,
+                'company' => $couSel ->company,
+                'status' => $couSel ->status,
+                'deleted' => $couSel ->deleted,
+                'entrydate' => $couSel ->entrydate,
+                'auth_token' => $couSel ->auth_token,
+                'api_url' => $couSel ->api_url,
+                'user_name_t' => $couSel ->user_name_t,
+                'password_t' =>$couSel ->password_t,
+                'courier_account_no_t' =>$couSel ->courier_account_no_t,
+                'courier_pin_no_t' => $couSel ->courier_pin_no_t,
+                'start_awb_sequence_t' => $couSel ->start_awb_sequence_t,
+                'end_awb_sequence_t' =>$couSel ->end_awb_sequence_t,
+                'auth_token_t' => $couSel ->auth_token_t,
+                'api_url_t' =>$couSel ->api_url_t,
+                'type' => $couSel ->type,
+                'super_id' => $couSel ->super_id,
+                'cc_id' => $couSel ->cc_id,
+                'company_type' => $couSel ->company_type,
+                'capacity' => $couSel ->capacity,
+                'n_column' => $couSel ->n_column,
+                'delivery_days' => $couSel ->delivery_days,
+                'cust_id' => $cust_id,
+
+            );
+           // echo "<pre> ";   print_r($sellearray);
+          
+        }
+
+       $output =  $this->$db->insert_batch('courier_company_seller', $sellearray);
+       return $output; 
+       // die; 
+    }
+
 
 }
 
