@@ -52,6 +52,12 @@ class Ccompany_model extends CI_Model {
         die;
     }
 
+    public function GetUpdateDeliveryCOmpanySeller($data = array(), $data_w) {
+        return $this->db->update('courier_company_seller', $data, $data_w);
+        echo $this->db->last_query();
+        die;
+    }
+
     public function GetCompanylistDropQry() {
 
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);

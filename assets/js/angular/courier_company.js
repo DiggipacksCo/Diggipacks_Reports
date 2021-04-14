@@ -240,7 +240,7 @@ var app = angular.module('CourierAppPage', [])
             {
 
                 $http({
-                    url: URLBASE + "CourierCompany/GetCompanyChnagesSave",
+                    url: URLBASE + "CourierCompany/GetCompanyChnagesSaveSeller",
                     method: "POST",
                     data: $scope.EditDataArr,
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
