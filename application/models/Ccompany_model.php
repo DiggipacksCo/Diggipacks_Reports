@@ -90,20 +90,41 @@ class Ccompany_model extends CI_Model {
 
    
 
-    public function GetdeliveryCompanyUpdateQry($cc_id = null) {
+    public function GetdeliveryCompanyUpdateQry($cc_id = null,$ShipArr_custid = null) {
 
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('cc_id', $cc_id);
         $this->db->select('*');
-        $this->db->from('courier_company');
+        $this->db->from('courier_company_seller');
         $this->db->where('deleted', 'N');
-        // $this->db->where('forwarded', 0);
-        //$this->db->where_not_in('code', 'RTC','DL','POD','C');
         $this->db->where('status', 'Y');
+        $this->db->where('cust_id', $ShipArr_custid);
         $this->db->order_by("company");
         $query = $this->db->get();
-        //echo  $this->db->last_query(); die; 
-        return $query->row_array();
+        //echo $this->db->last_query();//exit;
+
+        if ($query->num_rows()> 0)
+        {
+            //echo "num rows = ".$query->num_rows(); 
+            // echo $this->db->last_query();exit;
+            return $query->row_array();
+        }
+        else 
+        {
+            $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+            $this->db->where('cc_id', $cc_id);
+            $this->db->select('*');
+            $this->db->from('courier_company');
+            $this->db->where('deleted', 'N');
+            $this->db->where('status', 'Y');
+            $this->db->order_by("company");
+            $query = $this->db->get();
+           // echo $this->db->last_query();exit;
+            return $query->row_array();
+
+        }
+        
+
     }
 
 

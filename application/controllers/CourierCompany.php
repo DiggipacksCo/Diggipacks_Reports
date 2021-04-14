@@ -242,27 +242,35 @@ class CourierCompany extends MY_Controller  {
         }
         else
         {
-        $slipData = explode("\n", $postData['slip_no']);
-        $shipmentLoopArray = array_unique($slipData);
+            $slipData = explode("\n", $postData['slip_no']);
+            $shipmentLoopArray = array_unique($slipData);
         }
-        $invalid_slipNO=array();
-		$succssArray=array();
-		if($postData['comment']!=''){
-			$comment = $postData['comment'];
-		}else{
-			$comment = '';
-		}
+            $invalid_slipNO=array();
+            $succssArray=array();
+            if($postData['comment']!=''){
+                $comment = $postData['comment'];
+            }else{
+                $comment = '';
+            }
            
         if(!empty($shipmentLoopArray))
         { 
            
             if(!empty($postData))
             {
-                //print_r($postData);
+          
+                
                 $box_pieces=$postData['otherArr']['box_pieces'];
 			    $box_pieces1= $postData['box_pieces'];
-                $counrierArr_table=$this->Ccompany_model->GetdeliveryCompanyUpdateQry($postData['cc_id']);       
-                $c_id=$counrierArr_table['id'];
+               
+            foreach ($shipmentLoopArray as $key => $slipNo) 
+            {
+               
+                $ShipArr=$this->Ccompany_model->GetSlipNoDetailsQry(trim($slipNo));
+                
+                $ShipArr_custid =  $ShipArr['cust_id']; 
+                $counrierArr_table=$this->Ccompany_model->GetdeliveryCompanyUpdateQry($postData['cc_id'],$ShipArr_custid);   
+                $c_id = $counrierArr_table['id'];
 
               if ($counrierArr_table['type'] == 'test') {
                     $user_name = $counrierArr_table['user_name_t'];
@@ -301,10 +309,10 @@ class CourierCompany extends MY_Controller  {
                 $counrierArr['create_order_url'] = $create_order_url;
                 $counrierArr['company_type'] = $company_type ;
                 $counrierArr['auth_token'] = $auth_token;
+
+
 			 
-            foreach ($shipmentLoopArray as $key => $slipNo) 
-            {
-                $ShipArr=$this->Ccompany_model->GetSlipNoDetailsQry(trim($slipNo));
+              
                 if(!empty($ShipArr))
                 {
 					$sku_data = $this->Ccompany_model->Getskudetails_forward($slipNo);
