@@ -3054,7 +3054,20 @@ array_push($itemArray,$peiceArray);
         }
     }
     
+	public function all_ccSeller($id= null ){
+		$this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+	//	 $this->db->where('access_fm', 'Y');
+         $this->db->where('cust_id', $id);
+	  $this->db->order_by('id', 'desc');
+		   
+   $query = $this->db->get('courier_company_seller');
+   //echo $this->db->last_query(); die;
+   if($query->num_rows()>0){
+		   return $query->result();
+	   
+	   }
 
+    }	
 
 }
 

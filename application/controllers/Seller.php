@@ -19,7 +19,15 @@ class Seller extends MY_Controller {
         $this->load->model('Storage_model');
     }
 
-    
+    Public function add_courier_company($id = Null)
+    {
+        $data['id'] = $id;
+        
+        $this->load->view('SellerM/add_courier_company', $data);       
+
+       
+    }
+
     public function index() {
         $data['sellers'] = $this->Seller_model->all();
 

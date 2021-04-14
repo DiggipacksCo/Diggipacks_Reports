@@ -229,6 +229,8 @@ $route['add_storage']     = 'Storage/add_storage';
 $route['view_storage']    = 'Storage/storageview';
 $route['editview/(:any)'] = 'Storage/add_storage/$1';
 $route['editviewstorage/(:any)'] = 'Seller/add_storagecharges/$1';
+$route['add_courier_company/(:any)'] = 'Seller/add_courier_company/$1';
+
 $route['setStorageRate']  = 'Storage/setStorageRate';
 $route['CompanyDetails'] = 'Generalsetting/CompanyDetails';
 $route['defaultlist_view'] = 'Generalsetting/defaultlist_view';
