@@ -52,6 +52,12 @@ class Ccompany_model extends CI_Model {
         die;
     }
 
+    public function GetUpdateDeliveryCOmpanySeller($data = array(), $data_w) {
+        return $this->db->update('courier_company_seller', $data, $data_w);
+        echo $this->db->last_query();
+        die;
+    }
+
     public function GetCompanylistDropQry() {
 
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
@@ -84,20 +90,41 @@ class Ccompany_model extends CI_Model {
 
    
 
-    public function GetdeliveryCompanyUpdateQry($cc_id = null) {
+    public function GetdeliveryCompanyUpdateQry($cc_id = null,$ShipArr_custid = null) {
 
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('cc_id', $cc_id);
         $this->db->select('*');
-        $this->db->from('courier_company');
+        $this->db->from('courier_company_seller');
         $this->db->where('deleted', 'N');
-        // $this->db->where('forwarded', 0);
-        //$this->db->where_not_in('code', 'RTC','DL','POD','C');
         $this->db->where('status', 'Y');
+        $this->db->where('cust_id', $ShipArr_custid);
         $this->db->order_by("company");
         $query = $this->db->get();
-        //echo  $this->db->last_query(); die; 
-        return $query->row_array();
+        //echo $this->db->last_query();//exit;
+
+        if ($query->num_rows()> 0)
+        {
+            //echo "num rows = ".$query->num_rows(); 
+            // echo $this->db->last_query();exit;
+            return $query->row_array();
+        }
+        else 
+        {
+            $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+            $this->db->where('cc_id', $cc_id);
+            $this->db->select('*');
+            $this->db->from('courier_company');
+            $this->db->where('deleted', 'N');
+            $this->db->where('status', 'Y');
+            $this->db->order_by("company");
+            $query = $this->db->get();
+           // echo $this->db->last_query();exit;
+            return $query->row_array();
+
+        }
+        
+
     }
 
 
@@ -3054,20 +3081,79 @@ array_push($itemArray,$peiceArray);
         }
     }
     
-	public function all_ccSeller($id= null ){
+	public function all_ccSeller($id= null )
+    {
 		$this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
-	//	 $this->db->where('access_fm', 'Y');
          $this->db->where('cust_id', $id);
-	  $this->db->order_by('id', 'desc');
-		   
-   $query = $this->db->get('courier_company_seller');
-   //echo $this->db->last_query(); die;
-   if($query->num_rows()>0){
-		   return $query->result();
-	   
-	   }
+	     $this->db->order_by('id', 'desc');	
+         $this->db->order_by('deleted', 'N');		  
+        $query = $this->db->get('courier_company_seller');
+        //echo $this->db->last_query(); die;
+        if($query->num_rows()>0){
+                return $query->result();
+            }
+        else {
+           
+           if($this->getsellerCC($id))
+           {
+                $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+                $this->db->where('cust_id', $id);
+                $this->db->order_by('id', 'desc');	
+                $this->db->order_by('deleted', 'N');		  
+                $query = $this->db->get('courier_company_seller');
+                //echo $this->db->last_query(); die;
+                if($query->num_rows()>0){
+                        return $query->result();
+                    }
+           }
+        }
 
     }	
+
+    public function getsellerCC($cust_id = null)
+    {
+        $ccdata = $this->all();
+        foreach($ccdata as $couSel){
+            $sellearray[] = array(
+                'image' =>$couSel ->image,
+                'user_name' =>$couSel ->user_name,
+                'company_url' => $couSel ->company_url,
+                'password' =>$couSel ->password,
+                'courier_account_no' => $couSel ->courier_account_no,
+                'courier_pin_no' => $couSel ->courier_pin_no,
+                'start_awb_sequence' =>$couSel ->start_awb_sequence,
+                'end_awb_sequence' => $couSel ->end_awb_sequence,
+                'company' => $couSel ->company,
+                'status' => $couSel ->status,
+                'deleted' => $couSel ->deleted,
+                'entrydate' => $couSel ->entrydate,
+                'auth_token' => $couSel ->auth_token,
+                'api_url' => $couSel ->api_url,
+                'user_name_t' => $couSel ->user_name_t,
+                'password_t' =>$couSel ->password_t,
+                'courier_account_no_t' =>$couSel ->courier_account_no_t,
+                'courier_pin_no_t' => $couSel ->courier_pin_no_t,
+                'start_awb_sequence_t' => $couSel ->start_awb_sequence_t,
+                'end_awb_sequence_t' =>$couSel ->end_awb_sequence_t,
+                'auth_token_t' => $couSel ->auth_token_t,
+                'api_url_t' =>$couSel ->api_url_t,
+                'type' => $couSel ->type,
+                'super_id' => $couSel ->super_id,
+                'cc_id' => $couSel ->cc_id,
+                'company_type' => $couSel ->company_type,
+                'capacity' => $couSel ->capacity,
+                'n_column' => $couSel ->n_column,
+                'delivery_days' => $couSel ->delivery_days,
+                'cust_id' => $cust_id,
+
+            );     
+        }
+
+       $output =   $this->db->insert_batch('courier_company_seller', $sellearray);
+          return $output; 
+       // die; 
+    }
+
 
 }
 

@@ -166,6 +166,35 @@ class CourierCompany extends MY_Controller  {
         $return=$this->Ccompany_model->GetUpdateDeliveryCOmpany($UpdateArr,$UpdateArr_w);
          echo json_encode($return);
     }
+
+    public function GetCompanyChnagesSaveSeller()
+    {
+        $_POST = json_decode(file_get_contents('php://input'), true);
+        $RequestArr=$_POST;
+        $UpdateArr=array(
+            'user_name'=>$RequestArr['user_name'],
+            'company_url'=>$RequestArr['company_url'],
+            'password'=>$RequestArr['password'],
+            'courier_account_no'=>$RequestArr['courier_account_no'],
+            'courier_pin_no'=>$RequestArr['courier_pin_no'],
+            'start_awb_sequence'=>$RequestArr['start_awb_sequence'],
+            'end_awb_sequence'=>$RequestArr['end_awb_sequence'],
+            'auth_token'=>$RequestArr['auth_token'],
+            'api_url'=>$RequestArr['api_url'],
+            'user_name_t'=>$RequestArr['user_name_t'],        
+            'password_t'=>$RequestArr['password_t'],
+            'courier_account_no_t'=>$RequestArr['courier_account_no_t'],
+            'courier_pin_no_t'=>$RequestArr['courier_pin_no_t'],
+            'start_awb_sequence_t'=>$RequestArr['start_awb_sequence_t'],
+            'end_awb_sequence_t'=>$RequestArr['end_awb_sequence_t'],
+            'auth_token_t'=>$RequestArr['auth_token_t'],
+            'api_url_t'=>$RequestArr['api_url_t'],
+       );
+        $UpdateArr_w=array('id'=>$RequestArr['id']);
+        
+        $return=$this->Ccompany_model->GetUpdateDeliveryCOmpanySeller($UpdateArr,$UpdateArr_w);
+         echo json_encode($return);
+    }
 	
     
     public function GetUpdateActiveStatus()
@@ -213,27 +242,35 @@ class CourierCompany extends MY_Controller  {
         }
         else
         {
-        $slipData = explode("\n", $postData['slip_no']);
-        $shipmentLoopArray = array_unique($slipData);
+            $slipData = explode("\n", $postData['slip_no']);
+            $shipmentLoopArray = array_unique($slipData);
         }
-        $invalid_slipNO=array();
-		$succssArray=array();
-		if($postData['comment']!=''){
-			$comment = $postData['comment'];
-		}else{
-			$comment = '';
-		}
+            $invalid_slipNO=array();
+            $succssArray=array();
+            if($postData['comment']!=''){
+                $comment = $postData['comment'];
+            }else{
+                $comment = '';
+            }
            
         if(!empty($shipmentLoopArray))
         { 
            
             if(!empty($postData))
             {
-                //print_r($postData);
+          
+                
                 $box_pieces=$postData['otherArr']['box_pieces'];
 			    $box_pieces1= $postData['box_pieces'];
-                $counrierArr_table=$this->Ccompany_model->GetdeliveryCompanyUpdateQry($postData['cc_id']);       
-                $c_id=$counrierArr_table['id'];
+               
+            foreach ($shipmentLoopArray as $key => $slipNo) 
+            {
+               
+                $ShipArr=$this->Ccompany_model->GetSlipNoDetailsQry(trim($slipNo));
+                
+                $ShipArr_custid =  $ShipArr['cust_id']; 
+                $counrierArr_table=$this->Ccompany_model->GetdeliveryCompanyUpdateQry($postData['cc_id'],$ShipArr_custid);   
+                $c_id = $counrierArr_table['id'];
 
               if ($counrierArr_table['type'] == 'test') {
                     $user_name = $counrierArr_table['user_name_t'];
@@ -272,10 +309,10 @@ class CourierCompany extends MY_Controller  {
                 $counrierArr['create_order_url'] = $create_order_url;
                 $counrierArr['company_type'] = $company_type ;
                 $counrierArr['auth_token'] = $auth_token;
+
+
 			 
-            foreach ($shipmentLoopArray as $key => $slipNo) 
-            {
-                $ShipArr=$this->Ccompany_model->GetSlipNoDetailsQry(trim($slipNo));
+              
                 if(!empty($ShipArr))
                 {
 					$sku_data = $this->Ccompany_model->Getskudetails_forward($slipNo);
