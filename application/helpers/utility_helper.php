@@ -1110,16 +1110,16 @@ if (!function_exists('PrintPiclist3PL_bulk')) {
 
             $files = $fileArray;
             //echo $frwd_company_id; die;
-            if (GetCourCompanynameId($frwd_company_id, 'company') == 'Clex' || GetCourCompanynameId($frwd_company_id, 'company') == 'Esnad' || GetCourCompanynameId($frwd_company_id, 'company') == 'Labaih' ) {
+            if (GetCourCompanynameId($val['frwd_company_id'], 'company') == 'Clex' || GetCourCompanynameId($val['frwd_company_id'], 'company') == 'Esnad' || GetCourCompanynameId($val['frwd_company_id'], 'company') == 'Labaih' ) {
                 $pdf = new FPDI('P', 'mm');
             } 
-            else if ( GetCourCompanynameId($frwd_company_id, 'company') == 'Shipadelivery') {
+            else if ( GetCourCompanynameId($val['frwd_company_id'], 'company') == 'Shipadelivery') {
                 $pdf = new FPDI('L', 'mm', array(102, 160));
             }
-            else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Saee'){
+            else if (GetCourCompanynameId($val['frwd_company_id'], 'company') == 'Saee'){
                 $pdf = new FPDI('P', 'mm', array(250, 175));
             }
-            else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Barqfleet' ) {
+            else if (GetCourCompanynameId($val['frwd_company_id'], 'company') == 'Barqfleet' ) {
                 $pdf = new FPDI('P', 'mm', array(110, 160));
             } else {
                 $pdf = new FPDI('P', 'mm', array(102, 160));
