@@ -39,12 +39,7 @@ class CourierCompany_auto extends CI_Controller {
 
     public function BulkForwardCompanyReady() {
 
-        // echo "kjdhkjdhfghdkjfg <br/> " ;   die; 
-
         $postData = json_decode(file_get_contents('php://input'), true);
-
-        // echo "<br><pre> Respo = "; print_r($postData);  die;
-
         $shipmentLoopArray[] = $postData['slip_no'];
         $super_id = $postData['super_id'];
         $CURRENT_TIME = date('H:i:s');
@@ -53,71 +48,56 @@ class CourierCompany_auto extends CI_Controller {
         $invalid_slipNO = array();
         $succssArray = array();
 
-        //  echo "<br/>super_id =". $super_id; 
-
-
         if (!empty($shipmentLoopArray)) {
             if (!empty($postData)) {
 
-
-
-                $courier_data = $this->forwardShipment($postData['slip_no'], $super_id);
-
-                // echo "<br/><pre> =";
-                // print_r($courier_data); 
-                // echo "<br/>super_id =". $super_id;                   
-                //    echo '<pre';
-                // print_r($courier_data); //die;
-
+               $courier_data = $this->forwardShipment($postData['slip_no'], $super_id);
                 if (!empty($courier_data)) {
 
-
-                    $courier_id = $courier_data[0]['cc_id'];
-                    $zone_id = $courier_data[0]['id'];
-                    $counrierArr_table = $this->Ccompany_auto_model->GetdeliveryCompanyUpdateQry($courier_id, $super_id);
-                    // echo '<pre counrierArr_table = ';  print_r($counrierArr_table); die; 
-
-
-                    $c_id = $counrierArr_table['id'];
-                    if ($counrierArr_table['type'] == 'test') {
-                        $user_name = $counrierArr_table['user_name_t'];
-                        $password = $counrierArr_table['password_t'];
-                        $courier_account_no = $counrierArr_table['courier_account_no_t'];
-                        $courier_pin_no = $counrierArr_table['courier_pin_no_t'];
-                        $start_awb_sequence = $counrierArr_table['start_awb_sequence_t'];
-                        $end_awb_sequence = $counrierArr_table['end_awb_sequence_t'];
-                        $company = $counrierArr_table['company'];
-                        $api_url = $counrierArr_table['api_url_t'];
-                        $auth_token = $counrierArr_table['auth_token_t'];
-                    } else {
-                        $user_name = $counrierArr_table['user_name'];
-                        $password = $counrierArr_table['password'];
-                        $courier_account_no = $counrierArr_table['courier_account_no'];
-                        $courier_pin_no = $counrierArr_table['courier_pin_no'];
-                        $start_awb_sequence = $counrierArr_table['start_awb_sequence'];
-                        $end_awb_sequence = $counrierArr_table['end_awb_sequence'];
-                        $company = $counrierArr_table['company'];
-                        $api_url = $counrierArr_table['api_url'];
-                        $auth_token = $counrierArr_table['auth_token'];
-                    }
-                    $counrierArr['user_name'] = $user_name;
-                    $counrierArr['password'] = $password;
-                    $counrierArr['courier_account_no'] = $courier_account_no;
-                    $counrierArr['courier_pin_no'] = $courier_pin_no;
-                    $counrierArr['courier_pin_no'] = $courier_pin_no;
-                    $counrierArr['start_awb_sequence'] = $start_awb_sequence;
-                    $counrierArr['end_awb_sequence'] = $end_awb_sequence;
-                    $counrierArr['company'] = $company;
-                    $counrierArr['api_url'] = $api_url;
-                    $counrierArr['auth_token'] = $auth_token;
-
-                    //print_r($counrierArr); die;
-
-
                     foreach ($shipmentLoopArray as $key => $slipNo) {
-                        ///$courier_data = forwardShipment($slipNo);
-                        // echo $slipNo; 
                         $ShipArr = $this->Ccompany_auto_model->GetSlipNoDetailsQry(trim($slipNo), $super_id);
+                        $ShipArr_custid =  $ShipArr['cust_id']; 
+                        $courier_id = $courier_data[0]['cc_id'];
+                        $zone_id = $courier_data[0]['id'];
+                        $counrierArr_table = $this->Ccompany_auto_model->GetdeliveryCompanyUpdateQry($courier_id, $super_id,$ShipArr_custid);
+                        // echo '<pre counrierArr_table = ';  print_r($counrierArr_table); die; 
+    
+    
+                        $c_id = $counrierArr_table['id'];
+                        if ($counrierArr_table['type'] == 'test') {
+                            $user_name = $counrierArr_table['user_name_t'];
+                            $password = $counrierArr_table['password_t'];
+                            $courier_account_no = $counrierArr_table['courier_account_no_t'];
+                            $courier_pin_no = $counrierArr_table['courier_pin_no_t'];
+                            $start_awb_sequence = $counrierArr_table['start_awb_sequence_t'];
+                            $end_awb_sequence = $counrierArr_table['end_awb_sequence_t'];
+                            $company = $counrierArr_table['company'];
+                            $company_type  = $counrierArr_table['company_type'];
+                            $api_url = $counrierArr_table['api_url_t'];
+                            $auth_token = $counrierArr_table['auth_token_t'];
+                        } else {
+                            $user_name = $counrierArr_table['user_name'];
+                            $password = $counrierArr_table['password'];
+                            $courier_account_no = $counrierArr_table['courier_account_no'];
+                            $courier_pin_no = $counrierArr_table['courier_pin_no'];
+                            $start_awb_sequence = $counrierArr_table['start_awb_sequence'];
+                            $end_awb_sequence = $counrierArr_table['end_awb_sequence'];
+                            $company = $counrierArr_table['company'];
+                            $company_type  = $counrierArr_table['company_type'];
+                            $api_url = $counrierArr_table['api_url'];
+                            $auth_token = $counrierArr_table['auth_token'];
+                        }
+                        $counrierArr['user_name'] = $user_name;
+                        $counrierArr['password'] = $password;
+                        $counrierArr['courier_account_no'] = $courier_account_no;
+                        $counrierArr['courier_pin_no'] = $courier_pin_no;
+                        $counrierArr['courier_pin_no'] = $courier_pin_no;
+                        $counrierArr['start_awb_sequence'] = $start_awb_sequence;
+                        $counrierArr['end_awb_sequence'] = $end_awb_sequence;
+                        $counrierArr['company'] = $company;
+                        $counrierArr['api_url'] = $api_url;
+                        $counrierArr['company_type'] = $company_type ;
+                        $counrierArr['auth_token'] = $auth_token;
 
                         if (!empty($ShipArr)) {
                             $sku_data = $this->Ccompany_auto_model->Getskudetails_forward($slipNo, $super_id);
@@ -768,76 +748,76 @@ class CourierCompany_auto extends CI_Controller {
                                     $returnArr['responseError'][] = $slipNo . ':' . $errre_response;
                                 }
                             }
-                            elseif ($company_type== 'F')
-                    { // for all fastcoo clients treat as a CC 
+                            elseif ($company_type == 'F')
+                            { // for all fastcoo clients treat as a CC 
                       
-                        if ($company=='Ejack' ) 
-                        {
-                                $response = $this->Ccompany_auto_model->Ejack($ShipArr, $counrierArr, $complete_sku,$c_id,$super_id);
-                                $response = json_decode($response, true);
-                                if($response['error']=='')
-                                {
-                                    $generated_pdf = file_get_contents($response['awb_print_url']);                                
-                                    file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
-                                    
-                                    $client_awb = $response['awb'];
-        
-                                    $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
-                                    $Update_data = $this->Ccompany_auto_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
-                                    array_push($succssArray, $slipNo);
-                                } else {
-                                    $returnArr['responseError'][] = $slipNo . ':' . $response['refrence_id'];
-                                }
+                                    if ($company=='Ejack' ) 
+                                    {
+                                            $response = $this->Ccompany_auto_model->Ejack($ShipArr, $counrierArr, $complete_sku,$c_id,$super_id);
+                                            $response = json_decode($response, true);
+                                            if($response['error']=='')
+                                            {
+                                                $generated_pdf = file_get_contents($response['awb_print_url']);                                
+                                                file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                                                
+                                                $client_awb = $response['awb'];
+                    
+                                                $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
+                                            $Update_data = $this->Ccompany_auto_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                            array_push($succssArray, $slipNo);
+                                        } else {
+                                            $returnArr['responseError'][] = $slipNo . ':' . $response['refrence_id'];
+                                        }
                             
-                        }
+                                    }
 
-                        else if ($company=='Emdad' )
-                        {
-                            $response = $this->Ccompany_auto_model->EmdadArray($ShipArr, $counrierArr, $complete_sku,$c_id, $super_id);
-                            $response = json_decode($response, true);
-                            if($response['error']=='')
-                            {
-                                $generated_pdf = file_get_contents($response['awb_print_url']);                                
-                                file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                                else if ($company=='Emdad' )
+                                {
+                                    $response = $this->Ccompany_auto_model->EmdadArray($ShipArr, $counrierArr, $complete_sku,$c_id, $super_id);
+                                    $response = json_decode($response, true);
+                                        if($response['error']=='')
+                                        {
+                                            $generated_pdf = file_get_contents($response['awb_print_url']);                                
+                                            file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                                            
+                                            $client_awb = $response['awb'];
+
+                                            $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
+                                            $Update_data = $this->Ccompany_auto_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                            array_push($succssArray, $slipNo);
+                                        } else {
+                                            $returnArr['responseError'][] = $slipNo . ':' . $response['refrence_id'];
+                                        }
                                 
-                                $client_awb = $response['awb'];
+                                }
 
-                                $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
-                                $Update_data = $this->Ccompany_auto_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
-                                array_push($succssArray, $slipNo);
-                            } else {
-                                $returnArr['responseError'][] = $slipNo . ':' . $response['refrence_id'];
-                            }
-                        
-                        }
+                                else
+                                {
+                                    $response = $this->Ccompany_auto_model->fastcooArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$super_id);
+                                    $responseArray = json_decode($response, true);     
+                                    if($responseArray['status']==200) 
+                                    {  
+                                        
+                                        $client_awb = $responseArray['awb_no'];                                
+                                        $mediaData = $responseArray['label_print'];
+                                        //****************************fastcoo label print cURL****************************
+                                        file_put_contents("assets/all_labels/$slipNo.pdf", file_get_contents($mediaData));
+                                        $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+                                        //****************************fastcoo label print cURL****************************
+                                        $CURRENT_DATE = date("Y-m-d H:i:s");
+                                        $CURRENT_TIME = date("H:i:s");
 
-                        else
-                        {
-                            $response = $this->Ccompany_auto_model->fastcooArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$super_id);
-                            $responseArray = json_decode($response, true);     
-                            if($responseArray['status']==200) 
-                            {  
+                                        $Update_data = $this->Ccompany_auto_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                        array_push($succssArray, $slipNo);
                                 
-                                $client_awb = $responseArray['awb_no'];                                
-                                $mediaData = $responseArray['label_print'];
-                                //****************************fastcoo label print cURL****************************
-                                file_put_contents("assets/all_labels/$slipNo.pdf", file_get_contents($mediaData));
-                                $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
-                                //****************************fastcoo label print cURL****************************
-                                $CURRENT_DATE = date("Y-m-d H:i:s");
-                                $CURRENT_TIME = date("H:i:s");
-
-                                $Update_data = $this->Ccompany_auto_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
-                                array_push($succssArray, $slipNo);
-                           
-                            }                               
-                            else
-                            {
-                                array_push($alreadyExist, $slipNo); 
-                                $returnArr['responseError'][] = $slipNo . ':' . $responseArray['msg'];  
-                            } 
-                        }                                   
-                    } //end company type F code
+                                    }                               
+                                    else
+                                    {
+                                        array_push($alreadyExist, $slipNo); 
+                                        $returnArr['responseError'][] = $slipNo . ':' . $responseArray['msg'];  
+                                    } 
+                                }                                   
+                            } //end company type F code
                         } else {
                             array_push($invalid_slipNO, $slipNo);
                         }
