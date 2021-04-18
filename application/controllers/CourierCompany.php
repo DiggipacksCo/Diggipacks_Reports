@@ -605,11 +605,15 @@ class CourierCompany extends MY_Controller  {
                     elseif ($company == 'NAQEL'){
                         $awb_array = $this->Ccompany_model->NaqelArray($ShipArr,$counrierArr, $complete_sku,$box_pieces1, $Auth_token,$c_id);
                          
-                         $HasError = $awb_array['HasError'];
+                       
+
+                        // Array ( [HasError] => false [WaybillNo] => 51150005 [BookingRefNo] => Array ( ) [Key] => 23664121 [Message] => New waybill has been created successfully. )
+                  $HasError = $awb_array['HasError'];
                         $error_message = $awb_array['Message'];
                         
-                        if ($awb_array['HasError'] !== true) 
+                        if ($awb_array['HasError'] =='false') 
                         {
+                           
                             $client_awb = $awb_array['WaybillNo'];
                                 if (!empty($client_awb)) 
                                 {
@@ -863,7 +867,10 @@ class CourierCompany extends MY_Controller  {
                             $response = $this->Ccompany_model->AymakanArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1);
                             $responseArray = json_decode($response, true);
 
-                            if (empty($responseArray['errors'])) 
+                          //  print_r($responseArray);
+                            
+
+                            if (empty($responseArray['error'])) 
                             {
                                      $client_awb = $responseArray['data']['shipping']['tracking_number'];
                                      $mediaData = $responseArray['data']['shipping']['label'];
@@ -880,7 +887,7 @@ class CourierCompany extends MY_Controller  {
                             }   
                             else{
                                   
-                                    $returnArr['responseError'][] = $slipNo . ':' . $responseArray['errors']['reference'][0];
+                                    $returnArr['responseError'][] = $slipNo . ':' . $responseArray['response'];
                                     
                             }                                    
                     } 
