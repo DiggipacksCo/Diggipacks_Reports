@@ -13,7 +13,7 @@ class Zone_model extends CI_Model {
    
         $this->db->trans_start();
 		$this->db->insert('zone_list_fm',$data);
-		echo $this->db->last_query();
+		//echo $this->db->last_query();
 		$insert_id= $this->db->insert_id();
         $this->db->trans_complete();
 		return $insert_id;
@@ -33,11 +33,11 @@ class Zone_model extends CI_Model {
 	// }
 	   
 	public function fetch_all_cities(){
-           // $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
 		$this->db->select('id,city');
         $this->db->where('city!=','');
 		$this->db->where('deleted','N');
-                $this->db->order_by('city');
+        $this->db->order_by('city');
 		$query=$this->db->get('country');
 
 		if($query->num_rows()>0){
