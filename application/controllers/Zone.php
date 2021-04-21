@@ -14,6 +14,8 @@ class Zone extends MY_Controller {
         //$this->load->library('pagination');
         $this->load->model('Zone_model');
         $this->load->model('Ccompany_model');
+       
+       
 
         $this->load->library('form_validation');
     }
@@ -24,6 +26,18 @@ class Zone extends MY_Controller {
         $this->load->view('Zone/list_view', $data);
     } 
 
+    public function list_view_customer() {
+        $sellers = $this->Zone_model->all_customer();
+       
+        foreach($sellers as $key=>$val)
+        {
+            $sellers[$key]->cust_name=getallsellerdatabyID(  $sellers[$key]->cust_id,'name');
+            //cust_name=
+        }
+         $data['sellers']=$sellers;
+        $this->load->view('Zone/list_view_customer', $data);
+    } 
+
      public function add_view($id = null) {
 
         if (($this->session->userdata('user_details') != '')) {
@@ -31,14 +45,70 @@ class Zone extends MY_Controller {
             $data['EditData'] = $this->Zone_model->find_customer_sellerm($id);
             $data['id'] = $id;
             $data['customers'] = $this->Zone_model->Zone();
-            $data['city_drp'] = $this->Zone_model->fetch_all_cities();
+           
             $data['company'] = $this->Ccompany_model->all();
+
+
+            $masterCity = $this->Zone_model->fetch_all_cities_new();
+
+
+            //print_r($masterCity); exit;
+            if($id!=null)
+            {
+                $precityData=$this->Zone_model->previousCity($id);
+                $precity=json_decode($precityData['city_id']);
+
+                //print_r($precity); exit;
+           
+                $keyArray=array();
+                $preArray=array();
+         
+            // print_r( $masterCity); exit;
+            foreach($precity as $key=>$val)
+            {
+              // array_map($masterCity);
+              $key1 = array_search($val, array_column($masterCity, 'id'));
+              
+             // echo '<br>'. $key1.'//' .  $val['city']; 
+               if(!empty($key1) || $key1==0 )
+               {
+              
+                 if(!in_array($key1,$keyArray))
+                 {
+                    
+                    array_push($preArray,$masterCity[$key1]);
+                   array_push($keyArray,$key1);
+                  // $data['pre'][]=$masterCity[$key];
+                 }
+                 $key1=null; 
+               }
+          
+            }
+            foreach($keyArray as $k1)
+            {
+                //echo '<pre>xx'.$k1 .print_r($masterCity[$k1]);
+              unset($masterCity[$k1]);  
+              
+            }
+            array_values($masterCity); 
+        }
+            
+          //  print_r($preArray); exit;
+             
+            $data['ListArr']=$masterCity;
+
+            $data['pre']=$preArray;
+
+
+
 
             $this->load->view('Zone/add_view', $data);
         } else {
             redirect(base_url() . 'Login');
         }
     }
+
+  
 
     public function editZoneUpdate($id = null) {
         if ($id > 0) {
@@ -56,9 +126,103 @@ class Zone extends MY_Controller {
         redirect('viewZone');
     }
 
+    
+    public function editZoneUpdateCustomer($id = null) {
+        if ($id > 0) {
+            $data = array(
+                'name' => $this->input->post('name'),
+                'capacity' => $this->input->post('capacity'),
+                'cc_id' => $this->input->post('c_id'),
+                'city_id' => json_encode($this->input->post('city_id')),
+                'price' => $this->input->post('price'),
+            );
+            $this->Zone_model->UpdateZoneCompanyLIstCustomer($data, $id);
+            $this->session->set_flashdata('msg', $this->input->post('name') . '   has been updated successfully');
+        } else
+            $this->session->set_flashdata('msg', 'try again');
+        redirect('viewZoneCustomer');
+    }
 
 
 
+    public function add_view_customer($id=null) {
+
+        if (($this->session->userdata('user_details') != '')) {
+
+          
+            $data['id'] = $id;
+            $data['customers'] = $this->Zone_model->ZoneCustomer();
+
+            $data['sellers'] = $this->Zone_model->custList();
+            
+            $data['company'] = $this->Ccompany_model->all();
+
+
+            $masterCity = $this->Zone_model->fetch_all_cities_new();
+
+
+            //print_r($masterCity); exit;
+            if($id!=null)
+            {
+                $data['EditData'] = $this->Zone_model->find_customer_sellerm_cust($id);
+                $precityData=$this->Zone_model->previousCity_customer($id);
+                $precity=json_decode($precityData['city_id']);
+
+               // print_r( $data['EditData']); exit;
+                
+            $data['EditData'][0]->cust_name=getallsellerdatabyID(  $data['EditData'][0]->cust_id,'name');
+            //cust_name=
+    
+
+                //print_r($precity); exit;
+           
+                $keyArray=array();
+                $preArray=array();
+         
+            // print_r( $masterCity); exit;
+            foreach($precity as $key=>$val)
+            {
+              // array_map($masterCity);
+              $key1 = array_search($val, array_column($masterCity, 'id'));
+              
+             // echo '<br>'. $key1.'//' .  $val['city']; 
+               if(!empty($key1) || $key1==0 )
+               {
+              
+                 if(!in_array($key1,$keyArray))
+                 {
+                    
+                    array_push($preArray,$masterCity[$key1]);
+                   array_push($keyArray,$key1);
+                  // $data['pre'][]=$masterCity[$key];
+                 }
+                 $key1=null; 
+               }
+          
+            }
+            foreach($keyArray as $k1)
+            {
+                //echo '<pre>xx'.$k1 .print_r($masterCity[$k1]);
+              unset($masterCity[$k1]);  
+              
+            }
+            array_values($masterCity); 
+        }
+            
+          //  print_r($preArray); exit;
+             
+            $data['ListArr']=$masterCity;
+
+            $data['pre']=$preArray;
+
+
+
+
+            $this->load->view('Zone/add_view_customer', $data);
+        } else {
+            redirect(base_url() . 'Login');
+        }
+    }
     
 
 
@@ -109,6 +273,59 @@ class Zone extends MY_Controller {
             redirect('viewZone');
         }
     }
+
+
+    public function add_zone_customer() {
+
+        // print_r($this->input->post('dd_customer'));
+        // print_r($this->input->post('warehousing_charge'));
+        // print_r($this->input->post('fulfillment_charge'));
+        // exit();
+        // $customer_id=$this->input->post('dd_customer');
+
+
+        $this->form_validation->set_rules("capacity", 'capacity', 'trim|required');
+        $this->form_validation->set_rules("c_id", 'Courier Company', 'trim|required');
+        $this->form_validation->set_rules("cust_id", 'Seller', 'trim|required');
+        $this->form_validation->set_rules("city_id[]", 'City', 'trim|required');
+//		  $this->form_validation->set_rules("password", 'Password ', 'trim|required|min_length[6]');
+//		  $this->form_validation->set_rules('conf_password', 'Confirm Password', 'required|matches[password]'); 
+        if ($this->form_validation->run() == FALSE) {
+
+            $this->add_view();
+        } else {
+            //echo "sssss"; die;
+            // print_r($_POST); die;
+            $unique_acc_mp = uniqid();
+            $data = array(
+                'name' => $this->input->post('name'),
+                'capacity' => $this->input->post('capacity'),
+                'cc_id' => $this->input->post('c_id'),
+                'cust_id' => $this->input->post('cust_id'),
+                'super_id' => $this->session->userdata('user_details')['super_id'],
+                'city_id' => json_encode($this->input->post('city_id')),
+                'price' => $this->input->post('price'),
+            );
+            if (empty($errors)) {
+                if ($this->Zone_model->add_company_customer($data))
+
+
+                //echo  $customer_id.'//'. $seller_id;     exit();  
+                    $this->session->set_flashdata('msg', $this->input->post('name') . '   has been added successfully');
+                else {
+                    $this->session->set_flashdata('msg', $this->input->post('name') . '    adding is failed');
+                }
+            } else {
+                $this->session->set_flashdata('msg', $this->input->post('name') . '    adding is failed');
+            }
+
+//die;
+
+            redirect('viewZoneCustomer');
+        }
+    }
+
+
 
     public function edit_view($id) {
         // $id = $this->input->get('id');

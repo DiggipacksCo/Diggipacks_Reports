@@ -393,6 +393,8 @@
                                 <?php if (menuIdExitsInPrivilageArray(45) == 'Y') { ?>
                                     <li><a href="<?= base_url('Seller'); ?>" id="layout2"><?= lang('lang_view_All_sellers'); ?></a></li>
                         <?php } ?>
+                        <li><a href="<?= base_url('addZoneCustomer'); ?>" id="layout2">Add Seller Zone </a></li>
+                        <li><a href="<?= base_url('viewZoneCustomer'); ?>" id="layout2">View Seller Zone</a></li>
                             </ul>
                         </li>
 <?php } ?>
