@@ -53,8 +53,7 @@ class Ccompany_auto_model extends CI_Model {
              $this->db->order_by("company");
              $query = $this->db->get();
             // echo $this->db->last_query();exit;
-             return $query->row_array();
- 
+             return $query->row_array(); 
          }
     }
 	

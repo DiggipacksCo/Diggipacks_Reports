@@ -268,7 +268,9 @@ $route['viewCourierCompany'] = 'CourierCompany/cCompany';
 $route['addZone']            = 'Zone/add_view';
 $route['editZone/(:num)']    = 'Zone/add_view/$1';
 $route['viewZone']           = 'Zone/list_view';
-
+$route['addZoneCustomer']            = 'Zone/add_view_customer';
+$route['editZoneCustomer/(:num)']    = 'Zone/add_view_customer/$1';
+$route['viewZoneCustomer']           = 'Zone/list_view_customer';
 //=============================================================
 
 
