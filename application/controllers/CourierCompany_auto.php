@@ -52,18 +52,20 @@ class CourierCompany_auto extends CI_Controller {
             if (!empty($postData)) {
 
                $courier_data = $this->forwardShipment($postData['slip_no'], $super_id);
+             // print_r($courier_data);exit;
                 if (!empty($courier_data)) {
 
                     foreach ($shipmentLoopArray as $key => $slipNo) {
                         $ShipArr = $this->Ccompany_auto_model->GetSlipNoDetailsQry(trim($slipNo), $super_id);
+                       // print_r($ShipArr);
                         $ShipArr_custid =  $ShipArr['cust_id']; 
                         $courier_id = $courier_data[0]['cc_id'];
                         $zone_id = $courier_data[0]['id'];
                         $counrierArr_table = $this->Ccompany_auto_model->GetdeliveryCompanyUpdateQry($courier_id, $super_id,$ShipArr_custid);
-                        // echo '<pre counrierArr_table = ';  print_r($counrierArr_table); die; 
+                       
+   
     
-    
-                        $c_id = $counrierArr_table['id'];
+                        $c_id = $counrierArr_table['cc_id'];
                         if ($counrierArr_table['type'] == 'test') {
                             $user_name = $counrierArr_table['user_name_t'];
                             $password = $counrierArr_table['password_t'];
@@ -99,6 +101,8 @@ class CourierCompany_auto extends CI_Controller {
                         $counrierArr['company_type'] = $company_type ;
                         $counrierArr['auth_token'] = $auth_token;
 
+                        //print_r( $counrierArr); exit;
+
                         if (!empty($ShipArr)) {
                             $sku_data = $this->Ccompany_auto_model->Getskudetails_forward($slipNo, $super_id);
                             $sku_all_names = array();
@@ -127,6 +131,8 @@ class CourierCompany_auto extends CI_Controller {
                                 $CashOnDeliveryAmount = NULL;
                                 $services = '';
                             }
+
+                          //  echo $company; exit;
                             if ($company == 'Aramex') {
                                 // echo "Aramex" .$slipNo ; die; 
                                 $params = $this->Ccompany_auto_model->AramexArray($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $super_id);
@@ -647,9 +653,10 @@ class CourierCompany_auto extends CI_Controller {
                                     $returnArr['responseError'][] = $slipNo . ':' . $response['description'];
                                 }
                             } elseif ($company == 'Aymakan') {
+
                                 $response = $this->Ccompany_auto_model->AymakanArray($ShipArr, $counrierArr, $Auth_token, $c_id, $super_id);
                                 $responseArray = json_decode($response, true);
-                                //$err = $responseArray['errors']['reference'][0];
+                                $err = $responseArray['errors']['reference'][0];
 
                                 if (empty($responseArray['errors'])) {
                                     $client_awb = $responseArray['data']['shipping']['tracking_number'];
@@ -835,13 +842,16 @@ class CourierCompany_auto extends CI_Controller {
     public function forwardShipment($awb = null, $super_id = null) {
 
         $fullData = $this->shipDetail($awb, $super_id);
+       // print_r($fullData);exit;
         if (empty($fullData)) {
             $fullData = $this->shipDetailDefault($awb, $super_id);
         }
 
         $lastArray = array();
         foreach ($fullData as $data) {
-            $dataArray = $this->zonListData($data['cc_id'], $data['destination'], $super_id);
+
+            $dataArray = $this->zonListData($data['cc_id'], $data['destination'], $super_id,$data['cust_id']);
+           
             if (!empty($dataArray)) {
                 return $dataArray;
                 break;
@@ -875,29 +885,59 @@ class CourierCompany_auto extends CI_Controller {
         $this->db->where('sellerCourier.status', '0');
         $this->db->order_by('sellerCourier.priority', 'ASC');
         $query = $this->db->get();
-        //  echo "shipDetail = ". $this->db->last_query(); die; 
+        // echo "shipDetail = ". $this->db->last_query(); die; 
         $result = $query->result_array();
 
         return $result;
     }
 
-    public function zonListData($ccid, $dest, $super_id) {
+    public function zonListData($ccid, $dest, $super_id,$cust_id) {
 //echo $dest."<br>";
-        $this->db->select('id,cc_id,city_id');
-        $this->db->from('zone_list_fm');
-        $this->db->where('zone_list_fm.super_id', $super_id);
-        $this->db->where('capacity>todayCount');
-        $this->db->where('cc_id', $ccid);
 
-        $query = $this->db->get();
-        // echo $this->db->last_query()."<br>";
-        $result = $query->result_array();
-        $rData = array();
-        foreach ($result as $n) {
-            if (in_array($dest, json_decode($n['city_id'], true))) {
-                array_push($rData, $n);
+
+            $this->db->select('id,cc_id,city_id');
+            $this->db->from('zone_list_customer_fm');
+            $this->db->where('zone_list_customer_fm.super_id', $super_id);
+            $this->db->where('capacity>todayCount');
+            $this->db->where('cust_id',$cust_id);
+            $this->db->where('cc_id', $ccid);
+
+            $query = $this->db->get();
+           // echo $this->db->last_query()."<br>";
+
+            if ($query->num_rows()> 0)
+            {
+                $result = $query->result_array();
+            }
+            else
+            {
+
+                $this->db->select('id,cc_id,city_id');
+                $this->db->from('zone_list_fm');
+                $this->db->where('zone_list_fm.super_id', $super_id);
+                $this->db->where('capacity>todayCount');
+                $this->db->where('cc_id', $ccid);
+        
+                $query1 = $this->db->get();
+                // echo $this->db->last_query()."<br>";
+                $result = $query1->result_array();
+                if ($query1->num_rows()> 0)
+                {
+                    $result = $query1->result_array();
+                }
+
+            }
+           
+           
+        if(!empty($result)){
+            $rData = array();
+            foreach ($result as $n) {
+                if (in_array($dest, json_decode($n['city_id'], true))) {
+                    array_push($rData, $n);
+                }
             }
         }
+
         if (!empty($rData)) {
             return $rData;
         } else {

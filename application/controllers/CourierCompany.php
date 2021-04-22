@@ -205,6 +205,16 @@ class CourierCompany extends MY_Controller  {
          $return=$this->Ccompany_model->GetUpdateDeliveryCOmpany($data,$data_w);
          echo json_encode($return);
     }
+
+
+    public function GetUpdateActiveStatusSeller()
+    {
+         $_POST = json_decode(file_get_contents('php://input'), true);
+         $data=array('status'=>$_POST['status']);
+         $data_w=array('id'=>$_POST['id']);
+         $return=$this->Ccompany_model->GetUpdateDeliveryCOmpanySeller($data,$data_w);
+         echo json_encode($return);
+    }
     
     public function GetUpdateLIveStatus()
     {
@@ -212,6 +222,15 @@ class CourierCompany extends MY_Controller  {
          $data=array('type'=>$_POST['status']);
          $data_w=array('id'=>$_POST['id']);
          $return=$this->Ccompany_model->GetUpdateDeliveryCOmpany($data,$data_w);
+         echo json_encode($return);
+    }
+
+    public function GetUpdateLIveStatusSeller()
+    {
+         $_POST = json_decode(file_get_contents('php://input'), true);
+         $data=array('type'=>$_POST['status']);
+         $data_w=array('id'=>$_POST['id']);
+         $return=$this->Ccompany_model->GetUpdateDeliveryCOmpanySeller($data,$data_w);
          echo json_encode($return);
     }
     

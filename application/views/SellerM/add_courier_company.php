@@ -9,7 +9,7 @@
          <link href="<?=base_url();?>assets/theme/css/icons.min.css" rel="stylesheet" type="text/css">
         <?php $this->load->view('include/file'); ?>
        
-        <script src="<?= base_url(); ?>assets/js/angular/courier_company.js"></script>
+        <script src="<?= base_url(); ?>assets/js/angular/courier_company_seller.js"></script>
 
 
     </head>
@@ -53,7 +53,7 @@
      }
 
 </style>
-    <body ng-app="CourierAppPage">
+    <body ng-app="CourierAppPageSeller">
 
         <?php $this->load->view('include/main_navbar'); ?>
 
