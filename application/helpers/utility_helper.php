@@ -361,9 +361,10 @@ if (!function_exists('GetCourCompanynameId')) {
     function GetCourCompanynameId($id = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM courier_company where id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT $field FROM courier_company where cc_id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
+        //echo $ci->db->last_query();
         return $result[$field];
     }
 
@@ -394,6 +395,22 @@ if (!function_exists('getdestinationfieldshow_array')) {
                 $rdata .= $ndata['city'] . ',';
             }
             return $rdata;
+        }
+    }
+
+}
+
+if (!function_exists('getdestinationfieldshow_auto_array')) {
+
+    function getdestinationfieldshow_auto_array($id = null, $field = null,$super_id) {
+        $ci = & get_instance();
+        $ci->load->database();
+        if (!empty($id)) {
+            $sql = "SELECT $field FROM country where id IN ($id) and super_id='".$super_id."'";
+            $query = $ci->db->query($sql);
+            $result = $query->row_array();
+            return  $result[$field];
+           
         }
     }
 

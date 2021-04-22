@@ -36,7 +36,7 @@ class Ccompany_auto_model extends CI_Model {
          $this->db->where('cust_id', $ShipArr_custid);
          $this->db->order_by("company");
          $query = $this->db->get();
-         //echo $this->db->last_query();//exit;
+       //  echo $this->db->last_query(); //exit;
  
          if ($query->num_rows()> 0)
          {
@@ -52,14 +52,14 @@ class Ccompany_auto_model extends CI_Model {
              $this->db->where('status', 'Y');
              $this->db->order_by("company");
              $query = $this->db->get();
-            // echo $this->db->last_query();exit;
+        // echo $this->db->last_query();exit;
              return $query->row_array(); 
          }
     }
 	
 	
 	
-	public function getdestinationfieldshow($id=null,$field=null,$super_id){
+	public function getdestinationfieldshow_auto_array_auto_array($id=null,$field=null,$super_id){
 	
                 
 		 $sql ="SELECT $field FROM country where id='$id' and super_id='".$super_id."'";
@@ -81,7 +81,7 @@ class Ccompany_auto_model extends CI_Model {
 	public function GetshipmentUpdate_forward(array $data,$awb=null){
            // $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
 		 $this->db->update('shipment_fm',$data,array('slip_no'=>$awb));
-                 $this->db->query("UPDATE `zone_list_fm` SET `todayCount`=todayCount+1 where cc_id='".$data['frwd_company_id']."'");
+               //  $this->db->query("UPDATE `zone_list_fm` SET `todayCount`=todayCount+1 where cc_id='".$data['frwd_company_id']."'");
               // echo $this->db->last_query(); die;
 	}
 	
@@ -92,8 +92,8 @@ class Ccompany_auto_model extends CI_Model {
         }
 	
 	public function AramexArray(array $ShipArr, array $counrierArr, $complete_sku=null, $pay_mode=null, $CashOnDeliveryAmount=null, $services=null,$super_id=null){
-		$sender_city = $this->getdestinationfieldshow($ShipArr['origin'], 'aramex_city',$super_id);
-		$reciever_city = $this->getdestinationfieldshow($ShipArr['destination'], 'aramex_city',$super_id);
+		$sender_city = $this->getdestinationfieldshow_auto_array_auto_array($ShipArr['origin'], 'aramex_city',$super_id);
+		$reciever_city = $this->getdestinationfieldshow_auto_array_auto_array($ShipArr['destination'], 'aramex_city',$super_id);
 		$date = (int) microtime(true) * 1000;
         if($ShipArr['weight']==0)
         {  $weight= 1;
@@ -344,8 +344,8 @@ class Ccompany_auto_model extends CI_Model {
 	}
 	
 	public function SafeArray(array $ShipArr, array $counrierArr, $complete_sku=null, $Auth_token=null,$super_id=null){
-		$sender_city_safe = $this->getdestinationfieldshow($ShipArr['origin'], 'safe_arrival',$super_id);
-		$receiver_city_safe = $this->getdestinationfieldshow($ShipArr['destination'], 'safe_arrival',$super_id);
+		$sender_city_safe = $this->getdestinationfieldshow_auto_array_auto_array($ShipArr['origin'], 'safe_arrival',$super_id);
+		$receiver_city_safe = $this->getdestinationfieldshow_auto_array_auto_array($ShipArr['destination'], 'safe_arrival',$super_id);
 		
 		$API_URL = $counrierArr['api_url'];
 
@@ -429,8 +429,8 @@ class Ccompany_auto_model extends CI_Model {
 	}
 	
 	public function EsnadArray(array $ShipArr, array $counrierArr, $esnad_awb_number=null, $complete_sku=null, $Auth_token=null,$super_id=null,$c_id=null){
-		$receiver_city = $this->getdestinationfieldshow($ShipArr['destination'], 'esnad_city',$super_id);
-		 $sender_city = $this->getdestinationfieldshow($ShipArr['origin'], 'esnad_city',$super_id); 
+		$receiver_city = $this->getdestinationfieldshow_auto_array($ShipArr['destination'], 'esnad_city',$super_id);
+		 $sender_city = $this->getdestinationfieldshow_auto_array($ShipArr['origin'], 'esnad_city',$super_id); 
 		$declared_charge = $ShipArr['total_cod_amt'];
 		$cod_amount = $ShipArr['total_cod_amt'];
 		
@@ -503,10 +503,10 @@ class Ccompany_auto_model extends CI_Model {
         
         
     public function LabaihArray($ShipArr, $counrierArr, $complete_sku,$box_pieces,$super_id=null,$c_id=null) {
-        $receiver_city = $this->getdestinationfieldshow($ShipArr['destination'], 'labaih',$super_id);
-        $sender_city = $this->getdestinationfieldshow($ShipArr['origin'], 'labaih',$super_id);
-        $lat = $this->getdestinationfieldshow($ShipArr['origin'], 'latitute',$super_id);
-        $lang = $this->getdestinationfieldshow($ShipArr['origin'], 'longitute',$super_id);
+        $receiver_city = $this->getdestinationfieldshow_auto_array($ShipArr['destination'], 'labaih',$super_id);
+        $sender_city = $this->getdestinationfieldshow_auto_array($ShipArr['origin'], 'labaih',$super_id);
+        $lat = $this->getdestinationfieldshow_auto_array($ShipArr['origin'], 'latitute',$super_id);
+        $lang = $this->getdestinationfieldshow_auto_array($ShipArr['origin'], 'longitute',$super_id);
         $declared_charge = $ShipArr['total_cod_amt'];
         $cod_amount = $ShipArr['total_cod_amt'];
         if ($ShipArr['mode'] === 'COD') {
@@ -602,8 +602,8 @@ class Ccompany_auto_model extends CI_Model {
 
     public function ClexArray($ShipArr, $counrierArr, $complete_sku,$box_pieces,$super_id=null,$c_id=null)
     {
-        $receiver_city = $this->getdestinationfieldshow($ShipArr['destination'], 'clex',$super_id);
-        $sender_city = $this->getdestinationfieldshow($ShipArr['origin'], 'clex',$super_id);
+        $receiver_city = $this->getdestinationfieldshow_auto_array($ShipArr['destination'], 'clex',$super_id);
+        $sender_city = $this->getdestinationfieldshow_auto_array($ShipArr['origin'], 'clex',$super_id);
         $comp_api_url = $counrierArr['api_url'];
         $declared_charge = $ShipArr['total_cod_amt'];
         $cod_amount = $ShipArr['total_cod_amt'];
@@ -717,10 +717,10 @@ class Ccompany_auto_model extends CI_Model {
  
 
 public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sku = null, $pay_mode = null, $CashOnDeliveryAmount = null, $services = null, $c_id = null, $super_id = null) {
-        $receiver_city = getdestinationfieldshow($ShipArr['destination'], 'city');
-        $sender_city = getdestinationfieldshow($ShipArr['origin'], 'city');
-        $lat = getdestinationfieldshow($ShipArr['origin'], 'latitute');
-        $lang = getdestinationfieldshow($ShipArr['origin'], 'longitute');
+        $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'city');
+        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city');
+        $lat = getdestinationfieldshow_auto_array($ShipArr['origin'], 'latitute');
+        $lang = getdestinationfieldshow_auto_array($ShipArr['origin'], 'longitute');
         $declared_charge = $ShipArr['total_cod_amt'];
 
         //echo "sadsdsad"; print_r($ShipArr); 
@@ -832,8 +832,8 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
     }
 
     public function MakdoonArray(array $ShipArr, array $counrierArr, $complete_sku = null, $Auth_token = null,$super_id,$c_id) {
-        $sender_city = $this->getdestinationfieldshow($ShipArr['origin'], 'makhdoom',$super_id);
-        $receiver_city = $this->getdestinationfieldshow($ShipArr['destination'], 'makhdoom',$super_id);
+        $sender_city = $this->getdestinationfieldshow_auto_array($ShipArr['origin'], 'makhdoom',$super_id);
+        $receiver_city = $this->getdestinationfieldshow_auto_array($ShipArr['destination'], 'makhdoom',$super_id);
         $API_URL = $counrierArr['api_url'];
 
         $sender_data = array(
@@ -928,8 +928,8 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
     }
 
 	public function SMSAArray($ShipArr, $counrierArr, $complete_sku,$box_pieces,$super_id) {
-        $receiver_city = $this->getdestinationfieldshow($ShipArr['destination'], 'samsa_city',$super_id,$c_id);
-        $sender_city = $this->getdestinationfieldshow($ShipArr['origin'], 'samsa_city',$super_id);
+        $receiver_city = $this->getdestinationfieldshow_auto_array($ShipArr['destination'], 'samsa_city',$super_id,$c_id);
+        $sender_city = $this->getdestinationfieldshow_auto_array($ShipArr['origin'], 'samsa_city',$super_id);
         $declared_charge = $ShipArr['total_cod_amt'];
         $cod_amount = $ShipArr['total_cod_amt'];
        
@@ -1045,8 +1045,8 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
     }
 
   	public function ZajilArray($ShipArr, $counrierArr, $complete_sku, $c_id, $super_id) {
-        $receiver_city = getdestinationfieldshow($ShipArr['destination'], 'zajil');
-        $sender_city = getdestinationfieldshow($ShipArr['origin'], 'zajil');
+        $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'zajil');
+        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'zajil');
         $declared_charge = $ShipArr['total_cod_amt'];
         $cod_amount = $ShipArr['total_cod_amt'];
         if ($ShipArr['mode'] === 'COD') {
@@ -1147,8 +1147,8 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
     }
 	public function NaqelArray(array $ShipArr, array $counrierArr, $complete_sku = null, $box_pieces = null, $Auth_token = null, $c_id = null, $super_id = null) 
 	 {
-	        $sender_city = getdestinationfieldshow($ShipArr['origin'], 'naqel_city_code');
-	        $receiver_city = getdestinationfieldshow($ShipArr['destination'], 'naqel_city_code');
+	        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'naqel_city_code');
+	        $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'naqel_city_code');
 	            if ($ShipArr['mode'] == 'CC') {
 	                    $BillingType = 1;
 	                } elseif ($ShipArr['mode'] == "COD") {
@@ -1266,10 +1266,10 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
 
 	}
 	public function SaeeArray(array $ShipArr, array $counrierArr, $Auth_token = null,$c_id,$super_id) {
-        $sender_city = getdestinationfieldshow($ShipArr['origin'], 'city');
-        $receiver_city = getdestinationfieldshow($ShipArr['destination'], 'city');
-        $lat = getdestinationfieldshow($ShipArr['origin'], 'latitute');
-        $lang = getdestinationfieldshow($ShipArr['origin'], 'longitute');
+        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city');
+        $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'city');
+        $lat = getdestinationfieldshow_auto_array($ShipArr['origin'], 'latitute');
+        $lang = getdestinationfieldshow_auto_array($ShipArr['origin'], 'longitute');
 
         $API_URL = $counrierArr['api_url'];
         $Secretkey = $counrierArr['auth_token'];
@@ -1362,7 +1362,7 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
             $Receiver_address = 'N/A';
         }
 
-        $Reciever_city = getdestinationfieldshow($ShipArr['destination'], 'emdad_city');
+        $Reciever_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'emdad_city');
         
         $product_type = 'Parcel'; //beone ka database
         $service = '2'; // beone wali
@@ -1378,7 +1378,7 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
         $s_address = $ShipArr['sender_address'];
         $s_zip = $ShipArr['sender_zip'];
         $s_phone = $ShipArr['sender_phone'];
-        $s_city = getdestinationfieldshow($ShipArr['origin'], 'emdad_city');
+        $s_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'emdad_city');
 
         $pay_mode = $ShipArr['mode']; //paymode either CASH or COD:(column name: mode || date
         $codValue = $ShipArr['total_cod_amt']; //COD charges.  :  (column name:     total_cod_amt || date type:
@@ -1417,10 +1417,10 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
         return $response;
     }
     public function AjeekArray($ShipArr, $counrierArr, $complete_sku, $box_pieces, $c_id, $super_id) {
-        $receiver_city = getdestinationfieldshow($ShipArr['destination'], 'ajeek_city');
-        $sender_city = getdestinationfieldshow($ShipArr['origin'], 'ajeek_city');
-       $latitude = getdestinationfieldshow($ShipArr['origin'], 'latitute');
-       $Longitude = getdestinationfieldshow($ShipArr['origin'], 'longitute');
+        $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'ajeek_city');
+        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'ajeek_city');
+       $latitude = getdestinationfieldshow_auto_array($ShipArr['origin'], 'latitute');
+       $Longitude = getdestinationfieldshow_auto_array($ShipArr['origin'], 'longitute');
         $api_key = $counrierArr['auth_token'];
         $vendor_id = $counrierArr['courier_pin_no'];
         $user_id = $counrierArr['courier_account_no'];
@@ -1509,14 +1509,16 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
         return $response_array;
     }
     public function AymakanArray(array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null, $super_id = null) {
-        $sender_city = getdestinationfieldshow($ShipArr['origin'], 'Aymakan');
-        $receiver_city = getdestinationfieldshow($ShipArr['destination'], 'Aymakan');
+        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'aymakan',$ShipArr['super_id']);
+
+       
+        $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'aymakan',$ShipArr['super_id']); 
          $store = getallsellerdatabyID($ShipArr['cust_id'], 'company');
         
         $entry_date = date('Y-m-d H:i:s');
         $pickup_date = date("Y-m-d", strtotime($entry_date));
 
-        $API_URL = $counrierArr['api_url'];
+        $API_URL = $counrierArr['api_url']; 
         $api_key = $counrierArr['auth_token'];
          $currency = "SAR";
 
@@ -1532,7 +1534,7 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
             $cod_amount = 0;
         }
 
-        echo "<pre>";
+        //echo "<pre>";
         $all_param_data = array(
            "requested_by" => $ShipArr['sender_name'],
            "fulfilment_customer_name" => $store,
@@ -1564,10 +1566,10 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
        // print_r($all_param_data);
         //exit;
         $json_final_date = json_encode($all_param_data);
-        // print_r($json_final_date);exit;
+    // print_r($json_final_date);exit;
         $headers = array(
             "Accept:application/json",
-            "Authorization: $api_key");
+            "Authorization:". $api_key);
         
         if(empty($receiver_city))
         {
@@ -1594,7 +1596,7 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
             $responseArray = json_decode($response, true);
             $logresponse =   json_encode($response);  
             $successres = $responseArray['errors'];
-            echo "<pre>"; print_r($response)   ;   // die;
+           // echo "<pre>"; print_r($response)   ;   
             if(empty($successres)) 
             {
                 $successstatus  = "Success";
@@ -1608,8 +1610,8 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
     }
     public function ShipsyArray(array $ShipArr, array $counrierArr, $box_pieces = null, $c_id = null, $super_id = null) {
         //print_r($ShipArr);exit;
-        $sender_city = getdestinationfieldshow($ShipArr['origin'], 'shipsy_city');
-        $receiver_city = getdestinationfieldshow($ShipArr['destination'], 'shipsy_city');
+        $sender_city = getdestinationfieldshow_auto_array_auto_array($ShipArr['origin'], 'shipsy_city');
+        $receiver_city = getdestinationfieldshow_auto_array_auto_array($ShipArr['destination'], 'shipsy_city');
             if ($ShipArr['mode'] == 'COD') {
                     $total_cod_amt = $ShipArr['total_cod_amt'];
                 } elseif ($ShipArr['mode'] == "CC") {
@@ -1768,8 +1770,8 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
     public function ShipadeliveryArray(array $ShipArr, array $counrierArr, $auth_token = null, $c_id = null) {
         
         ini_set('default_charset', 'UTF-8');
-        $sender_city = getdestinationfieldshow($ShipArr['origin'], 'shipsa_city');
-        $receiver_city = getdestinationfieldshow($ShipArr['destination'], 'shipsa_city');
+        $sender_city = getdestinationfieldshow_auto_array_auto_array($ShipArr['origin'], 'shipsa_city');
+        $receiver_city = getdestinationfieldshow_auto_array_auto_array($ShipArr['destination'], 'shipsa_city');
 
        // echo  "<br/>receiver_city = ".$receiver_city;
                
@@ -1978,8 +1980,8 @@ public function ShipaDelLabelcURL(array $counrierArr, $client_awb = null)
         $token = json_decode($response, true);
         
         
-        $sender_city = getdestinationfieldshow($ShipArr['origin'], 'saudipost_id');
-        $receiver_city = getdestinationfieldshow($ShipArr['destination'], 'saudipost_id');
+        $sender_city = getdestinationfieldshow_auto_array_auto_array($ShipArr['origin'], 'saudipost_id');
+        $receiver_city = getdestinationfieldshow_auto_array_auto_array($ShipArr['destination'], 'saudipost_id');
         
         if ($ShipArr['mode'] == "COD") {
             $PaymentType = 2;
@@ -2123,7 +2125,7 @@ public function ShipaDelLabelcURL(array $counrierArr, $client_awb = null)
         }
 
 
-}
+
 
 public function Ejack($ShipArr, $counrierArr, $complete_sku, $c_id,$super_id = null) 
 {
@@ -2156,7 +2158,7 @@ public function Ejack($ShipArr, $counrierArr, $complete_sku, $c_id,$super_id = n
         $Receiver_address = 'N/A';
     }
 
-    $Reciever_city = getdestinationfieldshow($ShipArr['destination'], 'city');
+    $Reciever_city = getdestinationfieldshow_auto_array_auto_array($ShipArr['destination'], 'city');
     
     $product_type = 'Parcel'; //beone ka database
     $service = '2'; // beone wali
@@ -2172,7 +2174,7 @@ public function Ejack($ShipArr, $counrierArr, $complete_sku, $c_id,$super_id = n
     $s_address = $ShipArr['sender_address'];
     $s_zip = $ShipArr['sender_zip'];
     $s_phone = $ShipArr['sender_phone'];
-    $s_city = getdestinationfieldshow($ShipArr['origin'], 'city');
+    $s_city = getdestinationfieldshow_auto_array_auto_array($ShipArr['origin'], 'city');
 
     $pay_mode = $ShipArr['mode']; //paymode either CASH or COD:(column name: mode || date
     $codValue = $ShipArr['total_cod_amt']; //COD charges.  :  (column name:     total_cod_amt || date type:
@@ -2209,9 +2211,10 @@ public function Ejack($ShipArr, $counrierArr, $complete_sku, $c_id,$super_id = n
     return $response;
 }
 
-public function fastcooArray(array $ShipArr, array $counrierArr, $complete_sku = null, $Auth_token = null, $c_id = null,$$super_id = null) {
-    $sender_city = getdestinationfieldshow($ShipArr['origin'], 'city');
-    $receiver_city = getdestinationfieldshow($ShipArr['destination'], 'city');
+public function fastcooArray(array $ShipArr, array $counrierArr, $complete_sku = null, $Auth_token = null, $c_id = null,$super_id = null) {
+
+    $sender_city = getdestinationfieldshow_auto_array_auto_array($ShipArr['origin'], 'city');
+    $receiver_city = getdestinationfieldshow_auto_array_auto_array($ShipArr['destination'], 'city');
     $entry_date = date('Y-m-d H:i:s');
     $pickup_date = date("Y-m-d", strtotime($entry_date));
 
@@ -2307,4 +2310,5 @@ public function fastcooArray(array $ShipArr, array $counrierArr, $complete_sku =
    
         return $response;
     }
+}
 }

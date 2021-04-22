@@ -17,7 +17,7 @@ class CourierSeller_model extends CI_Model {
 	{
         
 		$this->db->where('super_id', $this->session->userdata('user_details')['super_id']);		
-		$this->db->where('status', 'Y');		
+		//$this->db->where('status', 'Y');		
 		$this->db->where('deleted', 'N');	
 		$this->db->select('*');
         $this->db->from('courier_company');
@@ -27,7 +27,7 @@ class CourierSeller_model extends CI_Model {
 		if(!empty($data)){
 			$i = 0;
 			foreach ($data as $cc_val) {
-				$sel = $this->db->query("select * from sellerCourier where seller_id = '".$seller_id."' and cc_id='".$cc_val['id']."'");
+				$sel = $this->db->query("select * from sellerCourier where seller_id = '".$seller_id."' and cc_id='".$cc_val['cc_id']."'");
 				if($sel->num_rows() > 0){
 				}
 				else
@@ -41,7 +41,7 @@ class CourierSeller_model extends CI_Model {
 						} 
 					$instertData=  array(
 						'seller_id' => $seller_id, 
-						'cc_id' => $cc_val['id'], 
+						'cc_id' => $cc_val['cc_id'], 
 						'priority' => $i, 
 						'status' => $statusVal  , 
 						'super_id' => $this->session->userdata('user_details')['super_id'] 
@@ -65,8 +65,9 @@ class CourierSeller_model extends CI_Model {
 
  		$this->db->select('sellerCourier.*,courier_company.company');
         $this->db->from('sellerCourier');
-		$this->db->join('courier_company', 'sellerCourier.cc_id = courier_company.id');
+		$this->db->join('courier_company', 'sellerCourier.cc_id = courier_company.cc_id');
 		$this->db->where('sellerCourier.super_id',$this->session->userdata('user_details')['super_id']);
+		$this->db->where('courier_company.super_id',$this->session->userdata('user_details')['super_id']);
 		$this->db->where('sellerCourier.seller_id',$seller_id);
 		$query = $this->db->get();
 		//echo "<br><br><br>". $this->db->last_query(); die; 
