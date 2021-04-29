@@ -649,6 +649,7 @@
                             </ul>
                         </li>
                          <?php } ?>
+                         <li><a href="<?= base_url('Country/cityList'); ?>"><i class="fa fa-arrow-left"></i> <span><?= lang('lang_City_List'); ?></span></a>    </li>
                         
                         
                     

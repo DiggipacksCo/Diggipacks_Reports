@@ -92,6 +92,7 @@
                             <div class="alert alert-danger"><strong>Note! </strong><br>&nbsp1. To add bulk of items use this import feature. Below are the columns you must have according to serial number in the excel csv file.<br>&nbsp2. All fields are required.<br>&nbsp3. Click above excel icon to get excel file for an idea.<br>&nbsp4. Don't Change Default File Format</div>  <hr>
 
                                 <br> 
+                                <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-hover">
                                     <tbody>
                                         <tr>
@@ -108,16 +109,17 @@
                                               ?>
 
                                         </tr>
-                                        <tr>
+<!--                                        <tr>
                                            
                                         <td>(11) <?=('Arabic City Name');?> <span style="color:#F00"><strong>*</strong></span></td>
                                            
 
                                           
-                                        </tr>
+                                        </tr>-->
 
                                     </tbody>
                                 </table>
+                                    </div>
                                 <br>
                                 <form class="stdform" method="post" action="<?= base_url('Excel_export/ImportDeliveryCompanyData'); ?>" name="add_ship" enctype="multipart/form-data">
                                     <label><strong class="alert-danger">Import File</strong></label>

@@ -1222,3 +1222,4 @@ $lang['lang_FAQ']="FAQ";
 $lang['lang_Back']="Back";
 
 $lang['lang_Batch_Pickup']="Batch Pickup";
+$lang['lang_City_List']="City List";
