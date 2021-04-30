@@ -59,7 +59,7 @@ class Ccompany_auto_model extends CI_Model {
 	
 	
 	
-	public function getdestinationfieldshow_auto_array_auto_array($id=null,$field=null,$super_id){
+	public function getdestinationfieldshow_auto_array($id=null,$field=null,$super_id){
 	
                 
 		 $sql ="SELECT $field FROM country where id='$id' and super_id='".$super_id."'";
@@ -92,8 +92,8 @@ class Ccompany_auto_model extends CI_Model {
         }
 	
 	public function AramexArray(array $ShipArr, array $counrierArr, $complete_sku=null, $pay_mode=null, $CashOnDeliveryAmount=null, $services=null,$super_id=null){
-		$sender_city = $this->getdestinationfieldshow_auto_array_auto_array($ShipArr['origin'], 'aramex_city',$super_id);
-		$reciever_city = $this->getdestinationfieldshow_auto_array_auto_array($ShipArr['destination'], 'aramex_city',$super_id);
+		$sender_city = $this->getdestinationfieldshow_auto_array($ShipArr['origin'], 'aramex_city',$super_id);
+		$reciever_city = $this->getdestinationfieldshow_auto_array($ShipArr['destination'], 'aramex_city',$super_id);
 		$date = (int) microtime(true) * 1000;
         if($ShipArr['weight']==0)
         {  $weight= 1;
@@ -344,8 +344,8 @@ class Ccompany_auto_model extends CI_Model {
 	}
 	
 	public function SafeArray(array $ShipArr, array $counrierArr, $complete_sku=null, $Auth_token=null,$super_id=null){
-		$sender_city_safe = $this->getdestinationfieldshow_auto_array_auto_array($ShipArr['origin'], 'safe_arrival',$super_id);
-		$receiver_city_safe = $this->getdestinationfieldshow_auto_array_auto_array($ShipArr['destination'], 'safe_arrival',$super_id);
+		$sender_city_safe = $this->getdestinationfieldshow_auto_array($ShipArr['origin'], 'safe_arrival',$super_id);
+		$receiver_city_safe = $this->getdestinationfieldshow_auto_array($ShipArr['destination'], 'safe_arrival',$super_id);
 		
 		$API_URL = $counrierArr['api_url'];
 
@@ -427,67 +427,106 @@ class Ccompany_auto_model extends CI_Model {
           $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$super_id);
 		return $response;
 	}
-	
-	public function EsnadArray(array $ShipArr, array $counrierArr, $esnad_awb_number=null, $complete_sku=null, $Auth_token=null,$super_id=null,$c_id=null){
+
+	public function EsnadArray(array $ShipArr, array $counrierArr, $esnad_awb_number=null, $complete_sku=null, $Auth_token=null,$c_id=null,$box_pieces=NULL,$super_id=null){
 		$receiver_city = $this->getdestinationfieldshow_auto_array($ShipArr['destination'], 'esnad_city',$super_id);
 		 $sender_city = $this->getdestinationfieldshow_auto_array($ShipArr['origin'], 'esnad_city',$super_id); 
-		$declared_charge = $ShipArr['total_cod_amt'];
-		$cod_amount = $ShipArr['total_cod_amt'];
-		
-		if ($ShipArr['mode'] == 'COD') {
-			$pay_mode = "COD";
-			$declared_charge = 0;
-		} else {
-			$pay_mode = "PP";
-			$cod_amount = 0;
-		}
-		
-		$comp_api_url = $counrierArr['api_url'];
-		$Auth_token = $counrierArr['auth_token'];
-						
-		
-		$param = array(
-			array(
-				"esnadAwbNo" => $esnad_awb_number,
-				"clientOrderNo" => $ShipArr['slip_no'],
-				"orderType" => "DOM",
-				"deliveryService" => "EXP",
-				"consignor" => $ShipArr['sender_name'],
-				"pickupAddress" => $ShipArr['sender_address'],
-				"pickupContact" => $ShipArr['sender_phone'],
-				"originCity" => $sender_city,
-				"originCountry" => "SA",
-				"consignee" => $ShipArr['reciever_name'],
-				"deliveryAddress" => $ShipArr['reciever_address'],
-				"deliveryContact" => $ShipArr['reciever_phone'],
-				"destCity" => $receiver_city,
-				"destCountry" => "SA",
-				"returnName" => "",
-				"returnAddress" => "", //return address
-				"returnPincode" => "", // return zip
-				"returnContact" => "", // return contact
-				"returnCity" => "", // return city
-				"returnCountry" => "", // return country
-				"productDescription" => $complete_sku,
-				"paymentMode" => $pay_mode,
-				"amountToCollect" => $cod_amount,
-				"pcs" => 1,//$pieces,
-				"declaredValue" => $declared_charge,
-				"packageWeight" => $ShipArr['weight'],
-				"productDetails" => array(
-					"productHscode"=>$complete_sku,
-				)
-			)
-		);
-		
-		$dataJson = json_encode($param);
-		$headers = array(
-			"Content-Type: application/json",
-			"token: $Auth_token"
-		);
-		$response = send_data_to_curl($dataJson, $comp_api_url, $headers);
-		$logresponse =   json_encode($response); 
-        $responseArray = json_decode($response, true); 
+		 $declared_charge = $ShipArr['total_cod_amt'];
+        $iscod = false;
+        $cod_amount = $ShipArr['total_cod_amt'];
+        
+        if ($ShipArr['mode'] == 'COD') {
+            $pay_mode = "COD";
+            $declared_charge =$ShipArr['total_cod_amt'];
+            $iscod = true;
+        } else {
+            $pay_mode = "PP";
+            $cod_amount = 0;
+            $iscod = false;
+            if( $ShipArr['total_cod_amt']>0)
+            $declared_charge = $ShipArr['total_cod_amt'];
+            else
+            $declared_charge =1;
+        }
+        $comp_api_url = $counrierArr['api_url'];  
+        
+        $Auth_token = $counrierArr['auth_token'];     
+        if(empty($box_pieces1))
+        {
+            $box_pieces = 1;
+        }
+        else
+        { 
+             $box_pieces = $box_pieces1 ; 
+        }
+
+        if($ShipArr['weight']==0)
+        {  
+            $weight= 1;
+        }
+        else { 
+            $weight = $ShipArr['weight'] ; 
+        }
+        
+        $param = array(
+                "currency"=>"SAR",
+                "codAmount"=>$cod_amount,
+                "customerCode"=> "Kedan",
+                "customerNo"=> $ShipArr['slip_no'],
+                "trackingNo"=> $ShipArr['slip_no'],
+                "ifpickup"=> false,
+                "token"=>$Auth_token,
+                "isCod"=> $iscod,
+                "orderAmount" =>$declared_charge,
+                "packageList"=> array(array(
+                    "packageCode"=> $complete_sku,
+                    "packageHeight"=> 0,
+                    "packageLength"=>0,
+                    "packageVolume"=> $box_pieces,
+                    "packageWeight"=> (float)$weight,
+                    "packageWidth"=>0
+                    )
+                ),
+                "receiver"=>array(
+                    "address"=>html_entity_decode($ShipArr['reciever_address']) ,
+                    "cityId"=> $receiver_cityID,//(int)$ShipArr['destination'],
+                    "cityName"=> $receiver_city,
+                    "countryId"=> 1876,
+                    "countryName"=> "Saudi Arabia",
+                    "name"=> $ShipArr['reciever_name'],
+                    "phone"=> $ShipArr['reciever_phone']
+                ),
+                "sender"=>array(
+                    "address"=> html_entity_decode($ShipArr['sender_address']),
+                    "cityName"=> $sender_city,
+                    "countryId"=> 1876,
+                    "countryName"=> "Saudi Arabia",
+                    "name"=>$ShipArr['sender_name'],
+                    "phone"=> $ShipArr['sender_phone']
+                ),
+                
+                "totalInnerCount"=>1,
+                "totalPackageCount"=> 1,
+                "totalWeight"=>$weight,
+                "totalVolume"=>$box_pieces,
+                
+            
+        );
+
+        
+          $dataJson = json_encode($param); 
+  
+
+        $headers = array(
+            "Content-Type: application/json",
+            "token: $Auth_token"
+        );
+       // echo $comp_api_url; 
+        $response = send_data_to_curl($dataJson, $comp_api_url, $headers);
+               
+        //exit($response);
+        $logresponse =   json_encode($response); 
+        $responseArray = json_decode($response, true);
         $successres = $responseArray['code'];
         if($successres  == "1000") 
         {
@@ -496,9 +535,8 @@ class Ccompany_auto_model extends CI_Model {
             $successstatus  = "Fail";
         }
 
-           $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$super_id);
-
-		return $response;
+        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
+        return $response;
 	}
         
         
@@ -602,119 +640,113 @@ class Ccompany_auto_model extends CI_Model {
 
     public function ClexArray($ShipArr, $counrierArr, $complete_sku,$box_pieces,$super_id=null,$c_id=null)
     {
-        $receiver_city = $this->getdestinationfieldshow_auto_array($ShipArr['destination'], 'clex',$super_id);
-        $sender_city = $this->getdestinationfieldshow_auto_array($ShipArr['origin'], 'clex',$super_id);
+        $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'clex',$super_id);
+        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'clex',$super_id);
         $comp_api_url = $counrierArr['api_url'];
         $declared_charge = $ShipArr['total_cod_amt'];
         $cod_amount = $ShipArr['total_cod_amt'];
         if ($ShipArr['mode'] == 'COD') {
-                            $billing_type = 'COD';
-                            // $cod_amount=0;
-                        } else {
-                            $billing_type = 'PREPAID';
-                            $cod_amount = 0;
-                        }
-                        if ($ShipArr['weight'] == 0) {
-                            $weight = 1;
-                        }
-                        else
-                        {
-                            $weight=$ShipArr['weight'];
-                        }
-                        
-                        
-                         if($box_pieces>0)
+            $billing_type = 'COD';
+            // $cod_amount=0;
+        } else {
+            $billing_type = 'PREPAID';
+            $cod_amount = 0;
+        }
+              
+        if(empty($box_pieces1))
         {
-          $pieces=$box_pieces;
+            $box_pieces = 1;
         }
         else
-        {
-          $pieces= $ShipArr['pieces'];
+        { 
+             $box_pieces = $box_pieces1 ; 
         }
-                        
-                        $request_data = array(
-                            'shipment_reference_number' => $ShipArr['slip_no'],
-                            'shipment_type' => 'delivery',
-                            'billing_type' => $billing_type,
-                            'collect_amount' => $cod_amount,
-                            'primary_service' => 'delivery',
-                            'secondary_service' => '',
-                            'item_value' => '',
-                            'consignor' => $ShipArr['sender_name'],
-                            'consignor_email' => $ShipArr['sender_email'],
-                            'origin_city' => $sender_city,
-                            'origin_area_new' => '',
-                            'consignor_street_name' => $ShipArr['sender_address'],
-                            'consignor_building_name' => '',
-                            'consignor_address_house_appartment' => '',
-                            'consignor_address_landmark' => '',
-                            'consignor_country_code' => '+966',
-                            'consignor_phone' => remove_phone_format($ShipArr['sender_phone']),
-                            'consignor_alternate_country_code' => '',
-                            'consignor_alternate_phone' => '',
-                            'consignee' => $ShipArr['reciever_name'],
-                            'consignee_email' => $ShipArr['receiver_email'],
-                            'destination_city' => $receiver_city,
-                            'destination_area_new' => '',
-                            'consignee_street_name' => $ShipArr['reciever_address'],
-                            'consignee_building_name' => '',
-                            'consignee_address_house_appartment' => '',
-                            'consignee_address_landmark' => '',
-                            'consignee_country_code' => '+966',
-                            'consignee_phone' => remove_phone_format($ShipArr['reciever_phone']),
-                            'consignee_alternate_country_code' => '',
-                            'consignee_alternate_phone' => '',
-                            'pieces_count' => $pieces,
-                            'order_date' => date('d-m-Y'),
-                            'commodity_description' => $complete_sku,
-                            'pieces' => array(array(
-                                    'weight_actual' => '10',
-                                    'volumetric_width' => $weight,
-                                    'volumetric_height' => $weight,
-                                    'volumetric_depth' => $weight,
-                                ))
-                        );
-                       //  echo "<pre>";print_r($request_data);echo "</br>";exit;
-                        $dataJson = json_encode($request_data);
-                        $access_token=$counrierArr['auth_token'];
-                       
-                        $headers = array(
-                            "Content-type:application/json",
-                            "Access-token:$access_token");
-                         // echo "<pre>";print_r($headers);echo "</br>";exit;
-                         if(empty($receiver_city)){
-                            $response = array('message' => 'Receiver city is empty ');
-                            return $response; 
-                        }
-                        else{
-                
-                        $ch = curl_init($comp_api_url);
-                        curl_setopt($ch, CURLOPT_POST, 1);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-                        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataJson);
 
-                        $response = curl_exec($ch);
-                        	//echo "<pre>";print_r($response);echo "</br>";//exit;
-                        curl_close($ch);
-                        $response_array = json_decode($response, true);
-                         $response_array = json_decode($response, true);
-					        $logresponse =   json_encode($response_array);  
-					        $successres = $response_array['error'];
-					       // echo "<pre>"; print_r($response_array)   ;    //die;
-					        if($successres == 'false') 
-					        {
-					            $successstatus  = "Success";
-					        }else {
-					            $successstatus  = "Fail";
-					        }
+        if($ShipArr['weight']==0)
+        {  
+            $weight= 1;
+        }
+        else { 
+            $weight = $ShipArr['weight'] ; 
+        }
+       
 
-					         $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$super_id);
-					                        return $response_array;
-                        }
-        
+        $request_data = array(
+            'shipment_reference_number' => $ShipArr['slip_no'],
+            'shipment_type' => 'delivery',
+            'billing_type' => $billing_type,
+            'collect_amount' => $cod_amount,
+            'primary_service' => 'delivery',
+            'secondary_service' => '',
+            'item_value' => '',
+            'consignor' => $ShipArr['sender_name'],
+            'consignor_email' => $ShipArr['sender_email'],
+            'origin_city' => $sender_city,
+            'origin_area_new' => '',
+            'consignor_street_name' => $ShipArr['sender_address'],
+            'consignor_building_name' => '',
+            'consignor_address_house_appartment' => '',
+            'consignor_address_landmark' => '',
+            'consignor_country_code' => '+966',
+            'consignor_phone' => remove_phone_format($ShipArr['sender_phone']),
+            'consignor_alternate_country_code' => '',
+            'consignor_alternate_phone' => '',
+            'consignee' => $ShipArr['reciever_name'],
+            'consignee_email' => $ShipArr['receiver_email'],
+            'destination_city' => $receiver_city,
+            'destination_area_new' => '',
+            'consignee_street_name' => $ShipArr['reciever_address'],
+            'consignee_building_name' => '',
+            'consignee_address_house_appartment' => '',
+            'consignee_address_landmark' => '',
+            'consignee_country_code' => '+966',
+            'consignee_phone' => $ShipArr['reciever_phone'],
+            'consignee_alternate_country_code' => '',
+            'consignee_alternate_phone' => '',
+            'pieces_count' => $box_pieces,
+            'order_date' => date('d-m-Y'),
+            'commodity_description' => $complete_sku,
+            'pieces' => array(array(
+                    'weight_actual' => $weight,
+                    'volumetric_width' => '',
+                    'volumetric_height' =>'',
+                    'volumetric_depth' =>'',
+                ))
+        );
+
+       
+        $dataJson = json_encode($request_data);
+        $access_token = $counrierArr['auth_token'];
+
+        $headers = array(
+            "Content-type:application/json",
+            "Access-token:$access_token");
+
+        $ch = curl_init($comp_api_url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataJson);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $response_array = json_decode($response, true);
+        $logresponse =   json_encode($response_array);  
+        $successres = $response_array['message'];
+        $error = $response_array['error'];
+
+        if($successres == 'Succesfully added.' || $error == false) 
+        {
+            $successstatus  = "Success";
+        }else {
+            $successstatus  = "Fail";
+        }
+
+        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
+        return $response_array;
     }
  
+   
 
 public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sku = null, $pay_mode = null, $CashOnDeliveryAmount = null, $services = null, $c_id = null, $super_id = null) {
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'city');
@@ -1145,131 +1177,147 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
          $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$super_id);
         return $response_array;
     }
+   
+    
 	public function NaqelArray(array $ShipArr, array $counrierArr, $complete_sku = null, $box_pieces = null, $Auth_token = null, $c_id = null, $super_id = null) 
 	 {
-	        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'naqel_city_code');
-	        $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'naqel_city_code');
-	            if ($ShipArr['mode'] == 'CC') {
-	                    $BillingType = 1;
-	                } elseif ($ShipArr['mode'] == "COD") {
-	                    $BillingType = 5;
-	                }
-	             $API_URL = $counrierArr['api_url'];    
-	             $user_name = $counrierArr['user_name'];    
-	             $password = $counrierArr['password'];
-	            $xml_new = '<?xml version="1.0" encoding="utf-8"?>
-	                    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">
-	                        <soapenv:Header/>
-	                        <soapenv:Body>
-	                            <tem:CreateWaybill>
-	                                <tem:_ManifestShipmentDetails>
-	                                    <tem:ClientInfo>
-	                                    <tem:ClientAddress>
-	                                        <tem:PhoneNumber>'.$ShipArr['sender_phone'].'</tem:PhoneNumber>
-	                                        <tem:POBox></tem:POBox>
-	                                        <tem:ZipCode></tem:ZipCode>
-	                                        <tem:Fax></tem:Fax>
-	                                        <tem:FirstAddress>'.$ShipArr['sender_address'].'</tem:FirstAddress>
-	                                        <tem:Location>' . $sender_city . '</tem:Location>
-	                                        <tem:CountryCode>KSA</tem:CountryCode>
-	                                        <tem:CityCode>' . $sender_city . '</tem:CityCode>
-	                                    </tem:ClientAddress>
+       
+	      $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'naqel_city_code',$super_id); 
+          $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'naqel_city_code',$super_id);
+            if ($ShipArr['mode'] == 'CC') {
+                $BillingType = 1;
+            } elseif ($ShipArr['mode'] == "COD") {
+                $BillingType = 5;
+            }
+        if(empty($box_pieces1))
+            {
+                $box_pieces = 1;
+            }
+            else
+            { 
+                 $box_pieces = $box_pieces1 ; 
+            }
+    
+        if($ShipArr['weight']==0)
+            {  
+                $weight= 1;
+            }
+            else { 
+                $weight = $ShipArr['weight'] ; 
+            }
+           
+         $API_URL = $counrierArr['api_url'];    
+         $user_name = $counrierArr['user_name'];    
+         $password = $counrierArr['password'];
+         $xml_new = '<?xml version="1.0" encoding="utf-8"?>
+                <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">
+                    <soapenv:Header/>
+                    <soapenv:Body>
+                        <tem:CreateWaybill>
+                            <tem:_ManifestShipmentDetails>
+                                <tem:ClientInfo>
+                                <tem:ClientAddress>
+                                    <tem:PhoneNumber>'.$ShipArr['sender_phone'].'</tem:PhoneNumber>
+                                    <tem:POBox></tem:POBox>
+                                    <tem:ZipCode></tem:ZipCode>
+                                    <tem:Fax></tem:Fax>
+                                    <tem:FirstAddress>'.$ShipArr['sender_address'].'</tem:FirstAddress>
+                                    <tem:Location>' . $sender_city . '</tem:Location>
+                                    <tem:CountryCode>KSA</tem:CountryCode>
+                                    <tem:CityCode>' . $sender_city . '</tem:CityCode>
+                                </tem:ClientAddress>
 
-	                                    <tem:ClientContact>
-	                                        <tem:Name>' . $ShipArr['sender_name'] . '</tem:Name>
-	                                        <tem:Email>' . $ShipArr['sender_email'] . '</tem:Email>
-	                                        <tem:PhoneNumber>'.$ShipArr['sender_phone'] . '</tem:PhoneNumber>
-	                                        <tem:MobileNo>' . $ShipArr['sender_phone'] . '</tem:MobileNo>
-	                                    </tem:ClientContact>
+                                <tem:ClientContact>
+                                    <tem:Name>' . $ShipArr['sender_name'] . '</tem:Name>
+                                    <tem:Email>' . $ShipArr['sender_email'] . '</tem:Email>
+                                    <tem:PhoneNumber>'.$ShipArr['sender_phone'] . '</tem:PhoneNumber>
+                                    <tem:MobileNo>' . $ShipArr['sender_phone'] . '</tem:MobileNo>
+                                </tem:ClientContact>
 
-	                                    <tem:ClientID>'.$user_name.'</tem:ClientID>
-	                                    <tem:Password>'.$password.'</tem:Password>
-	                                    <tem:Version>9.0</tem:Version>
-	                                    </tem:ClientInfo>
+                                <tem:ClientID>'.$user_name.'</tem:ClientID>
+                                <tem:Password>'.$password.'</tem:Password>
+                                <tem:Version>9.0</tem:Version>
+                                </tem:ClientInfo>
 
-	                                    <tem:ConsigneeInfo>
-	                                    <tem:ConsigneeName>' .$ShipArr['reciever_name'].'</tem:ConsigneeName>
-	                                    <tem:Email>' . $ShipArr['reciever_email'] . '</tem:Email>
-	                                    <tem:Mobile>' . $ShipArr['reciever_phone'] . '</tem:Mobile>
-	                                    <tem:PhoneNumber>' . $ShipArr['reciever_phone'] . '</tem:PhoneNumber>
-	                                    <tem:Address>' .$receiver_city . '</tem:Address>
-	                                    <tem:CountryCode>KSA</tem:CountryCode>
-	                                    <tem:CityCode>' . $receiver_city .'</tem:CityCode>
-	                                    </tem:ConsigneeInfo>
+                                <tem:ConsigneeInfo>
+                                <tem:ConsigneeName>' .$ShipArr['reciever_name'].'</tem:ConsigneeName>
+                                <tem:Email>' . $ShipArr['reciever_email'] . '</tem:Email>
+                                <tem:Mobile>' . $ShipArr['reciever_phone'] . '</tem:Mobile>
+                                <tem:PhoneNumber>' . $ShipArr['reciever_phone'] . '</tem:PhoneNumber>
+                                <tem:Address>' .$receiver_city . '</tem:Address>
+                                <tem:CountryCode>KSA</tem:CountryCode>
+                                <tem:CityCode>' . $receiver_city .'</tem:CityCode>
+                                </tem:ConsigneeInfo>
 
-	                                    <tem:BillingType>' . $BillingType . '</tem:BillingType>
-	                                    <tem:PicesCount>' . $ShipArr['pieces'] . '</tem:PicesCount>
-	                                    <tem:Weight>' . $ShipArr['weight'] . '</tem:Weight>
-	                                    <tem:DeliveryInstruction> </tem:DeliveryInstruction>
-	                                    <tem:CODCharge>' . $ShipArr['total_cod_amt'] . '</tem:CODCharge>
-	                                    <tem:CreateBooking>false</tem:CreateBooking>
-	                                    <tem:isRTO>false</tem:isRTO>
-	                                    <tem:GeneratePiecesBarCodes>false</tem:GeneratePiecesBarCodes>
-	                                    <tem:LoadTypeID>36</tem:LoadTypeID>
-	                                    <tem:DeclareValue>0</tem:DeclareValue>
-	                                    <tem:GoodDesc>' . $complete_sku . '</tem:GoodDesc>
-	                                    <tem:RefNo>' .  $ShipArr['slip_no'] . '</tem:RefNo>
-	                                    <tem:InsuredValue>0</tem:InsuredValue>
-	                                    <tem:GoodsVATAmount>0</tem:GoodsVATAmount>
-	                                    <tem:IsCustomDutyPayByConsignee>false</tem:IsCustomDutyPayByConsignee>
-	                                </tem:_ManifestShipmentDetails>
-	                            </tem:CreateWaybill>
-	                        </soapenv:Body>
-	                        </soapenv:Envelope>';   
-	              //  echo "<pre>"; print_r($xml_new); //exit; 
-	                $headers = array(
-	                    "Content-type: text/xml",
-	                    "Content-length: ".strlen($xml_new),
-	                );
+                                <tem:BillingType>' . $BillingType . '</tem:BillingType>
+                                <tem:PicesCount>' . $box_pieces . '</tem:PicesCount>
+                                <tem:Weight>' . $weight. '</tem:Weight>
+                                <tem:DeliveryInstruction> </tem:DeliveryInstruction>
+                                <tem:CODCharge>' . $ShipArr['total_cod_amt'] . '</tem:CODCharge>
+                                <tem:CreateBooking>false</tem:CreateBooking>
+                                <tem:isRTO>false</tem:isRTO>
+                                <tem:GeneratePiecesBarCodes>false</tem:GeneratePiecesBarCodes>
+                                <tem:LoadTypeID>36</tem:LoadTypeID>
+                                <tem:DeclareValue>0</tem:DeclareValue>
+                                <tem:GoodDesc>' . $complete_sku . '</tem:GoodDesc>
+                                <tem:RefNo>' .  $ShipArr['slip_no'] . '</tem:RefNo>
+                                <tem:InsuredValue>0</tem:InsuredValue>
+                                <tem:GoodsVATAmount>0</tem:GoodsVATAmount>
+                                <tem:IsCustomDutyPayByConsignee>false</tem:IsCustomDutyPayByConsignee>
+                            </tem:_ManifestShipmentDetails>
+                        </tem:CreateWaybill>
+                    </soapenv:Body>
+                    </soapenv:Envelope>';   
+           
+            $headers = array(
+                "Content-type: text/xml",
+                "Content-length: ".strlen($xml_new),
+            );
+            if(empty($receiver_city)){
+                $awb_array = array('Message' => 'Receiver city is empty ');
+                return $awb_array; 
+            }
+            else{
+            $url = $API_URL;
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $xml_new);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            $response = curl_exec($ch);
+            $check = $response;
+            $respon = trim($check);
+            $respon = str_ireplace(array("soap:", "<?xml version=\"1.0\" encoding=\"utf-8\"?>"), "", $respon);
+            $xml2 = new SimpleXMLElement($respon);  
+            $again = $xml2;
+            $a = array("qwb" => $again);
 
-	                $url = $API_URL;
-                    if(empty($receiver_city)){
-                        $awb_array = array('Message' => 'Receiver city is empty ');
-                        return $awb_array; 
-                    }
-                    else{
-	                $ch = curl_init();
-	                curl_setopt($ch, CURLOPT_URL, $url);
-	                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-	                curl_setopt($ch, CURLOPT_POST, true);
-	                curl_setopt($ch, CURLOPT_POSTFIELDS, $xml_new);
-	                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-	                $response = curl_exec($ch);
-	                $check = $response;
-	                $respon = trim($check);
+            $complicated_awb = ($a['qwb']->Body->CreateWaybillResponse->CreateWaybillResult);
+            curl_close($ch);
 
-	                // echo "<br><br><pre> respon = "; print_r($respon);
-
-	                $respon = str_ireplace(array("soap:", "<?xml version=\"1.0\" encoding=\"utf-8\"?>"), "", $respon);
-	                $xml2 = new SimpleXMLElement($respon);  
-	                $again = $xml2;
-	                $a = array("qwb" => $again);
-
-	               $complicated_awb = ($a['qwb']->Body->CreateWaybillResponse->CreateWaybillResult);
-                curl_close($ch);
-
-                 $awb_array = json_decode(json_encode((array) $complicated_awb), TRUE);
-                 $logresponse =   json_encode($awb_array);  
-                    $successres = $awb_array['HasError'];
-                    echo $c_id;
-                    if($successres!== true) 
-                    {
-                        $successstatus  = "Success";
-                    } else {
-                        $successstatus  = "Fail";
-                    }
-
-                       $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$super_id);
-                       return $awb_array;
+           // print_r($complicated_awb ); exit;
+             $awb_array = json_decode(json_encode((array) $complicated_awb), TRUE);
+             $logresponse =   json_encode($awb_array);  
+                $successres = $awb_array['HasError'];
+               
+                if($successres!== true) 
+                {
+                    $successstatus  = "Success";
+                } else {
+                    $successstatus  = "Fail";
                 }
 
+                $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
+                 return $awb_array;
+            }
 	}
 	public function SaeeArray(array $ShipArr, array $counrierArr, $Auth_token = null,$c_id,$super_id) {
-        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city');
-        $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'city');
-        $lat = getdestinationfieldshow_auto_array($ShipArr['origin'], 'latitute');
-        $lang = getdestinationfieldshow_auto_array($ShipArr['origin'], 'longitute');
+        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city',$super_id);
+        $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'city',$super_id);
+        $lat = getdestinationfieldshow_auto_array($ShipArr['origin'], 'latitute',$super_id);
+        $lang = getdestinationfieldshow_auto_array($ShipArr['origin'], 'longitute',$super_id);
 
         $API_URL = $counrierArr['api_url'];
         $Secretkey = $counrierArr['auth_token'];
@@ -1610,8 +1658,8 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
     }
     public function ShipsyArray(array $ShipArr, array $counrierArr, $box_pieces = null, $c_id = null, $super_id = null) {
         //print_r($ShipArr);exit;
-        $sender_city = getdestinationfieldshow_auto_array_auto_array($ShipArr['origin'], 'shipsy_city');
-        $receiver_city = getdestinationfieldshow_auto_array_auto_array($ShipArr['destination'], 'shipsy_city');
+        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'shipsy_city');
+        $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'shipsy_city');
             if ($ShipArr['mode'] == 'COD') {
                     $total_cod_amt = $ShipArr['total_cod_amt'];
                 } elseif ($ShipArr['mode'] == "CC") {
@@ -1770,8 +1818,8 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
     public function ShipadeliveryArray(array $ShipArr, array $counrierArr, $auth_token = null, $c_id = null) {
         
         ini_set('default_charset', 'UTF-8');
-        $sender_city = getdestinationfieldshow_auto_array_auto_array($ShipArr['origin'], 'shipsa_city');
-        $receiver_city = getdestinationfieldshow_auto_array_auto_array($ShipArr['destination'], 'shipsa_city');
+        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'shipsa_city');
+        $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'shipsa_city');
 
        // echo  "<br/>receiver_city = ".$receiver_city;
                
@@ -1980,8 +2028,8 @@ public function ShipaDelLabelcURL(array $counrierArr, $client_awb = null)
         $token = json_decode($response, true);
         
         
-        $sender_city = getdestinationfieldshow_auto_array_auto_array($ShipArr['origin'], 'saudipost_id');
-        $receiver_city = getdestinationfieldshow_auto_array_auto_array($ShipArr['destination'], 'saudipost_id');
+        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'saudipost_id');
+        $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'saudipost_id');
         
         if ($ShipArr['mode'] == "COD") {
             $PaymentType = 2;
@@ -2158,7 +2206,7 @@ public function Ejack($ShipArr, $counrierArr, $complete_sku, $c_id,$super_id = n
         $Receiver_address = 'N/A';
     }
 
-    $Reciever_city = getdestinationfieldshow_auto_array_auto_array($ShipArr['destination'], 'city');
+    $Reciever_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'city');
     
     $product_type = 'Parcel'; //beone ka database
     $service = '2'; // beone wali
@@ -2174,7 +2222,7 @@ public function Ejack($ShipArr, $counrierArr, $complete_sku, $c_id,$super_id = n
     $s_address = $ShipArr['sender_address'];
     $s_zip = $ShipArr['sender_zip'];
     $s_phone = $ShipArr['sender_phone'];
-    $s_city = getdestinationfieldshow_auto_array_auto_array($ShipArr['origin'], 'city');
+    $s_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city');
 
     $pay_mode = $ShipArr['mode']; //paymode either CASH or COD:(column name: mode || date
     $codValue = $ShipArr['total_cod_amt']; //COD charges.  :  (column name:     total_cod_amt || date type:
@@ -2213,8 +2261,8 @@ public function Ejack($ShipArr, $counrierArr, $complete_sku, $c_id,$super_id = n
 
 public function fastcooArray(array $ShipArr, array $counrierArr, $complete_sku = null, $Auth_token = null, $c_id = null,$super_id = null) {
 
-    $sender_city = getdestinationfieldshow_auto_array_auto_array($ShipArr['origin'], 'city');
-    $receiver_city = getdestinationfieldshow_auto_array_auto_array($ShipArr['destination'], 'city');
+    $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city');
+    $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'city');
     $entry_date = date('Y-m-d H:i:s');
     $pickup_date = date("Y-m-d", strtotime($entry_date));
 
