@@ -3293,3 +3293,15 @@ function update_zid_product($quantity, $pid, $token, $storeID){
 
     curl_close($curl);
 }
+if (!function_exists('GetCourierCompanyStausActive')) {
+
+    function GetCourierCompanyStausActive($name = null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        $sql = "SELECT status FROM courier_company where company='$name' and deleted='N' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $query = $ci->db->query($sql);
+        $result = $query->row_array();
+        return $result['status'];
+    }
+
+}
