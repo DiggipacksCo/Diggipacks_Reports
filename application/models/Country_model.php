@@ -278,7 +278,7 @@ class Country_model extends CI_Model {
         $this->db->where('company_type', 'O');
         $this->db->where('deleted', 'N');
        $query = $this->db->get();
-       //echo $this->db->last_query(); die;
+      // echo $this->db->last_query(); die;
          return $query->result_array();
     }
     
@@ -331,10 +331,56 @@ class Country_model extends CI_Model {
     
     public function InsertCityData_new($data=array())
     {
-       return $this->db->insert_batch('country',$data);
+        $insertcity = $this->db->insert_batch('country',$data);
+      // echo $this->db->last_query()."<br>"; die ; 
+       return $insertcity;
     }
     
+     public function CitylistData($start,$limit,$filterKey){
+        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']); 
+        //$this->db->select('id,city,samsa_city,ubreem_city,aramex_city,dots_city,imile_city,naqel_city_code,esnad_city,samana_city,agility_city,descen,aymakan,zajil,clex,rabel_city,speedzi_city,barq_city,labaih,makhdoom,saee_city,ajeek_city,emdad_city,shipsy_city,shipsa_city,tamex_city,alamalkon,latitute,longitute');
+        $this->db->select('id,city,samsa_city,ubreem_city,aramex_city,dots_city,imile_city,naqel_city_code,esnad_city,esnad_city_code,samana_city,agility_city,descen,aymakan,zajil,clex,rabel_city,speedzi_city,barq_city,labaih,makhdoom,saee_city,ajeek_city,emdad_city,shipsy_city,shipsa_city,tamex_city,zid,sala,alamalkon,latitute,longitute,saudipost_id');
+        $this->db->from('country'); 
+        if(!empty($filterKey)){
+            $this->db->where("city like '%".$filterKey."%'",NULL,FALSE );
+        }
+        $this->db->where('status', 'Y');
+        $this->db->where('deleted', 'N');
+        $this->db->where('city!=', '');
+        
+        $this->db->limit($limit, $start);
+        
+
+        $query = $this->db->get();
+       //echo $this->db->last_query()."<br>";
+       $count =  $this->cityRecordsCount($filterKey); 
+       $totalpages = ceil($count / $limit);
+
+       $data['result'] = $query->result_array();
+       $data['total_result'] = $count;
+       $data['totalpages'] = $totalpages;
+       $data['per_page_records'] = $limit;
+       return $data; 
+    }
     
+    public function UpdateCitylistData($data,$id){
+        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->update('country', $data, array('id' => $id));
+      //  echo $this->db->last_query();
+        
+    }
     
+    public function cityRecordsCount($filterKey){
+        $this->db->select('*');
+        $this->db->from('country'); 
+        if(!empty($filterKey)){
+            $this->db->where("city like '%".$filterKey."%'",NULL,FALSE );
+        }
+        $this->db->where('status', 'Y');
+        $this->db->where('deleted', 'N');
+        $this->db->where('city!=', '');
+        
+        return  $this->db->get()->num_rows();
+    }
 
 }

@@ -35,9 +35,27 @@ class Country extends MY_Controller {
         $this->load->view('country/delivery_city.php');
     }
     public function Importdeliverycity($id=null) {
-         $data['ListArr'] = $this->Country_model->GetdeliveryCOmpanyListQry();
+         $companyData = $this->Country_model->GetdeliveryCOmpanyListQry();
+         //print "<<pre>"; print_r($companyData);die;
+         $comapnyArray = array();
+         if(!empty($companyData)){
+             foreach($companyData as $dataresult){
+                 if($dataresult['company']=='Esnad')
+                 $comapnyArray[] = array("company"=>'Esnad City Code');
 
-        $this->load->view('country/importdeliverycity.php',$data);
+                 $comapnyArray[] = array("company"=>$dataresult['company']);
+             }
+         }
+        // $comapnyArray[] = array("company"=>"Esnad City Code");
+         $comapnyArray[] = array("company"=>"Arabic City Name");
+         $comapnyArray[] = array("company"=>"Salla");
+         $comapnyArray[] = array("company"=>"Zid");
+         sort($comapnyArray);
+         $data['ListArr'] = $comapnyArray;
+            //print "<pre>"; print_r($data);die;
+         //$data['ListArr'] = $this->Country_model->GetdeliveryCOmpanyListQry();
+         
+        $this->load->view('country/importdeliverycity',$data);
     }
     
      public function Hubaddform($id=null) {
@@ -318,8 +336,45 @@ class Country extends MY_Controller {
        
          echo json_encode($newArray);
     }
-   
+    
+      public function cityList() {
+         $startcounter = isset($_REQUEST['startcounter'])?$_REQUEST['startcounter']:0;
+         $start = 0 ;
+         $limit= 100;
+         $filterKey = isset($_REQUEST['filter_by'])?$_REQUEST['filter_by']:'';
+         $dataResult = $this->Country_model->CitylistData($start,$limit,$filterKey,$startcounter);
+         //print "<pre>"; print_r($dataResult);die;
+         $this->load->view('country/citylist',$dataResult);
+    }
+    
+    public function filter_city(){
+        
+        
+         $start = $_REQUEST['offset'] ;
+         $limit= $_REQUEST['limit'];
+         
+         $filterKey = isset($_REQUEST['filter_by'])?$_REQUEST['filter_by']:'';;
+         $dataResult = $this->Country_model->CitylistData($start,$limit,$filterKey);
+         $dataResult['counter'] = $start +1;
+        
+         $response = $this->load->view('country/_citylist',$dataResult,TRUE);
+         echo $response;
+    }
+    
+    public function UpdateCityList() {
+        
+         $id = $this->input->post('city_id');
+         $column = $this->input->post('column_name');
+         $value = $this->input->post('columnVal');
+         $data = array(
+             $column=>$value,
+         );
+         $this->Country_model->UpdateCitylistData($data,$id);
+         echo json_encode(array('success'=>true));
+    }
 
+
+ 
 }
 
 ?>

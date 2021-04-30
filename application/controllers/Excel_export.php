@@ -1074,7 +1074,8 @@ class Excel_export extends MY_Controller {
         $object = new PHPExcel();
 
         $object->setActiveSheetIndex(0);
-        $namesArray = array('City');
+        //$namesArray = array('City');
+        $namesArray = array();
         $returnArray = $this->Country_model->GetdeliveryCOmpanyListQry();
         foreach ($returnArray as $val) {
             array_push($namesArray, $val['company']);
@@ -1082,10 +1083,17 @@ class Excel_export extends MY_Controller {
 
 
         $table_columns = $namesArray;
-        $table_columns[] = "Arabic City";
+        $table_columns[] = "Arabic City Name";
+        $table_columns[] = "Esnad City Code";
+        $table_columns[] = "Salla";
+        $table_columns[] = "Zid";
+        sort($table_columns);
+        
+        $table_column = array_merge(array("City"),$table_columns);
+        
         $column = 0;
 
-        foreach ($table_columns as $field) {
+        foreach ($table_column as $field) {
             $object->getActiveSheet()->setCellValueByColumnAndRow($column, 1, $field);
             $column++;
         }
@@ -1108,72 +1116,133 @@ class Excel_export extends MY_Controller {
             $activeCompany = $this->Country_model->GetdeliveryCOmpanyListQry();
 
 
-            // print_r($activeCompany);
+           // print_r($activeCompany);
             $columnLoop = array();
 
             foreach ($object->getWorksheetIterator() as $worksheet) {
                 $highestRow = $worksheet->getHighestRow();
-                $highestColumn = $worksheet->getHighestColumn();
+                $highestColumn = $worksheet->getHighestColumn(); 
 
-
+              $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn); 
                 // echo "gg"; die;
+                
                 $returnArr = array();
                 //print_r($activeCompany);
-                //echo '<pre>';
+             
                 for ($row2 = 1; $row2 <= 1; $row2++) {
-                    for ($mm = 1; $mm <= count($activeCompany); $mm++) {
+                    count($worksheet->getCellByColumnAndRow($mm, $row2));
+                    for ($mm = 1; $mm < $highestColumnIndex; $mm++) {
 
-                        //echo $worksheet->getCellByColumnAndRow($mm, $row2)->getValue();
-                        array_push($columnLoop, trim($worksheet->getCellByColumnAndRow($mm, $row2)->getValue()));
+                       
+                            array_push($columnLoop, trim($worksheet->getCellByColumnAndRow($mm, $row2)->getValue()));
+                       
                     }
                 }
-                // print_r($columnLoop);
+               
+                //$columnLoop[] = "Arabic City Name";
+                
+                
+            //    echo "<pre>";
+            // print_r($columnLoop); die;
                 for ($row = 2; $row <= $highestRow; $row++) {
-
-                    // echo $activeCompany[$key]['company']; 
-
-                    $city = trim($worksheet->getCellByColumnAndRow(0, $row)->getValue());
-
+                    $city = trim($worksheet->getCellByColumnAndRow(0, $row)->getValue()); 
+                    
                     $oldCityArr = GetCityAllDataByname($city);
-
+                   // print_r($oldCityArr);
                     $old_id = $oldCityArr['id'];
-
-
                     if ($old_id > 0) {
                         foreach ($columnLoop as $key99 => $colimn) {
-
-
                             $counter = $key99 + 1;
-                            $dynmicColumnVal = trim($worksheet->getCellByColumnAndRow($counter, $row)->getValue());
+                            $dynmicColumnVal = htmlspecialchars(trim($worksheet->getCellByColumnAndRow($counter, $row)->getValue())); 
+                           
                             $cityArrayName = $this->Country_model->GetCourierCItyNew($old_id, $colimn);
-
-
+                           
                             if (!empty($dynmicColumnVal)) {
+                                if ($colimn == 'Ajeek')
+                                    $dynmicColumn = 'ajeek_city';
+                                if ($colimn == 'Alamalkon')
+                                    $dynmicColumn = 'alamalkon';
+                                if ($colimn == 'Aramex')
+                                    $dynmicColumn = 'aramex_city';
+                                if ($colimn == 'Clex')
+                                    $dynmicColumn = 'clex';
+                                if ($colimn == 'Zajil')
+                                    $dynmicColumn = 'zajil';
+                                if ($colimn == 'Smsa')
+                                    $dynmicColumn = 'samsa_city';
+                                if ($colimn == 'Esnad')
+                                    $dynmicColumn = 'esnad_city';
+                                if ($colimn == 'Esnad City Code')
+                                    $dynmicColumn = 'esnad_city_code';
+                                if ($colimn == 'Safearrival')
+                                    $dynmicColumn = 'safe_arrival';
+                                if ($colimn == 'Arabic City Name')
+                                    $dynmicColumn = 'title';
+                                if ($colimn == 'Aymakan')
+                                    $dynmicColumn = 'aymakan';
+                                if ($colimn == 'Makhdoom')
+                                    $dynmicColumn = 'makhdoom';
+                                if ($colimn == 'Labaih')
+                                    $dynmicColumn = 'labaih';
+                                if ($colimn == 'Shipsy')
+                                    $dynmicColumn = 'shipsy_city';
+                                if ($colimn == 'Saudi Post')
+                                    $dynmicColumn = 'saudipost_id';
+                                if ($colimn == 'Shipadelivery')
+                                    $dynmicColumn = 'shipsa_city';
+                                if ($colimn == 'Barqfleet')
+                                    $dynmicColumn = 'barq_city';
+                                if ($colimn == 'Saee')
+                                    $dynmicColumn = 'saee_city';
+                                if ($colimn == 'NAQEL')
+                                    $dynmicColumn = 'naqel_city_code';
+                                if ($colimn == 'Tamex')
+                                    $dynmicColumn = 'tamex_city';
+                                if ($colimn == 'Salla')
+                                    $dynmicColumn = 'sala';
+                                if ($colimn == 'Zid')
+                                    $dynmicColumn = 'zid';
+                                if ($colimn == 'Thabit')
+                                    $dynmicColumn = 'thabit_city';
+                                if ($colimn == 'BurqExpres')
+                                    $dynmicColumn = 'burq_city';
 
+                                    
+                                 
                                 if (!empty($cityArrayName)) {
-                                    $UpdateArray_new[] = array('id' => $cityArrayName['id'], 'cc_name' => $colimn, 'city_name' => $dynmicColumnVal);
+                                    $UpdateArray_new[] = array($dynmicColumn => addslashes($dynmicColumnVal), 'id' => $old_id);
                                 } else {
-                                    $UpdateArray[] = array('cc_name' => $colimn, 'city_id' => $old_id, 'city_name' => $dynmicColumnVal, 'super_id' => $this->session->userdata('user_details')['super_id']);
+                                    $UpdateArray[] = array('city' => $colimn, $dynmicColumn => addslashes($dynmicColumnVal), 'super_id' => 
+                                  //  print_r();
+                                    $this->session->userdata('user_details')['super_id']);
                                 }
-                                $returnArr['validrowtate'][] = $row . " " . $colimn;
+                                //$returnArr['validrowtate'][] = $row . " " . $colimn;
                             }
                         }
                     }
-                    // echo '<pre>';
-                    // print_r($UpdateArray);  
+                    //  echo '<pre>';
+                    // print_r($UpdateArray_new);  
                 }
             }
-            //    print_r($UpdateArray_new);   
+         //   die;
+            //echo '<pre>'; print_r($UpdateArray_new);   die;
             //  print_r($UpdateArray);   
-            // die;
+             //die;
             if (!empty($UpdateArray)) {
 
                 //die;
 
-                $this->Country_model->GetDataUpdateCIty_new($UpdateArray_new);
+
                 $this->Country_model->InsertCityData_new($UpdateArray);
             }
+            if (!empty($UpdateArray_new)) {
+
+                //die;      
+
+                $this->Country_model->GetDataUpdateCIty_new($UpdateArray_new);
+            }
             //  die;
+            $returnArr['validrowtate'][] = "";
             $this->session->set_flashdata('errorA', $returnArr);
             redirect(base_url() . 'Country/Importdeliverycity');
         } else {

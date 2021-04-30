@@ -285,6 +285,8 @@ $route['runshell_tracking'] = 'Shipment/runshell_tracking';
 $route['run_shell_fixrate'] = 'Finance/run_shell_fixrate';
 $route['run_shell_dynamic'] = 'Finance/run_shell_dynamic';
 
+$route['city_list'] = 'Country/cityList';
+
 //$route['editcatview/(:any)'] = 'Finance/getaddviewfinancecat/$1';
 //$route['deletecategory/(:any)'] = 'Finance/getremovecategory/$1';
 //$route['sellerCharges'] = 'Finance/getallsellerchargesset';
