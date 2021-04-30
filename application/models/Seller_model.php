@@ -197,4 +197,15 @@ class Seller_model extends CI_Model {
 			return $query->result();
 		}
 	}
+	public function update_zid($id, $data) {    
+        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);       
+        $this->db->where('id', $id);
+		 
+        $update_zid=  $this->db->update('customer', $data);
+		
+		//echo $this->db->last_query(); die;
+		return $update_zid; 
+    }
+
+
 }
