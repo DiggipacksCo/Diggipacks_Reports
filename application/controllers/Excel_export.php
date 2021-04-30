@@ -1216,7 +1216,7 @@ class Excel_export extends MY_Controller {
                                   //  print_r();
                                     $this->session->userdata('user_details')['super_id']);
                                 }
-                                $returnArr['validrowtate'][] = $row . " " . $colimn;
+                                //$returnArr['validrowtate'][] = $row . " " . $colimn;
                             }
                         }
                     }
@@ -1225,7 +1225,7 @@ class Excel_export extends MY_Controller {
                 }
             }
          //   die;
-            echo '<pre>'; print_r($UpdateArray_new);   die;
+            //echo '<pre>'; print_r($UpdateArray_new);   die;
             //  print_r($UpdateArray);   
              //die;
             if (!empty($UpdateArray)) {
@@ -1242,6 +1242,7 @@ class Excel_export extends MY_Controller {
                 $this->Country_model->GetDataUpdateCIty_new($UpdateArray_new);
             }
             //  die;
+            $returnArr['validrowtate'][] = "";
             $this->session->set_flashdata('errorA', $returnArr);
             redirect(base_url() . 'Country/Importdeliverycity');
         } else {
