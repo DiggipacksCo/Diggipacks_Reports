@@ -290,6 +290,7 @@ class CourierCompany extends MY_Controller  {
                 $ShipArr_custid =  $ShipArr['cust_id']; 
                 $counrierArr_table=$this->Ccompany_model->GetdeliveryCompanyUpdateQry($postData['cc_id'],$ShipArr_custid);   
                 $c_id = $counrierArr_table['id'];
+                $cc_id = $counrierArr_table['cc_id'];
 
               if ($counrierArr_table['type'] == 'test') {
                     $user_name = $counrierArr_table['user_name_t'];
@@ -488,7 +489,7 @@ class CourierCompany extends MY_Controller  {
                         $esnad_awb_number = Get_esnad_awb($start_awb_sequence, $end_awb_sequence); 
                         $esnad_awb_number = $esnad_awb_number -1;
                         $Auth_token = $counrierArr['auth_token'];                      
-                        $response = $this->Ccompany_model->EsnadArray($ShipArr, $counrierArr, $esnad_awb_number, $complete_sku, $Auth_token,$c_id,$box_pieces1);                      
+                        $response = $this->Ccompany_model->EsnadArray($ShipArr, $counrierArr, $esnad_awb_number, $complete_sku, $Auth_token,$cc_id,$box_pieces1);                      
                         $responseArray = json_decode($response, true); 
                         
                         $status = $responseArray['success'];
@@ -513,7 +514,7 @@ class CourierCompany extends MY_Controller  {
                             file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
                             $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf'; 
 
-                        $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $esnad_awb_link,$c_id);
+                        $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $esnad_awb_link,$cc_id);
                 
                             array_push($succssArray, $slipNo);
                             array_push($DataArray, $slipNo);
@@ -622,12 +623,8 @@ class CourierCompany extends MY_Controller  {
                             }
                     }
                     elseif ($company == 'NAQEL'){
-                        $awb_array = $this->Ccompany_model->NaqelArray($ShipArr,$counrierArr, $complete_sku,$box_pieces1, $Auth_token,$c_id);
-                         
-                       
-
-                        // Array ( [HasError] => false [WaybillNo] => 51150005 [BookingRefNo] => Array ( ) [Key] => 23664121 [Message] => New waybill has been created successfully. )
-                  $HasError = $awb_array['HasError'];
+                        $awb_array = $this->Ccompany_model->NaqelArray($ShipArr,$counrierArr, $complete_sku,$box_pieces1, $Auth_token,$cc_id);
+                        $HasError = $awb_array['HasError'];
                         $error_message = $awb_array['Message'];
                         
                         if ($awb_array['HasError'] =='false') 
@@ -704,7 +701,7 @@ class CourierCompany extends MY_Controller  {
                                             //****************NAQEL label print cURL****************************
                                              $CURRENT_DATE = date("Y-m-d H:i:s");
                                              $CURRENT_TIME = date("H:i:s");
-                                            $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                            $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$cc_id);
                                            array_push($succssArray, $slipNo);
                                         }
                                 }
@@ -715,7 +712,7 @@ class CourierCompany extends MY_Controller  {
                         }
                     }
                     elseif ($company == 'Saee'){
-                             $response = $this->Ccompany_model->SaeeArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1);
+                             $response = $this->Ccompany_model->SaeeArray($ShipArr, $counrierArr, $Auth_token,$cc_id,$box_pieces1);
                              $safe_response =  $response; 
                             // echo "<pre>";  print_r($safe_response); 
                             if ($safe_response['success'] == 'true') 
@@ -731,7 +728,7 @@ class CourierCompany extends MY_Controller  {
                                  $CURRENT_DATE = date("Y-m-d H:i:s");
                                  $CURRENT_TIME = date("H:i:s");
 
-                                $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$cc_id);
                                 array_push($succssArray, $slipNo);
                               
                             }  
@@ -824,36 +821,36 @@ class CourierCompany extends MY_Controller  {
                     } 
                     elseif ($company == 'Clex'){
                             
-                            $response = $this->Ccompany_model->ClexArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id);
-                            //echo $this->session->userdata('user_details')['super_id'];
-                         //   print_r($response);
-                            if ($response['data'][0]['cn_id']) {
-                                $client_awb = $response['data'][0]['cn_id'];
-                                 $label_url_new = clex_label_curl($Auth_token, $client_awb);
-                                 $generated_pdf = file_get_contents($label_url_new);
-                                file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                        $response = $this->Ccompany_model->ClexArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$cc_id);
+                        //echo $this->session->userdata('user_details')['super_id'];
+                     //   print_r($response);
+                        if ($response['data'][0]['cn_id']) {
+                            $client_awb = $response['data'][0]['cn_id'];
+                             $label_url_new = clex_label_curl($Auth_token, $client_awb);
+                             $generated_pdf = file_get_contents($label_url_new);
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
 
-                                $fastcoolabel = base_url()."assets/all_labels/$slipNo.pdf";
-                                $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
-                                array_push($succssArray, $slipNo);
-                            } else {
-                                if($response['already_exist'])
-                                {
-                                    $label_url_new = clex_label_curl($Auth_token, $response['consignment_id'][0]);
-                                    
-                                    $generated_pdf = file_get_contents($label_url_new);
-                                   file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
-                                $returnArr['responseError'][] = $slipNo . ':' . $response['already_exist'][0]." ".$response['consignment_id'][0];
-                                }
-                                elseif($response['origin_city'])
-                                     $returnArr['responseError'][] = $slipNo . ':' . $response['origin_city'][0];
-                                 elseif($response['destination_city'])
-                                     $returnArr['responseError'][] = $slipNo . ':' . $response['destination_city'][0];
-                                else
-                                    $returnArr['responseError'][] = $slipNo . ':' . $response['message'];
-                                    
+                            $fastcoolabel = base_url()."assets/all_labels/$slipNo.pdf";
+                            $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$cc_id);
+                            array_push($succssArray, $slipNo);
+                        } else {
+                            if($response['already_exist'])
+                            {
+                                $label_url_new = clex_label_curl($Auth_token, $response['consignment_id'][0]);
+                                
+                                $generated_pdf = file_get_contents($label_url_new);
+                               file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                            $returnArr['responseError'][] = $slipNo . ':' . $response['already_exist'][0]." ".$response['consignment_id'][0];
                             }
-                    }                                    
+                            elseif($response['origin_city'])
+                                 $returnArr['responseError'][] = $slipNo . ':' . $response['origin_city'][0];
+                             elseif($response['destination_city'])
+                                 $returnArr['responseError'][] = $slipNo . ':' . $response['destination_city'][0];
+                            else
+                                $returnArr['responseError'][] = $slipNo . ':' . $response['message'];
+                                
+                        }
+                    }                                   
                     elseif ($company == 'Ajeek'){
                             
                             $response = $this->Ccompany_model->AjeekArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id);
@@ -883,7 +880,7 @@ class CourierCompany extends MY_Controller  {
                             }
                     }
                     elseif ($company == 'Aymakan'){
-                            $response = $this->Ccompany_model->AymakanArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1);
+                            $response = $this->Ccompany_model->AymakanArray($ShipArr, $counrierArr, $Auth_token,$cc_id,$box_pieces1);
                             $responseArray = json_decode($response, true);
 
                           //  print_r($responseArray);
@@ -901,7 +898,7 @@ class CourierCompany extends MY_Controller  {
                                  $CURRENT_DATE = date("Y-m-d H:i:s");
                                     $CURRENT_TIME = date("H:i:s");
                                                              
-                                $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$cc_id);
                                array_push($succssArray, $slipNo); 
                             }   
                             else{

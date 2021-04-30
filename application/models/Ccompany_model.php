@@ -1055,35 +1055,29 @@ class Ccompany_model extends CI_Model {
         $headers = array(
             "Content-type:application/json",
             "Access-token:$access_token");
-        
-        if(empty($receiver_city)){
-            $response = array('message' => 'Receiver city is empty ');
-            return $response; 
+
+        $ch = curl_init($comp_api_url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataJson);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $response_array = json_decode($response, true);
+        $logresponse =   json_encode($response_array);  
+        $successres = $response_array['message'];
+        $error = $response_array['error'];
+
+        if($successres == 'Succesfully added.' || $error == false) 
+        {
+            $successstatus  = "Success";
+        }else {
+            $successstatus  = "Fail";
         }
-        else{
 
-            $ch = curl_init($comp_api_url);
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $dataJson);
-            $response = curl_exec($ch);
-            curl_close($ch);
-
-            $response_array = json_decode($response, true);
-            $logresponse =   json_encode($response_array);  
-            $successres = $response_array['message'];
-
-            if($successres == 'Succesfully added.') 
-            {
-                $successstatus  = "Success";
-            }else {
-                $successstatus  = "Fail";
-            }
-
-            $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
-            return $response_array;
-        }
+        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
+        return $response_array;
     }
 
     public function AjeekArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1, $c_id) {

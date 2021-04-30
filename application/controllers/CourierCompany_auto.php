@@ -12,6 +12,8 @@ class CourierCompany_auto extends CI_Controller {
         }
 
         $this->load->model('Ccompany_auto_model');
+        $this->load->model('Ccompany_model');
+        
         $this->load->model('Shipment_model');
         $this->load->model('ItemInventory_model');
         $this->load->library('form_validation');
@@ -47,23 +49,24 @@ class CourierCompany_auto extends CI_Controller {
 
         $invalid_slipNO = array();
         $succssArray = array();
-
+//echo print_r($postData);exit;
         if (!empty($shipmentLoopArray)) {
             if (!empty($postData)) {
 
                $courier_data = $this->forwardShipment($postData['slip_no'], $super_id);
-             // print_r($courier_data);exit;
+              //print_r($courier_data);exit;
                 if (!empty($courier_data)) {
 
                     foreach ($shipmentLoopArray as $key => $slipNo) {
                         $ShipArr = $this->Ccompany_auto_model->GetSlipNoDetailsQry(trim($slipNo), $super_id);
-                       // print_r($ShipArr);
+                       //print_r($ShipArr);
                         $ShipArr_custid =  $ShipArr['cust_id']; 
                         $courier_id = $courier_data[0]['cc_id'];
                         $zone_id = $courier_data[0]['id'];
                         $counrierArr_table = $this->Ccompany_auto_model->GetdeliveryCompanyUpdateQry($courier_id, $super_id,$ShipArr_custid);
-                       
-   
+                    //   echo '<pre>';
+                    //     print_r( $counrierArr_table); exit;
+                   
     
                         $c_id = $counrierArr_table['cc_id'];
                         if ($counrierArr_table['type'] == 'test') {
@@ -224,48 +227,40 @@ class CourierCompany_auto extends CI_Controller {
                                     $returnArr['responseError'][] = $slipNo . ':' . $safe_response['message'];
                                 }
                             } elseif ($company == 'Esnad') {
-                                ///  echo "sssssss"; die;
-                                //  echo "ddd".$start_awb_sequence; die;
-                                $esnad_awb_number = $this->Get_esnad_awb($start_awb_sequence, $end_awb_sequence, $super_id);
-                                $esnad_awb_number = $esnad_awb_number - 1;
-                                //echo $esnad_awb_number; die;
-                                $response = $this->Ccompany_auto_model->EsnadArray($ShipArr, $counrierArr, $esnad_awb_number, $complete_sku, $Auth_token, $super_id, $c_id);
+                        
+                                $Auth_token = $counrierArr['auth_token'];  
+                                $super_id= $ShipArr['super_id'];                    
+                        $response = $this->Ccompany_auto_model->EsnadArray($ShipArr, $counrierArr, $esnad_awb_number, $complete_sku, $Auth_token,$c_id,$box_pieces,$super_id);                      
+                        $responseArray = json_decode($response, true); 
+                       // print_r($responseArray);exit;
+                        $status = $responseArray['success'];
+                        if($status == false)
+                        {
+                                $error_array = array(
+                                        "Error_Message " => $responseArray['message'],
+                                );
+                                $error_response = json_encode($error_msg);
+                                array_push($error_array, $slipNo . ':' . $error_response['message']);
+                                $returnArr['responseError'][] = $slipNo . ':' . $responseArray['message'];                
+                                $this->session->set_flashdata('errorloop', $returnArr);
+                        }
+                        if($status == true){
+                         
+                            $description = $responseArray['message'];
+                            $client_awb = $responseArray['dataObj']['trackingNo'];
+                            $esnad_awb_link = $responseArray['dataObj']['labelUrl'];
+                       
+                            $generated_pdf = file_get_contents($esnad_awb_link);
+                          
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                            $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf'; 
 
-                                // print_r($response);
-
-                                $responseArray = json_decode($response, true);
-
-                                $status = $responseArray['code'];
-                                if ($status == "2000") {
-                                    $error_msg = array(
-                                        "Error_Message " => $responseArray['msg'],
-                                    );
-                                    $errre_response = json_encode($error_msg);
-                                    array_push($error_array, $slipNo . ':' . $error_response['Message']);
-                                    $returnArr['responseError'][] = $slipNo . ':' . $responseArray['msg'];
-
-                                    $this->session->set_flashdata('errorloop', $returnArr);
-                                }
-                                if ($status == "3000") {
-                                    $error_msg = array(
-                                        "Error_Message " => $responseArray['msg'],
-                                        "Awb_NO " => $responseArray['data'][0]['clientOrderNo'],
-                                        "Esnad_awb_no " => $responseArray['data'][0]['esnadAwbNo'],
-                                        "Esnad_awb_link" => $responseArray['data'][0]['esnadAwbPdfLink'],
-                                    );
-                                    $errre_response = json_encode($error_msg);
-                                    array_push($error_array, $slipNo . ':' . $responseArray['msg']);
-                                    $returnArr['responseError'][] = $slipNo . ':' . $responseArray['msg'];
-
-                                    $esnad_awb_link = $responseArray['data'][0]['esnadAwbPdfLink'];
-                                    $generated_pdf = file_get_contents($esnad_awb_link);
-                                    $encoded = base64_decode($generated_pdf);
-                                    //header('Content-Type: application/pdf');
-                                    file_put_contents("/var/www/html/fastcoo-tech/fulfillment/assets/all_labels/$slipNo.pdf", $generated_pdf);
-                                    $Update_data = $this->Ccompany_auto_model->Update_Shipment_Status($slipNo, $responseArray['data'][0]['esnadAwbNo'], $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $esnad_awb_link, $c_id, $super_id);
-
-                                    $this->session->set_flashdata('errorloop', $returnArr);
-                                }
+                        $Update_data = $this->Ccompany_auto_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $esnad_awb_link,$c_id);
+                
+                            array_push($succssArray, $slipNo);
+                           
+                        }
+                                
                                 // echo $status;exit;
 
                                 if ($status == "1000") {
@@ -387,7 +382,7 @@ class CourierCompany_auto extends CI_Controller {
                             } elseif ($company == 'Labaih') {
 
                                 $response = $this->Ccompany_auto_model->LabaihArray($ShipArr, $counrierArr, $complete_sku, $box_pieces, $super_id, $c_id);
-                                //echo "sss";
+                                //echo "sss"; 
                                 //print_r($response);
 
                                 if ($response['status'] == 200) {
@@ -407,33 +402,37 @@ class CourierCompany_auto extends CI_Controller {
                                     $returnArr['responseError'][] = $slipNo . ':' . $response['invalid_parameters'][0];
                                 }
                             } elseif ($company == 'Clex') {
-
-                                $response = $this->Ccompany_auto_model->ClexArray($ShipArr, $counrierArr, $complete_sku, $box_pieces, $super_id, $c_id);
-                                //echo $this->session->userdata('user_details')['super_id'];
-                                //   print_r($response);
-                                if ($response['data'][0]['cn_id']) {
-                                    $client_awb = $response['data'][0]['cn_id'];
+                              //  echo 'amb';exit; 
+                               $response = $this->Ccompany_auto_model->ClexArray($ShipArr, $counrierArr, $complete_sku,$box_pieces,$super_id,$c_id);
+                               //echo $this->session->userdata('user_details')['super_id'];
+                             // print_r($response);
+                               if ($response['data'][0]['cn_id']) {
+                                   $client_awb = $response['data'][0]['cn_id'];
                                     $label_url_new = clex_label_curl($Auth_token, $client_awb);
                                     $generated_pdf = file_get_contents($label_url_new);
-                                    file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
-
-                                    $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
-                                    $Update_data = $this->Ccompany_auto_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id, $super_id);
-                                    array_push($succssArray, $slipNo);
-                                } else {
-                                    if ($response['already_exist']) {
-                                        $label_url_new = clex_label_curl($Auth_token, $response['consignment_id'][0], $super_id);
-                                        $generated_pdf = file_get_contents($label_url_new);
-                                        file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
-
-                                        $returnArr['responseError'][] = $slipNo . ':' . $response['already_exist'][0] . " " . $response['consignment_id'][0];
-                                    } elseif ($response['origin_city'])
+                                   file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                                   $CURRENT_DATE = date("Y-m-d H:i:s");
+                                   $CURRENT_TIME = date("H:i:s");
+                                   $fastcoolabel = base_url()."assets/all_labels/$slipNo.pdf";
+                                   $Update_data = $this->Ccompany_auto_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                   array_push($succssArray, $slipNo);
+                               } else {
+                                   if($response['already_exist'])
+                                   {
+                                       $label_url_new = clex_label_curl($Auth_token, $response['consignment_id'][0]);
+                                       
+                                       $generated_pdf = file_get_contents($label_url_new);
+                                      file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                                   $returnArr['responseError'][] = $slipNo . ':' . $response['already_exist'][0]." ".$response['consignment_id'][0];
+                                   }
+                                   elseif($response['origin_city'])
                                         $returnArr['responseError'][] = $slipNo . ':' . $response['origin_city'][0];
-                                    elseif ($response['destination_city'])
+                                    elseif($response['destination_city'])
                                         $returnArr['responseError'][] = $slipNo . ':' . $response['destination_city'][0];
-                                    else
-                                        $returnArr['responseError'][] = $slipNo . ':' . $response['message'];
-                                }
+                                   else
+                                       $returnArr['responseError'][] = $slipNo . ':' . $response['message'];
+                                       
+                               }
                             } elseif ($company == 'Barqfleet') {
                                 $response_ww = $this->Ccompany_auto_model->BarqfleethArray($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $c_id, $super_id);
                                 $response_array = json_decode($response_ww, TRUE);
@@ -500,7 +499,8 @@ class CourierCompany_auto extends CI_Controller {
                                     $returnArr['responseError'][] = $slipNo . ':' . "invalid details";
                                 }
                             } elseif ($company == 'NAQEL') {
-                                $complicated_awb = $this->Ccompany_auto_model->NaqelArray($ShipArr, $counrierArr, $complete_sku, $box_pieces, $Auth_token, $c_id, $super_id);
+                               //echo 'xxxx'.$super_id;exit;
+                                $awb_array = $this->Ccompany_auto_model->NaqelArray($ShipArr, $counrierArr, $complete_sku, $box_pieces, $Auth_token, $c_id, $super_id);
 
                                 $HasError = $awb_array['HasError'];
 
@@ -885,7 +885,7 @@ class CourierCompany_auto extends CI_Controller {
         $this->db->where('sellerCourier.status', '0');
         $this->db->order_by('sellerCourier.priority', 'ASC');
         $query = $this->db->get();
-        // echo "shipDetail = ". $this->db->last_query(); die; 
+        //echo "shipDetail = ". $this->db->last_query(); die; 
         $result = $query->result_array();
 
         return $result;
