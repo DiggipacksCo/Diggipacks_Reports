@@ -17,7 +17,40 @@ class Seller extends MY_Controller {
         $this->load->library('form_validation');
         $this->load->model('CourierSeller_model');
         $this->load->model('Storage_model');
+        $this->load->helper('zid_helper');
     }
+
+    public function zidconfig($id=null) {
+        $this->load->view('SellerM/seller_zid', $data);
+    }
+
+    public function updateZidConfig($id= null ) {
+        $data['customer'] = $this->Seller_model->edit_view_customerdata($id);
+        $data['seller'] = $this->Seller_model->edit_view($id);
+
+       // echo $this->input->post('updatezid'); die; 
+        //$sel_id = $this->input->post('updatezid');
+
+        if ($this->input->post('updatezid')) {
+
+            $update_data = array(
+                'manager_token' => $this->input->post('manager_token'),
+                'zid_sid' => $this->input->post('zid_sid'),
+                'zid_status' => $this->input->post('zid_status'),
+                'zid_active' => $this->input->post('zid_active'),
+            );
+
+          //  echo "<pre>"; print_r($update_data);  die ;
+            $user = $this->Seller_model->update_zid($id, $update_data);
+
+            if ($user > 0) {
+                $this->session->set_flashdata('msg', $this->input->post('name') . ' has been updated successfully');
+                redirect('Seller');
+            }
+        }
+        $this->load->view('SellerM/seller_zidconfig', $data);
+    }
+
 
     Public function add_courier_company($id = Null)
     {
@@ -450,8 +483,6 @@ class Seller extends MY_Controller {
     public function report_view($id = null) {
 
 
-//error_reporting(E_ALL);
-//ini_set('display_errors', '1');
         $data['status'] = $this->Shipment_model->allstatus();
         $data['total_inventory_items'] = $this->ItemInventory_model->count_find($id);
         $data['seller_info'] = $this->Seller_model->find($id);
@@ -538,6 +569,185 @@ class Seller extends MY_Controller {
             $this->load->view('SellerM/seller_report', $data);
         }
     }
+
+/**
+     * @param type $id
+     * #description This method is used for zid webhook subscription
+     */
+    public function zidWebhookSubscribe($id) {
+        if ($this->input->post('zid_webhook_subscribed')) {
+
+            $customer = $this->Seller_model->edit_view_customerdata($id);
+            if ($customer['manager_token'] !== "" && $customer['zid_active'] == 'Y') {
+
+                if ($this->input->post('zid_webhook_subscribed') == 'Y') {
+                    $this->zidWebhookSubscriptionCreate($customer);
+                } else {
+                    $this->zidWebhookSubscriptionDelete($customer);
+                }
+
+                $update_data = array(
+                    'zid_webhook_subscribed' => $this->input->post('zid_webhook_subscribed')
+                );
+                if ($this->Seller_model->update_zid($id, $update_data)) {
+                    $this->session->set_flashdata('msg', $this->input->post('name') . '   has been updated successfully');
+                    redirect('Seller');
+                }
+            }
+            redirect('Seller');
+        }
+    }
+
+    private function zidWebhookSubscriptionCreate($customer) {
+
+        /* check zid status and if status is new then order create other wise update webhook */
+        if ($customer['zid_status'] == 'new') {
+            $event = "order.create";
+            $condition = null;
+        } else {
+            $event = "order.status.update";
+            $condition = "json_encode(array('status'=>'ready'))";
+        }
+        if ($customer['zid_active'] == 'Y') {
+
+            $arr = array(
+                "event" => $event,
+                "target_url" => $this->config->item('zid_order_target_url') . '/' . $customer['uniqueid'],
+                "original_id" => $customer['uniqueid'],
+                "subscriber" => "Fastcoo",
+                "conditions" => $condition
+            );
+            // echo "<pre>";print_r($arr);
+            // die; 
+
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => "https://api.zid.sa/v1/managers/webhooks",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_POSTFIELDS => $arr,
+                CURLOPT_HTTPHEADER => array(
+                    "Accept: en",
+                    "Accept-Language: en",
+                    "X-MANAGER-TOKEN: " . $customer['manager_token'],
+                    "Authorization:Bearer " . $this->config->item('zid_authorization'),
+                    "User-Agent: Fastcoo/1.00.00 (web)"
+                ),
+            ));
+
+             $response = json_decode(curl_exec($curl),true);
+                        
+            curl_close($curl);
+             
+            if ($response->status != "validation_error" || $response->status == "object") {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    private function zidWebhookSubscriptionDelete($customer) {
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://api.zid.sa/v1/managers/webhooks?subscriber=Fastcoo&original_id=" . $customer['uniqueid'],
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "DELETE",
+            CURLOPT_HTTPHEADER => array(
+                "Accept: en",
+                "Accept-Language: en",
+                "X-MANAGER-TOKEN: " . $customer['manager_token'],
+                "Authorization:Bearer " . $this->config->item('zid_authorization'),
+                "User-Agent: Fastcoo/1.00.00 (web)"
+            ),
+        ));
+
+        $response = json_decode(curl_exec($curl));
+
+        curl_close($curl);
+        if ($response->status == "success") {
+            return true;
+        }
+        return false;
+    }
+
+    public function getZidWebHooks() {
+        $id = $this->input->post('cust_id');
+        $customer = $this->Seller_model->edit_view_customerdata($id);
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://api.zid.sa/v1/managers/webhooks",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => array(
+                "Accept: en",
+                "Accept-Language: en",
+                "X-MANAGER-TOKEN: " . $customer['manager_token'],
+                "Authorization:Bearer " . $this->config->item('zid_authorization'),
+                "User-Agent: Fastcoo/1.00.00 (web)"
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        echo $response;
+        exit();
+    }
+    public function ZidProducts($id) {
+        $data['zidproducts'] = $this->Seller_model->zidproduct($id);
+        $storeID = $data['zidproducts'];
+        $store_link = "https://api.zid.sa/v1/products/";
+        $bearer = $this->config->item('zid_authorization');
+        $ZidProductR = ZidPcURL($storeID, $store_link, $bearer);
+
+        $ZidProductArr = json_decode($ZidProductR, true);
+        $results = array();
+        $results2 = array();
+        if (isset($ZidProductArr['results'])) {
+            foreach ($ZidProductArr['results'] as $key => $products) {
+                if (isset($products['structure']) && $products['structure'] == 'parent') {
+                    $product_link = $store_link . $products['id'];
+
+                    $product = json_decode(ZidPcURL($storeID, $product_link, $bearer),true);
+                    if (count($product['variants']) > 0) {
+                        foreach($product['variants'] as $variant){
+                            $results[] = $variant;
+                        }
+                        
+                    } else {
+                        $results[] = $product;
+                    }
+                    
+                }
+                else{
+                    $results2[] = $products;
+                }
+            }
+        }
+        $final_Arr = array_merge($results,$results2);
+        
+        $ZidProducts['products'] = $final_Arr;
+
+        $this->load->view('SellerM/view_zidp', $ZidProducts);
+    }
+
 
 }
 
