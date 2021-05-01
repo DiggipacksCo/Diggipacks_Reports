@@ -722,6 +722,7 @@ class Seller extends MY_Controller {
         $results2 = array();
         if (isset($ZidProductArr['results'])) {
             foreach ($ZidProductArr['results'] as $key => $products) {
+               
                 if (isset($products['structure']) && $products['structure'] == 'parent') {
                     $product_link = $store_link . $products['id'];
 
@@ -740,13 +741,44 @@ class Seller extends MY_Controller {
                     $results2[] = $products;
                 }
             }
+         
         }
         $final_Arr = array_merge($results,$results2);
+      //  echo "<pre>"; print_r($final_Arr); die; 
         
         $ZidProducts['products'] = $final_Arr;
 
         $this->load->view('SellerM/view_zidp', $ZidProducts);
     }
+
+    public function SaveZidProducts() {
+        $skuarray = array();
+     
+        foreach ($this->input->post('selsku') as $key => $value) {
+            $skuarray = array(
+                'sku' => $this->input->post('sku')[$key],
+                'zid_pid' => $this->input->post('pid')[$key],
+                'name' => $this->input->post('skuname')[$key],
+                'super_id' => $this->session->userdata('user_details')['super_id'],
+                'description' => $this->input->post('sku')[$key],
+                'type' => 'B2C',
+                'storage_id' => $this->input->post('storageid')[$key],
+                'wh_id' => $this->input->post('warehouseid')[$key],
+                'sku_size' => $this->input->post('sku_size')[$key],
+                'entry_date' => date("Y-m-d H:i:s")
+            );
+ 
+            $exist_zidsku_id = exist_zidsku_id($this->input->post('sku')[$key], $this->session->userdata('user_details')['super_id']);
+            if ($exist_zidsku_id != '' || $exist_zidsku_id != 0) {
+                echo $product['sku'] . ' Exist<br>';
+            } else {
+                AddSKUfromZid($skuarray);
+            }
+        }
+     
+        redirect('Item');
+    }
+
 
 
 }

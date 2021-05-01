@@ -10,6 +10,33 @@ function AddSKUfromZid($data = null) {
     //echo $ci->db->last_query();exit;
 }
 
+if (!function_exists('Getwarehouse_Dropdata')) {
+
+    function Getwarehouse_Dropdata() {
+        $ci = & get_instance();
+        $ci->load->database();
+        $sql = "SELECT id,name FROM warehouse_category where status='Y' and deleted='N' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "' ";
+        $query = $ci->db->query($sql);
+        $result = $query->result_array();
+        return $result;
+    }
+
+}
+
+if (!function_exists('Getallstorage_drop')) {
+
+    function Getallstorage_drop() {
+        $ci = & get_instance();
+        $ci->load->database();
+        $sql = "SELECT * FROM storage_table where deleted='N' AND status='Y' AND super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $query = $ci->db->query($sql);
+        $result = $query->result_array();
+        return $result;
+    }
+
+}
+
+
 function exist_zidsku_id($sku, $super_id) {
     $ci = & get_instance();
     $ci->load->database();
@@ -51,7 +78,7 @@ function GetAllQtyforSeller_new($cust_id = null) {
     $ci->db->where('item_inventory.seller_id', $cust_id);
     $ci->db->group_by('item_inventory.item_sku');
     $query = $ci->db->get();
-    //echo $ci->db->last_query();
+   echo $ci->db->last_query();
     return $row = $query->result_array();
 }
 
@@ -141,7 +168,6 @@ function ZidPcURL($storeID, $store_link, $bearer) {
     ));
 
     $response = curl_exec($curl);
-
     curl_close($curl);
     return $response;
 }
@@ -151,7 +177,9 @@ function checkZidSkuExist($sku, $pid) {
     $ci->load->database();
     $sql = "select id from items_m where sku='" . $sku . "' and zid_pid = '" . $pid . "'";
     $query = $ci->db->query($sql);
-
+   //echo $ci->db->last_query(); exit;
     $countdata = $query->num_rows();
     return $query->row_array();
 }
+
+
