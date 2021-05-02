@@ -753,8 +753,11 @@ class Seller extends MY_Controller {
 
     public function SaveZidProducts() {
         $skuarray = array();
-     
+      
+       
         foreach ($this->input->post('selsku') as $key => $value) {
+         
+
             $skuarray = array(
                 'sku' => $this->input->post('sku')[$key],
                 'zid_pid' => $this->input->post('pid')[$key],
@@ -767,7 +770,7 @@ class Seller extends MY_Controller {
                 'sku_size' => $this->input->post('sku_size')[$key],
                 'entry_date' => date("Y-m-d H:i:s")
             );
- 
+           
             $exist_zidsku_id = exist_zidsku_id($this->input->post('sku')[$key], $this->session->userdata('user_details')['super_id']);
             if ($exist_zidsku_id != '' || $exist_zidsku_id != 0) {
                 echo $product['sku'] . ' Exist<br>';
@@ -776,7 +779,7 @@ class Seller extends MY_Controller {
             }
         }
      
-        redirect('Item');
+       redirect('Item');
     }
 
 

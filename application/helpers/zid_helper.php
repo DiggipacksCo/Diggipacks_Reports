@@ -37,7 +37,7 @@ if (!function_exists('Getallstorage_drop')) {
 }
 
 
-function exist_zidsku_id($sku, $super_id) {
+function exist_zidsku_id($sku, $super_id) { 
     $ci = & get_instance();
     $ci->load->database();
     $sql = "select id from items_m where sku='" . $sku . "' and super_id='" . $super_id . "'";
