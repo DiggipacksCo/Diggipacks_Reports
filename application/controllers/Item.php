@@ -13,6 +13,7 @@ class Item extends MY_Controller {
         }
 
         //$this->load->library('pagination');
+        $this->load->helper('zid_helper');
         $this->load->model('Item_model');
         $this->load->model('ItemInventory_model');
         //$this->load->model('ItemCategory_model');
@@ -461,6 +462,22 @@ class Item extends MY_Controller {
         //$mpdf->SetDisplayMode('fullpage'); 
         //$mpdf->Output();
         $mpdf->Output('sku_barcode' . date('Y-m-d H:i:s') . '.pdf', 'I');
+    }
+
+    public function updateZid_product($seller_id=null) 
+    {
+        $ziDAllArr = GetAllQtyforSeller_new($seller_id);
+       
+        foreach($ziDAllArr as $key=>$zidReqArr)
+        {
+                $quantity = $zidReqArr['quantity'];
+                $pid = $zidReqArr['zid_pid'];
+                $token = $zidReqArr['manager_token'];
+                $storeID = $zidReqArr['zid_sid'];
+                update_zid_product($quantity, $pid, $token, $storeID);
+        }
+        $this->session->set_flashdata('msg', 'has been updated successfully');
+                    redirect('Seller');
     }
 
 }

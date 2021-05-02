@@ -55,6 +55,10 @@
 
 
                                 <div class="table-responsive" style="padding-bottom:20px;" >
+                                <?php  
+                                // $warehouse = Getwarehouse_Dropdata();
+                                // $storageArr = Getallstorage_drop();
+                                // echo "<pre>"; print_r($storageArr); ?> 
                                     <!--style="background-color: green;"-->
                                     <form method="post" action="<?php echo base_url(); ?>Seller/SaveZidProducts">
                                         <table class="table table-striped table-hover table-bordered dataTable bg-*" id="">
@@ -71,12 +75,14 @@
                                             </thead>
                                             <tbody>
 
-                                                <?php $sr = 1; ?>
+                                                <?php $sr = 1; ?> 
 
-                                                <?php if (!empty($products)): ?>
+                                                <?php
+                                                
+                                                 if (!empty($products)): ?>
                                                     <?php
-                                                    $warehouse = Getwarehouse_Dropdata();
-                                                    $storageArr = Getallstorage_drop();
+                                                        $warehouse = Getwarehouse_Dropdata();
+                                                        $storageArr = Getallstorage_drop();
                                                     ?>
                                                     <?php foreach ($products as $product): ?>
 
@@ -85,12 +91,12 @@
                                                             $is_exist = checkZidSkuExist($product['sku'], $product['id']);
                                                             
                                                             ?>
-                                                            <td><input type="checkbox" <?php echo ($is_exist)? 'checked disabled': ''?> name="selsku[<?= $product['sku']; ?>]" value="1"></td>
-                                                            <td><input type="hidden" name="sku[<?= $product['sku']; ?>]" value="<?= $product['sku']; ?>"><?= $product['sku']; ?></td>
-                                                            <td><input type="hidden" name="pid[<?= $product['sku']; ?>]" value="<?= $product['id']; ?>"><?= $product['id']; ?></td>
-                                                            <td><input type="hidden" name="skuname[<?= $product['sku']; ?>]" value="<?= $product['name']; ?>"><?= $product['name']; ?></td>
+                                                            <td><input type="checkbox" <?php echo ($is_exist)? 'checked disabled': ''?> name="selsku[]" value="<?php echo $product['sku']; ?>"></td>
+                                                            <td><input type="hidden" name="sku[]" value="<?= $product['sku']; ?>"><?php echo $product['sku']; ?></td>
+                                                            <td><input type="hidden" name="pid[]" value="<?= $product['id']; ?>"><?php echo $product['id']; ?></td>
+                                                            <td><input type="hidden" name="skuname[]" value="<?= $product['name']; ?>"><?php echo $product['name']; ?></td>
                                                             <td>
-                                                                <select class="form-control" name="warehouseid[<?= $product['sku']; ?>]">
+                                                                <select class="form-control" name="warehouseid[]">
                                                                     <option value="NULL">Select Warehouse</option>
                                                                     <?php
                                                                     foreach ($warehouse as $warehose1) {
@@ -101,7 +107,7 @@
                                                             </td>
                                                             <td>
 
-                                                                <select class="form-control" name="storageid[<?= $product['sku']; ?>]">
+                                                                <select class="form-control" name="storageid[]">
                                                                     <option value="NULL">Select Storage</option>
                                                                     <?php
                                                                     foreach ($storageArr as $storage) {
@@ -110,7 +116,7 @@
                                                                     ?>
                                                                 </select>
                                                             </td>
-                                                            <td><input type="text" name="sku_size[<?= $product['sku']; ?>]" value="10"></td>
+                                                            <td><input type="text" name="sku_size[]" value="10"></td>
                                                         </tr>
 
                                                     <?php endforeach; ?>
