@@ -84,8 +84,6 @@ function GetAllQtyforSeller_new($cust_id = null) {
 
 //*************************Quantity Update function in Zid*************************//
 function update_zid_product($quantity = null, $pid = null, $token = null, $storeID = null) {
-
-
     $param = array(
         'quantity' => $quantity,
         'id' => $pid,
@@ -143,7 +141,6 @@ function updateZidStatus($orderID = null, $token = null, $status = null, $code =
     ));
 
     $response = curl_exec($curl);
-
     curl_close($curl);
     $response;
 }

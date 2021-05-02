@@ -29,9 +29,7 @@ class Country extends MY_Controller {
         $this->load->view('country/importlocation.php',$data);
     }
     
-    public function Delivery_city_list() {
-       
-      
+    public function Delivery_city_list() {    
         $this->load->view('country/delivery_city.php');
     }
     public function Importdeliverycity($id=null) {
