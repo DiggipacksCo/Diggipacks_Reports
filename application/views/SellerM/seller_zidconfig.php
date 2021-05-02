@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-?>
+?> 
 
 <!DOCTYPE html>
 <html lang="en">
@@ -20,7 +20,39 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 display: inline-block;
                 width: 24%;
             }
-        </style>
+            
+        .subject-info-box-1,
+        .subject-info-box-2 {
+            float: left;
+            width: 45%;
+            
+            select[multiple],
+        select[size] {
+        
+
+            height: 400px !important;
+            padding: 0;
+
+            option {
+                padding: 4px 10px 4px 10px;
+            }
+
+            option:hover {
+                background: #EEEEEE;
+            }
+        }
+    }
+
+.subject-info-arrows {
+    float: left;
+    width: 10%;
+
+    input {
+        width: 70%;
+        margin-bottom: 5px;
+    }
+}
+</style>
     </head>
 
     <body >
@@ -45,6 +77,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                     <!-- Content area -->
                     <div class="content">
+                   
                         <div class="panel panel-flat">
                             <div class="panel-heading"><h1><strong> Zid Configuration</strong></h1></div>
                             <hr>
@@ -93,6 +126,95 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </form>
 
                             </div>
+                            
+
+                            <hr>
+                            <div class="panel-body">
+                                <form action="<?= base_url('Seller/zidDeliveryOptionAdd/' . $customer['id']); ?>" method="post" enctype="multipart/form-data" autocomplete="off">
+                                    <input type="hidden" class="form-control"  name="id" value="<?php echo $customer['id']; ?>">
+                                    <fieldset class="scheduler-border" id="show_zid_details">   
+                                        <legend class="scheduler-border">Delivery Option</legend>
+                                        <div class="form-group">
+                                            <label>Name</label>
+                                            
+                                            <input type="text" required="" class="form-control" name="zid_delivery_name" id="zid_delivery_name" value="<?php echo isset($delivery_options[0]['zid_delivery_name']) ? $delivery_options[0]['zid_delivery_name'] : ''; ?>"/>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Cost</label>
+                                            <input type="text" required="" class="form-control" name="zid_delivery_cost" id="zid_delivery_cost" value="<?php echo isset($delivery_options[0]['zid_delivery_cost']) ? $delivery_options[0]['zid_delivery_cost'] : ''; ?>"/>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Cod Enabled</label>
+                                            <select name="zid_cod_enabled" id="zid_cod_enabled" required class="form-control">
+                                                <option value="" >Select Cod Status</option>
+                                                <option <?php echo ($delivery_options[0]['zid_cod_enabled'] == "1" ? 'selected' : ''); ?> value="1" >Enabled</option>  
+                                                <option <?php echo ($delivery_options[0]['zid_cod_enabled'] == "0" ? 'selected' : ''); ?> value="0" >Disabled</option>  
+                                            </select>
+                                            <!--<input type="text" required="" class="form-control" name="zid_code_enabled" id="zid_code_enabled" value="<?php echo isset($delivery_options[0]['zid_code_enabled']) ? $delivery_options[0]['zid_code_enabled'] : ''; ?>"/>-->
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Cod Fee</label>
+                                            <input type="text" required="" class="form-control" name="zid_cod_fee" id="zid_cod_fee" value="<?php echo isset($delivery_options[0]['zid_cod_fee']) ? $delivery_options[0]['zid_cod_fee'] : ''; ?>"/>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Delivery Estimated Time ar</label>
+                                            <input type="text" required="" class="form-control" name="delivery_estimated_time_ar" id="delivery_estimated_time_ar" value="<?php echo $delivery_options[0]['delivery_estimated_time_ar']; ?>"/>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Delivery Estimated Time en</label>
+                                            <input type="text" required="" class="form-control" name="delivery_estimated_time_en" id="delivery_estimated_time_en" value="<?php echo $delivery_options[0]['delivery_estimated_time_en']; ?>"/>
+                                        </div>
+
+                                        <div class="form-group">
+                                        <!-- djhfjdhjdhfjdhfjd -->
+
+                                        <div class="subject-info-box-1">
+                                    <select multiple="multiple" id='lstBox1'  class="form-control">
+                                    <?php if (!empty($ListArr)): ?>
+                                                <?php foreach ($ListArr as $rows):
+                                                    ?>
+                                    <option value="<?= $rows['id']; ?>"> <?= $rows['zid']; ?> </option>
+                                            <?php endforeach; ?>
+                                            <?php endif; ?>
+                                    </select>
+                                    </div>
+                                    <div class="subject-info-arrows text-center">
+                                    <input type='button' style="margin-top:5px;" id='btnAllRight' value='>>' class="btn btn-info" /><br />
+                                    <input type='button' style="margin-top:5px;"id='btnRight' value='>' class="btn btn-info" /><br />
+                                    <input type='button' style="margin-top:5px;" id='btnLeft' value='<' class="btn btn-info" /><br />
+                                    <input type='button' style="margin-top:5px;" id='btnAllLeft' value='<<' class="btn btn-info" />
+                                    </div>
+                                    <div class="subject-info-box-2">
+                                    <select multiple="multiple" name="zid_city[]" id='lstBox2' class="form-control">
+                                    <?php if (!empty($pre)): 
+                                        ?>
+                                        <?php foreach ($pre as $rows): ?>
+                                    <option value="<?= $rows['id']; ?>" > <?= $rows['zid']; ?> </option>
+                                            <?php endforeach; ?>
+                                            <?php endif; ?>  
+                                    </select>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <br/><br/>
+                                    <button class="btn btn-warning  " type="button"  id="selectAll">Confirm</button>
+                                    <button type="submit" name="deliver_option" value="1" class="btn btn-primary">Update</button> 
+                                   
+                                    
+                                </div>
+
+
+                                        <!-- dklfjflkjdfkjskdjkd -->
+                                 </fieldset>  
+
+
+                                </form>
+                            </div>
+                            
                             <hr>
                             <div class="panel-body">
                                 <form action="<?= base_url('Seller/zidWebhookSubscribe/' . $customer['id']); ?>" method="post" enctype="multipart/form-data" autocomplete="off">
@@ -179,4 +301,83 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
     });
 
+    $('#all').change(function (e) {
+        console.log(e.currentTarget.checked);
+        if (e.currentTarget.checked) {
+            $('.citycheck').prop('checked', true);
+        } else {
+            $('.citycheck').prop('checked', false);
+        }
+    });
+
 </script>
+<Script>
+        $(document).ready(function(){
+        $('#selectAll').click(function(){
+           
+            $('#lstBox2 option').prop('selected', true);
+            $('#subButton').prop('disabled', false);
+        });
+        });
+
+
+        (function () {
+        $("#btnRight").click(function (e) {
+            var selectedOpts = $("#lstBox1 option:selected");
+            if (selectedOpts.length == 0) {
+            alert("Nothing to move.");
+            e.preventDefault();
+            }
+
+            $("#lstBox2").append($(selectedOpts).clone());
+            $(selectedOpts).remove();
+            $('#subButton').prop('disabled', true);
+            e.preventDefault();
+        });
+
+        $("#btnAllRight").click(function (e) {
+        var isconfirm= confirm("Do you really want to add cities! its huge...");
+        if(isconfirm)
+        {
+
+
+        var selectedOpts = $("#lstBox1 option");
+            if (selectedOpts.length == 0) {
+            alert("Nothing to move.");
+            e.preventDefault();
+            }
+
+            $("#lstBox2").append($(selectedOpts).clone());
+            $(selectedOpts).remove();
+            $('#subButton').prop('disabled', true);
+            e.preventDefault();
+        }
+        });
+
+        $("#btnLeft").click(function (e) {
+            var selectedOpts = $("#lstBox2 option:selected");
+            if (selectedOpts.length == 0) {
+            alert("Nothing to move.");
+            e.preventDefault();
+            }
+
+            $("#lstBox1").append($(selectedOpts).clone());
+            $(selectedOpts).remove();
+            $('#subButton').prop('disabled', true);
+            e.preventDefault();
+        });
+
+        $("#btnAllLeft").click(function (e) {
+            var selectedOpts = $("#lstBox2 option");
+            if (selectedOpts.length == 0) {
+            alert("Nothing to move.");
+            e.preventDefault();
+            }
+
+            $("#lstBox1").append($(selectedOpts).clone());
+            $(selectedOpts).remove();
+            $('#subButton').prop('disabled', true);
+            e.preventDefault();
+        });
+        })(jQuery);
+</Script>
