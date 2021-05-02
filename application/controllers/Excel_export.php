@@ -1077,7 +1077,9 @@ class Excel_export extends MY_Controller {
         //$namesArray = array('City');
         $namesArray = array();
         $returnArray = $this->Country_model->GetdeliveryCOmpanyListQry();
+       // print_r($returnArray);exit;
         foreach ($returnArray as $val) {
+            if(!empty($val['company']))
             array_push($namesArray, $val['company']);
         }
 
