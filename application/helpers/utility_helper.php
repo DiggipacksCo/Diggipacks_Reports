@@ -1574,6 +1574,22 @@ if (!function_exists('GetSinglesellerdata')) {
     }
 
 }
+
+if (!function_exists('Getselletdetails')) {
+
+    function Getselletdetails() {
+        
+        $ci = & get_instance();
+        $ci->load->database();
+        $sql = "SELECT * FROM user where id ='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $query = $ci->db->query($sql);
+        $result = $query->result_array();
+     // echo   $ci->db->last_query(); exit; 
+        return $result;
+    }
+
+}
+
 if (!function_exists('getcheckalreadyexitsstorage')) {
 
     function getcheckalreadyexitsstorage($id = null, $storage_id = null) {
@@ -2423,6 +2439,7 @@ if (!function_exists('getdestinationfieldshow')) {
         $ci = & get_instance();
         $ci->load->database();
         $sql = "SELECT $field FROM country where id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        //echo $sql;
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result[$field];

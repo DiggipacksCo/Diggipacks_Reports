@@ -111,14 +111,16 @@ var app = angular.module('AppManifest', [])
                         {
                             if (response.data.status == 'succ')
                             {
-                                alert("Successfully Assign");
+                                $scope.Success_msg = response.data.Success_msg;
                                 location.reload();
                             } else
                             {
 
                                 $scope.invalidSslip_no = response.data.invalid_slipNO;
-                                $scope.Success_msg = response.data.Success_msg;
                                 $scope.Error_msg = response.data.Error_msg;
+                                setTimeout(function() {
+                                 $('.alert-danger').fadeOut();
+                                }, 10000 );
                             }
                         } else
                         {
