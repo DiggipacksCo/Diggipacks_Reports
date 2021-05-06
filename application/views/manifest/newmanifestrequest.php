@@ -257,6 +257,8 @@
                                 <div class="alert alert-danger" ng-repeat="error_msg in Error_msg">{{error_msg}}</div>
                             </div>
 
+                            <div class="loader logloder" ng-show="loadershow"></div>
+
 
 
 
@@ -276,7 +278,7 @@
                                 <div ng-show="crourierbtn">
 
                                     <select type="text"  ng-model="AssignData.cc_id" class="form-control" required>
-                                        <option ng-repeat="cx in courierData"  value="{{cx.id}}">{{cx.company}}</option>
+                                        <option ng-repeat="cx in courierData"  value="{{cx.cc_id}}">{{cx.company}}</option>
                                     </select>
                                 </div>
 
