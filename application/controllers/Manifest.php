@@ -533,6 +533,9 @@ class Manifest extends CourierCompany_pickup {
                 if(isset($responseArray['errors']['collection_city']) && !empty($responseArray['errors']['collection_city'])){
                     $errors = $responseArray['errors']['collection_city'][0];
                 }
+                if(isset($responseArray['errors']['reference']) && !empty($responseArray['errors']['reference'])){
+                    $errors = $responseArray['errors']['reference'][0];
+                }
 
                 $returnArr['Error_msg'][] = $slipNo . ':' . $errors;
             }
