@@ -269,7 +269,7 @@
                                 <div class="alert alert-danger" ng-repeat="mdata in messArray1">Wrong Awb {{mdata}}</div>    
                             </div>
                             <form novalidate ng-submit="myForm.$valid && createUser()" >
-                                <input type="radio" name="assign_type" ng-model="AssignData.assign_type" ng-click="GetChangeAssignType('D');" value="D"  > Driver <input type="radio" name="assign_type" value="CC" ng-model="AssignData.assign_type" ng-click="GetChangeAssignType('CC');"  > Coourier Company
+                                <input type="radio" name="assign_type" ng-model="AssignData.assign_type" ng-click="GetChangeAssignType('D');" value="D"  > Driver <input type="radio" name="assign_type" value="CC" ng-model="AssignData.assign_type" ng-click="GetChangeAssignType('CC');"  > Courier Company
                                 <div ng-show="driverbtn">
                                     <select type="text"  ng-model="AssignData.assignid" class="form-control" required>
                                         <option ng-repeat="x in assigndata"  value="{{x.id}}">{{x.username}}</option>
@@ -286,7 +286,7 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <button type="button" ng-if="AssignData.assign_type == 'D'" class="btn btn-primary" ng-click="saveassigntodriver();" >Update Driver</button>
-                            <button type="button" ng-if="AssignData.assign_type == 'CC'" class="btn btn-primary" ng-click="saveassigntodriver();" >Send Curier</button>
+                            <button type="button" ng-if="AssignData.assign_type == 'CC'" class="btn btn-primary" ng-click="saveassigntodriver();" >Send Courier</button>
                         </div>
                         </form>          
                     </div>
