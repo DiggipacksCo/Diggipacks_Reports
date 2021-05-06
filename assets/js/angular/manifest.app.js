@@ -114,13 +114,11 @@ var app = angular.module('AppManifest', [])
                                 $scope.Success_msg = response.data.Success_msg;
                                 location.reload();
                             } else
-                            {
-
-                                $scope.invalidSslip_no = response.data.invalid_slipNO;
+                            {location.reload();
+                                //$scope.invalidSslip_no = response.data.invalid_slipNO;
                                 $scope.Error_msg = response.data.Error_msg;
-                                setTimeout(function() {
-                                 $('.alert-danger').fadeOut();
-                                }, 10000 );
+                                alert(0);
+                                location.reload();
                             }
                         } else
                         {
@@ -762,16 +760,19 @@ $scope.data={};
                         // $scope.response="";
                         if (response)
                         {
-                            if (response.data.status == 'succ')
+                             if (response.data.status == 'succ')
                             {
-                                alert("Successfully Assign");
+                                $scope.Success_msg = response.data.Success_msg;
                                 location.reload();
                             } else
                             {
-
-                                $scope.invalidSslip_no = response.data.invalid_slipNO;
-                                $scope.Success_msg = response.data.Success_msg;
+                                //$scope.invalidSslip_no = response.data.invalid_slipNO;
                                 $scope.Error_msg = response.data.Error_msg;
+                                 setTimeout(function() {
+                                 $('.alert-danger').fadeOut();
+                                 location.reload();
+                                }, 2000);
+                                
                             }
                         } else
                         {
