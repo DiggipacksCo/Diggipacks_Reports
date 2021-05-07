@@ -232,10 +232,8 @@ class Seller extends MY_Controller {
 
     Public function add_courier_company($id = Null)
     {
-        $data['id'] = $id;
-        
-        $this->load->view('SellerM/add_courier_company', $data);       
-
+        $data['id'] = $id;        
+        $this->load->view('SellerM/add_courier_company', $data);      
        
     }
     public function updateCourier() {
