@@ -146,7 +146,7 @@
                                                         <tr>
                                                             <th class="head1">Sr.No.</th>
                                                             <th class="head0">SKU</th>
-                                                            <th class="head1">Space</th>
+                                                            <th class="head1">Capacity</th>
                                                             <th class="head1">Storage</th>
                                                             <th class="head1">Stock Location</th>
                                                             <th class="head1">Shelve No.</th>
@@ -162,7 +162,7 @@
                                                             <td>{{$index + 1}}</td>
                                                             <td><span class="label label-primary">{{data.sku}}</span></td>
 
-                                                            <td>  <span class="badge badge badge-pill badge-info" >{{data.filled}}</span></td>
+                                                            <td>  <span class="badge badge badge-pill badge-info" >{{data.capacity}}</span></td>
                                                             <td>  <span class="badge badge badge-pill badge-warning" >{{data.storage_type}}</span></td>
                                                             <td><span ng-if="data.l_status == 'pending'"  class="label label-danger">{{data.stockLocation}}</span>
                                                                 <span ng-if="data.l_status == 'completed'"  class="label label-success">{{data.stockLocation}}</span>

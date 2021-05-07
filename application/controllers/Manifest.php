@@ -1612,7 +1612,8 @@ class Manifest extends CourierCompany_pickup {
 
     public function GetUpdateManifestStockLocation() {
 
-
+        // error_reporting(-1);
+		// ini_set('display_errors', 1);
         $_POST = json_decode(file_get_contents('php://input'), true);
         $uid = $_POST['list']['uid']; //'5E0DB8692B7A6';
         $sid = $_POST['list']['sid']; //3;//
@@ -1621,9 +1622,6 @@ class Manifest extends CourierCompany_pickup {
         $shelveArr = $_POST['shelveArr'];
         $SkuData = $this->Manifest_model->GetallmanifestskuData_new($uid, $sid, $sku);
 
-
-        // $totalqty="";
-        // $totalsku_size=0;
 
         $skureturnarray = array();
         $kk = 0;
@@ -1637,7 +1635,7 @@ class Manifest extends CourierCompany_pickup {
             } else {
                 $expdate = $expire_date;
             }
-            $totalqty = GetManifestInventroyUpdateQty($uid, $sid, $rdata['sku']);
+            $totalqty = GetManifestInventroyUpdateQty($uid, $sid, $rdata['sku']); 
 
             $skuid = $rdata['item_sku'];
             $totalsku_size = $rdata['sku_size'];
@@ -1650,24 +1648,141 @@ class Manifest extends CourierCompany_pickup {
                 $locationLimit = 1;
             else {
                 // echo $totalqty ."==========". $totalsku_size;
-                $locationLimit1 = $totalqty / $totalsku_size;
+                $locationLimit1 = $totalqty / $totalsku_size; // 11/3 
                 $locationLimit = ceil($locationLimit1);
             }
-            $newlimitcheck += $locationLimit;
-            // echo $locationLimit."<br>";
-            // 
+            
+            $requiredLocation= $locationLimit;
+
             $otherMatchInventory = array('item_sku' => $skuid, 'expity_date' => $expdate, 'seller_id' => $sid, 'wh_id' => $wh_id);
-            $skureturnarray2 = $this->Manifest_model->GetallstockLocation_new($sid, '', $stockArr, $locationLimit, $totalsku_size, $skuid, $otherMatchInventory);
-            // print_r($skureturnarray2);
-            if ($kk == 0) {
-                $createlocation = array_slice($skureturnarray2, 0, $locationLimit, true);
-            } else {
-                $createlocation = array_slice($skureturnarray2, $locationLimit, $locationLimit, true);
+            $skureturnarray1 = $this->Manifest_model->GetallstockLocation_bk($sid, '', $stockArr, $locationLimit, $totalsku_size, $skuid, $otherMatchInventory,$totalqty);
+            $newQty=$totalqty;
+            //print_r($skureturnarray1); exit;
+            if(!empty( $skureturnarray1))
+            {
+                $required=0;
+                $available=0;
+           
+            foreach( $skureturnarray1 as $keys=>$ndata)
+            {
+                if($newQty>0) // 5 sku size 3
+                {
+                    if($newQty>=$totalsku_size)   // 5>=3  
+                    {
+                       
+                        $rmSpace= $totalsku_size-$ndata['quantity']; //3- 1  rm =2 , 3-1=2
+                        if($rmSpace>0)
+                        {
+
+                            $required++;
+                            $available++;
+                        $newQty=$newQty-$rmSpace; //5-2=3 , 3-2=1
+                        $skureturnarray1[$keys]['filled']=$rmSpace;
+                        $stockArr[]=$ndata['stock_location'];
+                     }
+                    }
+                    else
+                    {
+                        $rmSpace= $totalsku_size-$ndata['quantity'];  // 5-1=4 , 3
+                        if($rmSpace>0)
+                        {
+                        if($rmSpace>=$newQty) // 3>=4
+                        {
+                            $required++;
+                            $available++;
+                            $skureturnarray1[$keys]['filled']=$newQty; 
+                            $stockArr[]=$ndata['stock_location'];
+                            $newQty=0;
+                        }
+                        else
+                        {
+                            $required++;
+                            $available++;
+                            $newQty= $newQty-$rmSpace;  // 4-3
+                            $skureturnarray1[$keys]['filled']=$rmSpace; 
+                            $stockArr[]=$ndata['stock_location'];
+                        }
+                    }
+                        
+                    }
+                   
+                }
+                else
+                {
+                   unset($skureturnarray1[$keys]);
+                }
             }
-            // print_r($createlocation);
+
+            array_values($skureturnarray1); 
+            $newlimitchecknew += count($skureturnarray1); 
+        }
+        //echo  $newQty; exit;
+        if($newQty==0)
+        {
+           
+        }
+        else
+        {
+            if ($totalsku_size >= $newQty)
+            $required = $required+1;
+          else {
+            // echo $totalqty ."==========". $totalsku_size;
+            $locationLimit1 = $newQty / $totalsku_size;
+            $required = ceil($locationLimit1) +$required;
+
+        $newlimitchecknew += count($skureturnarray1)+$locationLimit2; 
+
+        }
+        //$locationLimitnew=$requiredLocation-count($skureturnarray1);
+
+        $otherMatchInventory = array('item_sku' => $skuid, 'expity_date' => $expdate, 'seller_id' => $sid, 'wh_id' => $wh_id);
+        $skureturnarray = $this->Manifest_model->GetallstockLocation_new($sid, '', $stockArr, $required, $totalsku_size, $skuid, $otherMatchInventory,$totalqty,$skureturnarray,$newQty );
+       // print_r($skureturnarray );
+        $available=count($skureturnarray)+$available; 
+          
+      
+        foreach( $skureturnarray as $keyss=>$ndata)
+        {
+           
+            if($newQty>$totalsku_size)
+            {
+                $rmSpace= 0;
+                $newQty=$newQty-$totalsku_size;
+                $skureturnarray[$keyss]['filled']=$totalsku_size;
+                
+            }
+            else
+            {
+                $rmSpace= 0;
+                $newQty=$newQty;
+                $skureturnarray[$keyss]['filled']=$newQty;  
+            }
+               
+           }
+
+           } 
+
+           if(!empty($skureturnarray1) && !empty($skureturnarray) )
+           $skureturnarray2= array_merge_recursive($skureturnarray1,$skureturnarray);
+           else if(empty($skureturnarray1) && !empty($skureturnarray) )
+           {
+            $skureturnarray2  =$skureturnarray;
+           }
+           else
+           {
+            $skureturnarray2  =$skureturnarray1;
+           }
+            // print_r($skureturnarray2);
+            // if ($kk == 0) {
+            //     $createlocation = array_slice($skureturnarray2, 0, $locationLimit, true);
+            // } else {
+            //     $createlocation = array_slice($skureturnarray2, $locationLimit, $locationLimit, true);
+            // }
+            $createlocation=$skureturnarray2;
+            // print_r($createlocation);exit;
             // print_r($createlocation);
             //print_r($skureturnarray[$kk]);
-            $totallocationarray += count($createlocation);
+           
             if ($storage_type == 'Shelve') {
                 ///  $shelveLimit=1;
                 $shelveLimit = $locationLimit;
@@ -1678,32 +1793,35 @@ class Manifest extends CourierCompany_pickup {
 
             foreach ($createlocation as $key555 => $val) {
 
-                $skureturnarray[$key555]['stockLocation'] = $val['stock_location'];
-                $skureturnarray[$key555]['skuid'] = $skuid;
-                $skureturnarray[$key555]['sku'] = $rdata['sku'];
-                $skureturnarray[$key555]['uid'] = $rdata['uniqueid'];
-                $skureturnarray[$key555]['storage_type'] = $storage_type;
+                $skureturnarray3[$key555]['stockLocation'] = $val['stock_location'];
+                $skureturnarray3[$key555]['id'] = $val['id'];
+                $skureturnarray3[$key555]['filled'] = $val['filled'];
+                $skureturnarray3[$key555]['skuid'] = $skuid;
+                $skureturnarray3[$key555]['sku'] = $rdata['sku']; 
+                $skureturnarray3[$key555]['uid'] = $rdata['uniqueid'];
+                $skureturnarray3[$key555]['storage_type'] = $storage_type;
 
-                $skureturnarray[$key555]['sid'] = $rdata['seller_id'];
-                $skureturnarray[$key555]['capacity'] = $totalsku_size;
-                $skureturnarray[$key555]['boxes'] = $locationLimit;
-                $skureturnarray[$key555]['totalqty'] = $totalqty;
-                $skureturnarray[$key555]['shelveNo'] = $shelveArr[$key555]['shelv_no'];
-                $skureturnarray[$key555]['warehouse_name'] = $warehouse_name;
-                $skureturnarray[$key555]['expire_date'] = $expire_date;
-                $skureturnarray[$key555]['wh_id'] = $wh_id;
+                $skureturnarray3[$key555]['sid'] = $rdata['seller_id'];
+                $skureturnarray3[$key555]['capacity'] = $totalsku_size;
+                $skureturnarray3[$key555]['boxes'] = $locationLimit;
+                $skureturnarray3[$key555]['totalqty'] = $totalqty;
+                $skureturnarray3[$key555]['shelveNo'] = $shelveArr[$key555]['shelv_no'];
+                $skureturnarray3[$key555]['warehouse_name'] = $warehouse_name;
+                $skureturnarray3[$key555]['expire_date'] = $expire_date;
+                $skureturnarray3[$key555]['wh_id'] = $wh_id;
             }
-
+           
 
             $kk++;
         }
-
-
+        //$avaibale=count($skureturnarray)+count($skureturnarray1);
+       
         $sotrageTypes = $this->Manifest_model->getallStoragesTypesData();
         $warehouseArr = Getwarehouse_Dropdata();
-        $reurnarray = array('result' => $skureturnarray, 'uid' => $uid, 'sid' => $sid, 'countbox' => $newlimitcheck, 'countarray' => $totallocationarray, 'warehouseArr' => $warehouseArr);
+        $reurnarray = array('result' => $skureturnarray3, 'uid' => $uid, 'sid' => $sid, 'countarray' => $available, 'countbox' => $required, 'warehouseArr' => $warehouseArr);
         echo json_encode($reurnarray);
     }
+
 
     public function GetSkulistForUpdateInventory() {
         $_POST = json_decode(file_get_contents('php://input'), true);
@@ -1823,6 +1941,183 @@ class Manifest extends CourierCompany_pickup {
         // $shelve = $postData['list']['shelve'];
         // $return = $this->Manifest_model->GetCheckValidShelveNoIn($shelve);
         echo json_encode(true);
+    }
+
+
+    public function GetSaveInventoryManifest_bk() {
+
+
+        $postData = json_decode(file_get_contents('php://input'), true);
+       
+
+        $skus = $postData['skus'];
+        $locations = $postData['locations'];
+        
+        if (!empty($postData)) {
+
+            $uid = $skus[0]['uid'];
+            foreach ($skus as $key => $val) {
+
+                $sku = $val['sku'];
+                $skuid = GetallitemcheckDuplicate($sku);
+                $chargeQty = $val['totalqty'];
+                $sku_size = $val['capacity'];
+                $item_type = getalldataitemtables($skuid, 'type');
+                $qty = $val['totalqty'];
+
+                $sid = $val['sid'];
+                $first_out = getallsellerdatabyID($sid, 'first_out'); 
+                // $total_location = $val['total_location'];
+                $expire_date = $val['expire_date'];
+                $wh_id = $val['wh_id'];
+
+                if (empty($expire_date)) {
+                    $expdate = "0000-00-00";
+                } else {
+                    $expdate = $expire_date;
+                }
+
+                if ($first_out == 'N') {
+                    
+                    $dataNew=$locations;
+
+                   
+                    foreach ($dataNew as $val2) {
+                        if($val2['id']>0 )
+                        {  
+                            $activitiesArr1=array(); 
+                           $preData= $this->Manifest_model-> getPreQuantity($val2['id']);
+                           $newQty=($val2['filled']+$preData['quantity']);
+                           $activitiesArr1 = array(
+                            'exp_date' => $expdate,
+                            'st_location' =>$val2['stockLocation'] ,
+                            'item_sku' => $skuid,
+                            'user_id' => $this->session->userdata('user_details')['user_id'],
+                            'seller_id' => $sid,
+                            'qty' =>  $newQty ,
+                            'p_qty' =>$preData['quantity'],
+                            'qty_used' => $val2['filled'],
+                            'type' => 'Update',
+                            'entrydate' => date("Y-m-d h:i:s"),
+                            'super_id' => $this->session->userdata('user_details')['super_id'],
+                            'shelve_no' => $$val2['shelveNo']
+                        );
+                           
+
+                       GetAddInventoryActivities($activitiesArr1);
+                        $this->ItemInventory_model->updateInventory(array('quantity' => $newQty,'stock_location'=>$val2['stockLocation'], 'shelve_no'=>$val2['shelveNo'],'id' => $val2['id'])); 
+
+
+                        }
+                        else
+                        {
+                                                    
+                            $data[] = array(
+                                'itype' => $item_type,
+                                'item_sku' => $skuid,
+                                'seller_id' => $sid,
+                                'quantity' => $val2['filled'],
+                                'update_date' => date("Y/m/d h:i:sa"),
+                                'stock_location' => $val2['stockLocation'],
+                                'wh_id' => $wh_id,
+                                'shelve_no' => $val2['shelveNo'],
+                                'expity_date' => $expdate,
+                                'super_id' => $this->session->userdata('user_details')['user_id']
+                            );
+    
+
+                        }
+                        
+                        }
+
+                        // echo $val['item_sku'];  
+                    }
+                    else
+                    {
+                        if ($qty > 0) {
+                            if ($sku_size >= $qty)
+                                $locationLimit = 1;
+                            else {
+                                $locationLimit1 = $qty / $sku_size;
+                                $locationLimit = ceil($locationLimit1);
+                            }
+        
+                            $updateaty = $qty;
+                            $AddQty = 0;
+                           // $locationLimit = count($locations);
+                            for ($ii = 0; $ii < $locationLimit; $ii++) {
+                               // echo $ii;
+        
+                                if ($locations[$ii]['sku'] == $val['sku']) {
+                                    if ($sku_size <= $updateaty) {
+                                        $AddQty = $sku_size;
+                                        $updateaty = $updateaty - $sku_size;
+                                    } else {
+                                        $AddQty = $updateaty;
+                                        $updateaty = $updateaty;
+                                    }
+                                    // echo $AddQty;
+                                    $shelveNo = $locations[$ii]['shelveNo'];
+                                    $wh_id = $locations[$ii]['wh_id'];
+        
+                                    
+                                    $data[] = array(
+                                        'itype' => $item_type,
+                                        'item_sku' => $skuid,
+                                        'seller_id' => $sid,
+                                        'quantity' => $AddQty,
+                                        'update_date' => date("Y/m/d h:i:sa"),
+                                        'stock_location' => $locations[$ii]['stockLocation'],
+                                        'wh_id' => $wh_id,
+                                        'shelve_no' => $shelveNo,
+                                        'expity_date' => $expdate,
+                                        'super_id' => $this->session->userdata('user_details')['user_id']
+                                    );
+                                }
+        
+                            } 
+                            
+                        }
+                        
+                    }
+                }
+               
+
+              
+
+
+                    $manifestUpdate[] = array(
+                        'sku' => $sku,
+                        'confirmO' => 'Y',
+                        'on_hold' => 'N',
+                    );
+                    $chargeArr = array(
+                        'uid' => $uid,
+                        'sid' => $sid,
+                    );
+
+
+
+                    if ($item_type == 'B2B') {
+                        $result12 = $this->Manifest_model->GetUpdatePickupchargeInvocie($chargeArr, $locationLimit, $chargeQty, $skuid);
+                    } else {
+                        $result12 = $this->Manifest_model->GetUpdatePickupchargeInvocie($chargeArr, $qty, $chargeQty, $skuid);
+                    }
+                
+            }
+
+       
+          
+            if (!empty($data)) {
+                $result = $this->ItemInventory_model->add($data);
+                $this->Manifest_model->getupdateconfirmstatus_new($uid, $manifestUpdate);
+            }
+            
+        
+    
+        // check invonry for empty space
+
+        echo json_encode($postData);
     }
 
 }
