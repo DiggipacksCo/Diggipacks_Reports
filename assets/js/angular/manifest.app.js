@@ -763,14 +763,14 @@ $scope.data={};
                              if (response.data.status == 'succ')
                             {
                                 $scope.Success_msg = response.data.Success_msg;
-                                //location.reload();
+                                location.reload();
                             } else
                             {
                                 //$scope.invalidSslip_no = response.data.invalid_slipNO;
                                 $scope.Error_msg = response.data.Error_msg;
                                  setTimeout(function() {
-                                 //$('.alert-danger').fadeOut();
-                                 //location.reload();
+                                 $('.alert-danger').fadeOut();
+                                 location.reload();
                                 }, 2000);
                                 
                             }
