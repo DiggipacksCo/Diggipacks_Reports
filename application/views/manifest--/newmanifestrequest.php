@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title><?=lang('lang_Inventory');?></title>
+        <title>Inventory</title>
         <?php $this->load->view('include/file'); ?>
         <script type="text/javascript" src="<?= base_url(); ?>assets/js/angular/manifest.app.js"></script>
 
@@ -53,9 +53,9 @@
 
                                 <!-- Marketing campaigns -->
                                 <div class="panel panel-flat">
-                                    <div class="panel-heading" dir="ltr">
+                                    <div class="panel-heading">
                                         <h1>
-                                            <strong><?=lang('lang_New_Manifest_Request_List');?> </strong>
+                                            <strong>New Manifest Request List </strong>
                                             <a  ng-click="exportmanifestlistnew();" ><i class="icon-file-excel pull-right" style="font-size: 35px;"></i></a>
                                           <!-- <a id="pdf" ><i class="icon-file-pdf pull-right" style="font-size: 35px;color: red;"></i></a>-->
                                         </h1>
@@ -78,9 +78,9 @@
                                                         <tr style="width: 80%;">
 
                                                             <td>
-                                                                <div class="form-group" ><strong><?=lang('lang_Sellers');?>:</strong>
+                                                                <div class="form-group" ><strong>Sellers:</strong>
                                                                     <select id="seller_id"name="seller_id" ng-model="filterData.seller_id" class="form-control"> 
-                                                                        <option value=""><?=lang('lang_SelectSeller');?></option>
+                                                                        <option value="">Select Seller</option>
                                                                         <option ng-repeat="sdata in sellers"  value="{{sdata.id}}">{{sdata.name}}</option>
                                                                     </select>
 
@@ -90,7 +90,7 @@
 
 
                                                             <td>
-                                                                <div class="form-group" ><strong><?=lang('lang_Manifest_ID');?>:</strong>
+                                                                <div class="form-group" ><strong>Manifest ID:</strong>
                                                                     <input type="text" id="manifestid" name="manifestid" ng-model="filterData.manifestid" class="form-control"> 
 
                                                                 </div>
@@ -100,11 +100,11 @@
                                                                 <div class="form-group mt-10" >
                                                         <select class="form-control"  ng-model="filterData.sort_list" ng-change="loadMore(1, 1);">
 
-                                                            <option value=""><?=lang('lang_Short_List');?></option>
+                                                            <option value="">Short List</option>
 
 
-                                                            <option value="NO"><?=lang('lang_Newest_Order');?></option>
-                                                            <option value="OLD"><?=lang('lang_Oldest_Order');?></option>
+                                                            <option value="NO">Newest Order</option>
+                                                            <option value="OLD">Oldest Order</option>
                                                           
                                                             
 
@@ -113,8 +113,8 @@
                                                    </div>
                                                             </td>
 
-                                                            <td><button type="button" class="btn btn-success" style="margin-left: 7%"><?=lang('lang_Total');?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button></td>
-                                                            <td><button  class="btn btn-danger" ng-click="loadMore(1, 1);" ><?=lang('lang_Search');?></button></td>
+                                                            <td><button type="button" class="btn btn-success" style="margin-left: 7%">Total <span class="badge">{{shipData.length}}/{{totalCount}}</span></button></td>
+                                                            <td><button  class="btn btn-danger" ng-click="loadMore(1, 1);" >Search</button></td>
 
 
                                                         </tr>
@@ -153,17 +153,17 @@
                                     <table class="table table-striped table-hover table-bordered dataTable bg-*" id="example" style="width:100%;">
                                         <thead>
                                             <tr>
-                                            <th><?=lang('lang_SrNo');?>.</th>
-                                    <th><?=lang('lang_Manifest_ID');?> </th>
-                                    <!--<th>SKU</th>-->
-                                    <th><?=lang('lang_QTY');?></th>  
-                                                                                <!-- <th>Assign To</th> -->  
+                                                <th>Sr.No.</th>
+                                                <th>Manifest ID</th>
+                                                <!--<th>SKU</th>-->
+                                                <th>QTY</th>  
+                                             <!-- <th>Assign To</th> -->  
                                              <!--<th>Status</th>
                                              <th>Code</th>-->
-                                                <th><?=lang('lang_Vehicle_type');?></th>
-                                                <th><?=lang('lang_Seller');?></th>
-                                    <th><?=lang('lang_Schedule_Date');?></th>
-                                    <th><?=lang('lang_Request_Date');?></th>
+                                                <th>Vehicle Type</th>
+                                                <th>Seller</th>
+                                                <th>Schedule Date</th>
+                                                <th>Request Date</th>
 
 
 
@@ -199,7 +199,7 @@
 
                                                         <ul class="dropdown-menu dropdown-menu-right">
 
-                                                            <li><a ng-click="updatemanifeststatus($index, data.uniqueid);"  ><i class="icon-pencil7"></i><?=lang('lang_Assign_TO');?></a></li>
+                                                            <li><a ng-click="updatemanifeststatus($index, data.uniqueid);"  ><i class="icon-pencil7"></i> Assign To</a></li>
 
 
 
@@ -213,7 +213,7 @@
 
                                     </table>
 
-                                    <button ng-hide="shipData.length == totalCount" class="btn btn-info" ng-click="loadMore(count = count + 1, 0);" ng-init="count = 1"><?=lang('lang_Load_More');?></button>
+                                    <button ng-hide="shipData.length == totalCount" class="btn btn-info" ng-click="loadMore(count = count + 1, 0);" ng-init="count = 1">Load More</button>
                                 </div>
                                 <hr>
                             </div>
@@ -238,7 +238,7 @@
 
 
 
-                            <h5 class="modal-title" id="exampleModalLabel" dir="ltr"><?=lang('lang_Assign_TO');?>{{uniqueid}} </h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Assign TO {{uniqueid}} </h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -248,10 +248,10 @@
                             <div class="alert alert-warning" ng-if="message.error" id="errhide">{{message.error}}</div>
                             <div class="alert alert-success" ng-if="message.success">{{message.success}}</div>
                             <div class="col-md-12" ng-if="invalidSslip_no">
-                                <div class="alert alert-warning" ng-if="invalidSslip_no" ng-repeat="in_data in invalidSslip_no"><?=lang('lang_Invalid_slip_no');?>. "{{in_data}}"</div>
+                                <div class="alert alert-warning" ng-if="invalidSslip_no" ng-repeat="in_data in invalidSslip_no">Invalid slip no. "{{in_data}}"</div>
                             </div>
                             <div class="col-md-12" ng-if="Success_msg">
-                                <div class="alert alert-success" ng-repeat="success_msg in Success_msg">{{success_msg}} : <?=lang('lang_Shipment_Forwarded');?></div>
+                                <div class="alert alert-success" ng-repeat="success_msg in Success_msg">{{success_msg}} : Shipment Forwarded</div>
                             </div>
                             <div class="col-md-12" ng-if="Error_msg">
                                 <div class="alert alert-danger" ng-repeat="error_msg in Error_msg">{{error_msg}}</div>
@@ -266,10 +266,10 @@
                                 <div class="alert alert-danger" ng-if="mainstatusEmpty">{{mainstatusEmpty}}</div>
                             </div>
                             <div class="col-md-12" ng-if="messArray1 != 0">
-                                <div class="alert alert-danger" ng-repeat="mdata in messArray1"><?=lang('lang_wrong_AWB_no');?> {{mdata}}</div>    
+                                <div class="alert alert-danger" ng-repeat="mdata in messArray1">Wrong Awb {{mdata}}</div>    
                             </div>
                             <form novalidate ng-submit="myForm.$valid && createUser()" >
-                                <input type="radio" name="assign_type" ng-model="AssignData.assign_type" ng-click="GetChangeAssignType('D');" value="D"  >  <?=lang('lang_Drivers');?><input type="radio" name="assign_type" value="CC" ng-model="AssignData.assign_type" ng-click="GetChangeAssignType('CC');"  > <?=lang('lang_Courier_Company');?>
+                                <input type="radio" name="assign_type" ng-model="AssignData.assign_type" ng-click="GetChangeAssignType('D');" value="D"  > Driver <input type="radio" name="assign_type" value="CC" ng-model="AssignData.assign_type" ng-click="GetChangeAssignType('CC');"  > Courier Company
                                 <div ng-show="driverbtn">
                                     <select type="text"  ng-model="AssignData.assignid" class="form-control" required>
                                         <option ng-repeat="x in assigndata"  value="{{x.id}}">{{x.username}}</option>
@@ -284,9 +284,9 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal" ><?=lang('lang_Close');?></button>
-                            <button type="button" ng-if="AssignData.assign_type == 'D'" class="btn btn-primary" ng-click="saveassigntodriver();" ><?=lang('lang_Update_Driver');?></button>
-                            <button type="button" ng-if="AssignData.assign_type == 'CC'" class="btn btn-primary" ng-click="saveassigntodriver();" ><?=lang('lang_Send_Courier');?></button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" ng-if="AssignData.assign_type == 'D'" class="btn btn-primary" ng-click="saveassigntodriver();" >Update Driver</button>
+                            <button type="button" ng-if="AssignData.assign_type == 'CC'" class="btn btn-primary" ng-click="saveassigntodriver();" >Send Courier</button>
                         </div>
                         </form>          
                     </div>

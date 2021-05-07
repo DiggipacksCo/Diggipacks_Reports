@@ -19,7 +19,7 @@ class Manifest_model extends CI_Model {
         $this->db->select('pickup_request.id,pickup_request.uniqueid,pickup_request.sku,pickup_request.qty,items_m.id as item_sku, storage_table.storage_type,items_m.sku_size,items_m.item_path,pickup_request.seller_id');
         $this->db->from('pickup_request');
         $this->db->join('items_m', 'items_m.sku=pickup_request.sku');
-        $this->db->join('storage_table', 'storage_table.id=items_m.storage_id');
+        $this->db->join('storage_table', 'storage_table.id=items_m.storage_id','left');
         $this->db->where('pickup_request.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('items_m.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('pickup_request.confirmO', 'N');
@@ -31,7 +31,7 @@ class Manifest_model extends CI_Model {
         $this->db->group_by('pickup_request.sku');
 
         $query = $this->db->get();
-        // echo $this->db->last_query(); die;
+    // echo $this->db->last_query(); die;
 
         if ($query->num_rows() > 0) {
 
@@ -40,6 +40,7 @@ class Manifest_model extends CI_Model {
             //return $page_no.$this->db->last_query();
         }
     }
+
 
     public function filter($page_no, $filterarray = array()) {
 
@@ -711,54 +712,34 @@ class Manifest_model extends CI_Model {
         return $this->db->update_batch('pickup_request', $data, 'id');
     }
 
-    public function GetallstockLocation_new($sid = null, $limit = null, $stockArr = array(), $shelveLimit = 0, $totalsku_size = 0, $skuid = null, $otherMatchInventory = array()) {
+    public function GetallstockLocation_new($sid = null, $limit = null, $stockArr = array(), $shelveLimit = 0, $totalsku_size = 0, $skuid = null, $otherMatchInventory = array(),$newQty=null) {
 
-        $this->db->where($otherMatchInventory);
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
-
-        $this->db->select('stock_location');
-        $this->db->from('item_inventory');
-        if (!empty($stockArr))
-            $this->db->where_not_in('stock_location', $stockArr);
-        $this->db->where('stock_location!=', '');
-        $this->db->where('seller_id', $sid);
-        $this->db->where('quantity<', $totalsku_size);
-        $this->db->where('item_sku', $skuid);
-        $this->db->order_by("id", "asc");
-        $this->db->limit($shelveLimit);
-        $query3 = $this->db->get();
-
-
-
-        //echo  $this->db->last_query(); die;
-        $totalGetlocation = $query3->num_rows();
-        // $pending_location=$shelveLimit-$totalGetlocation;
         $pending_location = $shelveLimit;
         $StockArr1 = array();
-        if ($pending_location > 0 && $shelveLimit >= $pending_location) {
+       
             $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
-            $this->db->select('stock_location');
+            $this->db->select('stock_location , '.$totalsku_size.' as quantity , 0 as filled, 0 as id, 0 as shelve_no');
             $this->db->from('stockLocation');
             $this->db->where('seller_id', $sid);
-            if (!empty($stockArr)) {
-                $this->db->where_not_in('stock_location', $stockArr);
-            }
-            $this->db->where('`stock_location` NOT IN (SELECT `stock_location` FROM `item_inventory`)', NULL, FALSE);
+            // if (!empty($stockArr)) {
+            //     $this->db->where_not_in('stock_location', $stockArr);
+            // }
+            $this->db->where('`stock_location` NOT IN (SELECT `stock_location` FROM `item_inventory` where super_id= '.$this->session->userdata('user_details')['super_id'].'  and stock_location!="" )', NULL, FALSE);
             if (!empty($pending_location))
                 $this->db->limit($pending_location, 0);
             $query2 = $this->db->get();
+
+            //echo  $this->db->last_query(); die;
             if ($query2->num_rows() > 0) {
                 //echo  $this->db->last_query(); die;
                 $locationArr2 = $query2->result_array();
             } else {
                 $locationArr2 = array();
             }
-        } else {
-            $locationArr2 = array();
-        }
+        
 
 
-        $finalArr = array_merge_recursive($StockArr1, $locationArr2);
+        $finalArr = $locationArr2;
         // print_r($finalArr);
         return $finalArr;
     }
@@ -838,6 +819,40 @@ class Manifest_model extends CI_Model {
          {
              return false;
          }
+    }
+
+
+    public function GetallstockLocation_bk($sid = null, $limit = null, $stockArr = array(), $shelveLimit = 0, $totalsku_size = 0, $skuid = null, $otherMatchInventory = array()) {
+
+        $this->db->where($otherMatchInventory);
+        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+
+        $this->db->select('id,stock_location,quantity,shelve_no');
+        $this->db->from('item_inventory');
+        if (!empty($stockArr))
+            $this->db->where_not_in('stock_location', $stockArr);
+        $this->db->where('stock_location!=', '');
+        $this->db->where('seller_id', $sid);
+        $this->db->where('quantity<', $totalsku_size);
+        $this->db->where('item_sku', $skuid);
+        $this->db->order_by("id", "asc");
+       // $this->db->limit($shelveLimit);
+        $query3 = $this->db->get();
+        //echo  $this->db->last_query(); die;
+        if($query3->num_rows()>0)
+        {
+          return  $totalGetlocation = $query3->result_array();
+        }
+        else
+        {
+            return false;
+        }
+
+
+    
+        
+
+        
     }
 
 }

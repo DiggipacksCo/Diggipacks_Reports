@@ -5,22 +5,20 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title><?=lang('lang_Inventory');?></title>
+        <title>Inventory</title>
         <?php $this->load->view('include/file'); ?>
         <script type="text/javascript" src="<?= base_url(); ?>assets/js/angular/manifest.app.js"></script>
 
 
-
-
     </head>
 
-    <body ng-app="AppManifest" ng-controller="CTR_newmanifestrequest" ng-init="loadMore(1, 0);">
+    <body ng-app="AppManifest" >
 
         <?php $this->load->view('include/main_navbar'); ?>
 
 
         <!-- Page container -->
-        <div class="page-container" >
+        <div class="page-container" ng-controller="CTR_picluplist" ng-init="loadMore(1, 0);">
 
             <!-- Page content -->
             <div class="page-content">
@@ -37,9 +35,6 @@
 
                     <!-- Content area -->
                     <div class="content" >
-
-                        <div class="loader logloder" ng-show="loadershow"></div>
-
                         <!--style="background-color: red;"-->
                         <?php
                         if ($this->session->flashdata('msg'))
@@ -53,44 +48,50 @@
 
                                 <!-- Marketing campaigns -->
                                 <div class="panel panel-flat">
-                                    <div class="panel-heading" dir="ltr">
+                                    <div class="panel-heading">
                                         <h1>
-                                            <strong><?=lang('lang_New_Manifest_Request_List');?> </strong>
-                                            <a  ng-click="exportmanifestlistnew();" ><i class="icon-file-excel pull-right" style="font-size: 35px;"></i></a>
+
+                                            <strong>Pickup List </strong>
+                          <!--                  <a  ng-click="exportmanifestlistnew();" ><i class="icon-file-excel pull-right" style="font-size: 35px;"></i></a>-->
                                           <!-- <a id="pdf" ><i class="icon-file-pdf pull-right" style="font-size: 35px;color: red;"></i></a>-->
                                         </h1>
                                     </div>
                                     <form ng-submit="dataFilter();">
-                                    <!-- href="<? // base_url('Excel_export/shipments');   ?>" -->
-                         <!-- href="<? //base_url('Pdf_export/all_report_view');   ?>" -->
-                                        <!-- Quick stats boxes -->
+
                                         <div class="table-responsive " >
                                             <div class="col-lg-12" style="padding-left: 20px;padding-right: 20px;">
 
-                                                <!-- Today's revenue -->
 
-                                                <!-- <div class="panel-body" > -->
 
                                                 <table class="table table-bordered table-hover" style="width: 100%;">
                                                     <!-- width="170px;" height="200px;" -->
                                                     <tbody >
 
-                                                        <tr style="width: 80%;">
+                                                        <tr>
 
                                                             <td>
-                                                                <div class="form-group" ><strong><?=lang('lang_Sellers');?>:</strong>
+                                                                <div class="form-group" ><strong>Sellers:</strong>
                                                                     <select id="seller_id"name="seller_id" ng-model="filterData.seller_id" class="form-control"> 
-                                                                        <option value=""><?=lang('lang_SelectSeller');?></option>
+                                                                        <option value="">Select Seller</option>
                                                                         <option ng-repeat="sdata in sellers"  value="{{sdata.id}}">{{sdata.name}}</option>
+                                                                    </select>
+
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="form-group" ><strong>Drivers:</strong>
+
+                                                                    <select id="driverid" name="driverid" ng-model="filterData.driverid" class="form-control"> 
+                                                                        <option value="">Select Driver</option>
+                                                                        <option ng-repeat="x in assigndata"  value="{{x.id}}">{{x.username}}</option>
                                                                     </select>
 
                                                                 </div>
                                                             </td>
 
 
-
                                                             <td>
-                                                                <div class="form-group" ><strong><?=lang('lang_Manifest_ID');?>:</strong>
+                                                                <div class="form-group" ><strong>Manifest ID:</strong>
                                                                     <input type="text" id="manifestid" name="manifestid" ng-model="filterData.manifestid" class="form-control"> 
 
                                                                 </div>
@@ -100,11 +101,11 @@
                                                                 <div class="form-group mt-10" >
                                                         <select class="form-control"  ng-model="filterData.sort_list" ng-change="loadMore(1, 1);">
 
-                                                            <option value=""><?=lang('lang_Short_List');?></option>
+                                                            <option value="">Short List</option>
 
 
-                                                            <option value="NO"><?=lang('lang_Newest_Order');?></option>
-                                                            <option value="OLD"><?=lang('lang_Oldest_Order');?></option>
+                                                            <option value="NO">Newest Order</option>
+                                                            <option value="OLD">Oldest Order</option>
                                                           
                                                             
 
@@ -113,8 +114,12 @@
                                                    </div>
                                                             </td>
 
-                                                            <td><button type="button" class="btn btn-success" style="margin-left: 7%"><?=lang('lang_Total');?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button></td>
-                                                            <td><button  class="btn btn-danger" ng-click="loadMore(1, 1);" ><?=lang('lang_Search');?></button></td>
+
+
+
+
+                                                            <td><button type="button" class="btn btn-success" style="margin-left: 7%">Total <span class="badge">{{shipData.length}}/{{totalCount}}</span></button></td>
+                                                            <td><button  class="btn btn-danger" ng-click="loadMore(1, 1);" >Search</button></td>
 
 
                                                         </tr>
@@ -150,20 +155,24 @@
 
                                 <div class="table-responsive" style="padding-bottom:20px;" >
                                     <!--style="background-color: green;"-->
-                                    <table class="table table-striped table-hover table-bordered dataTable bg-*" id="example" style="width:100%;">
+                                    <table class="table table-striped table-hover table-bordered" id="example" style="width:100%;">
                                         <thead>
                                             <tr>
-                                            <th><?=lang('lang_SrNo');?>.</th>
-                                    <th><?=lang('lang_Manifest_ID');?> </th>
-                                    <!--<th>SKU</th>-->
-                                    <th><?=lang('lang_QTY');?></th>  
-                                                                                <!-- <th>Assign To</th> -->  
-                                             <!--<th>Status</th>
-                                             <th>Code</th>-->
-                                                <th><?=lang('lang_Vehicle_type');?></th>
-                                                <th><?=lang('lang_Seller');?></th>
-                                    <th><?=lang('lang_Schedule_Date');?></th>
-                                    <th><?=lang('lang_Request_Date');?></th>
+                                                <th>Sr.No.</th>
+                                                <th>Manifest ID</th>
+                                                <!--<th>SKU</th>-->
+                                                <th>QTY</th>  
+                                                <th>Driver Name</th>  
+                                                <th>3PL Company</th>  
+                                                <th>3PL AWB</th> 
+                                                <th>City</th> 
+                                                <th>Address</th> 
+                                                <th>Status</th>
+                                                <th>Code</th>
+                                                <th>Seller</th>
+                                                <th>Request Date</th>
+
+
 
 
 
@@ -174,18 +183,22 @@
 
                                             <td>{{$index + 1}}  </td>
                                             <td>{{data.uniqueid}}</td>
-                                           <!-- <td><span class="badge badge-info">{{data.sku}}</span></td>-->
-                                            <td width="200"><span class="badge badge-success">{{data.qtyall}}</span><!--&nbsp;<span class="badge badge-danger">2</span>--></td>
-                                            <!-- <td >{{data.assign_to}}</td>-->
 
- <!-- <td > {{data.pstatus}}</td>
-   <td > {{data.code}}</td>-->
-                                            <td><img ng-if="data.vehicle_type != ''" src="<?= base_url(); ?>{{data.vehicle_type}}" width="65">
-                                                <img ng-if="data.vehicle_type == ''" src="<?= base_url(); ?>assets/nfd.png" width="65"></td>
+                                            
+                                            <td ><span class="badge badge-success">{{data.qtyall}}</span></td>
+                                            <td >{{data.assign_to}}</td>
+                                            <td >{{data.company_name}}</td>
+                                            <td ><a  href="{{data.company_label}}" ng-if="data.company_label!=''"  target="_blank">{{data.company_awb}}</a>
+                                            <a ng-if="data.company_label==''">{{data.company_awb}}</a>
+                                            </td>
+                                            <td >{{data.city}}</td>
+                                            <td >{{data.address}}</td>
+
+                                            <td > {{data.pstatus}}</td>
+                                            <td > {{data.code}}</td>
                                             <td > {{data.seller_id}}</td>
-                                            <td ><span ng-if="data.schedule_date != ''">{{data.schedule_date}}</span><span ng-if="data.schedule_date == ''">--</span></td>
-
                                             <td > {{data.req_date}}</td>
+
 
 
 
@@ -199,8 +212,7 @@
 
                                                         <ul class="dropdown-menu dropdown-menu-right">
 
-                                                            <li><a ng-click="updatemanifeststatus($index, data.uniqueid);"  ><i class="icon-pencil7"></i><?=lang('lang_Assign_TO');?></a></li>
-
+                                                            <li><a ng-click="updatemanifeststatus($index, data.uniqueid);"  ><i class="icon-pencil7"></i> Update</a></li>
 
 
 
@@ -213,7 +225,7 @@
 
                                     </table>
 
-                                    <button ng-hide="shipData.length == totalCount" class="btn btn-info" ng-click="loadMore(count = count + 1, 0);" ng-init="count = 1"><?=lang('lang_Load_More');?></button>
+                                    <button ng-hide="shipData.length == totalCount" class="btn btn-info" ng-click="loadMore(count = count + 1, 0);" ng-init="count = 1">Load More</button>
                                 </div>
                                 <hr>
                             </div>
@@ -238,7 +250,8 @@
 
 
 
-                            <h5 class="modal-title" id="exampleModalLabel" dir="ltr"><?=lang('lang_Assign_TO');?>{{uniqueid}} </h5>
+
+                            <h5 class="modal-title" id="exampleModalLabel">Assign TO {{mid}} </h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -247,58 +260,51 @@
                         <div class="modal-body">
                             <div class="alert alert-warning" ng-if="message.error" id="errhide">{{message.error}}</div>
                             <div class="alert alert-success" ng-if="message.success">{{message.success}}</div>
-                            <div class="col-md-12" ng-if="invalidSslip_no">
-                                <div class="alert alert-warning" ng-if="invalidSslip_no" ng-repeat="in_data in invalidSslip_no"><?=lang('lang_Invalid_slip_no');?>. "{{in_data}}"</div>
-                            </div>
-                            <div class="col-md-12" ng-if="Success_msg">
-                                <div class="alert alert-success" ng-repeat="success_msg in Success_msg">{{success_msg}} : <?=lang('lang_Shipment_Forwarded');?></div>
-                            </div>
-                            <div class="col-md-12" ng-if="Error_msg">
-                                <div class="alert alert-danger" ng-repeat="error_msg in Error_msg">{{error_msg}}</div>
-                            </div>
+                            <form name="myform" novalidate ng-submit="myForm.$valid && createUser()" enctype="multipart/form-data" >
+                                <input type="hidden" name="menifestid" id="menifestid" value="{{mid}}">
 
-                            <div class="loader logloder" ng-show="loadershow"></div>
+                                <input ng-model="form.image" type="file" accept="image/*" onchange="angular.element(this).scope().uploadedFile(this)" class="form-control" required >
 
-
-
-
-                            <div class="col-md-12" ng-if="mainstatusEmpty">
-                                <div class="alert alert-danger" ng-if="mainstatusEmpty">{{mainstatusEmpty}}</div>
-                            </div>
-                            <div class="col-md-12" ng-if="messArray1 != 0">
-                                <div class="alert alert-danger" ng-repeat="mdata in messArray1"><?=lang('lang_wrong_AWB_no');?> {{mdata}}</div>    
-                            </div>
-                            <form novalidate ng-submit="myForm.$valid && createUser()" >
-                                <input type="radio" name="assign_type" ng-model="AssignData.assign_type" ng-click="GetChangeAssignType('D');" value="D"  >  <?=lang('lang_Drivers');?><input type="radio" name="assign_type" value="CC" ng-model="AssignData.assign_type" ng-click="GetChangeAssignType('CC');"  > <?=lang('lang_Courier_Company');?>
-                                <div ng-show="driverbtn">
-                                    <select type="text"  ng-model="AssignData.assignid" class="form-control" required>
-                                        <option ng-repeat="x in assigndata"  value="{{x.id}}">{{x.username}}</option>
-                                    </select>
                                 </div>
-                                <div ng-show="crourierbtn">
-
-                                    <select type="text"  ng-model="AssignData.cc_id" class="form-control" required>
-                                        <option ng-repeat="cx in courierData"  value="{{cx.cc_id}}">{{cx.company}}</option>
-                                    </select>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" ng-click="saveassigntodriver();" >Update</button>
                                 </div>
-
+                            </form>          
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal" ><?=lang('lang_Close');?></button>
-                            <button type="button" ng-if="AssignData.assign_type == 'D'" class="btn btn-primary" ng-click="saveassigntodriver();" ><?=lang('lang_Update_Driver');?></button>
-                            <button type="button" ng-if="AssignData.assign_type == 'CC'" class="btn btn-primary" ng-click="saveassigntodriver();" ><?=lang('lang_Send_Courier');?></button>
-                        </div>
-                        </form>          
                     </div>
                 </div>
+
+<!-- <script>
+var $rows = $('tbody tr');
+$('#search').keyup(function() {
+var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+
+$rows.show().filter(function() {
+var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+return !~text.indexOf(val);
+}).hide();
+});
+</script> -->
+
+
             </div>
+            <script>
 
 
+                // "order": [[0, "asc" ]]
+                $('#s_type').on('change', function () {
+                    if ($('#s_type').val() == "SKU") {
+                        $('#s_type_val').attr('placeholder', 'Enter SKU no.');
+                    } else if ($('#s_type').val() == "AWB") {
+                        $('#s_type_val').attr('placeholder', 'Enter AWB no.');
+                    }
+
+                });
 
 
-        </div>
-
-        <!-- /page container -->
+            </script>
+            <!-- /page container -->
 
     </body>
 </html>

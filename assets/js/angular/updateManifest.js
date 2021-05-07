@@ -73,7 +73,7 @@ var app = angular.module('updateManifest', [])
                     }).then(function (response) {
                          console.log(response.data.result); 
 
-                        if (response.data.result.length === 0)  
+                        if (response.data.result == undefined )  
                         {
                             $scope.Message = null;
                             $scope.warning1 = true;
@@ -332,7 +332,7 @@ var app = angular.module('updateManifest', [])
                 //console.log($scope.shipData);   
 
                 $http({
-                    url: URLBASE + "Manifest/GetSaveInventoryManifest_new",
+                    url: URLBASE + "Manifest/GetSaveInventoryManifest_bk",
                     method: "POST",
                     data: {locations:$scope.Menidata,skus:$scope.newCompeleteArr},
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
