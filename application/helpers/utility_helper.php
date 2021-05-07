@@ -1385,6 +1385,7 @@ if (!function_exists('getallsellerdatabyID')) {
         $ci = & get_instance();
         $ci->load->database();
         $sql = "SELECT $field FROM customer where id='$id' and access_fm='Y' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result[$field];

@@ -533,8 +533,8 @@ class Ccompany_model extends CI_Model {
     }
 
     public function SafeArray(array $ShipArr, array $counrierArr, $complete_sku = null, $Auth_token = null, $c_id = null,$box_pieces1=null) {
-        $sender_city_safe = getdestinationfieldshow($ShipArr['origin'], 'safe_arrival');
-        $receiver_city_safe = getdestinationfieldshow($ShipArr['destination'], 'safe_arrival');
+        $sender_city_safe = getdestinationfieldshow($ShipArr['origin'], 'safe_arrival');//"181230058";
+        $receiver_city_safe = getdestinationfieldshow($ShipArr['destination'], 'safe_arrival');//"181230058";
 
        $API_URL = $counrierArr['api_url'];
        
@@ -623,8 +623,8 @@ class Ccompany_model extends CI_Model {
         );
 
         $dataJson = json_encode($param);
-      $response = send_data_to_safe_curl($dataJson, $Auth_token, $API_URL); 
-
+        $response = send_data_to_safe_curl($dataJson, $Auth_token, $API_URL); 
+        $safe_response = json_decode($response,TRUE);
         
         $logresponse =   json_encode($response);  
         $successres = $safe_response['status'];
@@ -647,6 +647,7 @@ class Ccompany_model extends CI_Model {
       
         $sender_city_safe = getdestinationfieldshow($ShipArr['origin'], 'city');
         $receiver_city_safe = getdestinationfieldshow($ShipArr['destination'], 'safe_arrival');
+        
 
        $API_URL = $counrierArr['api_url'];
         if(empty($box_pieces1))
@@ -734,7 +735,9 @@ class Ccompany_model extends CI_Model {
         );
 
         $dataJson = json_encode($param);
-        $response = send_data_to_thabit_curl($dataJson, $Auth_token, $API_URL);      
+        $response = send_data_to_thabit_curl($dataJson, $Auth_token, $API_URL);
+        $safe_response =   json_decode($response, TRUE);
+        
         $logresponse =   json_encode($response);  
         $successres = $safe_response['status'];
        
@@ -748,7 +751,7 @@ class Ccompany_model extends CI_Model {
 
         $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
 
-        return $response;
+        return $safe_response;
     }
 
     public function EsnadArray(array $ShipArr, array $counrierArr, $esnad_awb_number = null, $complete_sku = null, $Auth_token = null,$c_id=null,$box_pieces1=null) {
@@ -906,7 +909,8 @@ class Ccompany_model extends CI_Model {
         else { 
             $weight = $ShipArr['weight'] ; 
         }
-       
+        
+        
         if(!empty($receiver_city ))
         {
 
@@ -975,16 +979,17 @@ class Ccompany_model extends CI_Model {
         curl_setopt($ch, CURLOPT_POSTFIELDS, $dataJson);        
         $response = curl_exec($ch); 
         curl_close($ch);
-            $response_array = json_decode($response, true);   
-            $logresponse =   json_encode($response_array);  
-            $successres = $response_array['status'];
+        $response_array = json_decode($response, true);   
+        
+        $logresponse =   json_encode($response_array);  
+        $successres = $response_array['status'];
 
-            if($successres == 200) 
-                {
-                    $successstatus  = "Success";
-                }else {
-                    $successstatus  = "Fail";
-                }
+        if($successres == 200) 
+            {
+                $successstatus  = "Success";
+            }else {
+                $successstatus  = "Fail";
+            }
         $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
 
         return $response_array;
@@ -1165,7 +1170,7 @@ class Ccompany_model extends CI_Model {
                 "user_id" => $user_id,
                 "cust_first_name" => $ShipArr['reciever_name'],
                 "cust_last_name" => " ",
-                "cust_mobil" => $number,
+                "cust_mobil" =>(string)$number,
                 "vendor_id" => $vendor_id,
                 "branch_id" => $branch_id,
                 "payment_type_id" => 1,
@@ -1181,6 +1186,7 @@ class Ccompany_model extends CI_Model {
         );
       
         $dataJson = json_encode($request_data);
+        
         $headers = array (
             "Content-Type: application/json"
         );
@@ -1476,7 +1482,7 @@ class Ccompany_model extends CI_Model {
             $cod_collection_mode = 'PREPAID';
             $cod_amount = 0;
         }
-
+        
         $comp_api_url = $counrierArr['api_url'];
 
         $pickupDate = date("Y-m-d");
@@ -1559,6 +1565,7 @@ class Ccompany_model extends CI_Model {
         $response_ww = curl_exec($ch);
        curl_close($ch);
         $logresponse =   json_encode($response_ww);  
+        
         $response_array = json_decode($response_ww, TRUE); 
         $successres = $response_array['code'];
     
@@ -1673,7 +1680,7 @@ class Ccompany_model extends CI_Model {
         $response_array = json_decode($response, true);
         $logresponse =   json_encode($response_array);  
         $successres = $response_array['data'][0]['success'];        
-        if($response['status'] == 'OK' && $successres == true) 
+        if($response_array['status'] == 'OK' && $successres == true) 
             {
                 $successstatus  = "Success";
             } else {
@@ -1683,7 +1690,8 @@ class Ccompany_model extends CI_Model {
         return $response_array;
     }
 
-    public function MakdoonArray(array $ShipArr, array $counrierArr, $complete_sku = null, $Auth_token = null, $c_id = null,$box_pieces1=null) {
+   public function MakdoonArray(array $ShipArr, array $counrierArr, $complete_sku = null, $Auth_token = null, $c_id = null,$box_pieces1=null) {
+       
         $sender_city = getdestinationfieldshow($ShipArr['origin'], 'makhdoom');
         $receiver_city = getdestinationfieldshow($ShipArr['destination'], 'makhdoom');
         $API_URL = $counrierArr['api_url'];
@@ -1779,8 +1787,13 @@ class Ccompany_model extends CI_Model {
        
         $dataJson = json_encode($param);
         $response = send_data_to_makdoom_curl($dataJson, $Auth_token, $create_order_url);
+        
         $logresponse =   json_encode($response);  
-        $successres = $response['status'];
+
+        $responseData = json_decode($response, TRUE);
+        //print "<pre>"; print_r($responseData);die;
+
+        $successres = $responseData['status'];
         
         if($successres == 'success') 
         {
@@ -1988,7 +2001,7 @@ class Ccompany_model extends CI_Model {
     public function SMSAArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id) {
         $receiver_city = getdestinationfieldshow($ShipArr['destination'], 'samsa_city');
         $sender_city = getdestinationfieldshow($ShipArr['origin'], 'samsa_city');
-        $store = getallsellerdatabyID($ShipArr['cust_id'], 'company');
+        $store = "smsa";//getallsellerdatabyID($ShipArr['cust_id'], 'company');
         $declared_charge = $ShipArr['total_cod_amt'];
         $cod_amount = $ShipArr['total_cod_amt'];
 
@@ -2380,7 +2393,7 @@ class Ccompany_model extends CI_Model {
                                                     "address_line_1" => $ShipArr['reciever_address'],
                                                     "address_line_2" => "",
                                                     "pincode" => '',
-                                                    "city" => $receiver_city,
+                                                    "city" =>$receiver_city,
                                                     "state" => '',
                                                     "email" => $ShipArr['reciever_email'],
                                                 ),
@@ -2407,6 +2420,7 @@ class Ccompany_model extends CI_Model {
 
                         );
         $param = json_encode($all_param_array);
+       // echo $param;die;
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
@@ -2426,6 +2440,7 @@ class Ccompany_model extends CI_Model {
         ));
 
         $response = curl_exec($curl);
+        
         $logresponse =   json_encode($response);  
          $response_array = json_decode($response, true);
         $successres = $response_array['data'][0]['success'];
@@ -2556,11 +2571,16 @@ class Ccompany_model extends CI_Model {
                 ));
 
                 $response = curl_exec($curl);
+                
                  curl_close($curl);
                  $logresponse =   json_encode($response);                   
                  $response_array = json_decode($response, true);
+                 $faultFlag = false;
+                 if(isset($response_array['fault']) && !empty($response_array['fault'])){
+                     $faultFlag = true;
+                 }
                  $successres = $response_array[0]['code'];
-                    if($successres==0) 
+                    if($successres==0 && $faultFlag == false) 
                         {
                            $successstatus  = "Success";
                         }
@@ -2805,7 +2825,8 @@ array_push($itemArray,$peiceArray);
         curl_close($curl);
          $logresponse =   json_encode($response);  
          $response_array = json_decode($response, true);
-        $successres = $response_array['Items'][0]['Message'];
+        //$successres = $response_array['Items'][0]['Message'];
+        $successres = $response_array['Message'];
         if($successres=='Success') 
         {
             $successstatus  = "Success";
@@ -2820,7 +2841,8 @@ array_push($itemArray,$peiceArray);
 
 //Naqel ends 
     public function EmdadArray($ShipArr, $counrierArr, $complete_sku, $c_id,$box_pieces1) 
-    {
+    { 
+        
         $sender_email = $counrierArr['user_name']; //provided by company  :  (column name: password || date
         $password = $counrierArr['password'];
         $url = $counrierArr['api_url'];
@@ -2849,7 +2871,7 @@ array_push($itemArray,$peiceArray);
         if (empty($Receiver_address)) {
             $Receiver_address = 'N/A';
         }
-
+        
         $Reciever_city = getdestinationfieldshow($ShipArr['destination'], 'emdad_city');
         
         $product_type = 'Parcel'; //beone ka database
@@ -2878,7 +2900,7 @@ array_push($itemArray,$peiceArray);
 
         //weight should be in kg.:(column name: weight || date type
         $NumberOfParcel = $box_pieces; //(column name: pieces || date type: int || value: 5)
-
+        
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, 1);
@@ -2888,10 +2910,13 @@ array_push($itemArray,$peiceArray);
         $response = curl_exec($ch);
 
         curl_close($ch);
+        $responseData = json_decode($response, TRUE);
         $logresponse =   json_encode($response);  
-        $successres = $response['error'];
+        
+        $successres = $responseData['error'];
+        $labelUrl = $responseData['awb_print_url'];
      
-        if($successres == '') 
+        if(!empty($labelUrl)) 
         {
             $successstatus  = "Success";
         }else {
@@ -2969,10 +2994,12 @@ array_push($itemArray,$peiceArray);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, "productType=$product_type&service=$service&password=$password&sender_email=$sender_email&sender_name=$s_name&sender_city=$s_city&sender_phone=$s_phone&sender_address=$s_address&Receiver_name=$Receiver_name&Receiver_email=$Receiver_email&Receiver_address=$Receiver_address&Receiver_phone=$Receiver_phone&Reciever_city=$Reciever_city&Weight=$weight&Description=$description&NumberOfParcel=$NumberOfParcel&BookingMode=$pay_mode&codValue=$codValue&refrence_id=$booking_id&product_price=$product_price&shippers_ref_no=$shipper_refer_number");
 
-        $response = curl_exec($ch);
+        $responsedata = curl_exec($ch);
 
         curl_close($ch);
-        $logresponse =   json_encode($response);  
+        $logresponse =   json_encode($responsedata);  
+        
+        $response = json_decode($responsedata,TRUE);
         $successres = $response['error'];
      
         if($successres == '') 
@@ -2984,7 +3011,7 @@ array_push($itemArray,$peiceArray);
 
         $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
         
-        return $response;
+        return $responsedata;
     }
 
     public function fastcooArray(array $ShipArr, array $counrierArr, $complete_sku = null, $Auth_token = null, $c_id = null,$box_pieces1 = null) {
