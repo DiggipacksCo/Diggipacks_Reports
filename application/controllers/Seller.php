@@ -40,17 +40,6 @@ class Seller extends MY_Controller {
 
     public function add() {
 
-        // print_r($this->input->post());
-        // print_r($this->input->post('warehousing_charge'));
-        // print_r($this->input->post('fulfillment_charge'));
-        // exit();
-        // print_r($this->input->post('cbm_no'));
-        // exit();
-        // $customer_id=$this->input->post('dd_customer');
-
-
-
-
         $this->form_validation->set_rules("email", 'Email Address', 'trim|required|is_unique[customer.email]');
         $this->form_validation->set_rules("password", 'Password ', 'trim|required|min_length[6]');
         $this->form_validation->set_rules("city_drop", 'City', 'trim|required');
@@ -239,6 +228,14 @@ class Seller extends MY_Controller {
         }
     }
 
+    
+
+    Public function add_courier_company($id = Null)
+    {
+        $data['id'] = $id;        
+        $this->load->view('SellerM/add_courier_company', $data);      
+       
+    }
     public function updateCourier() {
         $dataArray = $this->input->post();
         $idArray = $dataArray['id'];
