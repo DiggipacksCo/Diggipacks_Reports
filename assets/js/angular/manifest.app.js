@@ -769,8 +769,8 @@ $scope.data={};
                                 //$scope.invalidSslip_no = response.data.invalid_slipNO;
                                 $scope.Error_msg = response.data.Error_msg;
                                  setTimeout(function() {
-                                 $('.alert-danger').fadeOut();
-                                 location.reload();
+                                    $('.alert-danger').fadeOut();
+                                    location.reload();
                                 }, 2000);
                                 
                             }
