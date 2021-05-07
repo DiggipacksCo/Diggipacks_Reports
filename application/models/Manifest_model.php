@@ -279,6 +279,11 @@ class Manifest_model extends CI_Model {
         if ($filterarray['manifestid'])
             $this->db->where('uniqueid', $filterarray['manifestid']);
         $this->db->where('pstatus', 1);
+
+
+        // $this->db->where('assign_to',0);
+        // $this->db->where('3pl_name',0);
+        
         $this->db->group_by('uniqueid');
         if ($filterarray['sort_list'] == 'NO') {
             $this->db->order_by('pickup_request.id', 'desc');
