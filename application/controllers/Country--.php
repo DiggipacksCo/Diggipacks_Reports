@@ -29,13 +29,12 @@ class Country extends MY_Controller {
         $this->load->view('country/importlocation.php',$data);
     }
     
-    public function Delivery_city_list() {
-       
-      
+    public function Delivery_city_list() {    
         $this->load->view('country/delivery_city.php');
     }
     public function Importdeliverycity($id=null) {
          $companyData = $this->Country_model->GetdeliveryCOmpanyListQry();
+         //print "<<pre>"; print_r($companyData);die;
          $comapnyArray = array();
          if(!empty($companyData)){
              foreach($companyData as $dataresult){
@@ -54,7 +53,7 @@ class Country extends MY_Controller {
             //print "<pre>"; print_r($data);die;
          //$data['ListArr'] = $this->Country_model->GetdeliveryCOmpanyListQry();
          
-        $this->load->view('country/importdeliverycity.php',$data);
+        $this->load->view('country/importdeliverycity',$data);
     }
     
      public function Hubaddform($id=null) {
@@ -209,8 +208,8 @@ class Country extends MY_Controller {
            
           
           
-            $country = addslashes($this->input->post('country'));
-            $state = addslashes($this->input->post('state'));
+            $country = $this->input->post('country');
+            $state = $this->input->post('state');
               $c_id=getdestinationfieldshow_name($country,'id','country');
               //die;
             $checkExists= $this->Country_model->CountryAlreadyExistsCheck($state, 'state',$editid);
@@ -255,7 +254,7 @@ class Country extends MY_Controller {
        // $this->form_validation->set_rules('user_name', 'User Name', 'required|trim|is_unique[country.country]');
          $editid = $this->input->post('id');
         if ($this->form_validation->run() == FALSE) {
-            $this->CityAddForm($editid);
+            $this->Hubaddform($editid);
         } else {
             
            
@@ -336,12 +335,13 @@ class Country extends MY_Controller {
          echo json_encode($newArray);
     }
     
-    public function cityList() {
+      public function cityList() {
          $startcounter = isset($_REQUEST['startcounter'])?$_REQUEST['startcounter']:0;
          $start = 0 ;
          $limit= 100;
          $filterKey = isset($_REQUEST['filter_by'])?$_REQUEST['filter_by']:'';
          $dataResult = $this->Country_model->CitylistData($start,$limit,$filterKey,$startcounter);
+         //print "<pre>"; print_r($dataResult);die;
          $this->load->view('country/citylist',$dataResult);
     }
     
@@ -372,7 +372,7 @@ class Country extends MY_Controller {
     }
 
 
-
+ 
 }
 
 ?>

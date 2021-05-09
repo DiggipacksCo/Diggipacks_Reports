@@ -150,11 +150,7 @@
                                                    <?php if (GetCourierCompanyStausActive('Saudi Post') == 'Y') { ?>
                                                 <th class="head1">Saudi Post Id </th>
                                             <?php } ?>
-                                                
-                                                
-
                                             <th class="head1">LAT</th>
-
                                             <th class="head1">LNG</th>
                                         </tr>
                                     </thead>
@@ -211,7 +207,7 @@
                                                         <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'naqel_city_code');" value="<?php echo $listdata['id']; ?>">Update</a>  
                                                     </td>
                                                       <?php } ?>
- <?php if (GetCourierCompanyStausActive('Esnad') == 'Y') { ?>
+                                                    <?php if (GetCourierCompanyStausActive('Esnad') == 'Y') { ?>
                                                     <td><input type="text" name="esnad_city_name" id="esnad_city<?php echo $listdata['id']; ?>" placeholder="Add city" value="<?php echo $listdata['esnad_city']; ?>" class="form-control">
                                                         <br>
                                                         <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'esnad_city');" value="<?php echo $listdata['id']; ?>">Update</a>
@@ -309,21 +305,21 @@
                                                     </td>
                                                     <?php } ?>
                                                      <?php if (GetCourierCompanyStausActive('SHIPSY') == 'Y') { ?>
-                                                    <td><input type="text" name="shipsy_city" id="shipsy_city<?php echo $listdata['id']; ?>" placeholder="Add city" value="<?php echo $listdata['shipsy_city']; ?>" class="form-control">
+                                                    <td><input type="text" name="shipsy_city" id="shipsy_city_name<?php echo $listdata['id']; ?>" placeholder="Add city" value="<?php echo $listdata['shipsy_city']; ?>" class="form-control">
                                                         <br>
                                                         <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'shipsy_city');" value="<?php echo $listdata['id']; ?>">Update</a>
 
                                                     </td>
                                                      <?php } ?>
                                                      <?php if (GetCourierCompanyStausActive('Shipadelivery') == 'Y') { ?>
-                                                    <td><input type="text" name="shipsa_city" id="shipsa_city<?php echo $listdata['id']; ?>" placeholder="Add city" value="<?php echo $listdata['shipsa_city']; ?>" class="form-control">
+                                                    <td><input type="text" name="shipsa_city" id="shipsa_city_name<?php echo $listdata['id']; ?>" placeholder="Add city" value="<?php echo $listdata['shipsa_city']; ?>" class="form-control">
                                                         <br>
                                                         <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'shipsa_city');" value="<?php echo $listdata['id']; ?>">Update</a>
 
                                                     </td>
                                                      <?php } ?>
                                                     <?php if (GetCourierCompanyStausActive('TAMEX') == 'Y') { ?>
-                                                    <td><input type="text" name="tamex_city" id="tamex_city<?php echo $listdata['id']; ?>" placeholder="Add city" value="<?php echo $listdata['tamex_city']; ?>" class="form-control">
+                                                    <td><input type="text" name="tamex_city" id="tamex_city_name<?php echo $listdata['id']; ?>" placeholder="Add city" value="<?php echo $listdata['tamex_city']; ?>" class="form-control">
                                                         <br>
                                                         <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'tamex_city');" value="<?php echo $listdata['id']; ?>">Update</a>
 
@@ -347,8 +343,8 @@
                                                     </td>
                                                      <?php } ?>
 
- <?php if (GetCourierCompanyStausActive('Alamalkon') == 'Y') { ?>
-                                                    <td><input type="text" name="alamalkon_city" id="alamalkon<?php echo $listdata['id']; ?>" placeholder="Add city" value="<?php echo $listdata['alamalkon']; ?>" class="form-control">
+                                                    <?php if (GetCourierCompanyStausActive('Alamalkon') == 'Y') { ?>
+                                                    <td><input type="text" name="alamalkon_city" id="alamalkon_city_name<?php echo $listdata['id']; ?>" placeholder="Add city" value="<?php echo $listdata['alamalkon']; ?>" class="form-control">
                                                         <br>
                                                         <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'alamalkon');" value="<?php echo $listdata['id']; ?>">Update</a>
 
@@ -363,12 +359,12 @@
                                                       <?php } ?>
                                                     
                                                     
-                                                    <td><input type="text" name="latitute" id="latitute<?php echo $listdata['id']; ?>" placeholder="LAT" value="<?php echo $listdata['latitute']; ?>" class="form-control">
+                                                    <td><input type="text" name="latitute" id="latitute<?php echo $listdata['id']; ?>" placeholder="Add city" value="<?php echo $listdata['latitute']; ?>" class="form-control">
                                                         <br>
                                                         <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'latitute');" value="<?php echo $listdata['id']; ?>">Update</a>
 
                                                     </td>
-                                                    <td><input type="text" name="longitute" id="longitute<?php echo $listdata['id']; ?>" placeholder="LNG" value="<?php echo $listdata['longitute']; ?>" class="form-control">
+                                                    <td><input type="text" name="longitute" id="longitute<?php echo $listdata['id']; ?>" placeholder="Add city" value="<?php echo $listdata['longitute']; ?>" class="form-control">
                                                         <br>
                                                         <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'longitute');" value="<?php echo $listdata['id']; ?>">Update</a>
 
@@ -446,12 +442,9 @@
             }
 
             function updateCityListData(select_id, type) {
-           // alert(select_id);
-             //alert(type);
                 var columnVal = $("#" + type + select_id).val();
                 var city_id = select_id;
                 var column_name = type;
-              ///  alert(columnVal);
 
                 $.ajax({
                     url: '<?php echo base_url('Country/UpdateCityList'); ?>',

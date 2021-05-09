@@ -856,22 +856,34 @@ class Seller extends MY_Controller {
     private function sallaWebhookSubscriptionCreate($customer) {
 
         /* check zid status and if status is new then order create other wise update webhook */
-//        if ($customer['salla_status'] == 'new') {
-//            $event = "order.create";
-//            $condition = null;
-//        }
-//        } else {
-//            $event = "order.update";
-//            $condition = "json_encode(array('status'=>'ready'))";
-//        }
+        //        if ($customer['salla_status'] == 'new') {
+        //            $event = "order.create";
+        //            $condition = null;
+        //        }
+        //        } else {
+        //            $event = "order.update";
+        //            $condition = "json_encode(array('status'=>'ready'))";
+        //        }
+                
+        
         $event = "order.create";
         if ($customer['salla_active'] == 'Y') {
 
-
             $request = array(
-                'name' => 'Salla Update Customer Event',
+                'name' => 'Salla Create Order Event',
                 'event' => 'order.created',
-                'url' => $this->config->item('salla_order_target_url') . '/' . $customer['uniqueid'],
+                'url' => $this->config->item('salla_order_target_url') . '?cid=' . $customer['uniqueid'],
+            //                      'headers' =>
+            //                    array(                        
+            //                        array(
+            //                            'key' => 'Authorization',
+            //                            'value' => $customer['salla_athentication'],
+            //                        ),                        
+            //                        array(
+            //                            'key' => 'Accept-Language',
+            //                            'value' => 'AR',
+            //                        ),
+            //                    ),
             );
 
             $curl = curl_init();
@@ -886,13 +898,14 @@ class Seller extends MY_Controller {
                 CURLOPT_CUSTOMREQUEST => "POST",
                 CURLOPT_POSTFIELDS => $request,
                 CURLOPT_HTTPHEADER => [
-                    "Authorization: Bearer " . $customer['salla_authorization']
+                    "Authorization: Bearer " . $customer['salla_athentication']
                 ],
             ]);
 
             $result = curl_exec($curl);
 
             $response = json_decode(curl_exec($curl));
+            
             curl_close($curl);
         }
     }
@@ -960,6 +973,7 @@ class Seller extends MY_Controller {
 
         exit();
     }
+
 
     public function zidDeliveryOptionAdd() {
 
@@ -1043,13 +1057,17 @@ class Seller extends MY_Controller {
                 "Accept: en",
                 "Accept-Language: en",
                 "X-MANAGER-TOKEN: " . $customer['manager_token'],
-                "Authorization:Bearer " . $this->config->item('zid_authorization'),
-                
+                "Authorization:Bearer eyJ4NXQiOiJNell4TW1Ga09HWXdNV0kwWldObU5EY3hOR1l3WW1NNFpUQTNNV0kyTkRBelpHUXpOR00wWkdSbE5qSmtPREZrWkRSaU9URmtNV0ZoTXpVMlpHVmxOZyIsImtpZCI6Ik16WXhNbUZrT0dZd01XSTBaV05tTkRjeE5HWXdZbU00WlRBM01XSTJOREF6WkdRek5HTTBaR1JsTmpKa09ERmtaRFJpT1RGa01XRmhNelUyWkdWbE5nX1JTMjU2IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJoYXJpQGZhc3Rjb28uY29tQGNhcmJvbi5zdXBlciIsImF1dCI6IkFQUExJQ0FUSU9OIiwiYXVkIjoiN0ZlcjRpZGthZkNpaDV6bnVYR3g0Tk9mRXZ3YSIsIm5iZiI6MTYxOTAxMzc0NiwiYXpwIjoiN0ZlcjRpZGthZkNpaDV6bnVYR3g0Tk9mRXZ3YSIsInNjb3BlIjoiU2hpcHBpbmctUGFydG5lcnMiLCJpc3MiOiJodHRwczpcL1wvcG9ydGFsLnppZC5kZXY6NDQzXC9vYXV0aDJcL3Rva2VuIiwiZXhwIjoxNjUwNTcwNjcyLCJpYXQiOjE2MTkwMTM3NDYsImp0aSI6ImFjMzNmNWMyLTE1MDItNGUwYi05MWI1LTBiNmIxZTllMTBhNCJ9.crd3muE0AU1lOxSdfi0LAzd6vTw_ae6FCilR-X44nt3Uzp_-aR6pR3N0GV8A8AI9PLOu0RnRUjWXr2nS8fHMgijRNd910z2nowlqJ1g_xLb3wtLj7vwpXurvHP6Hy9-wG8vHUKNXy2QAU7ei-ToQsUMW-2CGlyzjFR64p8yQmFc5DzK6GmEO4JQ_tbbciz7BAmjdyzM8vyV01AqRiyLxN3yS_imTLAVqZpm8yAjYrcM3EdE9sS1W9JpQcjGovriLKFl3Z6-u0kb9SFDI9jP-wmVmSJ1lfEBgPCrzPGXWa5GQuCoIG7CMZBP0WSlL6Zu_v8Pq5lnTXHQegWmxLZ5x8A",
+                       
             ),
         ));
 
         $response = curl_exec($curl);
+        $response = json_decode($response);
+        echo "<pre>";print_r($response);
     }
+
+    
 
 }
 

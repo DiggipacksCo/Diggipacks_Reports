@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title><?=lang('lang_Delivery_Company_City');?></title>
+        <title>Delivery Company City</title>
         <?php $this->load->view('include/file'); ?>
         <script src="<?= base_url(); ?>/assets/js/angular/country.app.js"></script>
     </head>
@@ -35,7 +35,7 @@
                             <!--style="padding-bottom:220px;background-color: lightgray;"-->
                             <div class="panel-heading"> 
                                 <!-- <h5 class="panel-title">Basic responsive table</h5> -->
-                                <h1><strong><?=lang('lang_Delivery_Company_City');?></strong> 
+                                <h1><strong>Delivery Company City</strong> 
 
                                 </h1>
 
@@ -48,13 +48,13 @@
                                     <table class="table table-striped table-hover table-bordered " id="example">
                                         <thead>
                                             <tr>
-                                                <th><?=lang('lang_SrNo');?>.</th>
-                                                <th><?=lang('lang_Courier_Company');?></th>
+                                                <th>Sr.No.</th>
+                                                <th>Courier Company</th>
                                                 <th >
-                                                <?=lang('lang_City');?> <?=lang('lang_List');?>
+                                                   City List
                                                    <table class="table table-striped table-hover table-bordered">
                                                            
-                                                           <tr><td><?=lang('lang_City');?> <?=lang('lang_Name');?></td><td><?=lang('lang_Courier_city');?> </td></tr>
+                                                           <tr><td>City Name</td><td>Courier City</td></tr>
                                                        
                                                        </table>
                                                 </th>
