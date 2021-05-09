@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title><?=lang('lang_Add_New_User');?></title>
+        <title>Add New User</title>
         <?php $this->load->view('include/file'); ?>
 
 
@@ -34,22 +34,44 @@
                     <!-- Content area -->
                     <div class="content">
                         <div class="panel panel-flat">
-                            <div class="panel-heading"><h1><strong> <?php if(!empty($EditData)){ echo 'Edit';} else { echo 'Add';}?> <?=lang('lang_Country');?></strong></h1></div>
+                            <div class="panel-heading"><h1><strong> <?php if(!empty($EditData)){ echo 'Edit';} else { echo 'Add';}?> Hub</strong></h1></div>
                             <hr>
                             <div class="panel-body">
                                 <?php if (!empty(validation_errors())) echo'<div class="alert alert-warning" role="alert"><strong>Warning!</strong> ' . validation_errors() . '</div>'; ?>
                                 <?php
-                                if ($this->session->flashdata('err_msg') != '') {
-                                    echo '<div class="alert alert-warning" role="alert">  ' . $this->session->flashdata('err_msg') . '.</div>';
+                                if ($this->session->flashdata('errormess') != '') {
+                                    echo '<div class="alert alert-warning" role="alert">  ' . $this->session->flashdata('errormess') . '.</div>';
                                 }
                                 ?>
 
-                                <form action="<?= base_url('country/Addcountry'); ?>" name="adduser" method="post">
+                                <form action="<?= base_url('country/addhub'); ?>" name="adduser" method="post">
 
                                     <input type="hidden" id="id" name="id" value="<?=$EditData['id'];?>">
+                                    
+                                     <div class="form-group">
+                                        <label for="country" ><strong>Country:</strong></label>
+                                        <select name="country" class="form-control" id="country">
+                                            
+                                            <option value="">Select</option>
+                                            <?php 
+                                            
+                                            foreach($Countrylist as $val)
+                                            {
+                                                if($EditData['country']==$val['country'])
+                                                {
+                                                   echo '<option value="'.$val['country'].'" selected>'.$val['country'].'</option>'; 
+                                                }
+                                                else
+                                                {
+                                             echo '<option value="'.$val['country'].'">'.$val['country'].'</option>';
+                                                }
+                                            }
+                                                     ?>
+                                        </select>
+                                    </div> 
                                     <div class="form-group">
-                                        <label for="usertype"><strong><?=lang('lang_Name');?>:</strong></label>
-                                       <input type="text" class="form-control" name='country' id="country" placeholder="Enter Name" value="<?=$EditData['country'];?>">
+                                        <label for="state"><strong>Hub Name:</strong></label>
+                                       <input type="text" class="form-control" name='state' id="country" placeholder="Enter Hub Name" value="<?=$EditData['state'];?>">
                                     </div> 
                                    
                              
@@ -58,7 +80,7 @@
 
 
                                     <div style="padding-top: 20px;">
-                                        <button type="submit" class="btn btn-success"><?=lang('lang_Submit');?></button>
+                                        <button type="submit" class="btn btn-success">Submit</button>
                                     </div>
                                 </form>
 

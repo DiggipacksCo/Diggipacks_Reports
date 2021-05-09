@@ -2,18 +2,19 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Salla extends MY_Controller {
+class Salla extends CI_Controller {
 
     function __construct() {
         parent::__construct();
         if (menuIdExitsInPrivilageArray(22) == 'N') {
-            redirect(base_url() . 'notfound');
-            die;
+            //redirect(base_url() . 'notfound');
+            //die;
         }
         $this->load->library('pagination');
         $this->load->model('Salla_model');
         $this->load->library('form_validation');
         $this->load->helper('utility_helper');
+        $this->load->helper('zid_helper');
     }
 
     public function add() {
@@ -124,19 +125,19 @@ class Salla extends MY_Controller {
         }
     }
 
-    function add_zid() {
-        $data['customers'] = $this->Salla_model->fetch_zid_customers($this->session->userdata('user_details')['super_id']);
-        foreach ($data['customers'] as $key => $item) {
-            $data['customers'][$key] = (array) $item;
-        }
+    function add_zid($uniqueid) {
+        
+        $data['customers'] = $this->Salla_model->fetch_zid_customers($this->session->userdata('user_details')['super_id'], $uniqueid);
+        
+        //echo "<pre>";print_r($data['customers']);exit;
         foreach ($data['customers'] as $customers) {
             //echo "<pre>";print_r($customers);exit;
-            $user_agent = $customers['user_Agent'] . "/1.00.00 (web)";
-            $manager_token = $customers['manager_token'];
+            $user_agent = $data['customers']['user_Agent'] . "/1.00.00 (web)";
+            $manager_token = $data['customers']['manager_token'];
             $store_link = "https://api.zid.sa/v1/managers/store/orders?per_page=100&order_status=ready";
             $ZidOrders = ZidcURL($manager_token, $user_agent, $store_link, 0);
             if ($ZidOrders < 2) {
-                $pageCount = $SallaOrders;
+                $pageCount = $ZidOrders;
             } else {
                 $pageCount = 2;
             }
@@ -146,8 +147,8 @@ class Salla extends MY_Controller {
                 //echo "<pre>";print_r($ZidOrders);exit;
                 foreach ($ZidOrders['orders'] as $Order) {
                     //echo "<pre>";print_r($Order);exit;
-                    $secKey = $customers['secret_key'];
-                    $customerId = $customers['uniqueid'];
+                    $secKey = $data['customers']['secret_key'];
+                    $customerId = $data['customers']['uniqueid'];
                     $formate = "json";
                     $method = "createOrder";
                     $signMethod = "md5";
@@ -155,7 +156,7 @@ class Salla extends MY_Controller {
 
                     $booking_id = $Order['id'];
 
-                    $check_booking_id = exist_booking_id($booking_id, $customers['id']);
+                    $check_booking_id = exist_booking_id($booking_id, $data['customers']['id']);
 
 
                     if ($check_booking_id != '' || $check_booking_id != 0) {
@@ -183,11 +184,11 @@ class Salla extends MY_Controller {
                                 );
                             }
                             $param = array(
-                                "sender_name" => $customers['name'],
-                                "sender_email" => $customers['email'],
-                                "origin" => getdestinationfieldshow($customers['city'], 'city'),
-                                "sender_phone" => $customers['phone'],
-                                "sender_address" => $customers['address'],
+                                "sender_name" => $data['customers']['name'],
+                                "sender_email" => $data['customers']['email'],
+                                "origin" => getdestinationfieldshow_zid($data['customers']['city'], 'city', $data['customers']['super_id']),
+                                "sender_phone" => $data['customers']['phone'],
+                                "sender_address" => $data['customers']['address'],
                                 "receiver_name" => $result1['order']['customer']['name'],
                                 "receiver_phone" => $result1['order']['customer']['mobile'],
                                 "receiver_email" => $result1['order']['customer']['email'],
@@ -200,7 +201,9 @@ class Salla extends MY_Controller {
                                 "productType" => 'parcel',
                                 "service" => 3,
                                 "weight" => $weight,
-                                "skudetails" => $product
+                                "skudetails" => $product,
+                                "zid_store_id" => $result1['order']['store_id'],
+                                "order_from" => "zid"
                             );
                             //echo "<pre>";print_r($param);exit;
 
@@ -234,13 +237,12 @@ class Salla extends MY_Controller {
 
                             echo '<pre>';
                             echo $response;
-                            exit;
+                            //exit;
                         }
                     }
                 }
             }
         }
     }
-
 }
 ?>
