@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>All Users</title>
+        <title><?=lang('lang_All_Users');?></title>
         <?php $this->load->view('include/file'); ?>
     </head>
 
@@ -37,9 +37,9 @@
                         <!-- Basic responsive table -->
                         <div class="panel panel-flat" > 
                             <!--style="padding-bottom:220px;background-color: lightgray;"-->
-                            <div class="panel-heading"> 
+                            <div class="panel-heading" dir="ltr"> 
                                 <!-- <h5 class="panel-title">Basic responsive table</h5> -->
-                                <h1><strong>City List</strong> <a class="btn btn-primary mb-10 pull-right" href="<?=base_url('Country/Hubaddform');?>" style="margin-left: 10px;">Add Hub</a> <a href="<?=base_url('Country/CityAddForm');?>" class="btn btn-primary mb-10 pull-right" >Add City</a></h1>
+                                <h1><strong><?=lang('lang_City');?> <?=lang('lang_List');?></strong> <a class="btn btn-primary mb-10 pull-right" href="<?=base_url('Country/Hubaddform');?>" style="margin-left: 10px;"><?=lang('lang_add');?><?=lang('lang_Hub');?></a> <a href="<?=base_url('Country/CityAddForm');?>" class="btn btn-primary mb-10 pull-right" ><?=lang('lang_add');?><?=lang('lang_City');?></a></h1>
                                
                                 
                             </div>
@@ -51,12 +51,12 @@
                                     <table class="table table-striped table-hover table-bordered">
                                         <thead>
                                             <tr>
-                                                <th>Sr.No.</th>
-                                                <th>Country</th>
-                                                <th>Hub Name</th>
-                                                 <th>City</th>
-                                                  <th>City Code</th>
-                                                  <th>Arabic City Name</th>
+                                                 <th><?=lang('lang_SrNo');?>.</th>
+                                                <th><?=lang('lang_Country');?></th>
+                                                <th><?=lang('lang_Hub');?> <?=lang('lang_Name');?></th>
+                                                 <th><?=lang('lang_City');?></th>
+                                                  <th><?=lang('lang_City_Code');?></th>
+                                                  <th><?=lang('lang_Arabic_City_Name');?></th>
 
                                                 <th class="text-center" ><i class="icon-database-edit2"></i></th>
                                             </tr>
@@ -77,7 +77,7 @@
                                                         <td class="text-center"><ul class="icons-list">
                                                                 <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-menu9"></i> </a>
                                                                     <ul class="dropdown-menu dropdown-menu-right">
-                                                                        <li><a href="<?= site_url('Country/CityAddForm/' . $rows['id']); ?>"><i class="icon-pencil7"></i> Edit </a></li>
+                                                                        <li><a href="<?= site_url('Country/CityAddForm/' . $rows['id']); ?>"><i class="icon-pencil7"></i>  <?=lang('lang_Edit');?></a></li>
                                                                     </ul>
 
                                                                 </li>

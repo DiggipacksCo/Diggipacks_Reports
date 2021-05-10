@@ -855,11 +855,12 @@ class PickUp extends MY_Controller {
         echo json_encode($return);
     }
 
+  
     public function CheckReturnFulfil() {
 
         $_POST = json_decode(file_get_contents('php://input'), true);
 
-       // echo json_encode($_POST);die;
+        // echo json_encode($_POST);die;
         $shipments = $this->Pickup_model->GetCheckReturnFulfilstatus($_POST['slip_no'], $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination);
         $newarray = $shipments['result'];
         foreach ($newarray as $key => $val) {
@@ -955,116 +956,105 @@ class PickUp extends MY_Controller {
     }
 
 
-    public function save_details()
-        { 
-            $postData = json_decode(file_get_contents('php://input'), true);
-             
-           
-                $slip_no = $postData[0]['slip_no'];
+    public function save_details() {
+        $postData = json_decode(file_get_contents('php://input'), true);
 
 
-                $check_slipNo = $this->Shipment_model->getallshipmentdatashow($slip_no);
-                //$check_slipNo = $this->Shipment_model->getallshipmentdatashow($slip_no);
-               
+        $slip_no = $postData[0]['slip_no'];
 
 
-                if($check_slipNo['code'] == 'DL' || $check_slipNo['code'] == 'D3PL' || $check_slipNo['code'] == 'POD' || $check_slipNo['delivered']=='16'){                
-                    foreach ($postData as $SaveStock) {
+        $check_slipNo = $this->Shipment_model->getallshipmentdatashow($slip_no);
+      //$check_slipNo = $this->Shipment_model->getallshipmentdatashow($slip_no);
 
-                        foreach($SaveStock['local'] as $fzArray)
-                        {
-                         foreach($fzArray as $fArray)
-                         {
-                        if(!empty($fArray['location']))
-                        {
+
+        $token = GetallCutomerBysellerId($check_slipNo['cust_id'], 'manager_token');
+        if ($check_slipNo['code'] == 'DL' || $check_slipNo['code'] == 'D3PL' || $check_slipNo['code'] == 'POD' || $check_slipNo['code'] == 'ROP' || $check_slipNo['code'] == 'OFD' || $check_slipNo['code'] == 'DOP' || $check_slipNo['code'] == 'FD' || $check_slipNo['delivered'] == '16') {
+            foreach ($postData as $SaveStock) {
+
+                foreach ($SaveStock['local'] as $fzArray) {
+                    foreach ($fzArray as $fArray) {
+                        if (!empty($fArray['location'])) {
                             $updateLoc[] = array(
-                                'id' =>$fArray['location'] ,
-                                'quantity' =>$fArray['qty'] ,
-                                'stock_location' =>$fArray['stock_location'] ,
-                                'shelve_no' =>$fArray['shelve_no'], 
-                                'slip_no'=>$slip_no
-                                ); 
-                        }
-                        else
-                        {
+                                'id' => $fArray['location'],
+                                'quantity' => $fArray['qty'],
+                                'stock_location' => $fArray['stock_location'],
+                                'shelve_no' => $fArray['shelve_no'],
+                                'slip_no' => $slip_no
+                            );
+                        } else {
                             $addLoc[] = array(
-                                'quantity' =>$fArray['qty'] ,
-                                'stock_location' =>$fArray['stock_location'] ,
-                                'shelve_no' =>$fArray['shelve_no'],
-                                'super_id'=>$fArray['super_id'],
-                                'seller_id'=>$fArray['seller_id'],
-                                'item_sku'=>$fArray['item_sku']
+                                'quantity' => $fArray['qty'],
+                                'stock_location' => $fArray['stock_location'],
+                                'shelve_no' => $fArray['shelve_no'],
+                                'super_id' => $check_slipNo['super_id'],
+                                'seller_id' => $check_slipNo['cust_id'],
+                                'item_sku' => $fArray['item_sku']
+                            );
+
+                            $activitiesArr[] = array('exp_date' => $rdata['expity_date'], 'st_location' => $fArray['stock_location'], 'item_sku' => $fArray['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $check_slipNo['cust_id'], 'qty' => $fArray['qty'], 'p_qty' => 0, 'qty_used' => $fArray['qty'], 'type' => 'Add', 'entrydate' => date("Y-m-d h:i:s"), 'awb_no' => $slip_no, 'super_id' => $this->session->userdata('user_details')['super_id'], 'shelve_no' => $fArray['shelve_no']);
+                        }
+
+                        if (!empty($token)) {
+                            //==========update zid stock===============//
+                            $zidReqArr = GetAllQtyforSeller($check_slipNo['sku'], $check_slipNo['cust_id']);
 
 
-                                );  
+                            $quantity = $zidReqArr['quantity']; //+$fArray['qty'];
+                            $pid = $zidReqArr['zid_pid'];
+                            $token = $zidReqArr['manager_token'];
+                            $storeID = $check_slipNo['zid_store_id'];
+                            update_zid_product($quantity, $pid, $token, $storeID);
 
-                                $activitiesArr[] = array('exp_date' => $rdata['expity_date'], 'st_location' => $fArray['stock_location'], 'item_sku' => $fArray['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $fArray['seller_id'], 'qty' => $fArray['qty'], 'p_qty' => 0, 'qty_used' => $fArray['qty'], 'type' => 'Add', 'entrydate' => date("Y-m-d h:i:s"), 'awb_no' => $slip_no, 'super_id' => $this->session->userdata('user_details')['super_id'],'shelve_no'=>$fArray['shelve_no']);
-
-
+                            //=========================================//
                         }
                     }
-                    }
+                }
+            }
+            $statusvalue[0]['user_id'] = $this->session->userdata('user_details')['user_id'];
+            $statusvalue[0]['user_type'] = 'fulfillment';
+            $statusvalue[0]['slip_no'] = $slip_no;
+            $statusvalue[0]['new_status'] = 8;
+            $statusvalue[0]['code'] = 'RTC';
+            $statusvalue[0]['Activites'] = 'Return';
+            $statusvalue[0]['Details'] = 'Order Return, Update By ' . getUserNameById($this->session->userdata('user_details')['user_id']);
+            $statusvalue[0]['entry_date'] = date('Y-m-d H:i:s');
+            $statusvalue[0]['super_id'] = $this->session->userdata('user_details')['super_id'];
+            $shipData = array();
+            $updateArray = array('code' => 'RTC', 'delivered' => 8);
+            $shipData['where_in'] = $slip_no;
+            $shipData['update'] = $updateArray;
+            $shipData['close_date'] = date('Y-m-d');
+            if ($this->Status_model->insertStatus($statusvalue)) {
+                $this->Shipment_model->updateStatus($shipData);
+                $this->Shipment_model->stockdeletepicklistFM($slip_no);
+
+                if (!empty($token)) {
+                    $labelZid = base_url() . 'assets/all_labels' . $slip_no . '.pdf';
+                    $trackingurl = TRACKURL . $slip_no;
+                    //updateZidStatus($orderID=null, $token=null, $status=null, $code=null, $label=null, $trackingurl=null)
+                    updateZidStatus($check_slipNo['booking_id'], $token, 'cancelled', $slip_no, $labelZid, $trackingurl);
+                }
+            }
 
 
-                       
-                    }
-                    $statusvalue[0]['user_id'] = $this->session->userdata('user_details')['user_id'];
-                    $statusvalue[0]['user_type'] = 'fulfillment';
-                    $statusvalue[0]['slip_no'] = $slip_no;
-                    $statusvalue[0]['new_status'] = 8;
-                    $statusvalue[0]['code'] = 'RTC';
-                    $statusvalue[0]['Activites'] = 'Return';
-                    $statusvalue[0]['Details'] = 'Order Return, Update By '.getUserNameById($this->session->userdata('user_details')['user_id']);
-                    $statusvalue[0]['entry_date'] = date('Y-m-d H:i:s');
-                    $statusvalue[0]['super_id'] = $this->session->userdata('user_details')['super_id'];
-                    $shipData = array();
-                    $updateArray = array('code' => 'RTC', 'delivered' => 8);
-                    $shipData['where_in'] = $slip_no;
-                    $shipData['update'] = $updateArray;
-                    $shipData['close_date'] =  date('Y-m-d');
+            if (!empty($updateLoc)) {
+                $this->Shipment_model->stockSaveShipmentFM($updateLoc);
+            }
 
-    //  echo '<pre>';
+            if (!empty($addLoc)) {
+                $this->Shipment_model->addInventory($addLoc, $activitiesArr);
+            }
 
-                 //   print_r($updateLoc);
-                  ////  echo '<br>';
-                  ///  print_r($addLoc);
 
-                  ///  echo '<br>';
-                  ///  print_r($activitiesArr); exit;
-                 //  
-                   
-
-                 
-                    if ($this->Status_model->insertStatus($statusvalue))
-                    {
-                        $this->Shipment_model->updateStatus($shipData);
-                        $this->Shipment_model->stockdeletepicklistFM($slip_no);
-                    }
-                   
-
-                    if(!empty($updateLoc))
-                    {
-                        $this->Shipment_model->stockSaveShipmentFM($updateLoc);
-                    }
-                
-                   if(!empty($addLoc))
-                   {
-                      $this->Shipment_model->addInventory($addLoc, $activitiesArr);  
-
-                   }
-
-                  
-                     $error_status = array('status' =>true);
-                     echo  json_encode($error_status);
-                }//endif 
-                else
-                {
-                    $error_status = array('status' =>false);
-                     echo  json_encode($error_status);
-                     echo $this->db->last_query();
-                } 
-
+            $error_status = array('status' => true);
+            echo json_encode($error_status);
+        }//endif 
+        else {
+            $error_status = array('status' => false);
+            echo json_encode($error_status);
+            echo $this->db->last_query();
         }
+    }
         
         
 

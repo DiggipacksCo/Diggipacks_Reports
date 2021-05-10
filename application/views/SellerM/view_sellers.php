@@ -109,8 +109,10 @@ echo '<div class="alert alert-success">'.$this->session->flashdata('msg').' <but
                                <li><a href="<?= site_url('Seller/storage_charges/'.$seller->id);?>"><i class="icon-pencil7"></i> Set Storages Charges</a></li>
                                <li><a href="<?= site_url('Seller/add_courier_company/'.$seller->id);?>"><i class="icon-pencil7"></i> Add Courier Company </a></li>
                                <li><a href="<?= site_url('Seller/updateZidConfig/' . $seller->id); ?>"><i class="icon-pencil7"></i> Zid Configuration</a></li>
+                               <li><a href="<?= site_url('Seller/updateSallaConfig/' . $seller->id); ?>"><i class="icon-pencil7"></i> Salla Configuration</a></li>
                                <?php echo (($seller->manager_token != '' && $seller->zid_active == 'Y') ? '<li><a href="' . site_url("Seller/ZidProducts/" . $seller->id) . '"><i class="icon-pencil7"></i>Zid Product List</a></li>' : '') ?>
                                 <?php echo (($seller->manager_token != '' && $seller->zid_active == 'Y') ? '<li><a href="' . site_url("Item/updateZid_product/" . $seller->id) . '"><i class="icon-pencil7"></i>Zid Stock Update </a></li>' : '') ?>
+                                
                           
                             </ul>
                           </li>

@@ -260,6 +260,29 @@ if (!function_exists('GetSellerTableField')) {
 
 }
 
+if (!function_exists('Getselletdetails')) {
+    function Getselletdetails() {
+        
+        $ci = & get_instance();
+        $ci->load->database();
+        $sql = "SELECT * FROM user where id ='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $query = $ci->db->query($sql);
+        $result = $query->result_array();
+     // echo   $ci->db->last_query(); exit; 
+        return $result;
+    }
+}
+
+if (!function_exists('Getallstorage_drop')) {
+    function Getallstorage_drop() {
+        $ci = & get_instance();
+        $ci->load->database();
+        $sql = "SELECT * FROM storage_table where deleted='N' AND status='Y' AND super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $query = $ci->db->query($sql);
+        $result = $query->result_array();
+        return $result;
+    }
+}
 if (!function_exists('GetwherehouseDropShow')) {
 
     function GetwherehouseDropShow($id = null) {
@@ -357,31 +380,26 @@ if (!function_exists('Getwarehouse_Dropdata')) {
 
 }
 if (!function_exists('GetCourCompanynameId')) {
-
     function GetCourCompanynameId($id = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM courier_company where cc_id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT $field FROM courier_company where id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
-        //echo $ci->db->last_query();
         return $result[$field];
     }
-
 }
-
-if (!function_exists('GetCourCompanyIdName')) {
-
-    function GetCourCompanyIdName($company = null) {
+if (!function_exists('GetCourierCompanyStausActive')) {
+    function GetCourierCompanyStausActive($name = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT id FROM courier_company where company='$company' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT status FROM courier_company where company='$name' and deleted='N' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
-        return $result['id'];
+        return $result['status'];
     }
-
 }
+
 if (!function_exists('getdestinationfieldshow_array')) {
 
     function getdestinationfieldshow_array($id = null, $field = null) {
@@ -2910,12 +2928,11 @@ function SallacURL($athentication, $page) {
     }
 }
 
-function ZidcURL($manager_token, $user_agent, $cURL, $page) {
-    $athentication = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI2NSIsImp0aSI6IjNmMzI5MTExM2Y3Y2U4NjkxNDcwMDgwMDJkMTY4NTY4YWZkNzU5OWEwZmFlMWRkYTk4ODgzMDUxMGU3MDQ0YTZhYTZjZjE0ODkwYjI0OGY1IiwiaWF0IjoxNTk5OTg5ODkwLCJuYmYiOjE1OTk5ODk4OTAsImV4cCI6MTYzMTUyNTg5MCwic3ViIjoiMzMiLCJzY29wZXMiOlsidGhpcmQtcGFydGllcy1hcGlzIl19.VFozu9O0PEUOCzIxbFdZSVQ-mbduyEvl7JqIHpsHGKMzKmwcd8M-CFw9WyKQ9-I9yxYnFLNgzfsw9JuISjMLqzj6ePyKJw88BlTaB74bSXpD5n6FTAWafhTGETAOUNh7Eswxri9fAb5U8LCIpHLXTy0dWWUEPBb8IubxSULyMh49r1kk2p0ZOfBvnHnDQEdNXzIQe4A53Cyhuh6y6IHehY8nE6rxuw5WIItLmgdZQr-2hvzbcdkyzzD8Su0TwaBzT4E5T5LQNwr7HawfMJWayk_k4kXvRSGu-riP1CpbN0dNeRXL2T6sD79qGxi50xCV75efOlUhk-lqBVOlzmjt-JAFVogDuiMvQSFfXi4tazkzZRGC_SVPrz1pPsIW8B_Rgmpp1hlVUOhS5ywph-dlqsCbyWQa_2mkhleFFs9zwTP_ZQkM3-wSnup3hed7iXQCPVttX244SkItWqA2HBElPRo-a82H03gzBt2lCDGUrxCl_uG1go2KxIopW0TbtpnTs_Ajp6QaTuHgouFW-9GcmyoUo75kQ5RMtzQ6svEEXnV87yEUzsD5DuELkDdENpB_vZVwU9VqAxlgZaSy-LLmteBxVpCmhmv14qCxNrZ95zqZ1bZ02r21CnLJtVDCmpHL-vhq4QCvRQQTAiO-cZ8eF3hYhv5vkVjgY3Cr6c-dO3w';
+function ZidcURL($manager_token, $user_agent, $cURL, $page,$athentication) {
+    //$athentication = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI2NSIsImp0aSI6IjNmMzI5MTExM2Y3Y2U4NjkxNDcwMDgwMDJkMTY4NTY4YWZkNzU5OWEwZmFlMWRkYTk4ODgzMDUxMGU3MDQ0YTZhYTZjZjE0ODkwYjI0OGY1IiwiaWF0IjoxNTk5OTg5ODkwLCJuYmYiOjE1OTk5ODk4OTAsImV4cCI6MTYzMTUyNTg5MCwic3ViIjoiMzMiLCJzY29wZXMiOlsidGhpcmQtcGFydGllcy1hcGlzIl19.VFozu9O0PEUOCzIxbFdZSVQ-mbduyEvl7JqIHpsHGKMzKmwcd8M-CFw9WyKQ9-I9yxYnFLNgzfsw9JuISjMLqzj6ePyKJw88BlTaB74bSXpD5n6FTAWafhTGETAOUNh7Eswxri9fAb5U8LCIpHLXTy0dWWUEPBb8IubxSULyMh49r1kk2p0ZOfBvnHnDQEdNXzIQe4A53Cyhuh6y6IHehY8nE6rxuw5WIItLmgdZQr-2hvzbcdkyzzD8Su0TwaBzT4E5T5LQNwr7HawfMJWayk_k4kXvRSGu-riP1CpbN0dNeRXL2T6sD79qGxi50xCV75efOlUhk-lqBVOlzmjt-JAFVogDuiMvQSFfXi4tazkzZRGC_SVPrz1pPsIW8B_Rgmpp1hlVUOhS5ywph-dlqsCbyWQa_2mkhleFFs9zwTP_ZQkM3-wSnup3hed7iXQCPVttX244SkItWqA2HBElPRo-a82H03gzBt2lCDGUrxCl_uG1go2KxIopW0TbtpnTs_Ajp6QaTuHgouFW-9GcmyoUo75kQ5RMtzQ6svEEXnV87yEUzsD5DuELkDdENpB_vZVwU9VqAxlgZaSy-LLmteBxVpCmhmv14qCxNrZ95zqZ1bZ02r21CnLJtVDCmpHL-vhq4QCvRQQTAiO-cZ8eF3hYhv5vkVjgY3Cr6c-dO3w';
     //echo $cURL;exit;
-
+    
     $curl = curl_init();
-
     curl_setopt_array($curl, array(
         CURLOPT_URL => $cURL,
         CURLOPT_RETURNTRANSFER => true,
@@ -2928,29 +2945,24 @@ function ZidcURL($manager_token, $user_agent, $cURL, $page) {
         CURLOPT_HTTPHEADER => array(
             'Authorization: Bearer ' . $athentication,
             'X-MANAGER-TOKEN: ' . $manager_token,
-            'User-Agent: ' . $user_agent,
+            'User-Agent: Fastcoo/1.00.00 (web)',
             'Accept-Language: en',
         ),
     ));
-
     $response = curl_exec($curl);
-
     curl_close($curl);
-
     $result = json_decode($response, true);
-    //echo "<pre>";print_r($result);exit;
+   
     if ($page == 0) {
         return $result['total_order_count'];
     } else {
         return $result;
     }
 }
-
 function Zid_Order_Details($ZO_id, $manager_token, $user_Agent) {
     $athentication = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI2NSIsImp0aSI6IjNmMzI5MTExM2Y3Y2U4NjkxNDcwMDgwMDJkMTY4NTY4YWZkNzU5OWEwZmFlMWRkYTk4ODgzMDUxMGU3MDQ0YTZhYTZjZjE0ODkwYjI0OGY1IiwiaWF0IjoxNTk5OTg5ODkwLCJuYmYiOjE1OTk5ODk4OTAsImV4cCI6MTYzMTUyNTg5MCwic3ViIjoiMzMiLCJzY29wZXMiOlsidGhpcmQtcGFydGllcy1hcGlzIl19.VFozu9O0PEUOCzIxbFdZSVQ-mbduyEvl7JqIHpsHGKMzKmwcd8M-CFw9WyKQ9-I9yxYnFLNgzfsw9JuISjMLqzj6ePyKJw88BlTaB74bSXpD5n6FTAWafhTGETAOUNh7Eswxri9fAb5U8LCIpHLXTy0dWWUEPBb8IubxSULyMh49r1kk2p0ZOfBvnHnDQEdNXzIQe4A53Cyhuh6y6IHehY8nE6rxuw5WIItLmgdZQr-2hvzbcdkyzzD8Su0TwaBzT4E5T5LQNwr7HawfMJWayk_k4kXvRSGu-riP1CpbN0dNeRXL2T6sD79qGxi50xCV75efOlUhk-lqBVOlzmjt-JAFVogDuiMvQSFfXi4tazkzZRGC_SVPrz1pPsIW8B_Rgmpp1hlVUOhS5ywph-dlqsCbyWQa_2mkhleFFs9zwTP_ZQkM3-wSnup3hed7iXQCPVttX244SkItWqA2HBElPRo-a82H03gzBt2lCDGUrxCl_uG1go2KxIopW0TbtpnTs_Ajp6QaTuHgouFW-9GcmyoUo75kQ5RMtzQ6svEEXnV87yEUzsD5DuELkDdENpB_vZVwU9VqAxlgZaSy-LLmteBxVpCmhmv14qCxNrZ95zqZ1bZ02r21CnLJtVDCmpHL-vhq4QCvRQQTAiO-cZ8eF3hYhv5vkVjgY3Cr6c-dO3w';
     $cURL_id = "https://api.zid.sa/v1/managers/store/orders/" . $ZO_id . "/view";
     $curl = curl_init();
-
     curl_setopt_array($curl, array(
         CURLOPT_URL => $cURL_id,
         CURLOPT_RETURNTRANSFER => true,
@@ -2963,21 +2975,17 @@ function Zid_Order_Details($ZO_id, $manager_token, $user_Agent) {
         CURLOPT_HTTPHEADER => array(
             'Authorization: Bearer ' . $athentication,
             'X-MANAGER-TOKEN: ' . $manager_token,
-            'User-Agent: ' . $user_Agent,
+            'User-Agent: ' . 'Fastcoo/1.00.00 (web)',
             'Accept-Language: en'
         ),
     ));
-
     $response = curl_exec($curl);
-
     curl_close($curl);
     //echo $response;exit;
     $result1 = json_decode($response, true);
-
-    curl_close($ch);
-
     return $result1;
 }
+
 
 function exist_booking_id($booking_id, $cust_id) {
     $ci = & get_instance();
@@ -3244,6 +3252,23 @@ if (!function_exists('GetCourierCompanyStausActive')) {
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result['status'];
+    }
+
+}
+
+if (!function_exists('spPrintDetails')) {
+
+    function spPrintDetails($slip_no=null,$cc_id=null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        $sql = "SELECT log  FROM `frwd_shipment_log` WHERE `slip_no`='".$slip_no."' and cc_id='".$cc_id."'  and status='Success' limit 1 "; //and status='Success'
+        $query = $ci->db->query($sql);
+        $countdata = $query->num_rows();
+        $row = $query->row_array();
+        if ($countdata > 0)
+            return $row['log'];
+        else
+            return 0;
     }
 
 }

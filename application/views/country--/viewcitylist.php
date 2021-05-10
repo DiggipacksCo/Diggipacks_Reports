@@ -39,28 +39,24 @@
                             <!--style="padding-bottom:220px;background-color: lightgray;"-->
                             <div class="panel-heading"> 
                                 <!-- <h5 class="panel-title">Basic responsive table</h5> -->
-                                <h1><strong>Country List</strong></h1>
-                                <div class="heading-elements">
-                                    <ul class="icons-list">
-                                        <!-- <li><a data-action="collapse"></a></li>
-                                          <li><a data-action="reload"></a></li> --> 
-                                        <!-- <li><a data-action="close"></a></li> -->
-                                    </ul>
-                                </div>
-                                <hr>
+                                <h1><strong>City List</strong> <a class="btn btn-primary mb-10 pull-right" href="<?=base_url('Country/Hubaddform');?>" style="margin-left: 10px;">Add Hub</a> <a href="<?=base_url('Country/CityAddForm');?>" class="btn btn-primary mb-10 pull-right" >Add City</a></h1>
+                               
+                                
                             </div>
                             <div class="panel-body" > 
 
-<!-- <input type="text" id="search"  placeholder="Search .." class="form-control">
-                                -->
 
                                 <div class="table-responsive" style="padding-bottom:20px;" > 
                                     <!--style="background-color: green;"-->
-                                    <table class="table table-striped table-hover table-bordered dataTable bg-*" id="example">
+                                    <table class="table table-striped table-hover table-bordered">
                                         <thead>
                                             <tr>
                                                 <th>Sr.No.</th>
                                                 <th>Country</th>
+                                                <th>Hub Name</th>
+                                                 <th>City</th>
+                                                  <th>City Code</th>
+                                                  <th>Arabic City Name</th>
 
                                                 <th class="text-center" ><i class="icon-database-edit2"></i></th>
                                             </tr>
@@ -72,39 +68,32 @@
                                                     ?>
                                                     <tr>
                                                         <td><?= $sr; ?></td>
-                                                        <td><a href="<?= site_url('Country/CountraddFrom/' . $rows['id']); ?>"> <?= $rows['country']; ?> </a></td>
-
-        <?php $sr++; ?>
+                                                        <td><a> <?= $rows['country']; ?> </a></td>
+                                                        <td> <?= $rows['state']; ?></td>
+                                                          <td> <?= $rows['city']; ?></td>
+                                                           <td> <?= $rows['city_code']; ?></td>
+                                                           <td> <?= $rows['title']; ?></td>
+                                                        <?php $sr++; ?>
                                                         <td class="text-center"><ul class="icons-list">
                                                                 <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-menu9"></i> </a>
                                                                     <ul class="dropdown-menu dropdown-menu-right">
-
-
-
-
-                                                                        <li><a href="<?= site_url('Country/CountraddFrom/' . $user['id']); ?>"><i class="icon-pencil7"></i> Edit </a></li>
-
-
+                                                                        <li><a href="<?= site_url('Country/CityAddForm/' . $rows['id']); ?>"><i class="icon-pencil7"></i> Edit </a></li>
                                                                     </ul>
 
                                                                 </li>
                                                             </ul></td>
                                                     </tr>
-    <?php endforeach; ?>
-<?php endif; ?>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
                                         </tbody>
                                     </table>
                                 </div>
-                                <!--  <div>
-                                  <center>
-<?php //echo $links;  ?> 
-                                 </center>
-                               </div> -->
+
                                 <hr>
                             </div>
                         </div>
                         <!-- /basic responsive table -->
-<?php $this->load->view('include/footer'); ?>
+                        <?php $this->load->view('include/footer'); ?>
                     </div>
                     <!-- /content area --> 
 
@@ -115,14 +104,7 @@
             <!-- /page content --> 
 
         </div>
-        <script>
-            $(document).ready(function () {
-                var table = $('#example').DataTable({});
 
-            });
-
-
-        </script> 
 
         <!-- /page container -->
 
