@@ -282,7 +282,7 @@
                                     </select>
                                 </div>
 
-                        </div>
+                        </div> 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal" ><?=lang('lang_Close');?></button>
                             <button type="button" ng-if="AssignData.assign_type == 'D'" class="btn btn-primary" ng-click="saveassigntodriver();" ><?=lang('lang_Update_Driver');?></button>

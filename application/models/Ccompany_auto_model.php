@@ -2358,5 +2358,116 @@ public function fastcooArray(array $ShipArr, array $counrierArr, $complete_sku =
    
         return $response;
     }
-}
+    }
+    public function ThabitArray(array $ShipArr, array $counrierArr, $complete_sku = null, $Auth_token = null, $c_id = null, $super_id) 
+    {
+      
+        $sender_city_safe = getdestinationfieldshow($ShipArr['origin'], 'city');
+        $receiver_city_safe = getdestinationfieldshow($ShipArr['destination'], 'safe_arrival');
+        
+
+       $API_URL = $counrierArr['api_url'];
+        if(empty($box_pieces1))
+       { $box_pieces = 1;  }
+         else { $box_pieces = $box_pieces1 ; }
+
+        if($ShipArr['weight']==0)
+            {  $weight= 1;
+            }
+            else { $weight = $ShipArr['weight'] ; }
+
+        if($ShipArr['mode'] == "COD"){
+            $pay_mode = "cash";
+            $paid = 0;
+        }
+        else {
+            $pay_mode = "credit_balance";
+            $paid = 1;
+        }
+
+        $sender_data = array(
+            "address_type" => "residential",
+            "name" => $ShipArr['sender_name'],
+            "email" => $ShipArr['sender_email'],
+            "street" => html_entity_decode($ShipArr['sender_address']),
+            "city" => array(
+                "code" =>strtolower($sender_city_safe)
+            ),
+            "country" => array(
+                "id" => 191
+            ),
+           "phone" =>$ShipArr['sender_phone'],
+        );
+        
+        
+        $recipient_data = array(
+            "address_type" => "residential",
+            "name" => $ShipArr['reciever_name'],
+            "email" => $ShipArr['reciever_email'],
+            "street" => html_entity_decode($ShipArr['reciever_address']),
+            "city" => array(
+                "id" => $receiver_city_safe
+            ),
+            "country" => array(
+                "id" => 191
+            ),
+
+            "phone" => $ShipArr['reciever_phone'],
+        );
+        $dimensions = array(
+            "weight" => $weight
+        );
+        $package_type = array(
+            "courier_type" => 'express_delivery'
+        );
+        $charge_items = array(
+            array(
+                "paid" => $paid,
+                "charge" => $ShipArr['total_cod_amt'],
+                "charge_type" => $ShipArr['mode']
+            )
+        );
+
+        $param = array(
+            "sender_data" => $sender_data,
+            "recipient_data" => $recipient_data,
+            "dimensions" => $dimensions,
+            "package_type" => $package_type,
+            "charge_items" => $charge_items,
+            "recipient_not_available" => "do_not_deliver",
+            "payment_type" => "credit_balance",
+            "payer" => "recipient",
+            "parcel_value" => $ShipArr['total_cod_amt'],
+            "fragile" => true,
+            "note" => $complete_sku,
+            "piece_count" => $box_pieces,
+            "force_create" => true,
+            "reference_id" => $ShipArr['slip_no']
+        );
+        
+        $header = array(
+            "Authorization" => "Bearer ".$Auth_token,
+            "Content-Type" => "application/json",
+            "Accept" => "application/json"
+        );
+
+        $dataJson = json_encode($param);
+        $response = send_data_to_thabit_curl($dataJson, $Auth_token, $API_URL);
+        $safe_response =   json_decode($response, TRUE);
+        
+        $logresponse =   json_encode($response);  
+        $successres = $safe_response['status'];
+       
+       
+        if($successres == "success") 
+        {
+            $successstatus  = "Success";
+        }else {
+            $successstatus  = "Fail";
+        }
+
+        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
+
+        return $safe_response;
+    }
 }
