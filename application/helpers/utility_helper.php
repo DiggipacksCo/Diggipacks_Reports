@@ -2933,6 +2933,7 @@ function ZidcURL($manager_token, $user_agent, $cURL, $page,$athentication) {
     //echo $cURL;exit;
     
     $curl = curl_init();
+
     curl_setopt_array($curl, array(
         CURLOPT_URL => $cURL,
         CURLOPT_RETURNTRANSFER => true,
@@ -2946,11 +2947,14 @@ function ZidcURL($manager_token, $user_agent, $cURL, $page,$athentication) {
             'Authorization: Bearer ' . $athentication,
             'X-MANAGER-TOKEN: ' . $manager_token,
             'User-Agent: Fastcoo/1.00.00 (web)',
-            'Accept-Language: en',
+            'Accept-Language: ar',
         ),
     ));
+
     $response = curl_exec($curl);
+
     curl_close($curl);
+
     $result = json_decode($response, true);
    
     if ($page == 0) {
@@ -2959,10 +2963,12 @@ function ZidcURL($manager_token, $user_agent, $cURL, $page,$athentication) {
         return $result;
     }
 }
+
 function Zid_Order_Details($ZO_id, $manager_token, $user_Agent) {
     $athentication = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI2NSIsImp0aSI6IjNmMzI5MTExM2Y3Y2U4NjkxNDcwMDgwMDJkMTY4NTY4YWZkNzU5OWEwZmFlMWRkYTk4ODgzMDUxMGU3MDQ0YTZhYTZjZjE0ODkwYjI0OGY1IiwiaWF0IjoxNTk5OTg5ODkwLCJuYmYiOjE1OTk5ODk4OTAsImV4cCI6MTYzMTUyNTg5MCwic3ViIjoiMzMiLCJzY29wZXMiOlsidGhpcmQtcGFydGllcy1hcGlzIl19.VFozu9O0PEUOCzIxbFdZSVQ-mbduyEvl7JqIHpsHGKMzKmwcd8M-CFw9WyKQ9-I9yxYnFLNgzfsw9JuISjMLqzj6ePyKJw88BlTaB74bSXpD5n6FTAWafhTGETAOUNh7Eswxri9fAb5U8LCIpHLXTy0dWWUEPBb8IubxSULyMh49r1kk2p0ZOfBvnHnDQEdNXzIQe4A53Cyhuh6y6IHehY8nE6rxuw5WIItLmgdZQr-2hvzbcdkyzzD8Su0TwaBzT4E5T5LQNwr7HawfMJWayk_k4kXvRSGu-riP1CpbN0dNeRXL2T6sD79qGxi50xCV75efOlUhk-lqBVOlzmjt-JAFVogDuiMvQSFfXi4tazkzZRGC_SVPrz1pPsIW8B_Rgmpp1hlVUOhS5ywph-dlqsCbyWQa_2mkhleFFs9zwTP_ZQkM3-wSnup3hed7iXQCPVttX244SkItWqA2HBElPRo-a82H03gzBt2lCDGUrxCl_uG1go2KxIopW0TbtpnTs_Ajp6QaTuHgouFW-9GcmyoUo75kQ5RMtzQ6svEEXnV87yEUzsD5DuELkDdENpB_vZVwU9VqAxlgZaSy-LLmteBxVpCmhmv14qCxNrZ95zqZ1bZ02r21CnLJtVDCmpHL-vhq4QCvRQQTAiO-cZ8eF3hYhv5vkVjgY3Cr6c-dO3w';
     $cURL_id = "https://api.zid.sa/v1/managers/store/orders/" . $ZO_id . "/view";
     $curl = curl_init();
+
     curl_setopt_array($curl, array(
         CURLOPT_URL => $cURL_id,
         CURLOPT_RETURNTRANSFER => true,
@@ -2976,16 +2982,32 @@ function Zid_Order_Details($ZO_id, $manager_token, $user_Agent) {
             'Authorization: Bearer ' . $athentication,
             'X-MANAGER-TOKEN: ' . $manager_token,
             'User-Agent: ' . 'Fastcoo/1.00.00 (web)',
-            'Accept-Language: en'
+            'Accept-Language: ar'
         ),
     ));
+
     $response = curl_exec($curl);
+
     curl_close($curl);
     //echo $response;exit;
     $result1 = json_decode($response, true);
     return $result1;
 }
+function makeTrackUrl($id, $awb,$slip_no)
+{
+   
+        $ci = & get_instance();
+        $ci->load->database();
+        $sql = "SELECT company_url FROM courier_company where id='$id' and deleted='N' and company_url!='' limit 1";
+        $query = $ci->db->query($sql);
+        if($query->num_rows()>0)
+        {
+            $result = $query->row_array();
 
+        return $result['company_url'].$awb;
+        }
+    
+}
 
 function exist_booking_id($booking_id, $cust_id) {
     $ci = & get_instance();
