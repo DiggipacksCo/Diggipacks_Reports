@@ -7,32 +7,91 @@ class Zid extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->helper('utility_helper');
+       
+        $this->load->helper('zid_helper');
         $this->load->model('Zid_model');
     }
-
     public function getOrder($uniqueid) {
+        // error_reporting(-1);
+		// ini_set('display_errors', 1);
+     
+        ignore_user_abort();
+        $file = fopen("/var/www/html/diggipack_new/zidcron.lock", "w+");;
 
+        // exclusive lock, LOCK_NB serves as a bitmask to prevent flock() to block the code to run while the file is locked.
+        // without the LOCK_NB, it won't go inside the if block to echo the string
+        if (!flock($file,LOCK_EX|LOCK_NB))
+        {
+            echo "Unable to obtain lock, the previous process is still going on."; 
+        }
+        else
+        {
+            //Lock obtained, start doing some work now
+            sleep(10);//sleep for 10 seconds
+            $this->zidOrders($uniqueid);
+            echo "Work completed!";
+             // release lock
+            flock($file,LOCK_UN);
+        }
+
+        fclose($file);
+        /*
+        $filehandle = fopen("/var/www/html/fastcoo-tech/zidcron.lock", "c+");
+
+      
+        $filehandle = fopen("/var/www/html/fastcoo-tech/zidcron.lock", "w+");
+ 
+        if (flock($filehandle, LOCK_EX | LOCK_NB)) {
+            $this->zidOrders($uniqueid);
+            sleep(10);
+            flock($filehandle, LOCK_UN);  // don't forget to release the lock
+        } else {
+            $myfile = fopen("/var/www/html/fastcoo-tech/zidlogs.txt", "a") or die("Unable to open file!");
+            $txt = $uniqueid ."==cron run at: " . date('Y-m-d H:i:s');
+            fwrite($myfile, "\n" . $txt);
+            fclose($myfile);
+            // throw an exception here to stop the next cron job
+        }
+
+        fclose($filehandle);
+         
+         */
+        
+    }
+
+    private function zidOrders($uniqueid) {
         $customers = $this->Zid_model->fetch_zid_customers($uniqueid);
-        $user_agent = $customers['user_Agent'];
+        echo $deliveryOption=deliveryOption($customers['id']); 
+        $user_agent = "Fastcoo/1.00.00 (web)"; //$customers['user_Agent'];
         $manager_token = $customers['manager_token'];
-        $store_link = "https://api.zid.sa/v1/managers/store/orders?per_page=100&order_status=" . $customers['zid_status'];
-        $ZidTotalOrders = ZidcURL($manager_token, $user_agent, $store_link, 0);
+        $Bearer = $this->config->item('zid_authorization');
+        $store_link = "https://api.zid.sa/v1/managers/store/orders?per_page=100&sort_by=asc&order_status=" . $customers['zid_status'];
+        $ZidTotalOrders = ZidcURL($manager_token, $user_agent, $store_link, 0,$Bearer);
         $pageCount = ceil($ZidTotalOrders / 100);
 
         for ($i = 1; $i <= $pageCount; $i++) {
-            $store_link = "https://api.zid.sa/v1/managers/store/orders?per_page=100&order_status=" . $customers['zid_status'] . "&page=" . $i;
-            $ZidOrders = ZidcURL($manager_token, $user_agent, $store_link, $i);
-            //echo "<pre>";print_r($ZidOrders);exit;
+            $store_link = "https://api.zid.sa/v1/managers/store/orders?per_page=100&sort_by=asc&order_status=" . $customers['zid_status'] . "&page=" . $i;
+            $ZidOrders = ZidcURL($manager_token, $user_agent, $store_link, $i,$Bearer);
+ 
+           
+             echo '<pre>'.$customers['zid_status'];
+            print_r( $ZidOrders); die(); 
+          
+ 
             foreach ($ZidOrders['orders'] as $Order) {
-                //echo "<pre>";print_r($Order);exit;
+              
                 $secKey = $customers['secret_key'];
                 $customerId = $customers['uniqueid'];
                 $formate = "json";
                 $method = "createOrder";
                 $signMethod = "md5";
                 $product = array();
-
-                $booking_id = $Order['id'];
+             
+              
+             $booking_id = $Order['id'];
+               
+               
+               
 
                 if ($customers['access_fm'] == 'Y') {
                     $check_booking_id = exist_booking_id($booking_id, $customers['id']);
@@ -42,14 +101,42 @@ class Zid extends CI_Controller {
                     $check_booking_id = $this->Zid_model->existLmBookingId($booking_id, $customers['id']);
                 }
 
-                if ($check_booking_id != '' || $check_booking_id != 0) {
+                if (!empty($check_booking_id)) {
+
+                  
+                   
+                    if($check_booking_id['code']=='POD')
+                    {
+                       
+                    // if(!empty($check_booking_id['frwd_company_label']))
+                    // $lable=$check_booking_id['frwd_company_label'];
+                    // else
+                    // $lable='https://api.fastcoo-tech.com/API/print/'.$check_booking_id['slip_no'];
+
+
+                    // $trackingurl=makeTrackUrl($check_booking_id['cc_id'],$check_booking_id['frwd_company_awb']);
+                  
+                    
+                    updateZidStatus($booking_id, $manager_token, 'delivered', $check_booking_id['slip_no'], $lable, $trackingurl);
+                    }
                     echo $booking_id . ' Exist<br>';
                 } else {
 
-                    $result1 = Zid_Order_Details($booking_id, $manager_token, $user_agent);
-                    //echo "<pre>";print_r($result1);exit;
-                    if ($result1['order']['order_status']['code'] == $customers['zid_status']) {
-
+                    $result1 = Zid_Order_Details($booking_id, $manager_token, $user_agent); 
+                    // if($booking_id==7176231 )
+                    // {
+                    //     echo '<pre>';
+                    //     echo '<br>'.$result1['order']['order_status']['code'];
+                    //     echo '<br>'.print_r($result1['order']['shipping']['method']['name']);
+                    //     echo '<br>'. trim($deliveryOption);
+                    //     echo '<br>'.$customers['zid_status'];
+                    //     print_r( $result1);  
+                    //     die();
+                    // }
+                 
+                    if ($result1['order']['order_status']['code'] == $customers['zid_status'] &&  trim($result1['order']['shipping']['method']['name']) ==  trim($deliveryOption) ) {
+                   
+                    
                         $weight = 0;
                         foreach ($result1['order']['products'] as $ITEMs) {
                             $weight = $weight + $ITEMs['weight']['value'];
@@ -66,7 +153,7 @@ class Zid extends CI_Controller {
                                 "wieght" => $products['weight']['value'],
                             );
                         }
-
+                        
                         $param = array(
                             "sender_name" => $customers['name'],
                             "sender_email" => $customers['email'],
@@ -78,7 +165,7 @@ class Zid extends CI_Controller {
                             "receiver_email" => $result1['order']['customer']['email'],
                             "description" => $result1['message']['description'],
                             "destination" => $result1['order']['shipping']['address']['city']['name'],
-                            "BookingMode" => ($result1['order']['payment']['method']['name'] == 'Cash on Delivery' ? 'COD' : 'CC'),
+                            "BookingMode" => ($result1['order']['payment']['method']['code'] == 'zid_cod' ? 'COD' : 'CC'),
                             "receiver_address" => $result1['order']['shipping']['address']['formatted_address'] . ' ' . $result1['order']['shipping']['address']['street'] . ' ' . $result1['order']['shipping']['address']['district'],
                             "reference_id" => $booking_id,
                             "codValue" => $result1['order']['order_total'],
@@ -88,7 +175,7 @@ class Zid extends CI_Controller {
                             "skudetails" => $product,
                             "zid_store_id" => $result1['order']['store_id'],
                             "order_from" => "zid"
-                        );
+                        );                       
 
 
                         $sign = create_sign($param, $secKey, $customerId, $formate, $method, $signMethod);
@@ -103,7 +190,8 @@ class Zid extends CI_Controller {
                         );
 
                         $dataJson = json_encode($data_array);
-                        if ($customers['access_fm'] == 'Y') {
+                       // echo $customers['zid_access'];die;
+                        if ($customers['zid_access'] == 'FM') {
                             if ($_SERVER['HTTP_HOST'] == "dev-fm.fastcoo.net") {
                                 $url = "https://api.fastcoo.net/API/createOrder";
                             } else {
@@ -111,13 +199,14 @@ class Zid extends CI_Controller {
                             }
 
                             //$url = "http://apilm.com/API/createOrder";
-                            $this->orderCurl($url, $dataJson);
+                           $resps = $this->sendRequest($url, $dataJson);
                         }
 
-                        if ($customers['access_lm'] == 'Y') {
-//                            $url = "https://api.fastcoo-tech.com/API/createLmOrder";
-//                            $this->orderCurl($url, $dataJson);
+                        if ($customers['zid_access'] == 'LM') {
+                            $url = "https://api.fastcoo-tech.com/API/createLmOrder";
+                          $resps =  $this->sendRequest($url, $dataJson);
                         }
+                        print_r($resps);
                     }
                 }
             }

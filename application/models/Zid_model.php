@@ -7,7 +7,7 @@ class Zid_model extends CI_Model {
     function __construct() {
         parent::__construct();
     }
-
+    
     public function fetch_zid_customers($uniqueid = null) {
         $this->db->select('*');
         $this->db->where('uniqueid', $uniqueid);
@@ -20,6 +20,11 @@ class Zid_model extends CI_Model {
         }
     }
 
+    public function webhook_log($data) {
+        $this->db->insert('webhook_log', $data);
+        return $this->db->insert_id();
+    }
+    
     public function existLmBookingId($booking_id, $cust_id) {
 
         $sql = "select id from shipment where booking_id='" . $booking_id . "' and cust_id='" . $cust_id . "' and deleted='N'";

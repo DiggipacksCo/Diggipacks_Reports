@@ -178,7 +178,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <?php if (!empty($ListArr)): ?>
                                                 <?php foreach ($ListArr as $rows):
                                                     ?>
-                                    <option value="<?= $rows['id']; ?>"> <?= $rows['zid']; ?> </option>
+                                    <option value="<?= $rows['id']; ?>"> <?= $rows['en_name']; ?> </option>
                                             <?php endforeach; ?>
                                             <?php endif; ?>
                                     </select>
@@ -194,7 +194,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <?php if (!empty($pre)): 
                                         ?>
                                         <?php foreach ($pre as $rows): ?>
-                                    <option value="<?= $rows['id']; ?>" > <?= $rows['zid']; ?> </option>
+                                    <option selected  value="<?= $rows['id']; ?>" > <?= $rows['en_name']; ?> </option>
                                             <?php endforeach; ?>
                                             <?php endif; ?>  
                                     </select>

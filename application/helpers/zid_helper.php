@@ -180,3 +180,13 @@ function checkZidSkuExist($sku, $pid) {
 }
 
 
+
+function deliveryOption($cust_id) {
+    $ci = & get_instance();
+    $ci->load->database();
+    $sql = "SELECT  `zid_delivery_name`FROM `zid_deliver_options` WHERE `cust_id` = '" . $cust_id . "'";
+    $query = $ci->db->query($sql);
+$result=$query->row_array();
+    
+    return $result['zid_delivery_name'];
+}
