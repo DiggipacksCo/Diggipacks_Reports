@@ -107,14 +107,14 @@
                                         <thead>
                                             <tr><th><?= lang('lang_SrNo'); ?>.</th>
                                                 <th><?= lang('lang_Manifest_ID'); ?> </th>
-                                                <th>SKU </th>
+                                                <th> <?= lang('lang_SKU'); ?></th>
                                                 <th><?= lang('lang_Total_Qty'); ?></th>  
                                               
-                                                <th>Driver</th>   
-                                                <th>3PL Company</th>  
-                                                <th>3PL AWB</th> 
-                                                <th>City</th> 
-                                                <th>Address</th> 
+                                                <th><?= lang('lang_Drivers'); ?></th>   
+                                                <th><?= lang('lang_TPL_company'); ?></th>  
+                                                <th><?= lang('lang_TPL_AWB'); ?></th> 
+                                                <th><?= lang('lang_City'); ?></th> 
+                                                <th><?= lang('lang_Address'); ?></th> 
                                                 <th><?= lang('lang_Seller'); ?></th>
                                              <th><?= lang('lang_Request_Date'); ?></th>
 <!--                                                <th class="text-center" ><i class="icon-database-edit2"></i></th>-->
@@ -128,9 +128,9 @@
                                            <td width="200"><span class="badge badge-success" title="Total">{{data.qtyall}}</span> <!--&nbsp;<span class="badge badge-danger">2</span>--></td>
                                             
                                             <td >{{data.assign_to}}</td>
-                                            <td >{{data.company_name}}</td>
-                                            <td ><a  href="{{data.company_label}}" ng-if="data.company_label != ''"  target="_blank">{{data.company_awb}}</a>
-                                                <a ng-if="data.company_label == ''">{{data.company_awb}}</a>
+                                            <td >{{data.r_3pl_name}}</td>
+                                            <td ><a  href="{{data.r_3pl_label}}" ng-if="data.r_3pl_label != ''"  target="_blank">{{data.r_3pl_awb}}</a>
+                                                <a ng-if="data.r_3pl_label == ''">{{data.r_3pl_awb}}</a>
                                             </td>
                                             <td >{{data.city}}</td>
                                             <td >{{data.address}}</td>
@@ -168,7 +168,7 @@
 
 
 
-                            <h5 class="modal-title" id="exampleModalLabel">Return Order{{uniqueid}} </h5>
+                            <h5 class="modal-title" id="exampleModalLabel"><?= lang('lang_Return_Order'); ?> {{uniqueid}} </h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -178,10 +178,10 @@
                             <div class="alert alert-warning" ng-if="message.error" id="errhide">{{message.error}}</div>
                             <div class="alert alert-success" ng-if="message.success">{{message.success}}</div>
                             <div class="col-md-12" ng-if="invalidSslip_no">
-                                <div class="alert alert-warning" ng-if="invalidSslip_no" ng-repeat="in_data in invalidSslip_no">Invalid slip no. "{{in_data}}"</div>
+                                <div class="alert alert-warning" ng-if="invalidSslip_no" ng-repeat="in_data in invalidSslip_no"><?= lang('lang_Invalid_slip_no'); ?>. "{{in_data}}"</div>
                             </div>
                             <div class="col-md-12" ng-if="Success_msg">
-                                <div class="alert alert-success" ng-repeat="success_msg in Success_msg">{{success_msg}} : Shipment Forwarded</div>
+                                <div class="alert alert-success" ng-repeat="success_msg in Success_msg">{{success_msg}} : <?= lang('lang_Shipment_Forwarded'); ?></div>
                             </div>
                             <div class="col-md-12" ng-if="Error_msg">
                                 <div class="alert alert-danger" ng-repeat="error_msg in Error_msg">{{error_msg}}</div>
@@ -194,10 +194,10 @@
                                 <div class="alert alert-danger" ng-if="mainstatusEmpty">{{mainstatusEmpty}}</div>
                             </div>
                             <div class="col-md-12" ng-if="messArray1 != 0">
-                                <div class="alert alert-danger" ng-repeat="mdata in messArray1">Wrong Awb {{mdata}}</div>    
+                                <div class="alert alert-danger" ng-repeat="mdata in messArray1"> <?= lang('lang_wrong_AWB_no'); ?> {{mdata}}</div>    
                             </div>
                             <form novalidate ng-submit="myForm.$valid && createUser()" >
-                                <input type="radio" name="assign_type" ng-model="returnUpdate.assign_type" ng-click="GetChangeAssignType('D');" value="D"  > Driver <input type="radio" name="assign_type" value="CC" ng-model="AssignData.assign_type" ng-click="GetChangeAssignType('CC');"  > Coourier Company
+                                <input type="radio" name="assign_type" ng-model="returnUpdate.assign_type" ng-click="GetChangeAssignType('D');" value="D"  > <?= lang('lang_Drivers'); ?> <input type="radio" name="assign_type" value="CC" ng-model="AssignData.assign_type" ng-click="GetChangeAssignType('CC');"  > <?= lang('lang_Courier_Company'); ?>
                                 <div ng-show="driverbtn">
                                     <select type="text"  ng-model="returnUpdate.assignid" class="form-control" required>
                                         <option ng-repeat="x in assigndata"  value="{{x.id}}">{{x.username}}</option>
@@ -212,9 +212,9 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" ng-if="returnUpdate.assign_type == 'D'" class="btn btn-primary" ng-click="saveassigntodriver();" >Update Driver</button>
-                            <button type="button" ng-if="returnUpdate.assign_type == 'CC'" class="btn btn-primary" ng-click="saveassigntodriver();" >Send Curier</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><?= lang('lang_Close'); ?></button>
+                            <button type="button" ng-if="returnUpdate.assign_type == 'D'" class="btn btn-primary" ng-click="saveassigntodriver();" ><?= lang('lang_Update_Driver'); ?></button>
+                            <button type="button" ng-if="returnUpdate.assign_type == 'CC'" class="btn btn-primary" ng-click="saveassigntodriver();" ><?= lang('lang_Send_Courier'); ?></button>
                         </div>
                         </form>          
                     </div>

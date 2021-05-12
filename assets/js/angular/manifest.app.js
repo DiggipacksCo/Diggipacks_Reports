@@ -111,14 +111,15 @@ var app = angular.module('AppManifest', [])
                         {
                             if (response.data.status == 'succ')
                             {
+                                alert("Successfully Assign");
+                                location.reload();
+                            }
+                          
+                         else
+                            {
+                                $scope.invalidSslip_no = response.data.invalid_slipNO;
                                 $scope.Success_msg = response.data.Success_msg;
-                                location.reload();
-                            } else
-                            {location.reload();
-                                //$scope.invalidSslip_no = response.data.invalid_slipNO;
                                 $scope.Error_msg = response.data.Error_msg;
-                                alert(0);
-                                location.reload();
                             }
                         } else
                         {
@@ -537,6 +538,7 @@ $scope.data={};
                 $scope.filterData.status = 1;
                 if (reset == 1)
                 {
+                    $scope.count=1;
                     $scope.shipData = [];
                     $scope.Items = [];
                 }
@@ -799,6 +801,7 @@ $scope.data={};
                 $scope.filterData.status = 1;
                 if (reset == 1)
                 {
+                    $scope.count=1;
                     $scope.shipData = [];
                     $scope.Items = [];
                 }
@@ -949,6 +952,7 @@ $scope.data={};
                 $scope.filterData.status = 1;
                 if (reset == 1)
                 {
+                    $scope.count=1;
                     $scope.shipData = [];
                     $scope.Items = [];
 
