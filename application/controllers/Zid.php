@@ -74,8 +74,8 @@ class Zid extends CI_Controller {
             $ZidOrders = ZidcURL($manager_token, $user_agent, $store_link, $i,$Bearer);
  
            
-             echo '<pre>'.$customers['zid_status'];
-            print_r( $ZidOrders); die(); 
+           //  echo '<pre>'.$customers['zid_status'];
+          //  print_r( $ZidOrders); die(); 
           
  
             foreach ($ZidOrders['orders'] as $Order) {
@@ -85,13 +85,11 @@ class Zid extends CI_Controller {
                 $formate = "json";
                 $method = "createOrder";
                 $signMethod = "md5";
-                $product = array();
-             
+                $product = array();            
               
-             $booking_id = $Order['id'];
-               
-               
-               
+                $booking_id = $Order['id'];
+
+              // echo "<pre>";  print_r($customers['id']);  die; 
 
                 if ($customers['access_fm'] == 'Y') {
                     $check_booking_id = exist_booking_id($booking_id, $customers['id']);
@@ -120,10 +118,13 @@ class Zid extends CI_Controller {
                     updateZidStatus($booking_id, $manager_token, 'delivered', $check_booking_id['slip_no'], $lable, $trackingurl);
                     }
                     echo $booking_id . ' Exist<br>';
+
                 } else {
 
                     $result1 = Zid_Order_Details($booking_id, $manager_token, $user_agent); 
-                    // if($booking_id==7176231 )
+
+                    
+                    // if($booking_id == 7176231 )
                     // {
                     //     echo '<pre>';
                     //     echo '<br>'.$result1['order']['order_status']['code'];
@@ -133,8 +134,10 @@ class Zid extends CI_Controller {
                     //     print_r( $result1);  
                     //     die();
                     // }
+                   
                  
-                    if ($result1['order']['order_status']['code'] == $customers['zid_status'] &&  trim($result1['order']['shipping']['method']['name']) ==  trim($deliveryOption) ) {
+                    if ($result1['order']['order_status']['code'] == $customers['zid_status'] &&  trim($result1['order']['shipping']['method']['name']) ==  trim($deliveryOption) ) 
+                    {
                    
                     
                         $weight = 0;
@@ -190,20 +193,28 @@ class Zid extends CI_Controller {
                         );
 
                         $dataJson = json_encode($data_array);
-                       // echo $customers['zid_access'];die;
+                    //   echo "dataJson =  ".$dataJson;
+                    //   echo "<br><br>"; 
+                    //   echo $customers['zid_access'];
+                      
                         if ($customers['zid_access'] == 'FM') {
-                            if ($_SERVER['HTTP_HOST'] == "dev-fm.fastcoo.net") {
-                                $url = "https://api.fastcoo.net/API/createOrder";
+                            if ($_SERVER['HTTP_HOST'] == "dev-fm.fastcoo.net") 
+                            {
+                               echo  $url = "https://api.diggipacks.com/API/createOrder";
                             } else {
-                                $url = "https://api.fastcoo-tech.com/API/createOrder";
+                                echo $url = "https://api.diggipacks.com/API/createOrder";
                             }
 
                             //$url = "http://apilm.com/API/createOrder";
-                           $resps = $this->sendRequest($url, $dataJson);
+                            $resps = $this->sendRequest($url, $dataJson);
                         }
+                        //echo " <br><br><br><br>resp = <pre>"; echo $resps ;  exit;
+
+                     
+
 
                         if ($customers['zid_access'] == 'LM') {
-                            $url = "https://api.fastcoo-tech.com/API/createLmOrder";
+                            $url = "https://api.diggipacks.com/API/createLmOrder";
                           $resps =  $this->sendRequest($url, $dataJson);
                         }
                         print_r($resps);
@@ -212,6 +223,28 @@ class Zid extends CI_Controller {
             }
         }
     }
+
+    private function sendRequest($url, $dataJson) {
+
+
+        $headers = array(
+            "Content-type: application/json",
+        );
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataJson);
+
+        $response = curl_exec($ch);
+
+        echo '<pre>';
+        echo $response;
+    }
+
 
     private function orderCurl($url, $dataJson) {
         if ($_SERVER['HTTP_HOST'] == "localhost") {

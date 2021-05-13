@@ -19,9 +19,9 @@ class PickUp extends MY_Controller {
         $this->load->model('Status_model');
         $this->load->model('Pickup_model');
          $this->load->model('User_model');
-        
-        
+         $this->load->helper('zid');
         $this->load->helper('utility');
+        
         // $this->user_id = isset($this->session->get_userdata()['user_details'][0]->id)?$this->session->get_userdata()['user_details'][0]->users_id:'1';
     }
 
@@ -559,7 +559,6 @@ class PickUp extends MY_Controller {
 
     public function dispatchOrder() {
 
-
         $_POST = json_decode(file_get_contents('php://input'), true);
         //$_POST=array('awbArray'=>array('STF9252413194'));
         // echo json_encode($_POST); exit;
@@ -570,10 +569,12 @@ class PickUp extends MY_Controller {
         if ($_POST['type'] == 'DL') {
             $code = 'DL';
             $new_status = 5;
+            $zidStatus = "indelivery";
         }
         if ($_POST['type'] == 'POD') {
             $code = 'POD';
             $new_status = 7;
+            $zidStatus = "delivered";
         }
         $slip_data = array();
         $OutboundArray = array();
@@ -585,8 +586,9 @@ class PickUp extends MY_Controller {
                 $d1 = $this->Shipment_model->filter($data['slip_no']);
                 //   print_r($d1);exit;
                 $responseData = $this->addShipIntegration($d1['result']);
-                // $responseData['status'] = 200;
-               // $responseData['awb'] = "";
+
+                $responseData['status'] = 200;
+                // $responseData['awb'] = "";
             } else {
                 $responseData['status'] = 200;
                 $responseData['awb'] = "";
@@ -611,9 +613,7 @@ class PickUp extends MY_Controller {
                 $slip_data[$key]['shippers_ref_no'] = $responseData['awb'];
                 $slip_data[$key]['code'] = $code;
                 $slip_data[$key]['delivered'] = $new_status;
-               // $slip_data[$key]['close_date'] = date('Y-m-d');
-
-
+                // $slip_data[$key]['close_date'] = date('Y-m-d');
                 //======================outbound charges=====================================///
                 $getallskuArray = $this->Pickup_model->GetallskuDataDetails($data['slip_no']);
                 $totalLocationboxes = GetshpmentDataByawb($data['slip_no'], 'stocklcount');
@@ -648,28 +648,26 @@ class PickUp extends MY_Controller {
                     $OutboundChargeA = getalluserfinanceRates($seller_id, 8, 'rate');
                     $OutboundCharge = getalluserfinanceRates($seller_id, 7, 'rate');
                     $OutBoundPieces = getalluserfinanceRates($seller_id, 7, 'setpiece');
-                    
+
                     if ($OutBoundPieces >= $totalPieces)
                         $addisnalOutboundChargeQty = 1;
                     else
                         $addisnalOutboundChargeQty = $totalPieces - $OutBoundPieces;
-                    
+
                     $totalOutboundCharge1 = $OutboundCharge;
                     $totalOutboundCharge2 = $OutboundChargeA * $addisnalOutboundChargeQty;
-                    
-                    if($totalPieces==1)
-                        {
-                            $totalOutboundCharge = $totalOutboundCharge1;
-                        }
-                        else
-                        {
-                            $totalOutboundCharge = $totalOutboundCharge1 + $totalOutboundCharge2;
-                        }
-                    
+
+                    if ($totalPieces == 1) {
+                        $totalOutboundCharge = $totalOutboundCharge1;
+                    } else {
+                        $totalOutboundCharge = $totalOutboundCharge1 + $totalOutboundCharge2;
+                    }
+
                     /* $totalOutboundCharge1=$OutboundCharge;
                       $totalOutboundCharge2=$OutboundChargeA*$totalPiecesF;
                       $totalOutboundCharge=$totalOutboundCharge1+$totalOutboundCharge2; */
                 }
+
 
                 $OutboundArray[$key]['seller_id'] = $seller_id;
                 $OutboundArray[$key]['slip_no'] = $data['slip_no'];
@@ -677,6 +675,25 @@ class PickUp extends MY_Controller {
                 $OutboundArray[$key]['entrydate'] = date("Y-m-d H:i:sa");
                 $OutboundArray[$key]['pieces'] = $totalPieces;
                 $OutboundArray[$key]['super_id'] = $this->session->userdata('user_details')['super_id'];
+
+                $token = GetallCutomerBysellerId($seller_id, 'manager_token');
+                if (!empty($token)) {
+                    $slip_no = $data['slip_no'];
+                   
+                    if(!empty($data['frwd_company_awb']))
+                    {
+                       // $trackingurl=makeTrackUrl($data['frwd_company_id'],$data['frwd_company_awb']); 
+                        $lable=$data['frwd_company_label'];
+                    }  else
+                    {
+                        $lable='https://api.diggipacks.com/API/print/'.$data['slip_no'];
+
+                    }
+                      
+                    $trackingurl = TRACKURL . $slip_no;                    
+                    //updateZidStatus($orderID=null, $token=null, $status=null, $code=null, $label=null, $trackingurl=null)
+                    updateZidStatus($data['booking_id'], $token, $zidStatus, $slip_no, $lable, $trackingurl);
+                }
                 //=========================================================================//     
                 $key++;
             } else {
@@ -688,8 +705,8 @@ class PickUp extends MY_Controller {
             }
         }
 
-//print_r($OutboundArray);
-//die;
+        //print_r($OutboundArray);
+        //die;
         if (!empty($statusvalue) && !empty($slip_data)) {
             $this->Status_model->insertStatus($statusvalue);
             $this->Shipment_model->updateStatusBatch($slip_data);
@@ -703,6 +720,7 @@ class PickUp extends MY_Controller {
 
         echo json_encode($error_data);
     }
+
 
     public function returnformlmOrder() {
 
@@ -955,7 +973,6 @@ class PickUp extends MY_Controller {
        
     }
 
-
     public function save_details() {
         $postData = json_decode(file_get_contents('php://input'), true);
 
@@ -964,7 +981,7 @@ class PickUp extends MY_Controller {
 
 
         $check_slipNo = $this->Shipment_model->getallshipmentdatashow($slip_no);
-      //$check_slipNo = $this->Shipment_model->getallshipmentdatashow($slip_no);
+        //$check_slipNo = $this->Shipment_model->getallshipmentdatashow($slip_no);
 
 
         $token = GetallCutomerBysellerId($check_slipNo['cust_id'], 'manager_token');
@@ -993,20 +1010,9 @@ class PickUp extends MY_Controller {
 
                             $activitiesArr[] = array('exp_date' => $rdata['expity_date'], 'st_location' => $fArray['stock_location'], 'item_sku' => $fArray['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $check_slipNo['cust_id'], 'qty' => $fArray['qty'], 'p_qty' => 0, 'qty_used' => $fArray['qty'], 'type' => 'Add', 'entrydate' => date("Y-m-d h:i:s"), 'awb_no' => $slip_no, 'super_id' => $this->session->userdata('user_details')['super_id'], 'shelve_no' => $fArray['shelve_no']);
                         }
-
-                        if (!empty($token)) {
-                            //==========update zid stock===============//
-                            $zidReqArr = GetAllQtyforSeller($check_slipNo['sku'], $check_slipNo['cust_id']);
-
-
-                            $quantity = $zidReqArr['quantity']; //+$fArray['qty'];
-                            $pid = $zidReqArr['zid_pid'];
-                            $token = $zidReqArr['manager_token'];
-                            $storeID = $check_slipNo['zid_store_id'];
-                            update_zid_product($quantity, $pid, $token, $storeID);
-
-                            //=========================================//
-                        }
+                        
+                        $skuQtyArray[] = $fArray['item_sku'];
+                       
                     }
                 }
             }
@@ -1029,10 +1035,21 @@ class PickUp extends MY_Controller {
                 $this->Shipment_model->stockdeletepicklistFM($slip_no);
 
                 if (!empty($token)) {
-                    $labelZid = base_url() . 'assets/all_labels' . $slip_no . '.pdf';
+                    
+                    
+                    if(!empty($data['frwd_company_awb']))
+                    {
+                        $trackingurl=makeTrackUrl($data['frwd_company_id'],$data['frwd_company_awb']);
+                        $lable=$data['frwd_company_label'];
+                    }else
+                    {
+                        $lable='https://api.diggipacks.com/API/print/'.$data['slip_no'];
+                       
+
+                    } 
                     $trackingurl = TRACKURL . $slip_no;
                     //updateZidStatus($orderID=null, $token=null, $status=null, $code=null, $label=null, $trackingurl=null)
-                    updateZidStatus($check_slipNo['booking_id'], $token, 'cancelled', $slip_no, $labelZid, $trackingurl);
+                    updateZidStatus($data['booking_id'], $token, 'cancelled', $slip_no, $lable, $trackingurl);
                 }
             }
 
@@ -1045,6 +1062,24 @@ class PickUp extends MY_Controller {
                 $this->Shipment_model->addInventory($addLoc, $activitiesArr);
             }
 
+            if (!empty($token)) {
+                        foreach($skuQtyArray as $skuqtyval){                           
+                           
+                            //==========update zid stock===============//
+                              $zidReqArr = GetAllQtyforSellerby_ID($skuqtyval, $check_slipNo['cust_id']);
+                          
+                                $quantity = $zidReqArr['quantity']; //+$fArray['qty'];
+                                $pid = $zidReqArr['zid_pid'];
+                                $token = $token;
+                                 $storeID = $check_slipNo['zid_store_id'];
+                                $reszid = update_zid_product($quantity, $pid, $token, $storeID);
+                                 
+                                
+    
+                                //=========================================//
+                            }
+                        
+                        }
 
             $error_status = array('status' => true);
             echo json_encode($error_status);
@@ -1055,6 +1090,7 @@ class PickUp extends MY_Controller {
             echo $this->db->last_query();
         }
     }
+
         
         
 
@@ -2542,7 +2578,7 @@ else
 										<table border="1">
 											<tr>
 											<td colspan=""  align="center"> 
-												  <img src="https://super.fastcoo-tech.com/assets/clientlogo/1607498465.png"  style="height:17% !الاسم  الحالةant; width:100px !الاسم  الحالةant">  
+												  <img src="https://super.diggipacks.com/assets/clientlogo/1615581471.png"  style="height:17% !الاسم  الحالةant; width:100px !الاسم  الحالةant">  
 												</td>
 												<td  > 
 												From <h1>' . $oringincode . '</h1>  
@@ -2553,7 +2589,7 @@ else
 												</td>
 												<td   >
 										  
-<img src="https://lm.fastcoo-tech.com/application/third_party/qrcodegen.php?data=' . $status_update_data[$key]['slip_no'] . '"  style="height:17% !الاسم  الحالةant; width:17% !الاسم  الحالةant;" /> 
+<img src="https://lm.diggipacks.com/application/third_party/qrcodegen.php?data=' . $status_update_data[$key]['slip_no'] . '"  style="height:17% !الاسم  الحالةant; width:17% !الاسم  الحالةant;" /> 
 										</td>			
 																						
 											</tr>
@@ -3094,18 +3130,16 @@ public function awbPickupPrint_bulk_new($awb = array(),$type = null) {
         }
     }
     
-    public function GetCheck3PLDispatchData()
-    {
+    public function GetCheck3PLDispatchData() {
         $postData = json_decode(file_get_contents('php://input'), true);
-        
-        $returnData=$this->Pickup_model->Get3pldispatchCheckData($postData);
-        $newCreateArr=$returnData;
-        foreach($newCreateArr as $key=>$val)
-        {
+
+        $returnData = $this->Pickup_model->Get3pldispatchCheckData($postData);
+        $newCreateArr = $returnData;
+        foreach ($newCreateArr as $key => $val) {
             //=============shipment update==============//
-            $updateSlip[$key]['code']='D3PL';
-            $updateSlip[$key]['delivered']='17';
-            $updateSlip[$key]['slip_no']=$val['slip_no'];
+            $updateSlip[$key]['code'] = 'D3PL';
+            $updateSlip[$key]['delivered'] = '17';
+            $updateSlip[$key]['slip_no'] = $val['slip_no'];
             //===============status update==================//
             $statusvalue[$key]['user_id'] = $this->session->userdata('user_details')['user_id'];
             $statusvalue[$key]['user_type'] = 'fulfillment';
@@ -3117,19 +3151,38 @@ public function awbPickupPrint_bulk_new($awb = array(),$type = null) {
             $statusvalue[$key]['entry_date'] = date('Y-m-d H:i:s');
             $statusvalue[$key]['super_id'] = $this->session->userdata('user_details')['super_id'];
             //==============================================//
-           $newCreateArr[$key]['destination']= getdestinationfieldshow($val['destination'], 'city'); 
-           $newCreateArr[$key]['origin']= getdestinationfieldshow($val['origin'], 'city'); 
-           $newCreateArr[$key]['frwd_company_id']= GetCourCompanynameId($val['frwd_company_id'],'company');
-            $newCreateArr[$key]['cust_name']= getallsellerdatabyID($val['cust_id'],'name');
-           
-           
+            $newCreateArr[$key]['destination'] = getdestinationfieldshow($val['destination'], 'city');
+            $newCreateArr[$key]['origin'] = getdestinationfieldshow($val['origin'], 'city');
+            $newCreateArr[$key]['frwd_company_id'] = GetCourCompanynameId($val['frwd_company_id'], 'company');
+            $newCreateArr[$key]['cust_name'] = getallsellerdatabyID($val['cust_id'], 'name');
+
+            $seller_id = $val['cust_id'];
+            $token = GetallCutomerBysellerId($seller_id, 'manager_token');
+            if (!empty($token)) {
+                $slip_no = $val['slip_no'];
+                
+                $zidStatus = "indelivery";
+
+                if(!empty($data['frwd_company_awb']))
+                {
+                    $trackingurl=makeTrackUrl($val['frwd_company_id'],$val['frwd_company_awb']); 
+                    $lable=$data['frwd_company_label'];
+                }else
+                {
+                    $lable='https://api.diggipacks.com/API/print/'.$val['slip_no'];
+                   
+
+                } 
+                $trackingurl = TRACKURL . $slip_no;
+                //updateZidStatus($orderID=null, $token=null, $status=null, $code=null, $label=null, $trackingurl=null)
+                updateZidStatus($val['booking_id'], $token, $zidStatus, $slip_no, $lable, $trackingurl);
+            }
         }
-        if(!empty($updateSlip))
-        {
-          $this->Pickup_model->Update3PLOrder($updateSlip,$statusvalue);  
+        if (!empty($updateSlip)) {
+            $this->Pickup_model->Update3PLOrder($updateSlip, $statusvalue);
         }
-        $returnArr['result']=$newCreateArr;
-        $returnArr['count']=count($returnData);
+        $returnArr['result'] = $newCreateArr;
+        $returnArr['count'] = count($returnData);
         echo json_encode($returnArr);
     }
     
