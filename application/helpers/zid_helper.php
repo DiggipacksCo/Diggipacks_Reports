@@ -3,13 +3,6 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-function AddSKUfromZid($data = null) {
-    $ci = & get_instance();
-    $ci->load->database();
-    $ci->db->insert('items_m', $data);
-    //echo $ci->db->last_query();exit;
-}
-
 if (!function_exists('Getwarehouse_Dropdata')) {
 
     function Getwarehouse_Dropdata() {
@@ -36,8 +29,14 @@ if (!function_exists('Getallstorage_drop')) {
 
 }
 
+function AddSKUfromZid($data = null) {
+    $ci = & get_instance();
+    $ci->load->database();
+    $ci->db->insert('items_m', $data);
+  // echo $ci->db->last_query();exit;
+}
 
-function exist_zidsku_id($sku, $super_id) { 
+function exist_zidsku_id($sku, $super_id) {
     $ci = & get_instance();
     $ci->load->database();
     $sql = "select id from items_m where sku='" . $sku . "' and super_id='" . $super_id . "'";
@@ -66,6 +65,23 @@ function GetAllQtyforSeller($sku = null, $cust_id = null) {
     return $row = $query->row_array();
 }
 
+function GetAllQtyforSellerby_ID($sku = null, $cust_id = null) {
+    $ci = & get_instance();
+    $ci->load->database();
+    $ci->db->select('items_m.zid_pid,SUM(item_inventory.quantity) as quantity');
+    $ci->db->from('item_inventory');
+    $ci->db->join('items_m', 'items_m.id=item_inventory.item_sku');
+    $ci->db->where('item_inventory.super_id', $ci->session->userdata('user_details')['super_id']);
+    $ci->db->where('items_m.id', $sku);
+    $ci->db->where('item_inventory.seller_id', $cust_id);
+
+    $query = $ci->db->get();
+    return $row = $query->row_array();
+}
+
+
+
+
 function GetAllQtyforSeller_new($cust_id = null) {
     $ci = & get_instance();
     $ci->load->database();
@@ -84,6 +100,8 @@ function GetAllQtyforSeller_new($cust_id = null) {
 
 //*************************Quantity Update function in Zid*************************//
 function update_zid_product($quantity = null, $pid = null, $token = null, $storeID = null) {
+
+
     $param = array(
         'quantity' => $quantity,
         'id' => $pid,
@@ -110,13 +128,13 @@ function update_zid_product($quantity = null, $pid = null, $token = null, $store
         ),
     ));
 
-    $response = curl_exec($curl);
+     $response = curl_exec($curl); 
 
     curl_close($curl);
 }
 
-//**************************************************************************//
 
+//**************************************************************************//
 function updateZidStatus($orderID = null, $token = null, $status = null, $code = null, $label = null, $trackingurl = null) {
     //echo 'werwqerwqrewqerwqrwqerqew'.$token.'testerewrwrwerewrwererweer';
     $url = 'https://api.zid.sa/v1/managers/store/orders/' . $orderID . '/change-order-status';
@@ -141,6 +159,7 @@ function updateZidStatus($orderID = null, $token = null, $status = null, $code =
     ));
 
     $response = curl_exec($curl);
+
     curl_close($curl);
     $response;
 }

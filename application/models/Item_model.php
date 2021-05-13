@@ -54,6 +54,7 @@ class Item_model extends CI_Model {
         $this->db->join('storage_table', 'items_m.storage_id = storage_table.id');
         $this->db->order_by('id', 'DESC');
         $query = $this->db->get();
+       // echo $this->db->last_query()."<br>"; die ; 
 
         if ($query->num_rows() > 0) {
             return $query->result();

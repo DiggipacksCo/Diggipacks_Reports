@@ -298,7 +298,7 @@ class Shipment_model extends CI_Model {
         $this->db->where('id', $id);
         $this->db->where('shipment_fm.super_id', $this->session->userdata('user_details')['super_id']);
         $query = $this->db->get('shipment_fm');
-
+     
         if ($query->num_rows() > 0) {
             return $query->result();
         }
@@ -3159,10 +3159,11 @@ class Shipment_model extends CI_Model {
 	
 	  public function countryList() {  
         //$this->db->where('country.super_id', $this->session->userdata('user_details')['super_id']);
-        $this->db->select('*');
+        $this->db->select('id, city');
         $this->db->from('country');   
 		$this->db->where('city!=', '');  
         $this->db->order_by('id', 'DESC');
+        $this->db->limit(100);
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {

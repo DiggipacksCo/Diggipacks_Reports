@@ -18,7 +18,7 @@ class Shipment extends MY_Controller {
         $this->load->model('Item_model');
         $this->load->model('Status_model');
         $this->load->model('Pickup_model');
-
+        $this->load->helper('zid');
         $this->load->helper('utility');
         $this->load->model('User_model');
          $this->load->model('ItemInventory_model');
@@ -1647,7 +1647,9 @@ class Shipment extends MY_Controller {
                 $stock_location=$postData['id'];
                 $slip_no=$postData[0]['slip_no'];
                 $check_slipNo = $this->Shipment_model->getallshipmentdatashow($slip_no);
-                if($check_slipNo['code'] != 'OG'){                
+                $token = GetallCutomerBysellerId($check_slipNo['cust_id'], 'manager_token');
+                if($check_slipNo['code'] != 'OG')
+                {                
                     foreach ($postData as $SaveStock) {
                        
                         foreach($SaveStock['local'] as $fzArray)
@@ -1673,15 +1675,15 @@ class Shipment extends MY_Controller {
                                 'super_id'=>$fArray['super_id'],
                                 'seller_id'=>$fArray['seller_id'],
                                 'item_sku'=>$fArray['item_sku']
-
-
                                 );  
 
                                 $activitiesArr[] = array('exp_date' => $rdata['expity_date'], 'st_location' => $fArray['stock_location'], 'item_sku' => $fArray['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $fArray['seller_id'], 'qty' => $fArray['qty'], 'p_qty' => 0, 'qty_used' => $fArray['qty'], 'type' => 'Add', 'entrydate' => date("Y-m-d h:i:s"), 'awb_no' => $slip_no, 'super_id' => $this->session->userdata('user_details')['super_id'],'shelve_no'=>$fArray['shelve_no']);
-
-
                         }
-                    }
+
+                            $skuQtyArray[] = $fArray['item_sku'];
+
+                       
+                        }
                     }
                      
                     }
@@ -1717,7 +1719,26 @@ class Shipment extends MY_Controller {
                       $this->Shipment_model->addInventory($addLoc, $activitiesArr);  
 
                    }
-                  
+
+                if (!empty($token)) {
+                        foreach($skuQtyArray as $skuqtyval){                           
+                           
+                            //==========update zid stock===============//
+                              $zidReqArr = GetAllQtyforSellerby_ID($skuqtyval, $check_slipNo['cust_id']);
+                          
+                                $quantity = $zidReqArr['quantity']; //+$fArray['qty'];
+                                $pid = $zidReqArr['zid_pid'];
+                                $token = $token;
+                                 $storeID = $check_slipNo['zid_store_id'];
+                                $reszid = update_zid_product($quantity, $pid, $token, $storeID);
+                                 
+                                
+    
+                                //=========================================//
+                            }
+                        
+                        }
+                      
 
                      $error_status = array('status' =>true);
                      echo  json_encode($error_status);
@@ -3194,7 +3215,19 @@ class Shipment extends MY_Controller {
                     if ($stock_check['succ'] == 1) {
                         //array_push($ReturnstockArray,$stock_check['stArray']);
                         $ReturnstockArray[] = $stock_check['stArray'];
-                        $newStocklocation[]=$stock_check['StockLocation'];;
+                        $newStocklocation[]=$stock_check['StockLocation'];
+                        
+                        //==========update zid stock===============//
+                        $zidReqArr = GetAllQtyforSeller($skuDetails['sku'], $data['cust_id']);
+
+
+                        $quantity = $zidReqArr['quantity'] - $skuDetails['piece'];
+                        $pid = $zidReqArr['zid_pid'];
+                        $token = $zidReqArr['manager_token'];
+                        $storeID = $data['zid_store_id'];
+                        update_zid_product($quantity, $pid, $token, $storeID);
+
+                        //=========================================//
                     } else {
                        // $newStocklocation=array();
 

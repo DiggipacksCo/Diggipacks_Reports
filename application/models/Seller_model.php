@@ -156,7 +156,7 @@ class Seller_model extends CI_Model {
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('id', $id);
         $query = $this->db->get('customer');
-
+        //echo $this->db->last_query(); die;
         if ($query->num_rows() > 0) {
             return $query->result();
         }

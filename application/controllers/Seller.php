@@ -528,6 +528,8 @@ class Seller extends MY_Controller {
         $bearer = $this->config->item('zid_authorization');
         $ZidProductRT = ZidPcURL($storeID, $store_link, $bearer);
 
+        //echo "<pre>"; print_r( $ZidProductRT); die; 
+
         $ZidProductArr_total = json_decode($ZidProductRT, true);
 
         $total_pages = 1;
@@ -576,30 +578,37 @@ class Seller extends MY_Controller {
     }
 
     public function SaveZidProducts() {
-        $skuarray = array();
-
-        foreach ($this->input->post('selsku') as $key => $value) {
+       
+        foreach ($this->input->post('selsku') as  $value) {
+          
+            $skuarray = array();
             $skuarray = array(
-                'sku' => $this->input->post('sku')[$key],
-                'zid_pid' => $this->input->post('pid')[$key],
-                'name' => $this->input->post('skuname')[$key],
+                'sku' => $this->input->post('sku')[$value],
+                'zid_pid' => $this->input->post('pid')[$value],
+                'name' => $this->input->post('skuname')[$value],
                 'super_id' => $this->session->userdata('user_details')['super_id'],
-                'description' => $this->input->post('sku')[$key],
+                'description' => $this->input->post('sku')[$value],
                 'type' => 'B2C',
-                'storage_id' => $this->input->post('storageid')[$key],
-                'wh_id' => $this->input->post('warehouseid')[$key],
-                'sku_size' => $this->input->post('sku_size')[$key],
+                'storage_id' => $this->input->post('storageid'),
+                'wh_id' => $this->input->post('warehouseid'),
+                'sku_size' => $this->input->post('sku_size'),
                 'entry_date' => date("Y-m-d H:i:s")
             );
 
-            $exist_zidsku_id = exist_zidsku_id($this->input->post('sku')[$key], $this->session->userdata('user_details')['super_id']);
-            if ($exist_zidsku_id != '' || $exist_zidsku_id != 0) {
+           
+         
+           $exist_zidsku_id = exist_zidsku_id($this->input->post('sku')[$value], $this->session->userdata('user_details')['super_id']);
+        //    echo "<pre>"; print_r($exist_zidsku_id); die; 
+
+            if ($exist_zidsku_id != '' || $exist_zidsku_id != 0) 
+            {
                 echo $product['sku'] . ' Exist<br>';
-            } else {
+            }
+            else {
                 AddSKUfromZid($skuarray);
             }
         }
-
+        $this->session->set_flashdata('msg', "Selected Sku has been Added Successfully");
         redirect('Item');
     }
 
@@ -665,18 +674,27 @@ class Seller extends MY_Controller {
                 'zid_sid' => $this->input->post('zid_sid'),
                 'zid_status' => $this->input->post('zid_status'),
                 'zid_active' => $this->input->post('zid_active'),
+                'zid_access'=>  $zid_access,
             );
 
 
             $user = $this->Seller_model->update_zid($id, $update_data);
 
             if ($user > 0) {
-                $this->session->set_flashdata('msg', $this->input->post('name') . '   has been updated successfully');
-                redirect('Seller');
+                
+                if(  $this->zidWebhookSubscriptionDelete( $data['customer']))
+                    {
+                    $data['customer'] = $this->Seller_model->edit_view_customerdata($id);
+                    $this->zidWebhookSubscriptionCreate( $data['customer']);  
+                    }
+                        $this->session->set_flashdata('msg', $this->input->post('name') . '   has been updated successfully');
+                            redirect('Seller/updateZidConfig/'.$id);
             }
         }
         $this->load->view('SellerM/seller_zidconfig', $data);
     }
+
+
     public function updateSallaConfig($id) {
         $data['customer'] = $this->Seller_model->edit_view_customerdata($id);
         $data['seller'] = $this->Seller_model->edit_view($id);
