@@ -602,20 +602,25 @@ class ItemInventory extends MY_Controller {
         }
         //echo '<pre>';
         //print_r($ItemArray);die;
+         $returnArray['query'] = $items['query'];
+         $returnArray['count'] = $items['count'];
         $returnArray['dropexport'] = $expoertdropArr;
         $returnArray['result'] = $ItemArray;
         echo json_encode($returnArray);
     }
 
     public function filter_damage() {
-
+        $this->load->model('User_model');
 
         $_POST = json_decode(file_get_contents('php://input'), true);
 
         $items = $this->ItemInventory_model->filter_damage($_POST);
         $ItemArray = $items['result'];
-
-
+        $assignuser = $this->User_model->userDropval(9);
+        $courierData = GetCourierCompanyDrop();
+        
+        $items['assignuser'] = $assignuser;
+        $items['courierData'] = $courierData;
 
 
         echo json_encode($items);
@@ -676,6 +681,7 @@ class ItemInventory extends MY_Controller {
         }
         //echo '<pre>';
         //print_r($palletArray);
+         $returnArray['count'] = $items['count'];
         $returnArray['dropexport'] = $expoertdropArr;
         $returnArray['result'] = $ItemArray;
         echo json_encode($returnArray);
@@ -865,6 +871,7 @@ class ItemInventory extends MY_Controller {
         echo json_encode($returnarray);
     }
      public function GetallStockLocation_new() {
+         
         $_POST = json_decode(file_get_contents('php://input'), true);
         $quantity = $_POST['quantity'];
         $seller_id = $_POST['seller_id'];

@@ -296,6 +296,7 @@ var app = angular.module('Appiteminventory', [])
                 $scope.filterData.page_no = page_no;
                 if (reset == 1)
                 {
+                    $scope.count=1;
                     $scope.shipData = [];
                 }
 
@@ -391,6 +392,7 @@ var app = angular.module('Appiteminventory', [])
                 $scope.filterData.page_no = page_no;
                 if (reset == 1)
                 {
+                    $scope.count=1;
                     $scope.shipData = [];
                 }
 
@@ -468,6 +470,7 @@ var app = angular.module('Appiteminventory', [])
                 $scope.filterData.page_no = page_no;
                 if (reset == 1)
                 {
+                    $scope.count=1;
                     $scope.shipData = [];
                 }
 
@@ -703,8 +706,12 @@ var app = angular.module('Appiteminventory', [])
                 $scope.filterData.page_no = page_no;
                 if (reset == 1)
                 {
+                    $scope.count=1;
                     $scope.shipData = [];
+                 //   alert($scope.filterData.page_no);
+                    // $scope.filterData.page_no = 1;
                 }
+               //  alert($scope.filterData.page_no);
 
                 $http({
                     url: "ItemInventory/filter",
@@ -761,6 +768,10 @@ var app = angular.module('Appiteminventory', [])
                     console.log(response)
                     $scope.totalCount = response.data.count;
                     $scope.dropexport = response.data.dropexport;
+                    $scope.courierData = response.data.courierData;
+                    $scope.assigndata = response.data.assignuser;
+                    $scope.sellerID = response.data.seller;
+                    
                     if (response.data.result.length > 0) {
                         angular.forEach(response.data.result, function (value) {
                             // console.log(value.slip_no)
@@ -849,6 +860,7 @@ $scope.Items=[];
               $scope.invalidSslip_no = {};
             $scope.Success_msg = {};
             $scope.Error_msg = {};
+            $scope.responseError = {};
             $scope.saveassigntodriver = function ()
             {
                 if ($scope.returnUpdate.assign_type == 'D')
@@ -859,13 +871,14 @@ $scope.Items=[];
                 {
                     $scope.returnUpdate.assignid = "";
                 }
-                if ($scope.returnUpdate.assignid || $scope.returnUpdate.cc_id)
+                if ($scope.returnUpdate.assignid || $scope.returnUpdate.cc_id || $scope.returnUpdate.seller)
                 {
                     $scope.loadershow = true;
                     disableScreen(1);
 
 
                     $scope.returnUpdate.order_type ='return_o';
+                    $scope.returnUpdate.sellerid =$scope.sellerID;
 
                     $http({
                         url: "Manifest/getupdateassign_return",
@@ -883,7 +896,8 @@ $scope.Items=[];
                         {
                             if (response.data.status == 'succ')
                             {
-                                alert("Successfully Assign");
+                                //alert("Data updated successfully.");
+                                $scope.Success_msg = response.data.Success_msg;
                                 location.reload();
                             } else
                             {
@@ -891,6 +905,11 @@ $scope.Items=[];
                                 $scope.invalidSslip_no = response.data.invalid_slipNO;
                                 $scope.Success_msg = response.data.Success_msg;
                                 $scope.Error_msg = response.data.Error_msg;
+                                $scope.responseError = response.data.responseError;
+                                    setTimeout(function() {
+                                     $('.alert-danger').fadeOut();
+                                    }, 10000 );
+
                             }
                         } else
                         {
@@ -902,11 +921,12 @@ $scope.Items=[];
                     $scope.loadershow = false;
                 } else
                 {
-                    if ($scope.returnUpdate.assign_type == 'D')
+                    if ($scope.returnUpdate.assign_type == 'D'){
                         alert("Please Select Driver");
-                    else
+                    }else{
                         alert("Please Select Courier Company");
                 }
+            }
             }
              $scope.GetChangeAssignType = function (type)
             {
@@ -989,6 +1009,17 @@ $scope.Items=[];
                 //$scope.updateArray.updateType="error";
                 console.log($scope.updateArray);
                 $("#UpdateInventory").modal({backdrop: 'static',
+                    keyboard: false})
+            }
+            $scope.updaateNewExp={};
+            
+             $scope.GetUpdateExpirePopShow = function (data)
+            {
+               
+                $scope.updaateNewExp.id = data;
+                
+               
+                $("#UpdateInventory_expire").modal({backdrop: 'static',
                     keyboard: false})
             }
             $scope.GetinventorydeleteUpdate = function (id)
@@ -1252,6 +1283,10 @@ $scope.Items=[];
 
 
             }
+            
+            $scope.GetCheckReturnOrderProcesspop = function (){
+                $("#PopidreturnShowitem").modal()
+            }
         })
 
         .controller('CtrShelveNoReport', function ($scope, $http, $window, $location) {
@@ -1267,6 +1302,7 @@ $scope.Items=[];
             $scope.PalletArray = {};
             $scope.PupdateArray = {};
             $updateArray = {};
+              $scope.updateArray_exp = {};
             $scope.loadershow = false;
             $scope.loadMore = function (page_no, reset)
             {
@@ -1277,6 +1313,7 @@ $scope.Items=[];
                 $scope.filterData.page_no = page_no;
                 if (reset == 1)
                 {
+                    $scope.count=1;
                     $scope.shipData = [];
                 }
 
@@ -1521,6 +1558,7 @@ $scope.Items=[];
                 $scope.filterData.page_no = page_no;
                 if (reset == 1)
                 {
+                    $scope.count=1;
                     $scope.shipData = [];
                 }
 
@@ -1902,6 +1940,7 @@ $scope.Items=[];
                 $scope.filterData.page_no = page_no;
                 if (reset == 1)
                 {
+                    $scope.count=1;
                     $scope.shipData = [];
                 }
 
@@ -2041,6 +2080,7 @@ $scope.Items=[];
                 $scope.filterData.page_no = page_no;
                 if (reset == 1)
                 {
+                    $scope.count=1;
                     $scope.shipData = [];
                 }
 

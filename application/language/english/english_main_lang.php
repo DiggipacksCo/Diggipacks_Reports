@@ -1225,3 +1225,5 @@ $lang['lang_Batch_Pickup']="Batch Pickup";
 $lang['lang_City_List']="City List";
 $lang['lang_Send_Courier']="Send Courier";
 $lang['lang_Update_Driver']="Update Driver"; 
+
+$lang['lang_Create_Order_Return']="Create Order Return";
