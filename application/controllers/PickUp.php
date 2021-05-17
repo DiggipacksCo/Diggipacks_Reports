@@ -1037,19 +1037,19 @@ class PickUp extends MY_Controller {
                 if (!empty($token)) {
                     
                     
-                    if(!empty($data['frwd_company_awb']))
+                    if(!empty($check_slipNo['frwd_company_awb']))
                     {
-                        $trackingurl=makeTrackUrl($data['frwd_company_id'],$data['frwd_company_awb']);
-                        $lable=$data['frwd_company_label'];
+                        $trackingurl=makeTrackUrl($check_slipNo['frwd_company_id'],$check_slipNo['frwd_company_awb']);
+                        $lable=$check_slipNo['frwd_company_label'];
                     }else
                     {
-                        $lable='https://api.diggipacks.com/API/print/'.$data['slip_no'];
+                        $lable='https://api.diggipacks.com/API/print/'.$check_slipNo['slip_no'];
                        
 
                     } 
                     $trackingurl = TRACKURL . $slip_no;
                     //updateZidStatus($orderID=null, $token=null, $status=null, $code=null, $label=null, $trackingurl=null)
-                    updateZidStatus($data['booking_id'], $token, 'cancelled', $slip_no, $lable, $trackingurl);
+                    updateZidStatus($check_slipNo['booking_id'], $token, 'cancelled', $slip_no, $lable, $trackingurl);
                 }
             }
 

@@ -1219,6 +1219,7 @@ if (!function_exists('getusertypedropdown')) {
 
 }
 
+
 if (!function_exists('GetManifestInventroyUpdateQty')) {
 
     function GetManifestInventroyUpdateQty($uid, $sid, $sku) {

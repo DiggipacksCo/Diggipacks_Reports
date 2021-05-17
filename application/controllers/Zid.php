@@ -60,6 +60,7 @@ class Zid extends CI_Controller {
     }
 
     private function zidOrders($uniqueid) {
+
         $customers = $this->Zid_model->fetch_zid_customers($uniqueid);
         echo $deliveryOption=deliveryOption($customers['id']); 
         $user_agent = "Fastcoo/1.00.00 (web)"; //$customers['user_Agent'];
@@ -74,8 +75,9 @@ class Zid extends CI_Controller {
             $ZidOrders = ZidcURL($manager_token, $user_agent, $store_link, $i,$Bearer);
  
            
-           //  echo '<pre>'.$customers['zid_status'];
-          //  print_r( $ZidOrders); die(); 
+        //     echo '<pre>'.$customers['zid_status'];
+        //     print_r( $customers);
+        //    print_r( $ZidOrders); die(); 
           
  
             foreach ($ZidOrders['orders'] as $Order) {

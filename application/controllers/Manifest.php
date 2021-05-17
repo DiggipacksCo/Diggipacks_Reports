@@ -24,6 +24,7 @@ class Manifest extends CourierCompany_pickup {
         $this->load->model('Shelve_model');
         $this->load->model('Pickup_model');
         $this->load->helper('utility');
+        $this->load->helper('zid');
         $this->load->model('Ccompany_model');
         // $this->user_id = isset($this->session->get_userdata()['user_details'][0]->id)?$this->session->get_userdata()['user_details'][0]->users_id:'1';
     }
@@ -2215,8 +2216,11 @@ class Manifest extends CourierCompany_pickup {
 
             array_values($skureturnarray1); 
             $newlimitchecknew += count($skureturnarray1); 
+                           
+                           // echo $required.'//'. $available;exit;
+
         }
-        //echo  $newQty; exit;
+//echo  $newQty; exit;
         if($newQty==0)
         {
            
@@ -2224,20 +2228,26 @@ class Manifest extends CourierCompany_pickup {
         else
         {
             if ($totalsku_size >= $newQty)
-            $required = $required+1;
+            {
+                $locationLimit1=1;
+                $required = $required+1;
+            }
+          
           else {
             // echo $totalqty ."==========". $totalsku_size;
-            $locationLimit1 = $newQty / $totalsku_size;
-            $required = ceil($locationLimit1) +$required;
+            $locationLimit1 = ceil($newQty / $totalsku_size); 
+            $required = ($locationLimit1) +$required; 
 
         $newlimitchecknew += count($skureturnarray1)+$locationLimit2; 
 
-        }
+    }
         //$locationLimitnew=$requiredLocation-count($skureturnarray1);
 
         $otherMatchInventory = array('item_sku' => $skuid, 'expity_date' => $expdate, 'seller_id' => $sid, 'wh_id' => $wh_id);
-        $skureturnarray = $this->Manifest_model->GetallstockLocation_new($sid, '', $stockArr, $required, $totalsku_size, $skuid, $otherMatchInventory,$totalqty,$skureturnarray,$newQty );
-       // print_r($skureturnarray );
+        $skureturnarray = $this->Manifest_model->GetallstockLocation_new($sid, '', $stockArr, $locationLimit1, $totalsku_size, $skuid, $otherMatchInventory,$totalqty,$skureturnarray,$newQty );
+        //echo  count($skureturnarray );
+
+       //$available;exit;
         $available=count($skureturnarray)+$available; 
           
       
@@ -2258,7 +2268,7 @@ class Manifest extends CourierCompany_pickup {
                 $skureturnarray[$keyss]['filled']=$newQty;  
             }
                
-           }
+        }
 
            } 
 
@@ -2321,6 +2331,7 @@ class Manifest extends CourierCompany_pickup {
         $reurnarray = array('result' => $skureturnarray3, 'uid' => $uid, 'sid' => $sid, 'countarray' => $available, 'countbox' => $required, 'warehouseArr' => $warehouseArr);
         echo json_encode($reurnarray);
     }
+
 
 
     public function GetSkulistForUpdateInventory() {
@@ -2447,12 +2458,14 @@ class Manifest extends CourierCompany_pickup {
     public function GetSaveInventoryManifest_bk() {
 
 
-        $postData = json_decode(file_get_contents('php://input'), true);
-       
-
+        $postData = json_decode(file_get_contents('php://input'), true);         
+          
         $skus = $postData['skus'];
         $locations = $postData['locations'];
-        
+        $seller_id = $skus[0]['sid'];
+        $token = GetallCutomerBysellerId($seller_id, 'manager_token');
+        $skuQtyArray = array(); 
+         
         if (!empty($postData)) {
 
             $uid = $skus[0]['uid'];
@@ -2485,7 +2498,7 @@ class Manifest extends CourierCompany_pickup {
                     foreach ($dataNew as $val2) {
                         if($val2['id']>0 )
                         {  
-                            $activitiesArr1=array(); 
+                           $activitiesArr1=array(); 
                            $preData= $this->Manifest_model-> getPreQuantity($val2['id']);
                            $newQty=($val2['filled']+$preData['quantity']);
                            $activitiesArr1 = array(
@@ -2504,7 +2517,7 @@ class Manifest extends CourierCompany_pickup {
                         );
                            
 
-                       GetAddInventoryActivities($activitiesArr1);
+                        GetAddInventoryActivities($activitiesArr1);
                         $this->ItemInventory_model->updateInventory(array('quantity' => $newQty,'stock_location'=>$val2['stockLocation'], 'shelve_no'=>$val2['shelveNo'],'id' => $val2['id'])); 
 
 
@@ -2580,11 +2593,10 @@ class Manifest extends CourierCompany_pickup {
                         }
                         
                     }
+                    $skuQtyArray[] = $sku; 
                 }
                
-
               
-
 
                     $manifestUpdate[] = array(
                         'sku' => $sku,
@@ -2614,7 +2626,28 @@ class Manifest extends CourierCompany_pickup {
             }
             
         
-    
+            if (!empty($token)) {
+
+                $zid_store_id = GetallCutomerBysellerId($seller_id, 'zid_sid');
+             // echo "<br> <pre>";
+             foreach($skuQtyArray as $skuqtyval)
+             {                           
+                 //==========update zid stock===============//
+                   $zidReqArr = GetAllQtyforSeller($skuqtyval, $seller_id);    
+                  // print_r($zidReqArr);                      
+                     $quantity = $zidReqArr['quantity']; //+$fArray['qty'];
+                     $pid = $zidReqArr['zid_pid'];
+                     $token = $token;
+                      $storeID = $zid_store_id;
+                    $reszid = update_zid_product($quantity, $pid, $token, $storeID);                                                               
+
+                     //=========================================//
+                 }
+             
+             }
+          
+       
+
         // check invonry for empty space
 
         echo json_encode($postData);
