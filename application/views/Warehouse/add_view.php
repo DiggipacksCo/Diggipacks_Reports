@@ -62,25 +62,25 @@
                     
                     $weekendArr = explode(",",$weekendArr[0]) ;  
 			
-			 $city_ids=json_decode($editdata['city_id'],true);
-			 // print_r($city_ids);
+                $city_ids=json_decode($editdata['city_id'],true);
+                // print_r($city_ids);
 			          ?>
                  <div class="form-group ">
                   <label>City</label>  
                   <span id="city"></span>
-                  <!-- <select name="city_id[]" class="selectpicker" multiple  data-show-subtext="true" data-live-search="true" required  data-width="100%"> 
+                  <select name="city_id[]" class="selectpicker" multiple  data-show-subtext="true" data-live-search="true" required  data-width="100%"> 
                  
                     <?php if(!empty($city_drp))
                                         {foreach($city_drp as $cry){ 
                                             ?>
                     <option  value="<?php echo $cry->id;?>" <?php if(in_array($cry->id,$city_ids)) {echo "selected=selected";}?>><?php echo $cry->city?></option>         
                     <?php }}?>    
-                  </select>  -->
-                  <select name="city_id[]" class="selectpicker" multiple  data-show-subtext="true" data-live-search="true" required  data-width="100%">
-                  <option  value="711"> Riyadh </option>
-                  <option  value="3246"> Jeddah </option>
-                  <option  value="4104"> Damman </option>
-                  </select>
+                  </select> 
+                    <!-- <select name="city_id[]" class="selectpicker" multiple  data-show-subtext="true" data-live-search="true" required  data-width="100%">
+                        <option  value="711"> Riyadh </option>
+                        <option  value="3246"> Jeddah </option>
+                        <option  value="4104"> Damman </option>
+                    </select> -->
                 </div>
                   
                 

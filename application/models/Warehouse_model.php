@@ -36,12 +36,15 @@ class Warehouse_model extends CI_Model {
 
 
     public function fetch_all_cities() {
+
+    $citylist = Array('Riyadh','Jeddah','Dammam');
         $this->db->select('id,city');
         $this->db->where('city!=', '');
+        $this->db->where_in('city', $citylist);
         $this->db->where('deleted', 'N');
-       // $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+       $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $query = $this->db->get('country');
-
+       // echo $this->db->last_query(); die;
         if ($query->num_rows() > 0) {
             return $query->result();
         }

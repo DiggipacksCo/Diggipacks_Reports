@@ -1079,7 +1079,8 @@ class Seller extends MY_Controller {
                 redirect('Seller/updateZidConfig/'.$cust_id);
         }
     }
-    public function getZidDeliveryOptions($id){
+    public function getZidDeliveryOptions($id)
+    {
         $customer = $this->Seller_model->edit_view_customerdata($id);
         $curl = curl_init();
 
@@ -1106,6 +1107,10 @@ class Seller extends MY_Controller {
         echo "<pre>";print_r($response);
     }
 
+
+    //Salla functions starts 
+
+  
     
 
 }

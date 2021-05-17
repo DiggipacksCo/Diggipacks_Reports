@@ -192,6 +192,8 @@ class Seller_model extends CI_Model {
         return $row['zid_sid'];
     }
 
+
+
     public function update_zid($id, $data) {
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('id', $id);
