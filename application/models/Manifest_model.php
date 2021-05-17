@@ -744,6 +744,7 @@ class Manifest_model extends CI_Model {
         return $finalArr;
     }
 
+
     public function GetCheckInventoryShelveNo($sid = null, $skuid = null, $shelveLimit = 0, $totalsku_size = 0, $shelveArr = array()) {
 
         //  echo $shelveLimit."rrrrrr";
@@ -838,7 +839,7 @@ class Manifest_model extends CI_Model {
         $this->db->order_by("id", "asc");
        // $this->db->limit($shelveLimit);
         $query3 = $this->db->get();
-        //echo  $this->db->last_query(); die;
+    // echo  $this->db->last_query(); die;
         if($query3->num_rows()>0)
         {
           return  $totalGetlocation = $query3->result_array();
@@ -848,11 +849,7 @@ class Manifest_model extends CI_Model {
             return false;
         }
 
-
-    
-        
-
-        
     }
+
 
 }

@@ -74,7 +74,6 @@ function GetAllQtyforSellerby_ID($sku = null, $cust_id = null) {
     $ci->db->where('item_inventory.super_id', $ci->session->userdata('user_details')['super_id']);
     $ci->db->where('items_m.id', $sku);
     $ci->db->where('item_inventory.seller_id', $cust_id);
-
     $query = $ci->db->get();
     return $row = $query->row_array();
 }

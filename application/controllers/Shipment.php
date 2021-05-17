@@ -1720,7 +1720,7 @@ class Shipment extends MY_Controller {
 
                    }
 
-                if (!empty($token)) {
+                    if (!empty($token)) {
                         foreach($skuQtyArray as $skuqtyval){                           
                            
                             //==========update zid stock===============//

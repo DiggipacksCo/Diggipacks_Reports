@@ -641,8 +641,8 @@ class Seller extends MY_Controller {
         $data['seller'] = $this->Seller_model->edit_view($id);
         $ListArr = $this->zidCities();//$this->Seller_model->zidCities();
         $data['delivery_options'] = $this->Seller_model->deliverOptionExist($id);
-// echo '<pre>';
-//         print_r(  $data['zid_cities']); 
+            // echo '<pre>';
+            //         print_r(  $data['zid_cities']); 
        
         $listcity =   explode(',', $data['delivery_options'][0]['zid_city']); ; 
         $pre = array();
