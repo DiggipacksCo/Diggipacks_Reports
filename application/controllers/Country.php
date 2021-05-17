@@ -206,9 +206,6 @@ class Country extends MY_Controller {
             $this->Hubaddform($editid);
         } else {
             
-           
-          
-          
             $country = addslashes($this->input->post('country'));
             $state = addslashes($this->input->post('state'));
               $c_id=getdestinationfieldshow_name($country,'id','country');

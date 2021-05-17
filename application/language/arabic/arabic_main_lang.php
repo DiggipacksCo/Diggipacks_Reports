@@ -53,7 +53,7 @@ $lang['lang_CLOSED_BOX']="CLOSED BOX";
 $lang['lang_OPEN_CONTAINER']="OPEN CONTAINER";
 $lang['lang_Flatbed_Truck']="Flatbed Truck";
 $lang['lang_nothing']="لا شيء";
-
+$lang['lang_Arabic_City_Name']="الاسم العربي";
 $lang['lang_test1']="test1";
 $lang['lang_hello1']="hello1";
 $lang['lang_Vehicle_capacity']="سعة المركبة";

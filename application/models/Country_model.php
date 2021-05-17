@@ -110,6 +110,7 @@ class Country_model extends CI_Model {
           {
              $this->db->where("id!='$id'");  
           }
+
           $this->db->where($field, $name);
           $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
           $this->db->where('deleted', 'N');
@@ -118,15 +119,17 @@ class Country_model extends CI_Model {
           $this->db->select('id,country');
           $this->db->from('country');
           $query = $this->db->get();
-        //  echo $this->db->last_query();
-       if($query->num_rows()==0)
-       {
-           return true;
-       }
-       else
-       {
-          return false;  
-       }
+
+         // echo $this->db->last_query(); die; 
+
+          if($query->num_rows()==0)
+          {
+              return true;
+          }
+          else
+          {
+              return false;  
+          }
        
     }
      public function hublistData_edit($id=null)
