@@ -69,6 +69,7 @@
                                             
                                                 <th>Category</th>
                                                 <th>Sub Category</th>
+                                                <th>Action</th>
                                               
                                                 
                                             </tr>
@@ -82,6 +83,7 @@
                                               
                                                  <td> <span ng-repeat="mdata in data.main_cat">{{mdata.privilege_name}}<br></span></td> 
                                                   <td> <span ng-repeat="cdata in data.sub_cat">{{cdata.privilege_name}}<br></span></td> 
+                                                  <td> <a href="<?=base_url();?>edit_access_template/{{data.id}}" class="btn btn-success">Edit</a></td> 
                                                
                                                
                                                 

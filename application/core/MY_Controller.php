@@ -32,7 +32,7 @@ class MY_Controller extends CI_Controller {
           
          $this->site_data       = site_config($url);
          //print_r($this->site_data  );
-          $this->site_data->newlogo = 'https://super.diggipacks.com/'.$this->site_data->logo; 
+        //  $this->site_data->newlogo = 'https://super.diggipacks.com/'.$this->site_data->logo; 
              
         
          

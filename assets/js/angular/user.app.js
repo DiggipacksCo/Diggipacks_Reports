@@ -7,6 +7,7 @@ var app = angular.module('usersApp', [])
   $scope.filterData={};
   $scope.UserArr={};
   $scope.sub_catArr={};
+  $scope.sub_catArr_main={};
   
    angular.element(document).ready(function () {
        
@@ -43,7 +44,7 @@ var app = angular.module('usersApp', [])
     {
      
    $http({
-		url: $scope.baseUrl+"/Users/showaccesstemplatelist",
+		url: URLBASE+"Users/showaccesstemplatelist",
 		method: "POST",
 		data:$scope.filterData,
 		headers: {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -61,22 +62,53 @@ var app = angular.module('usersApp', [])
         
     };  
     
-    $scope.GetSubCatDatashow=function()
+
+
+
+    $scope.GetSubCatDatashow=function(uid)
     {
+        $scope.filterData.privilage_array_sub=[];
+        $scope.filterData.uid=uid;
     
          $http({
-		url: $scope.baseUrl+"/Users/GetSubCatDatashow",
+		url: URLBASE+"Users/GetSubCatDatashow",
 		method: "POST",
 		data:$scope.filterData,
 		headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 	}).then(function (response) {
-           $scope.sub_catArr=response.data;
+           $scope.sub_catArr=response.data.sub_array;
            
-           console.log($scope.sub_catArr);
+           $scope.filterData.privilage_array_sub=response.data.privilage_array_sub;
+           //$scope.filterData.privilage_array=response.data.privilage_array;
+           
 		
   });  
   
     };
+    
+    $scope.getmaincatVal=function(uid)
+    {
+        $scope.filterData.privilage_array=[];
+        $scope.filterData.uid=uid;
+        $scope.sub_catArr_main=[];
+    
+         $http({
+		url: URLBASE+"Users/getmaincatVal",
+		method: "POST",
+		data:$scope.filterData,
+		headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+	}).then(function (response) {
+           $scope.sub_catArr_main=response.data.sub_array;
+           
+           //$scope.filterData.privilage_array_sub=response.data.privilage_array_sub;
+           $scope.filterData.privilage_array=response.data.privilage_array;
+           
+		
+  });  
+  
+    };
+    
+    
     
 
 	
@@ -165,4 +197,17 @@ var app = angular.module('usersApp', [])
     }
   }
 ])
+.directive('convertToNumber', function() {
+  return {
+    require: 'ngModel',
+    link: function(scope, element, attrs, ngModel) {
+      ngModel.$parsers.push(function(val) {
+        return parseInt(val, 10);
+      });
+      ngModel.$formatters.push(function(val) {
+        return '' + val;
+      });
+    }
+  };
+});
 /*------ /show shipments-----*/

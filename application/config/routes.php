@@ -132,6 +132,7 @@ $route['edit_template/(:any)'] = 'Templates/editTemplate/$1';
 
 //===========access template========================//
 $route['add_access_template']  = 'Users/add_access_template';
+$route['edit_access_template/(:any)']  = 'Users/add_access_template/$1';
 $route['show_access_template'] = 'Users/show_access_template';
 //==================================================//
 

@@ -50,18 +50,19 @@ class Users extends MY_Controller {
     }
 
     public function add_access_template($user_id = null) {
-        $view['user_id'] = $user_id;
+         $view['user_id'] = $user_id; 
 
         $view['typeArr'] = $this->User_model->designation_tblDaata();
 
         $view['CatData'] = $this->User_model->userCategoryData();
 
-        $view['editdata'] = $this->User_model->edit_view($user_id);
+        $view['editdata'] = $this->User_model->edit_view_access($user_id);
 
 
 
         $this->load->view('user/add_access_template', $view);
     }
+    
 
     public function show_access_template($user_id = null) {
         $view['user_id'] = $user_id;
@@ -134,6 +135,7 @@ class Users extends MY_Controller {
             $this->add_access_template();
         } else {
 
+           // print_r($this->input->post()); die;
 
             $privilage_array = implode(',', $this->input->post('privilage_array'));
             $d_id = $this->input->post('d_id');
@@ -523,7 +525,22 @@ class Users extends MY_Controller {
     public function GetSubCatDatashow() {
 
         $postData = json_decode(file_get_contents('php://input'), true);
-        $return = $this->User_model->GetSubCatDatashowQry($postData['privilage_array']);
+        $uid=$postData['uid'];
+         $editArr = $this->User_model->edit_view_access($uid);
+        $return['sub_array'] = $this->User_model->GetSubCatDatashowQry($postData['privilage_array'],$editArr['privilage_array']);
+        $return['privilage_array_sub']=explode(',',$editArr['privilage_array_sub']);
+        $return['privilage_array']=explode(',',$editArr['privilage_array']);
+        echo json_encode($return);
+    }
+    
+     public function getmaincatVal() {
+
+        $postData = json_decode(file_get_contents('php://input'), true);
+        $uid=$postData['uid'];
+         $editArr = $this->User_model->edit_view_access($uid);
+        $return['sub_array'] =  $this->User_model->userCategoryData($editArr['privilage_array']);;
+        $return['privilage_array_sub']=explode(',',$editArr['privilage_array_sub']);
+        $return['privilage_array']=explode(',',$editArr['privilage_array']);
         echo json_encode($return);
     }
 

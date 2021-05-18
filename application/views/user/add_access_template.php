@@ -14,7 +14,7 @@
 
     </head>
 
-    <body ng-app="usersApp" ng-controller="PickerSettingsCtlr"  >
+    <body ng-app="usersApp" ng-controller="PickerSettingsCtlr" ng-init="getmaincatVal(<?=$editdata['id']?>);<?php  if(!empty($editdata['id'])){ echo 'GetSubCatDatashow('.$editdata['id'].')';} ?>"  >
 
         <?php $this->load->view('include/main_navbar'); ?>
 
@@ -67,32 +67,26 @@
                                         <label for="privilage_array"><strong>Category:</strong>
                                           <input type="checkbox" id="checkbox" > Select All
                                         </label>
-                                        <select name="privilage_array[]"  ng-model="filterData.privilage_array" id="main_item" multiple="multiple"  class="form-control js-example-basic-multiple" data-width="100%" ng-change="GetSubCatDatashow();"> 
-                                            <?php
-                                            $editCatArr = explode(',', $editdata['privilage_array']);
-
-                                            foreach ($CatData as $cat_data) {
-                                                if (in_array($cat_data['id'], $editCatArr)) {
-                                                    echo '<option value="' . $cat_data['id'] . '" selected>' . $cat_data['privilege_name'] . '</option>';
-                                                } else {
-                                                    echo '<option value="' . $cat_data['id'] . '">' . $cat_data['privilege_name'] . '</option>';
-                                                }
-                                            }
-                                            ?>
+                                        <select name="privilage_array[]"  ng-model="filterData.privilage_array" id="main_item" multiple="multiple"  class="form-control js-example-basic-multiple" data-width="100%" ng-change="GetSubCatDatashow(<?=$editdata['id'];?>);"> 
+                                       
+                                         <option ng-repeat="data_m in sub_catArr_main" value="{{data_m.id}}">{{data_m.privilege_name}}</option>
                                         </select>
+                                        
                                     </div>
 
                                     <div class="form-group">
                                         <label for="privilage_array_sub"><strong>Sub Category:</strong>
                                            <input type="checkbox" id="checkbox2" > Select All
                                         </label>
-                                        <select name="privilage_array_sub[]" multiple="multiple" id="main_item_sub"  class="form-control js-example-basic-multiple" data-width="100%"> 
+                                        <select name="privilage_array_sub[]" multiple="multiple" id="main_item_sub" ng-model="filterData.privilage_array_sub"   class="form-control js-example-basic-multiple" data-width="100%"> 
 
                                             <option ng-repeat="data in sub_catArr" value="{{data.id}}">{{data.privilege_name}}</option>
 
                                             }
                                             ?>
                                         </select>
+                                        
+                                     
                                     </div>
 
   <div style="padding-top: 20px;">
