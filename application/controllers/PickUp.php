@@ -697,7 +697,7 @@ class PickUp extends MY_Controller {
                         $lable=$data['frwd_company_label'];
                     }else
                     {
-                        $lable='https://api.diggipacks.com/API/print/'.$data['slip_no'];
+                        $lable='https://api.fastcoo-tech.com/API/print/'.$data['slip_no'];
                         
 
                     }
@@ -719,8 +719,7 @@ class PickUp extends MY_Controller {
             }
         }
 
-//print_r($OutboundArray);
-//die;
+
         if (!empty($statusvalue) && !empty($slip_data)) {
             $this->Status_model->insertStatus($statusvalue);
             $this->Shipment_model->updateStatusBatch($slip_data);
@@ -1122,11 +1121,6 @@ class PickUp extends MY_Controller {
           //  echo $this->db->last_query();
         }
     }
-
-        
-        
-
-
 
 
     public function ReturnLMtoFMOrder() {

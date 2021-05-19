@@ -3012,6 +3012,7 @@ class Shipment extends MY_Controller {
         }
     }
 
+   
     function GetUpdateShipmentDataPage() {
         $_POST = json_decode(file_get_contents('php://input'), true);
         $dataArray = $_POST;
@@ -3072,43 +3073,43 @@ class Shipment extends MY_Controller {
                 //print_r($dataArray['skuData']);
                 //$uniqueSku=array_unique($dataArray['skuData']);
                 $newSkuArray = array();
-                   $totalCod = $dataArray['total_cod_amt'];
+                $totalCod = $dataArray['total_cod_amt'];
 
 
-                foreach ($dataArray['skuData'] as $key => $skuval) {
-                      
+                // foreach ($dataArray['skuData'] as $key => $skuval) {
 
-                    $checkSku = getallitemskubyid($skuval['sku']);
-                    if ($checkSku > 0) {
-                        $DimationOldArray = GetdiaMationTableDataFind($dataArray['slip_no'], $skuval['sku']);
-                        //echo "sssss";
-                        $totalPices += $skuval['piece'];
-                       // $totalCod += $skuval['cod'];
-                      
-                        if (!empty($DimationOldArray)) {
-                            if ($DimationOldArray['cod'] != $skuval['cod'])
-                                $statusActivites .= $skuval['cod'] . " COD changed from " . $DimationOldArray['cod'] . " " . $skuval['sku'] . " <br>";
-                            if ($DimationOldArray['piece'] != $skuval['piece'])
-                                $statusActivites .= $skuval['piece'] . " Pieces changed from " . $DimationOldArray['piece'] . " " . $skuval['sku'] . " <br>";
-                            if ($DimationOldArray['sku'] != $skuval['sku'])
-                                $statusActivites .= $skuval['sku'] . " SKU changed from " . $DimationOldArray['sku'] . " " . $skuval['sku'] . " <br>";
 
-                            $dimationArray[$key]['cod'] = $skuval['cod'];
-                           
-                            $dimationArray[$key]['piece'] = $skuval['piece'];
-                            $dimationArray[$key]['sku'] = $skuval['sku'];
-                            $dimationArray[$key]['id'] = $skuval['d_id'];
-                        } else {
-                            $statusActivites .= "New SKU Added " . $skuval['sku'] . "<br>";
-                            $dimationArray_added[] = array('slip_no' => $dataArray['slip_no'], 'sku' => $skuval['sku'], 'description' => addslashes(getalldataitemtablesBySku($skuval['sku'], 'description')), 'booking_id' => $dataArray['booking_id'], 'cod' => $skuval['cod'], 'piece' => $skuval['piece'], 'super_id' => $this->session->userdata('user_details')['super_id']);
-                        }
-                    } else
-                        array_push($newSkuArray, $skuval['sku']);
-                }
+                //     $checkSku = getallitemskubyid($skuval['sku']);
+                //     if ($checkSku > 0) {
+                //         $DimationOldArray = GetdiaMationTableDataFind($dataArray['slip_no'], $skuval['sku']);
+                //         //echo "sssss";
+                //         $totalPices += $skuval['piece'];
+                //         // $totalCod += $skuval['cod'];
+
+                //         if (!empty($DimationOldArray)) {
+                //             if ($DimationOldArray['cod'] != $skuval['cod'])
+                //                 $statusActivites .= $skuval['cod'] . " COD changed from " . $DimationOldArray['cod'] . " " . $skuval['sku'] . " <br>";
+                //             if ($DimationOldArray['piece'] != $skuval['piece'])
+                //                 $statusActivites .= $skuval['piece'] . " Pieces changed from " . $DimationOldArray['piece'] . " " . $skuval['sku'] . " <br>";
+                //             if ($DimationOldArray['sku'] != $skuval['sku'])
+                //                 $statusActivites .= $skuval['sku'] . " SKU changed from " . $DimationOldArray['sku'] . " " . $skuval['sku'] . " <br>";
+
+                //             $dimationArray[$key]['cod'] = $skuval['cod'];
+
+                //             $dimationArray[$key]['piece'] = $skuval['piece'];
+                //             $dimationArray[$key]['sku'] = $skuval['sku'];
+                //             $dimationArray[$key]['id'] = $skuval['d_id'];
+                //         } else {
+                //             $statusActivites .= "New SKU Added " . $skuval['sku'] . "<br>";
+                //             $dimationArray_added[] = array('slip_no' => $dataArray['slip_no'], 'sku' => $skuval['sku'], 'description' => addslashes(getalldataitemtablesBySku($skuval['sku'], 'description')), 'booking_id' => $dataArray['booking_id'], 'cod' => $skuval['cod'], 'piece' => $skuval['piece'], 'super_id' => $this->session->userdata('user_details')['super_id']);
+                //         }
+                //     } else
+                //         array_push($newSkuArray, $skuval['sku']);
+                // }
                 //echo $statusActivites; die;
                 //echo '<pre>';
                 //print_r($dimationArray); die;
-                if (empty($newSkuArray)) {
+             
                     if (!empty($statusActivites)) {
 
                         $key88 = 0;
@@ -3141,15 +3142,12 @@ class Shipment extends MY_Controller {
                         $this->Shipment_model->GetDimationDatansertQry($dimationArray_added);
                     }
                     $return['status'] = 'succ';
-                } else {
-                    $return['status']['sku'] = 'sku not valid ' . implode(',', $newSkuArray);
-                }
+               
             } else
                 $return['status'] = 'booking_id';
         }
         echo json_encode($return);
     }
-
     function GetestinationDropData() {
 
         $city = getAllDestination();
