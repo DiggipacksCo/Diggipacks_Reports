@@ -3158,12 +3158,12 @@ class Shipment_model extends CI_Model {
 	
 	
 	  public function countryList() {  
-        //$this->db->where('country.super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->where('country.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('id, city');
         $this->db->from('country');   
 		$this->db->where('city!=', '');  
         $this->db->order_by('id', 'DESC');
-        $this->db->limit(100);
+       // $this->db->limit(100);
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {

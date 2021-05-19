@@ -49,13 +49,23 @@
                             <div class="panel-body" >
                                 <div class="table-responsive" style="padding-bottom:20px;" > 
                                     <!--style="background-color: green;"-->
-                                    <?php
+                                    <!-- <?php
                                     if (!empty($traking_awb_no))
                                         echo 'Tracking Result for AWB#<b>' . implode(',', $traking_awb_no) . '</b>';
-                                    ?>
+                                    ?> -->
                                     <table class="table table-striped table-hover table-bordered dataTable bg-*" id="example" style="width:100%;">
                                         <thead>
-                                            <tr>
+                                       
+                                            
+                                            <?php
+                                            //print_r($shipmentdata);
+                                            if (!empty($shipmentdata)) {
+                                                foreach ($shipmentdata as $awbdata) {
+                                                    echo '
+                                                    <tr >
+                                                    <td colspan=7>   Tracking Result for AWB#<b>' . $awbdata['slip_no']  . '</b></td>
+                                                    </tr>
+                                                    <tr>
                                                 <th><b class="size-2">Date</b></th>
                                                 <th><b class="size-2">Origin</b></th>
                                                 <th><b class="size-2">Destination</b></th>
@@ -64,11 +74,7 @@
                                                 <th><b class="size-2">Status</b></th>
                                                 <th><b class="size-2">Action</b></th>
                                             </tr>
-                                            <?php
-                                            //print_r($shipmentdata);
-                                            if (!empty($shipmentdata)) {
-                                                foreach ($shipmentdata as $awbdata) {
-                                                    echo '<tr>
+                                                    <tr>
                                                         <td>' . $awbdata['entrydate'] . '</td>
                                                         <td>' . getdestinationfieldshow($awbdata['origin'], 'city') . '</td>
                                                         <td>' . getdestinationfieldshow($awbdata['destination'], 'city') . '</td>
@@ -79,7 +85,10 @@
 
                                                         <td><a href="' . base_url() . 'TrackingDetails/' . $awbdata['id'] . '" class="btn btn-primary" target="_black">View Details</a></td>
 
-                                                        </tr>';
+                                                        </tr>
+                                                        
+                                                        <tr>  <td colspan=7> <hr></td></tr>
+                                                        ';
                                                 }
                                             } else {
                                                 echo'<tr><td colspan="6" align="center">record not found</td></tr>';

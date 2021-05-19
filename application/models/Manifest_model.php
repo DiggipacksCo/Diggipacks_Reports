@@ -19,7 +19,7 @@ class Manifest_model extends CI_Model {
         $this->db->select('pickup_request.id,pickup_request.uniqueid,pickup_request.sku,pickup_request.qty,items_m.id as item_sku, storage_table.storage_type,items_m.sku_size,items_m.item_path,pickup_request.seller_id');
         $this->db->from('pickup_request');
         $this->db->join('items_m', 'items_m.sku=pickup_request.sku');
-        $this->db->join('storage_table', 'storage_table.id=items_m.storage_id','left');
+        $this->db->join('storage_table', 'storage_table.id=items_m.storage_id');
         $this->db->where('pickup_request.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('items_m.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('pickup_request.confirmO', 'N');
@@ -40,7 +40,6 @@ class Manifest_model extends CI_Model {
             //return $page_no.$this->db->last_query();
         }
     }
-
 
     public function filter($page_no, $filterarray = array()) {
 
@@ -105,8 +104,8 @@ class Manifest_model extends CI_Model {
             $start = ($page_no - 1) * $limit;
         }
 
-        $this->db->select('qty as qtyall,id,uniqueid,sku,qty,assign_to,req_date,pstatus,code,seller_id,on_hold,itemupdated,confirmO,pickimg,address,city,3pl_awb,3pl_name,3pl_label,3pl_date,boxes,description,return_type');
-        $this->db->from('pickup_request_return');
+        $this->db->select('qty as qtyall,id,uniqueid,sku,qty,assign_to,req_date,pstatus,code,seller_id,on_hold,itemupdated,confirmO,pickimg,address,city,3pl_awb,3pl_name,3pl_label,3pl_date,r_3pl_awb,r_3pl_name,r_3pl_label,r_3pl_date,boxes,description,return_type');
+        $this->db->from('pickup_request');
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         if ($this->session->userdata('user_details')['user_type'] == 9)
             $this->db->where('assign_to', $this->session->userdata('user_details')['user_id']);
@@ -139,7 +138,7 @@ class Manifest_model extends CI_Model {
     public function manifestCount_return($page_no, $filterarray = array()) {
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('id');
-        $this->db->from('pickup_request_return');
+        $this->db->from('pickup_request');
         if ($filterarray['seller_id'])
             $this->db->where('seller_id', $filterarray['seller_id']);
         if ($filterarray['driverid'])
@@ -165,7 +164,7 @@ class Manifest_model extends CI_Model {
 
     public function manifestCount($page_no, $filterarray = array()) {
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
-        $this->db->select('id');
+        $this->db->select(' count( DISTINCT(uniqueid) )  AS tcount');
         $this->db->from('pickup_request');
         if ($filterarray['seller_id'])
             $this->db->where('seller_id', $filterarray['seller_id']);
@@ -173,18 +172,20 @@ class Manifest_model extends CI_Model {
             $this->db->where('assign_to', $filterarray['driverid']);
         if ($filterarray['manifestid'])
             $this->db->where('uniqueid', $filterarray['manifestid']);
-        $this->db->where('pstatus', 5);
-        $this->db->group_by('uniqueid');
+
+            $this->db->where_in('pstatus', array(5, 2));
+       // $this->db->where('pstatus', 5);
+       // $this->db->group_by('uniqueid');
         $this->db->order_by('id', 'ASC');
 
 
         $query = $this->db->get();
 
-        //return $this->db->last_query(); die;
+       // return $this->db->last_query(); die;
         if ($query->num_rows() > 0) {
 
-            $data = $query->num_rows();
-            return $data;
+            $data =  $query->result_array();
+            return $data[0]['tcount'];
             // return $page_no.$this->db->last_query();
         }
         return 0;
@@ -280,11 +281,6 @@ class Manifest_model extends CI_Model {
         if ($filterarray['manifestid'])
             $this->db->where('uniqueid', $filterarray['manifestid']);
         $this->db->where('pstatus', 1);
-
-
-        // $this->db->where('assign_to',0);
-        // $this->db->where('3pl_name',0);
-        
         $this->db->group_by('uniqueid');
         if ($filterarray['sort_list'] == 'NO') {
             $this->db->order_by('pickup_request.id', 'desc');
@@ -548,11 +544,13 @@ class Manifest_model extends CI_Model {
 
     public function GetallpickupRequestData_imtemCheck($uid = null) {
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
-        $this->db->select('pickup_request.*');
+        $this->db->select('count(id)');
         $this->db->from('pickup_request');
         //$this->db->join("items_m as IMS","IMS.sku!=pickup_request.sku","inner");
-        $this->db->where("sku not in (select sku from items_m )");
+        //$this->db->where("sku not in (select sku from items_m )");
 
+    
+        $this->db->where('confirmO','N');
         $this->db->where('pickup_request.uniqueid', $uid);
         $this->db->group_by('pickup_request.sku');
         //$this->db->where('pstatus',2);
@@ -561,10 +559,17 @@ class Manifest_model extends CI_Model {
         //$this->db->order_by("id", "asc");
         //$this->db->limit(1, 0);
         $query2 = $this->db->get();
-
+        if( $query2->num_rows()>0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;  
+        }
         //echo  $this->db->last_query(); die;
         // $query2->num_rows();
-        return $query2->result_array();
+       
         //$this->db->get_compiled_select();
     }
 
@@ -594,7 +599,7 @@ class Manifest_model extends CI_Model {
         $this->db->select('id,seller_id,stock_location');
         $this->db->from('stockLocation');
         $this->db->where('seller_id', $sid);
-        $this->db->where('`stock_location` NOT IN (SELECT `stock_location` FROM `item_inventory`)', NULL, FALSE);
+        $this->db->where('`stock_location` NOT IN (SELECT `stock_location` FROM `item_inventory` where super_id= '.$this->session->userdata('user_details')['super_id'].'  and stock_location!="" )', NULL, FALSE);
         if (!empty($limit))
             $this->db->limit($limit, 0);
         $query2 = $this->db->get();
@@ -644,6 +649,8 @@ class Manifest_model extends CI_Model {
 
     public function GetallmanifestskuData_new($uid = null, $sid = null, $sku = null) {
         $this->db->where('pickup_request.super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->where('items_m.super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->where('storage_table.super_id', $this->session->userdata('user_details')['super_id']);
         // $this->db->select('pickup_request.id,pickup_request.sku,pickup_request.qty,pickup_request.expire_date,pickup_request.code');
 
 
@@ -712,6 +719,40 @@ class Manifest_model extends CI_Model {
         return $this->db->update_batch('pickup_request', $data, 'id');
     }
 
+    public function GetallstockLocation_bk($sid = null, $limit = null, $stockArr = array(), $shelveLimit = 0, $totalsku_size = 0, $skuid = null, $otherMatchInventory = array()) {
+
+        $this->db->where($otherMatchInventory);
+        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+
+        $this->db->select('id,stock_location,quantity,shelve_no');
+        $this->db->from('item_inventory');
+        if (!empty($stockArr))
+            $this->db->where_not_in('stock_location', $stockArr);
+        $this->db->where('stock_location!=', '');
+        $this->db->where('seller_id', $sid);
+        $this->db->where('quantity<', $totalsku_size);
+        $this->db->where('item_sku', $skuid);
+        $this->db->order_by("id", "asc");
+       // $this->db->limit($shelveLimit);
+        $query3 = $this->db->get();
+    //echo  $this->db->last_query(); die;
+        if($query3->num_rows()>0)
+        {
+          return  $totalGetlocation = $query3->result_array();
+        }
+        else
+        {
+            return false;
+        }
+
+
+    
+        
+
+        
+    }
+
+
     public function GetallstockLocation_new($sid = null, $limit = null, $stockArr = array(), $shelveLimit = 0, $totalsku_size = 0, $skuid = null, $otherMatchInventory = array(),$newQty=null) {
 
         $pending_location = $shelveLimit;
@@ -743,7 +784,6 @@ class Manifest_model extends CI_Model {
         // print_r($finalArr);
         return $finalArr;
     }
-
 
     public function GetCheckInventoryShelveNo($sid = null, $skuid = null, $shelveLimit = 0, $totalsku_size = 0, $shelveArr = array()) {
 
@@ -800,7 +840,25 @@ class Manifest_model extends CI_Model {
     public function getupdateconfirmstatus_new($uid = null, $data = array()) {
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('uniqueid', $uid);
-        return $this->db->update_batch("pickup_request", $data, 'sku');
+         $this->db->update_batch("pickup_request", $data, 'sku');
+
+        //echo  $this->db->last_query(); 
+
+    }
+
+    public function getPreQuantity($id=null) {
+
+        
+        $this->db->select('quantity');
+        $this->db->from('item_inventory');
+       
+        $this->db->where('id', $id);
+        $query3 = $this->db->get();
+       // echo  $this->db->last_query(); 
+         if ($query3->num_rows() > 0) {
+            return $query3->row_array();
+         }
+        
     }
 
     public function GetCheckValidShelveNoIn($shelve_no = null) {
@@ -822,34 +880,15 @@ class Manifest_model extends CI_Model {
          }
     }
 
+    public function GetMidDetailsQry($mid = null) {
 
-    public function GetallstockLocation_bk($sid = null, $limit = null, $stockArr = array(), $shelveLimit = 0, $totalsku_size = 0, $skuid = null, $otherMatchInventory = array()) {
-
-        $this->db->where($otherMatchInventory);
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
-
-        $this->db->select('id,stock_location,quantity,shelve_no');
-        $this->db->from('item_inventory');
-        if (!empty($stockArr))
-            $this->db->where_not_in('stock_location', $stockArr);
-        $this->db->where('stock_location!=', '');
-        $this->db->where('seller_id', $sid);
-        $this->db->where('quantity<', $totalsku_size);
-        $this->db->where('item_sku', $skuid);
-        $this->db->order_by("id", "asc");
-       // $this->db->limit($shelveLimit);
-        $query3 = $this->db->get();
-    // echo  $this->db->last_query(); die;
-        if($query3->num_rows()>0)
-        {
-          return  $totalGetlocation = $query3->result_array();
-        }
-        else
-        {
-            return false;
-        }
-
+        $this->db->select('*');
+        $this->db->from('pickup_request');
+        $this->db->where('uniqueid ', $mid);
+        $query = $this->db->get();
+      //  echo $this->db->last_query(); exit;
+        return $query->row_array();
     }
-
 
 }

@@ -49,10 +49,25 @@ function exist_zidsku_id($sku, $super_id) {
         return false;
 }
 
+function GetAllQtyforSellerby_ID($sku = null, $cust_id = null) {
+    $ci = & get_instance();
+    $ci->load->database();
+    $ci->db->select('items_m.zid_pid,SUM(item_inventory.quantity) as quantity,items_m.sku as sku');
+    $ci->db->from('item_inventory');
+    $ci->db->join('items_m', 'items_m.id=item_inventory.item_sku');
+    $ci->db->where('item_inventory.super_id', $ci->session->userdata('user_details')['super_id']);
+    $ci->db->where('items_m.id', $sku);
+    $ci->db->where('item_inventory.seller_id', $cust_id);
+    $query = $ci->db->get();
+    return $row = $query->row_array();
+}
+
+
+
 function GetAllQtyforSeller($sku = null, $cust_id = null) {
     $ci = & get_instance();
     $ci->load->database();
-    $ci->db->select('items_m.zid_pid,customer.manager_token,SUM(item_inventory.quantity) as quantity');
+    $ci->db->select('items_m.zid_pid,customer.manager_token,SUM(item_inventory.quantity) as quantity,items_m.sku as sku');
     $ci->db->from('item_inventory');
     $ci->db->join('items_m', 'items_m.id=item_inventory.item_sku');
     $ci->db->join('customer', 'customer.id=item_inventory.seller_id');
@@ -61,20 +76,7 @@ function GetAllQtyforSeller($sku = null, $cust_id = null) {
     $ci->db->where('item_inventory.seller_id', $cust_id);
     $ci->db->group_by('item_inventory.item_sku');
     $query = $ci->db->get();
-    //echo $ci->db->last_query();
-    return $row = $query->row_array();
-}
-
-function GetAllQtyforSellerby_ID($sku = null, $cust_id = null) {
-    $ci = & get_instance();
-    $ci->load->database();
-    $ci->db->select('items_m.zid_pid,SUM(item_inventory.quantity) as quantity');
-    $ci->db->from('item_inventory');
-    $ci->db->join('items_m', 'items_m.id=item_inventory.item_sku');
-    $ci->db->where('item_inventory.super_id', $ci->session->userdata('user_details')['super_id']);
-    $ci->db->where('items_m.id', $sku);
-    $ci->db->where('item_inventory.seller_id', $cust_id);
-    $query = $ci->db->get();
+   // echo $ci->db->last_query();
     return $row = $query->row_array();
 }
 
@@ -93,7 +95,7 @@ function GetAllQtyforSeller_new($cust_id = null) {
     $ci->db->where('item_inventory.seller_id', $cust_id);
     $ci->db->group_by('item_inventory.item_sku');
     $query = $ci->db->get();
-   echo $ci->db->last_query();
+    //echo $ci->db->last_query();
     return $row = $query->result_array();
 }
 
@@ -207,4 +209,37 @@ function deliveryOption($cust_id) {
 $result=$query->row_array();
     
     return $result['zid_delivery_name'];
+}
+
+
+//*************************Quantity Update function in Salla*************************//
+function update_salla_qty_product($quantity = null, $pid = null, $token = null) 
+{
+    
+    $param=array('quantity'=>$quantity);
+    $request = json_encode($param);
+     $url = "https://api.salla.dev/admin/v2/products/quantities/bySku/". $pid ;
+  
+  
+    $curl = curl_init();
+
+       curl_setopt_array($curl, [
+           CURLOPT_URL => $url,
+           CURLOPT_RETURNTRANSFER => true,
+           CURLOPT_ENCODING => "",
+           CURLOPT_MAXREDIRS => 10,
+           CURLOPT_TIMEOUT => 30,
+           CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+           CURLOPT_CUSTOMREQUEST => "PUT",
+           CURLOPT_POSTFIELDS => $request,
+           CURLOPT_HTTPHEADER => [
+               "Authorization: Bearer " . $token,
+               "Accept-Language: AR",
+               "Content-Type: application/json",
+              
+           ],
+       ]);
+ $response = curl_exec($curl);
+curl_close($curl);
+
 }

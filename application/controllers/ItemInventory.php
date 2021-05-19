@@ -260,18 +260,17 @@ class ItemInventory extends MY_Controller {
         // print_r($bulk);exit;
         $this->load->view('ItemM/InboundRecord', $bulk);
     }
-
     public function add() {
-
+        // error_reporting(-1);
+		// ini_set('display_errors', 1);
         $chargeQty = $this->input->post('quantity');
         $sku_size = getalldataitemtables($this->input->post('sku'), 'sku_size');
         $item_type = getalldataitemtables($this->input->post('sku'), 'type');
         $first_out = getallsellerdatabyID($this->input->post('seller'), 'first_out');
         $wh_id = $this->input->post('wh_id');
         $qty = $this->input->post('quantity');
-
-        $token = GetallCutomerBysellerId($this->input->post('seller'), 'manager_token');     
-
+        
+      
         // check invonry for empty space
         if (empty($this->input->post('expity_date')))
             $expdate = "0000-00-00";
@@ -282,15 +281,19 @@ class ItemInventory extends MY_Controller {
             $dataNew = $this->ItemInventory_model->find(array('item_sku' => $this->input->post('sku'), 'expity_date' => $expdate, 'seller_id' => $this->input->post('seller'), 'itype' => $item_type, 'wh_id' => $wh_id));
 
             //print_r($dataNew); 
+
+
+
             foreach ($dataNew as $val) {
                 if ($val->quantity < $sku_size) {
+
                     //echo '<br> 2//'.$qty.'//'. $val->quantity.'//';
                     $check = $qty + $val->quantity;
                     $shelve_no = $val->shelve_no;
-                    if(empty($shelve_no)) {
+                    if (empty($shelve_no)) {
                         $shelve_no = "";
                     }
-                    if($check <= $sku_size) {
+                    if ($check <= $sku_size) {
 
                         $lastQtyUp = GetuserToatalLOcationQty($val->id, 'quantity');
                         $stock_location_upHistory = GetuserToatalLOcationQty($val->id, 'stock_location');
@@ -300,7 +303,6 @@ class ItemInventory extends MY_Controller {
                         GetAddInventoryActivities($activitiesArr);
                         $this->ItemInventory_model->updateInventory(array('quantity' => $check, 'id' => $val->id));
                         $qty = 0;
-
                     } else {
 
                         $diff = $sku_size - $val->quantity;
@@ -315,7 +317,7 @@ class ItemInventory extends MY_Controller {
                     }
                 }
 
-                    // echo $val['item_sku'];  
+                // echo $val['item_sku'];  
             }
         }
 
@@ -370,20 +372,7 @@ class ItemInventory extends MY_Controller {
                     $this->ItemInventory_model->GetUpdatePickupchargeInvocie($this->input->post('seller'), $chargeQty, $this->input->post('quantity'), $this->input->post('sku'));
 
                 //die;
-                if (!empty($token)) {   
-                    $zid_store_id = GetallCutomerBysellerId($this->input->post('seller'), 'zid_sid');     
-                         //==========update zid stock===============//
-                             $zidReqArr = GetAllQtyforSellerby_ID($this->input->post('sku'), $this->input->post('seller'));
-                             $quantity = $zidReqArr['quantity']; //+$fArray['qty'];
-                             $pid = $zidReqArr['zid_pid'];
-                             $token = $token;
-                             $storeID = $zid_store_id;
-                            $reszid = update_zid_product($quantity, $pid, $token, $storeID);
-                        //=========================================//
-                              
-                 }
-            // die; 
-                redirect(base_url('ItemInventory'));
+               // redirect(base_url('ItemInventory'));
             } else {
 
 
@@ -395,10 +384,44 @@ class ItemInventory extends MY_Controller {
                 $this->ItemInventory_model->GetUpdatePickupchargeInvocieUpdateQty($this->input->post('seller'), $locationLimit, $this->input->post('quantity'), $this->input->post('sku'));
             else
                 $this->ItemInventory_model->GetUpdatePickupchargeInvocieUpdateQty($this->input->post('seller'), $qty, $this->input->post('quantity'), $this->input->post('sku'));
-            redirect(base_url('ItemInventory'));
-        }
-    }
 
+                
+           
+        } 
+
+        $token = GetallCutomerBysellerId($this->input->post('seller'), 'manager_token'); 
+         $sallatoken = GetallCutomerBysellerId($this->input->post('seller'), 'salla_athentication'); 
+         
+        if (!empty($token)) {   //Qty update in Zid section 
+            $zid_store_id = GetallCutomerBysellerId($this->input->post('seller'), 'zid_sid');     
+                 //==========update zid stock===============//
+                     $zidReqArr = GetAllQtyforSellerby_ID($this->input->post('sku'), $this->input->post('seller'));
+                     $quantity = $zidReqArr['quantity']; //+$fArray['qty'];
+                     $pid = $zidReqArr['zid_pid'];
+                     $token = $token;
+                     $storeID = $zid_store_id;
+                    $reszid = update_zid_product($quantity, $pid, $token, $storeID);
+                //=========================================//
+                      
+         }
+         if (!empty($sallatoken)) { 
+            //Qty update in salla section 
+
+                //==========update zid stock===============//
+                     $sallaReqArr = GetAllQtyforSellerby_ID($this->input->post('sku'), $this->input->post('seller'));
+                     $quantity = $sallaReqArr['quantity']; //+$fArray['qty'];
+                     $pid = $sallaReqArr['sku'];
+                     $sallatoken = $sallatoken;
+                //    echo "<pre> sdfdsdfsdf"; print_r($sallaReqArr);
+                 
+                 
+                  $reszid = update_salla_qty_product($quantity, $pid, $sallatoken);  
+                //=========================================//
+                      
+         }
+
+        redirect(base_url('ItemInventory'));
+    }
     public function edit_view($id) {
 
         $item1 = $this->ItemInventory_model->edit_view($id);

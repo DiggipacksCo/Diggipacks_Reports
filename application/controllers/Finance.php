@@ -653,7 +653,8 @@ public function GettransportReportShowData()
 	public function getallsellerdata()
 	{
 		   $_POST = json_decode(file_get_contents('php://input'), true);
-		   $returndata = GetallsellerdataInv($_POST['type']); 
+		  // $returndata = GetallsellerdataInv($_POST['type']); 
+		   $returndata = Getallsellerdata($_POST['type']); 
 		  
 		   echo json_encode($returndata);
 	}
