@@ -1640,118 +1640,109 @@ class Shipment extends MY_Controller {
 
         }
     }
-     public function save_details()
-        { 
-              $postData = json_decode(file_get_contents('php://input'), true); 
-          //  echo '<pre>';  print_r($postData); exit;
-                $stock_location=$postData['id'];
-                $slip_no=$postData[0]['slip_no'];
-                $check_slipNo = $this->Shipment_model->getallshipmentdatashow($slip_no);
-                $token = GetallCutomerBysellerId($check_slipNo['cust_id'], 'manager_token');
-                if($check_slipNo['code'] != 'OG')
-                {                
-                    foreach ($postData as $SaveStock) {
-                       
-                        foreach($SaveStock['local'] as $fzArray)
-                        {
-                         foreach($fzArray as $fArray)
-                         {
-                        if(!empty($fArray['location']))
-                        {
+   
+
+    public function save_details() {
+        $postData = json_decode(file_get_contents('php://input'), true);
+        //  echo '<pre>';  print_r($postData); exit;
+        $stock_location = $postData['id'];
+        $slip_no = $postData[0]['slip_no'];
+        $check_slipNo = $this->Shipment_model->getallshipmentdatashow($slip_no);
+        $custmoerID=$check_slipNo['cust_id']; 
+        $token = GetallCutomerBysellerId($custmoerID, 'manager_token'); 
+        $salatoken = GetallCutomerBysellerId($custmoerID, 'salla_athentication');
+        if ($check_slipNo['code'] != 'OG') {
+            foreach ($postData as $SaveStock) {
+               
+                foreach ($SaveStock['local'] as $fzArray) {
+                    foreach ($fzArray as $fArray) {
+                        if (!empty($fArray['location'])) {
                             $updateLoc[] = array(
-                                'id' =>$fArray['location'] ,
-                                'quantity' =>$fArray['qty'] ,
-                                'stock_location' =>$fArray['stock_location'] ,
-                                'shelve_no' =>$fArray['shelve_no'], 
-                                'slip_no'=>$slip_no
-                                ); 
-                        }
-                        else
-                        {
+                                'id' => $fArray['location'],
+                                'quantity' => $fArray['qty'],
+                                'stock_location' => $fArray['stock_location'],
+                                'shelve_no' => $fArray['shelve_no'],
+                                'slip_no' => $slip_no
+                            );
+                        } else {
                             $addLoc[] = array(
-                                'quantity' =>$fArray['qty'] ,
-                                'stock_location' =>$fArray['stock_location'] ,
-                                'shelve_no' =>$fArray['shelve_no'],
-                                'super_id'=>$fArray['super_id'],
-                                'seller_id'=>$fArray['seller_id'],
-                                'item_sku'=>$fArray['item_sku']
-                                );  
+                                'quantity' => $fArray['qty'],
+                                'stock_location' => $fArray['stock_location'],
+                                'shelve_no' => $fArray['shelve_no'],
+                                'super_id' => $fArray['super_id'],
+                                'seller_id' => $fArray['seller_id'],
+                                'item_sku' => $fArray['item_sku']
+                            );
 
-                                $activitiesArr[] = array('exp_date' => $rdata['expity_date'], 'st_location' => $fArray['stock_location'], 'item_sku' => $fArray['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $fArray['seller_id'], 'qty' => $fArray['qty'], 'p_qty' => 0, 'qty_used' => $fArray['qty'], 'type' => 'Add', 'entrydate' => date("Y-m-d h:i:s"), 'awb_no' => $slip_no, 'super_id' => $this->session->userdata('user_details')['super_id'],'shelve_no'=>$fArray['shelve_no']);
-                        }
-
-                            $skuQtyArray[] = $fArray['item_sku'];
-
-                       
+                            $activitiesArr[] = array('exp_date' => $rdata['expity_date'], 'st_location' => $fArray['stock_location'], 'item_sku' => $fArray['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $fArray['seller_id'], 'qty' => $fArray['qty'], 'p_qty' => 0, 'qty_used' => $fArray['qty'], 'type' => 'Add', 'entrydate' => date("Y-m-d h:i:s"), 'awb_no' => $slip_no, 'super_id' => $this->session->userdata('user_details')['super_id'], 'shelve_no' => $fArray['shelve_no']);
                         }
                     }
-                     
-                    }
-
-
-                    $statusvalue[0]['user_id'] = $this->session->userdata('user_details')['user_id'];
-                    $statusvalue[0]['user_type'] = 'fulfillment';
-                    $statusvalue[0]['slip_no'] = $postData[0]['slip_no'];
-                    $statusvalue[0]['new_status'] = 11;
-                    $statusvalue[0]['code'] = 'OG';
-                    $statusvalue[0]['Activites'] = 'Order Generated';
-                    $statusvalue[0]['Details'] = 'Order Opened By ' . getUserNameById($this->session->userdata('user_details')['user_id']);
-                    $statusvalue[0]['entry_date'] = date('Y-m-d H:i:s');
-                    $statusvalue[0]['super_id'] = $this->session->userdata('user_details')['super_id'];
-                    $shipData = array();
-                    $updateArray = array('code' => 'OG', 'delivered' => 11);
-                    $shipData['where_in'] = $postData[0]['slip_no'];
-                    $shipData['update'] = $updateArray;
-
-                    if ($this->Status_model->insertStatus($statusvalue))
+                  
+                    if (!empty($token)) 
                     {
-                        $this->Shipment_model->updateStatus($shipData);
-                            //echo json_encode($shipData) ;
-                        $this->Shipment_model->stockdeletepicklistFM($slip_no);
+                        $zidReqArr = GetAllQtyforSellerby_ID($fArray['item_sku'], $custmoerID);
+                        $quantity = $zidReqArr['quantity'] - $fArray['qty'];
+                        $pid = $zidReqArr['zid_pid'];
+                        $token = $token;
+                        $storeID = $data['zid_store_id'];
+                        update_zid_product($quantity, $pid, $token, $storeID);
                     }
-                    if(!empty($updateLoc))
-                    {
-                        $this->Shipment_model->stockSaveShipmentFM($updateLoc);
-                    }
-                
-                   if(!empty($addLoc))
-                   {
-                      $this->Shipment_model->addInventory($addLoc, $activitiesArr);  
-
-                   }
-
-                    if (!empty($token)) {
-                        foreach($skuQtyArray as $skuqtyval){                           
-                           
-                            //==========update zid stock===============//
-                              $zidReqArr = GetAllQtyforSellerby_ID($skuqtyval, $check_slipNo['cust_id']);
-                          
-                                $quantity = $zidReqArr['quantity']; //+$fArray['qty'];
-                                $pid = $zidReqArr['zid_pid'];
-                                $token = $token;
-                                 $storeID = $check_slipNo['zid_store_id'];
-                                $reszid = update_zid_product($quantity, $pid, $token, $storeID);
-                                 
-                                
     
-                                //=========================================//
-                            }
-                        
-                        }
-                      
-
-                     $error_status = array('status' =>true);
-                     echo  json_encode($error_status);
-                }//endif 
-                else{
-
-                    $error_status = array('status' =>false);
-                     echo  json_encode($error_status);
-                } 
+                    //==========update salla quantity===============//
+                    
+                    if (!empty($salatoken)) 
+                    {
+                        $sallaReqArr = GetAllQtyforSellerby_ID($fArray['item_sku'], $custmoerID);
+                        $quantity = $sallaReqArr['quantity'] +$fArray['qty']; //+$fArray['qty'];
+                        $pid = $sallaReqArr['sku'];
+                        $sallatoken = $salatoken;
+                        // echo "<pre>"; print_r($sallaReqArr);
+                        $reszid = update_salla_qty_product($quantity, $pid, $sallatoken);  
+                    
+                    
+                    }
                 
-            
-             
+                }
+            }
+
+
+            $statusvalue[0]['user_id'] = $this->session->userdata('user_details')['user_id'];
+            $statusvalue[0]['user_type'] = 'fulfillment';
+            $statusvalue[0]['slip_no'] = $postData[0]['slip_no'];
+            $statusvalue[0]['new_status'] = 11;
+            $statusvalue[0]['code'] = 'OG';
+            $statusvalue[0]['Activites'] = 'Order Generated';
+            $statusvalue[0]['Details'] = 'Order Opened By ' . getUserNameById($this->session->userdata('user_details')['user_id']);
+            $statusvalue[0]['entry_date'] = date('Y-m-d H:i:s');
+            $statusvalue[0]['super_id'] = $this->session->userdata('user_details')['super_id'];
+            $shipData = array();
+            $updateArray = array('code' => 'OG', 'delivered' => 11);
+            $shipData['where_in'] = $postData[0]['slip_no'];
+            $shipData['update'] = $updateArray;
+
+            if ($this->Status_model->insertStatus($statusvalue)) {
+                $this->Shipment_model->updateStatus($shipData);
+                //echo json_encode($shipData) ;
+                $this->Shipment_model->stockdeletepicklistFM($slip_no);
+            }
+            if (!empty($updateLoc)) {
+                $this->Shipment_model->stockSaveShipmentFM($updateLoc);
+            }
+
+            if (!empty($addLoc)) {
+                $this->Shipment_model->addInventory($addLoc, $activitiesArr);
+            }
+
+
+            $error_status = array('status' => true);
+            echo json_encode($error_status);
+        }//endif 
+        else {
+
+            $error_status = array('status' => false);
+            echo json_encode($error_status);
         }
+    }
 
 
     public function updateData() {
@@ -3168,9 +3159,12 @@ class Shipment extends MY_Controller {
     }
 
     function CreateGenratedOrderCheck() {
+   
         $this->load->model('Pickup_model');
         $_POST = json_decode(file_get_contents('php://input'), true);
         $dataArray = $_POST;
+       // echo '<pre>';
+       // print_r($dataArray);die;
 
         $picklistValue = array();
         $statusvalue = array();
@@ -3183,95 +3177,132 @@ class Shipment extends MY_Controller {
         $entrydate = date("Y-m-d H:i:s");
         $time = date("H:i:s");
 
-            $arar = $dataArray['slipData'];
-           $ayte['listData'] = $this->Shipment_model->ShipData($arar);
-      
- 
-                // echo"<br><pre>"; 
-                //    print_r($ayte['listData']); 
-                //    die; 
+        $arar = $dataArray['slipData'];
+        $ayte['listData'] = $this->Shipment_model->ShipData($arar);
 
 
-       // foreach ($dataArray['listData'] as $data) {
+        //  echo"<br><pre>"; 
+        //    print_r($ayte['listData']); 
+        //    die; 
+        // foreach ($dataArray['listData'] as $data) {
         foreach ($ayte['listData'] as $data) {
-            
-               
-            $data['skuData'] = $this->Shipment_model->GetDiamationDetailsBYslipNo($data['slip_no']);
+            if ($data['origin'] > 0 && $data['destination'] > 0 && $data['skubtnDs']!='Y') {
 
+
+                $data['skuData'] = $this->Shipment_model->GetDiamationDetailsBYslipNo($data['slip_no']);
                
+
+               $custmoerID = $data['cust_id'];
+               $token = GetallCutomerBysellerId($custmoerID, 'manager_token'); 
+                $salatoken = GetallCutomerBysellerId($custmoerID, 'salla_athentication');
 
                 $stockarray = array();
                 $ReturnstockArray = array();
-                foreach ($data['skuData'] as $new_key => $skuDetails) 
+              //  print_r($data['skuData']); die;
+                if(!empty($data['skuData']))
                 {
-                //      echo"<br><pre>"; 
-                //     print_r($data);
-                // // die; 
+                foreach ($data['skuData'] as $new_key => $skuDetails) {
+                    //      echo"<br><pre>"; 
+                    //   print_r($data);
+                    //die; 
 
-                  $stock_check = CheckStockBackorder_ordergen($data['cust_id'], $skuDetails['sku'], $skuDetails['piece'], $data['slip_no'], $skuDetails['sku_id']);
-                    
-                
-                //  echo '<pre>'.  print_r($stock_check); 
+                    $stock_check = CheckStockBackorder_ordergen($data['cust_id'], $skuDetails['sku'], $skuDetails['piece'], $data['slip_no']);
+
+
+                     // echo '<pre>'.  print_r($stock_check); 
                     if ($stock_check['succ'] == 1) {
                         //array_push($ReturnstockArray,$stock_check['stArray']);
                         $ReturnstockArray[] = $stock_check['stArray'];
-                        $newStocklocation[]=$stock_check['StockLocation'];
-                        
+                        $newStocklocation[] = $stock_check['StockLocation'];
+                
                         //==========update zid stock===============//
-                        $zidReqArr = GetAllQtyforSeller($skuDetails['sku'], $data['cust_id']);
-
-
-                        $quantity = $zidReqArr['quantity'] - $skuDetails['piece'];
-                        $pid = $zidReqArr['zid_pid'];
-                        $token = $zidReqArr['manager_token'];
-                        $storeID = $data['zid_store_id'];
-                        update_zid_product($quantity, $pid, $token, $storeID);
-
+                     
+                        if (!empty($token)) 
+                        {
+                            $zidReqArr = GetAllQtyforSeller($skuDetails['sku'], $custmoerID);
+                            $quantity = $zidReqArr['quantity'] - $skuDetails['piece'];
+                            $pid = $zidReqArr['zid_pid'];
+                            $token = $token;
+                            $storeID = $data['zid_store_id'];
+                            update_zid_product($quantity, $pid, $token, $storeID);
+                        }
+        
+                        //==========update salla quantity===============//
+                        
+                        if (!empty($salatoken)) 
+                        {
+                            $sallaReqArr = GetAllQtyforSeller($skuDetails['sku'], $custmoerID);
+                            $quantity = $sallaReqArr['quantity'] - $skuDetails['piece']; //+$fArray['qty'];
+                            $pid = $sallaReqArr['sku'];
+                            $sallatoken = $salatoken;
+                            // echo "<pre>"; print_r($sallaReqArr);
+                            $reszid = update_salla_qty_product($quantity, $pid, $sallatoken);  
+                        
+                        
+                        }
                         //=========================================//
+
+
+
+
+
                     } else {
-                       // $newStocklocation=array();
+                        // $newStocklocation=array();
 
                         $errorReturnArray = array("slip_no" => $data['slip_no'], "sku" => $skuDetails['sku']);
                         array_push($stockarray, $errorReturnArray);
                     }
+
+                  
+
                 }
 
-                    if (empty($stockarray)) {
+                if (empty($stockarray)) {
 
-                        $statusvalue[$key]['user_type'] = 'fulfillment';
-                        $StatusArray[$key]['slip_no'] = $data['slip_no'];
-                        $StatusArray[$key]['new_status'] = 1;
-                        $StatusArray[$key]['pickup_time'] = $time;
-                        $StatusArray[$key]['pickup_date'] = $entrydate;
-                        $StatusArray[$key]['Details'] = "Order Created";
-                        $StatusArray[$key]['Activites'] = "Order Created";
-                        $StatusArray[$key]['entry_date'] = $entrydate;
-                        $StatusArray[$key]['user_id'] = $this->session->userdata('user_details')['user_id'];
-                        $StatusArray[$key]['user_type'] = 'fulfillment';
-                        $StatusArray[$key]['code'] = 'OC';
-                        $StatusArray[$key]['super_id'] = $this->session->userdata('user_details')['super_id'];
+                    $statusvalue[$key]['user_type'] = 'fulfillment';
+                    $StatusArray[$key]['slip_no'] = $data['slip_no'];
+                    $StatusArray[$key]['new_status'] = 1;
+                    $StatusArray[$key]['pickup_time'] = $time;
+                    $StatusArray[$key]['pickup_date'] = $entrydate;
+                    $StatusArray[$key]['Details'] = "Order Created";
+                    $StatusArray[$key]['Activites'] = "Order Created";
+                    $StatusArray[$key]['entry_date'] = $entrydate;
+                    $StatusArray[$key]['user_id'] = $this->session->userdata('user_details')['user_id'];
+                    $StatusArray[$key]['user_type'] = 'fulfillment';
+                    $StatusArray[$key]['code'] = 'OC';
+                    $StatusArray[$key]['super_id'] = $this->session->userdata('user_details')['super_id'];
 
-                        $shipArray[$key]['slip_no'] = $data['slip_no'];
-                        $shipArray[$key]['backorder'] = 0;
-                        $shipArray[$key]['delivered'] = 1;
-                        $shipArray[$key]['code'] = 'OC';
+                    $shipArray[$key]['slip_no'] = $data['slip_no'];
+                    $shipArray[$key]['backorder'] = 0;
+                    $shipArray[$key]['delivered'] = 1;
+                    $shipArray[$key]['code'] = 'OC';
 
-                        UpdateStockBackorder_orderGen($ReturnstockArray,$newStocklocation);
-                    }
+                    UpdateStockBackorder_orderGen($ReturnstockArray, $newStocklocation);
+                }
+                }
+                else
+                {
+                  //  echo $key;
+                        $invalidSkuArr=$this->Shipment_model->GetinVliadSkulist($data['slip_no']);
+                        
+                       // print_r($invalidSkuArr);
+                        $errorReturnArray = array("slip_no" => $data['slip_no'], "sku_invalid" => implode(',',$invalidSkuArr));
+                        array_push($stockarray, $errorReturnArray);
+                }
 
 
 
-            $key++;
-          
-    }
-    //    // die;
-    //     echo '<pre>';
-    //      print_r($shipArray);
-    //      print_r($StatusArray);
-    //      die;
+                $key++;
+            }
+        }
+        //    // die;
+           //  echo '<pre>';
+            //  print_r($ReturnstockArray);
+           //  print_r($errorReturnArray);
+           //   die;
 
-        
-        
+
+
 
         if (!empty($statusvalue) && !empty($shipArray)) {
 
@@ -3282,9 +3313,17 @@ class Shipment extends MY_Controller {
             $this->Status_model->insertStatus($StatusArray);
         }
         // die;
+       
         echo json_encode($stockarray);
-
     }
+    //    // die;
+    //     echo '<pre>';
+    //      print_r($shipArray);
+    //      print_r($StatusArray);
+    //      die;
+
+        
+        
 
     public function GetUpdatePalletNoData() {
         $_POST = json_decode(file_get_contents('php://input'), true);

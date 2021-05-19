@@ -148,7 +148,6 @@ class Manifest extends CourierCompany_pickup {
         //exit();
         echo json_encode($dataArray);
     }
-
     public function filter_return() {
         $this->load->model('User_model');
         $assignuser = $this->User_model->userDropval(9);

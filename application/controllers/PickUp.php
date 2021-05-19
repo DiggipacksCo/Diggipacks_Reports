@@ -566,15 +566,20 @@ class PickUp extends MY_Controller {
         $shipments = $this->Shipment_model->shipmetsInAwbAll($_POST['awbArray']);
         // print_r($shipments); die;
         // $valid=array();
+        
         if ($_POST['type'] == 'DL') {
             $code = 'DL';
             $new_status = 5;
             $zidStatus = "indelivery";
+            $sallaStatus=349994915;
+            $note= "جاري التوصيل";
         }
         if ($_POST['type'] == 'POD') {
             $code = 'POD';
             $new_status = 7;
             $zidStatus = "delivered";
+            $sallaStatus=1723506348;
+            $note="تم التوصيل";
         }
         $slip_data = array();
         $OutboundArray = array();
@@ -677,23 +682,32 @@ class PickUp extends MY_Controller {
                 $OutboundArray[$key]['super_id'] = $this->session->userdata('user_details')['super_id'];
 
                 $token = GetallCutomerBysellerId($seller_id, 'manager_token');
+                $salatoken = GetallCutomerBysellerId($seller_id, 'salla_athentication');
+
+                if (!empty($salatoken)) {
+                  update_status_salla($sallaStatus , $note, $salatoken,$data['booking_id'] ); 
+                }
+
                 if (!empty($token)) {
                     $slip_no = $data['slip_no'];
-                   
                     if(!empty($data['frwd_company_awb']))
                     {
                        // $trackingurl=makeTrackUrl($data['frwd_company_id'],$data['frwd_company_awb']); 
+                        
                         $lable=$data['frwd_company_label'];
-                    }  else
+                    }else
                     {
                         $lable='https://api.diggipacks.com/API/print/'.$data['slip_no'];
+                        
 
                     }
-                      
-                    $trackingurl = TRACKURL . $slip_no;                    
+                   $trackingurl = TRACKURL . $slip_no;
+                    
                     //updateZidStatus($orderID=null, $token=null, $status=null, $code=null, $label=null, $trackingurl=null)
                     updateZidStatus($data['booking_id'], $token, $zidStatus, $slip_no, $lable, $trackingurl);
                 }
+
+              
                 //=========================================================================//     
                 $key++;
             } else {
@@ -705,8 +719,8 @@ class PickUp extends MY_Controller {
             }
         }
 
-        //print_r($OutboundArray);
-        //die;
+//print_r($OutboundArray);
+//die;
         if (!empty($statusvalue) && !empty($slip_data)) {
             $this->Status_model->insertStatus($statusvalue);
             $this->Shipment_model->updateStatusBatch($slip_data);
@@ -974,6 +988,8 @@ class PickUp extends MY_Controller {
     }
 
     public function save_details() {
+
+       
         $postData = json_decode(file_get_contents('php://input'), true);
 
 
@@ -983,8 +999,9 @@ class PickUp extends MY_Controller {
         $check_slipNo = $this->Shipment_model->getallshipmentdatashow($slip_no);
         //$check_slipNo = $this->Shipment_model->getallshipmentdatashow($slip_no);
 
-
         $token = GetallCutomerBysellerId($check_slipNo['cust_id'], 'manager_token');
+        $salatoken = GetallCutomerBysellerId($check_slipNo['cust_id'], 'salla_athentication');
+      
         if ($check_slipNo['code'] == 'DL' || $check_slipNo['code'] == 'D3PL' || $check_slipNo['code'] == 'POD' || $check_slipNo['code'] == 'ROP' || $check_slipNo['code'] == 'OFD' || $check_slipNo['code'] == 'DOP' || $check_slipNo['code'] == 'FD' || $check_slipNo['delivered'] == '16') {
             foreach ($postData as $SaveStock) {
 
@@ -1010,9 +1027,37 @@ class PickUp extends MY_Controller {
 
                             $activitiesArr[] = array('exp_date' => $rdata['expity_date'], 'st_location' => $fArray['stock_location'], 'item_sku' => $fArray['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $check_slipNo['cust_id'], 'qty' => $fArray['qty'], 'p_qty' => 0, 'qty_used' => $fArray['qty'], 'type' => 'Add', 'entrydate' => date("Y-m-d h:i:s"), 'awb_no' => $slip_no, 'super_id' => $this->session->userdata('user_details')['super_id'], 'shelve_no' => $fArray['shelve_no']);
                         }
-                        
-                        $skuQtyArray[] = $fArray['item_sku'];
+
+
                        
+
+                        if (!empty($salatoken)) {
+
+                          
+                            //==========update zid stock===============//
+                                $sallaReqArr = GetAllQtyforSellerby_ID($fArray['item_sku'], $check_slipNo['cust_id']);
+                                $quantity = $sallaReqArr['quantity']+$fArray['qty'];
+                                $pid = $sallaReqArr['sku'];
+                                $sallatoken = $salatoken;
+                               //echo "<pre>"; print_r($sallaReqArr); exit;
+                            
+                                $reszid = update_salla_qty_product($quantity, $pid, $sallatoken);  
+                            //=========================================//
+                                   
+
+                        }
+
+                        if (!empty($token)) {
+                            //==========update zid stock===============//
+                            $zidReqArr = GetAllQtyforSeller($fArray['item_sku'], $check_slipNo['cust_id']);
+                            $quantity = $zidReqArr['quantity']+$fArray['qty'];
+                            $pid = $zidReqArr['zid_pid'];
+                            $token = $zidReqArr['manager_token'];
+                            $storeID = $check_slipNo['zid_store_id'];
+                            update_zid_product($quantity, $pid, $token, $storeID);
+
+                            //=========================================//
+                        }
                     }
                 }
             }
@@ -1039,7 +1084,7 @@ class PickUp extends MY_Controller {
                     
                     if(!empty($check_slipNo['frwd_company_awb']))
                     {
-                        $trackingurl=makeTrackUrl($check_slipNo['frwd_company_id'],$check_slipNo['frwd_company_awb']);
+                        $trackingurl=makeTrackUrl($data['frwd_company_id'],$check_slipNo['frwd_company_awb']);
                         $lable=$check_slipNo['frwd_company_label'];
                     }else
                     {
@@ -1050,6 +1095,11 @@ class PickUp extends MY_Controller {
                     $trackingurl = TRACKURL . $slip_no;
                     //updateZidStatus($orderID=null, $token=null, $status=null, $code=null, $label=null, $trackingurl=null)
                     updateZidStatus($check_slipNo['booking_id'], $token, 'cancelled', $slip_no, $lable, $trackingurl);
+                }
+                if (!empty($salatoken)) {
+                $sallaStatus = 525144736; 
+                $note = "ملغي";
+               update_status_salla($sallaStatus , $note, $salatoken,$check_slipNo['booking_id'] ); 
                 }
             }
 
@@ -1062,24 +1112,6 @@ class PickUp extends MY_Controller {
                 $this->Shipment_model->addInventory($addLoc, $activitiesArr);
             }
 
-            if (!empty($token)) {
-                        foreach($skuQtyArray as $skuqtyval){                           
-                           
-                            //==========update zid stock===============//
-                              $zidReqArr = GetAllQtyforSellerby_ID($skuqtyval, $check_slipNo['cust_id']);
-                          
-                                $quantity = $zidReqArr['quantity']; //+$fArray['qty'];
-                                $pid = $zidReqArr['zid_pid'];
-                                $token = $token;
-                                 $storeID = $check_slipNo['zid_store_id'];
-                                $reszid = update_zid_product($quantity, $pid, $token, $storeID);
-                                 
-                                
-    
-                                //=========================================//
-                            }
-                        
-                        }
 
             $error_status = array('status' => true);
             echo json_encode($error_status);
@@ -1087,7 +1119,7 @@ class PickUp extends MY_Controller {
         else {
             $error_status = array('status' => false);
             echo json_encode($error_status);
-            echo $this->db->last_query();
+          //  echo $this->db->last_query();
         }
     }
 

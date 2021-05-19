@@ -694,7 +694,6 @@ class Seller extends MY_Controller {
         $this->load->view('SellerM/seller_zidconfig', $data);
     }
 
-
     public function updateSallaConfig($id) {
         $data['customer'] = $this->Seller_model->edit_view_customerdata($id);
         $data['seller'] = $this->Seller_model->edit_view($id);
@@ -709,12 +708,14 @@ class Seller extends MY_Controller {
 
             if ($this->Seller_model->update_salla($id, $update_data)) {
                 $this->session->set_flashdata('msg', $this->input->post('name') . '   has been updated successfully');
-                redirect('Seller');
+                redirect('Seller/updateSallaConfig/'.$id);
             }
         }
 
         $this->load->view('SellerM/seller_sallaconfig', $data);
     }
+
+   
 
     /**
      * @param type $id
@@ -866,13 +867,11 @@ class Seller extends MY_Controller {
     public function sallaWebhookSubscribe($id) {
 
         if ($this->input->post('salla_webhook_subscribed')) {
-            ini_set('display_errors', '1');
-            ini_set('display_startup_errors', '1');
-            error_reporting(E_ALL);
+           
             $customer = $this->Seller_model->edit_view_customerdata($id);
 
             if ($customer['salla_athentication'] !== "" && $customer['salla_active'] == 'Y') {
-
+               
                 if ($this->input->post('salla_webhook_subscribed') == 'Y') {
                     $this->sallaWebhookSubscriptionCreate($customer);
                 } else {
@@ -885,48 +884,34 @@ class Seller extends MY_Controller {
 
                 if ($this->Seller_model->update_salla($id, $update_data)) {
                     $this->session->set_flashdata('msg', $this->input->post('name') . '   has been updated successfully');
-                    redirect('Seller');
+                    redirect('Seller/updateSallaConfig/'.$id);
                 }
             }
-            die;
-            redirect('Seller');
+            
+            redirect('Seller/updateSallaConfig/'.$id);
         }
     }
 
     private function sallaWebhookSubscriptionCreate($customer) {
 
-        /* check zid status and if status is new then order create other wise update webhook */
-        //        if ($customer['salla_status'] == 'new') {
-        //            $event = "order.create";
-        //            $condition = null;
-        //        }
-        //        } else {
-        //            $event = "order.update";
-        //            $condition = "json_encode(array('status'=>'ready'))";
-        //        }
-                
-        
-        $event = "order.create";
+
+        $event = "order.update";
         if ($customer['salla_active'] == 'Y') {
 
             $request = array(
-                'name' => 'Salla Create Order Event',
-                'event' => 'order.created',
-                'url' => $this->config->item('salla_order_target_url') . '?cid=' . $customer['uniqueid'],
-            //                      'headers' =>
-            //                    array(                        
-            //                        array(
-            //                            'key' => 'Authorization',
-            //                            'value' => $customer['salla_athentication'],
-            //                        ),                        
-            //                        array(
-            //                            'key' => 'Accept-Language',
-            //                            'value' => 'AR',
-            //                        ),
-            //                    ),
-            );
-
-            $curl = curl_init();
+                "name" => "Salla Update ".$customer['uniqueid'], 
+                "event" => "order.updated", 
+                "url" => "https://api.diggipacks.com/API/sallaOrder/".$customer['uniqueid'], 
+                "headers" => array(
+                      array(
+                         "key" => "X-EVENT-TYPE", 
+                         "value" => "order.updated.diggipacks" 
+                      )
+                ) ,
+             ); 
+         //$this->config->item('salla_order_target_url') . '/' . $customer['uniqueid'],
+          $request=json_encode($request); 
+         $curl = curl_init();
 
             curl_setopt_array($curl, [
                 CURLOPT_URL => "https://api.salla.dev/admin/v2/webhooks/subscribe",
@@ -938,13 +923,17 @@ class Seller extends MY_Controller {
                 CURLOPT_CUSTOMREQUEST => "POST",
                 CURLOPT_POSTFIELDS => $request,
                 CURLOPT_HTTPHEADER => [
-                    "Authorization: Bearer " . $customer['salla_athentication']
+                    "Authorization: Bearer " . $customer['salla_athentication'],
+                    "Accept-Language: AR",
+                    "Content-Type: application/json"
                 ],
             ]);
 
-            $result = curl_exec($curl);
+            
 
-            $response = json_decode(curl_exec($curl));
+          $result = curl_exec($curl); 
+
+            $response = json_decode(curl_exec($curl)); 
             
             curl_close($curl);
         }
@@ -1110,7 +1099,88 @@ class Seller extends MY_Controller {
 
     //Salla functions starts 
 
-  
+    public function SallaProducts($id) 
+    {
+    
+         $store_link = "https://api.salla.dev/admin/v2/products";
+         $customer = $this->Seller_model->edit_view_customerdata($id);
+    
+        $curl = curl_init();
+        curl_setopt_array($curl, [
+          CURLOPT_URL => $store_link,
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => "",
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 30,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => "GET",
+          CURLOPT_HTTPHEADER => [
+            "authorization: Bearer ".$customer['salla_athentication']
+          ],
+        ]);
+        
+        $response = curl_exec($curl);
+        $err = curl_error($curl);        
+        curl_close($curl);
+    
+        $SallaProductArr_total = json_decode($response, true);
+    
+        // echo "<pre>"; print_r( $SallaProductArr_total);   die; 
+    
+            if (!empty($SallaProductArr_total['data']) && ($SallaProductArr_total['success'] == 1)) 
+            {
+                $sallaarray = array();
+                foreach ($SallaProductArr_total['data'] as $key => $products) 
+                {
+                    if(!empty($products['sku']))
+                    {
+                        //echo "<pre>"; print_r($products); 
+                        $sallaarray[] =  array(
+                            'sku' => $products['sku'],
+                            'name' => $products['name'] ,
+                            'id' => $products['id']
+                            );
+                           
+                    }
+                   
+                }
+            }
+            $SallaProducts['products'] = $sallaarray;
+       
+             //echo "<pre>"; print_r( $SallaProducts);   die; 
+    
+       $this->load->view('SellerM/view_sallaproducts', $SallaProducts);
+        //$this->load->view('SellerM/view_sallaproducts');
+    }
+    
+    public function SaveSallaProducts() {
+                  
+        foreach ($this->input->post('selsku') as  $value) {
+          
+            $skuarray = array();
+            $skuarray = array(
+                'sku' => $this->input->post('sku')[$value],
+                'salla_pid' => $this->input->post('pid')[$value],
+                'name' => $this->input->post('skuname')[$value],
+                'super_id' => $this->session->userdata('user_details')['super_id'],
+                'description' => $this->input->post('sku')[$value],
+                'type' => 'B2C',
+                'storage_id' => $this->input->post('storageid'),
+                'wh_id' => $this->input->post('warehouseid'),
+                'sku_size' => $this->input->post('sku_size'),
+                'entry_date' => date("Y-m-d H:i:s")
+            );
+         
+           $exist_zidsku_id = exist_zidsku_id($this->input->post('sku')[$value], $this->session->userdata('user_details')['super_id']);
+            if ($exist_zidsku_id != '' || $exist_zidsku_id != 0) {
+                echo $product['sku'] . ' Exist<br>';
+            } else {
+                AddSKUfromZid($skuarray);
+            }
+        }
+        $this->session->set_flashdata('msg', "Selected Sku has been Added Successfully");
+        redirect('Item');
+    }
     
 
 }

@@ -178,7 +178,7 @@
                     <!-- Content area -->
                     <div class="content">
                         <div class="panel panel-flat">
-                            <div class="panel-heading">
+                            <div class="panel-heading" dir="ltr">
                                 <h1><strong><?= lang('lang_Add_Zone'); ?></strong></h1>
                             </div>
                             <hr>
@@ -208,7 +208,7 @@ else echo set_value('name'); ?>" required/>
                                                 <span id="c_id"></span>
                                                 <select name="c_id" id="" required class="js-select4 bigdrop"  required > 
                                                 <option value="0" <?php if ($cmpy->id == 0) {
-                                                                echo "selected=selected";} ?>>Last Mile </option>
+                                                                echo "selected=selected";} ?>><?= lang('lang_Last_Mile'); ?> </option>
                                                     <?php
                                                     if (!empty($company)) {
                                                         foreach ($company as $cmpy) {
@@ -243,19 +243,19 @@ $alreayCityIds = json_decode($EditData[0]->city_id);
                                             </div>
 
                                                <div class="form-group ">
-                                                <label>Capcity</label>
+                                                <label><?= lang('lang_Capcity'); ?></label>
                                                 <span id="capacity"></span>
                                                <input type="number" name="capacity" class="form-control" min="0"  onChange="updateTextInput(this.value);" value="<?= $EditData[0]->capacity; ?>" required>
                                               </div>  
 
                                               <div class="form-group ">
-                                                <label>Price</label>
+                                                <label><?= lang('lang_Price'); ?></label>
                                                 <span id="price"></span>
                                                <input type="number" name="price" class="form-control" value="<?= $EditData[0]->price; ?>" required>
                                               </div>
 
 
-                                            <button type="submit" class="btn btn-primary" name="submit" value="submit">Add New Zone</button>
+                                            <button type="submit" class="btn btn-primary" name="submit" value="submit"><?= lang('lang_Add_NEW_ZONE'); ?></button>
                                     </form>
                             </div>
                         </div>
