@@ -298,6 +298,7 @@ $route['city_list'] = 'Country/cityList';
 //========================Salla/Zid Order Pulling===============================//
 $route['salla'] = 'Salla/add';
 $route['zid']   = 'Salla/add_zid';
+$route['bulk_tracking']= 'Shipment/bulk_tracking';
 
 //===================================================//
 $route['notfound'] = 'Mynotfound';

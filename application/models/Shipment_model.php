@@ -197,9 +197,9 @@ class Shipment_model extends CI_Model {
         }
     }
 
-    public function getawbdataquery($awbids = array()) {
+  public function getawbdataquery($awbids = array()) {
         // print_r($awbids[0]);
-        $awbarray =$awbids;
+        $awbarray = $awbids;
 
         $counter = 0;
         $conditions = "";
@@ -211,8 +211,8 @@ class Shipment_model extends CI_Model {
             $counter++;
         }
 
-        $query = $this->db->query("select * from shipment_fm where (slip_no IN('$conditions') or booking_id IN('$conditions')) and super_id='" . $this->session->userdata('user_details')['super_id'] . "'");
-       // echo $this->db->last_query();
+        $query = $this->db->query("select * from shipment_fm where (slip_no IN('$conditions') or booking_id IN('$conditions') or frwd_company_awb IN('$conditions')) and super_id='" . $this->session->userdata('user_details')['super_id'] . "'");
+        // echo $this->db->last_query();
         if ($query->num_rows() > 0) {
             return $query->result_array();
         }
