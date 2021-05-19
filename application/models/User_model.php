@@ -205,6 +205,9 @@ class User_model extends CI_Model {
     }
 
     public function userCategoryData() {
+         $SuperAccessIDs = GetSuperAdminAccessIds();
+        $ids_array = explode(',', $SuperAccessIDs);
+        $this->db->where_in('id', $ids_array);
         $this->db->where('pid', 0);
         $this->db->where('deleted', 'N');
         $query = $this->db->get('privilege_details_fm');
