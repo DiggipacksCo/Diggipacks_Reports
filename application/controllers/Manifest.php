@@ -2466,6 +2466,7 @@ class Manifest extends CourierCompany_pickup {
         $locations = $postData['locations'];
         $seller_id = $skus[0]['sid'];
         $token = GetallCutomerBysellerId($seller_id, 'manager_token');
+        $salatoken = GetallCutomerBysellerId($seller_id, 'salla_athentication');
         $skuQtyArray = array(); 
          
         if (!empty($postData)) {
@@ -2631,9 +2632,10 @@ class Manifest extends CourierCompany_pickup {
             if (!empty($token)) {
 
                 $zid_store_id = GetallCutomerBysellerId($seller_id, 'zid_sid');
-             // echo "<br> <pre>";
-             foreach($skuQtyArray as $skuqtyval)
-             {                           
+          
+            foreach($skuQtyArray as $skuqtyval)
+             {      
+                if (!empty($token)) {                     
                  //==========update zid stock===============//
                    $zidReqArr = GetAllQtyforSeller($skuqtyval, $seller_id);    
                   // print_r($zidReqArr);                      
@@ -2641,7 +2643,19 @@ class Manifest extends CourierCompany_pickup {
                      $pid = $zidReqArr['zid_pid'];
                      $token = $token;
                       $storeID = $zid_store_id;
-                    $reszid = update_zid_product($quantity, $pid, $token, $storeID);                                                               
+                    $reszid = update_zid_product($quantity, $pid, $token, $storeID);    
+                }
+                    if (!empty($salatoken)) 
+                    {
+                        $sallaReqArr =GetAllQtyforSeller($skuqtyval, $seller_id);    
+                        $quantity = $sallaReqArr['quantity'] ; //+$fArray['qty'];
+                        $pid = $sallaReqArr['sku'];
+                        $sallatoken = $salatoken;
+                        // echo "<pre>"; print_r($sallaReqArr);
+                        $reszid = update_salla_qty_product($quantity, $pid, $sallatoken);  
+                    
+                    
+                    }
 
                      //=========================================//
                  }

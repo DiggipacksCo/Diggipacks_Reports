@@ -243,3 +243,39 @@ function update_salla_qty_product($quantity = null, $pid = null, $token = null)
 curl_close($curl);
 
 }
+
+
+function update_status_salla($status = null, $note = null, $token = null,$id=null) 
+{
+   
+
+    $param = array(
+        'status_id' => $status,
+        'note' => $note,
+    );
+    $request = json_encode($param);
+    
+    $url = "https://api.salla.dev/admin/v2/orders/" . $id . "/status"; 
+    $curl = curl_init();
+
+       curl_setopt_array($curl, [
+           CURLOPT_URL => $url ,
+           CURLOPT_RETURNTRANSFER => true,
+           CURLOPT_ENCODING => "",
+           CURLOPT_MAXREDIRS => 10,
+           CURLOPT_TIMEOUT => 30,
+           CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+           CURLOPT_CUSTOMREQUEST => "POST",
+           CURLOPT_POSTFIELDS => $request,
+           CURLOPT_HTTPHEADER => [
+               "Authorization: Bearer " . $token,
+               "Accept-Language: AR",
+               "Content-Type: application/json",
+              
+           ],
+       ]);
+ $response = curl_exec($curl);
+$err = curl_error($curl);
+
+
+}
