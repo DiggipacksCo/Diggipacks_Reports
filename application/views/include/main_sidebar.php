@@ -32,7 +32,7 @@
                     <?php } ?>
 
                     <?php if (menuIdExitsInPrivilageArray(1) == 'Y') { ?>
-                        <li <?php if ($this->uri->segment(1) == 'Shipment' || $this->uri->segment(1) == 'bulk_update_view' || $this->uri->segment(1) == 'TrackingResult' || $this->uri->segment(1) == 'TrackingDetails' || $this->uri->segment(1) == 'Forward_Delivery_Station' || $this->uri->segment(1) == 'bulkprint' || $this->uri->segment(1) == 'forwardshipments' || $this->uri->segment(1) == 'forwardedshipments') echo 'class="active"'; ?>> <a href="#"><i class="icon-bus"></i> <span><?= lang('lang_Shipment_Management'); ?></span></a>
+                        <li <?php if ($this->uri->segment(1) == 'Shipment' || $this->uri->segment(1) == 'bulk_update_view' || $this->uri->segment(1) == 'TrackingResult' || $this->uri->segment(1) == 'TrackingDetails' || $this->uri->segment(1) == 'Forward_Delivery_Station' || $this->uri->segment(1) == 'bulkprint' || $this->uri->segment(1) == 'forwardshipments' || $this->uri->segment(1) == 'forwardedshipments' || $this->uri->segment(1) == 'bulk_tracking') echo 'class="active"'; ?>> <a href="#"><i class="icon-bus"></i> <span><?= lang('lang_Shipment_Management'); ?></span></a>
                             <ul>
                                 <?php if (menuIdExitsInPrivilageArray(29) == 'Y') { ?>
 
@@ -50,7 +50,9 @@
                                 <?php if (menuIdExitsInPrivilageArray(82) == 'Y') { ?>
                                     <li><a href="<?= base_url('bulkprint'); ?>"><?= lang('lang_Bulk_Print'); ?></a></li>
                                 <?php } ?>
-                                    
+                                     <?php if (menuIdExitsInPrivilageArray(137) == 'Y') { ?>
+                                    <li><a href="<?= base_url('bulk_tracking'); ?>">Bulk Track</a></li>
+                                <?php } ?>
                                    
                                 <?php if (menuIdExitsInPrivilageArray(30) == 'Y') { ?>
 

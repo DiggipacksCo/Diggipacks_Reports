@@ -4217,6 +4217,32 @@ class Shipment extends MY_Controller {
          }
         echo json_encode($postData); 
     }
+      public function bulk_tracking() {
+        $this->load->view('ShipmentM/bulk_tracking', $bulk);
+    }
+    
+     public function BulkTrackingsbt() {
+
+
+
+        $show_awb_no = $this->input->post('show_awb_no');
+        $SlipNos = preg_replace('/\s+/', ',', $show_awb_no);
+        $slip_arr = explode(",", $SlipNos);
+        $slipData = array_unique($slip_arr);
+         $data['traking_awb_no'] =$slipData;
+         $data['shipmentdata'] = $this->Shipment_model->getawbdataquery($slipData);
+         if(!empty($data['shipmentdata']))
+         {
+        //print_r($data['shipmentdata']); die;
+         $this->load->view('ShipmentM/trackingresult', $data);
+         }
+         else
+         {
+             $this->session->set_flashdata('error', 'please enter valid order no.');
+           redirect(base_url() . 'bulk_tracking');  
+         }
+       // print_r($slipData); die;
+    }
 
 }
 
