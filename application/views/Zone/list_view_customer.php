@@ -71,7 +71,9 @@
                                                 <th><?= lang('lang_company'); ?></th>
                                                 <th><?= lang('lang_Capacity'); ?></th>
                                                 <th><?= lang('lang_City'); ?></th>
-                                                <th>Price</th>                                                  
+                                                <th>Max Weight Range</th>   
+                                                <th>Max Weight Range Rate</th> 
+                                                <th>Additional Weight Rate</th>                                                
                                                 <th><?= lang('lang_Action'); ?></th>
                                             </tr>
                                         </thead>
@@ -87,7 +89,9 @@
                                                            <td><?= $seller->capacity; ?></td> 
 
                                                         <td><?= getdestinationfieldshow_array(implode(',', json_decode($seller->city_id)), 'city'); ?></td> 
-                                                         <td><?= $seller->price; ?></td> 
+                                                        <td><?= $seller->max_weight; ?></td> 
+                                                         <td><?= $seller->flat_price; ?></td> 
+                                                          <td><?= $seller->price; ?></td> 
                                                      
                                                         <td class="text-center">
                                                             <ul class="icons-list">

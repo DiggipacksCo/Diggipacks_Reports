@@ -249,7 +249,7 @@ else echo set_value('name'); ?>" required/>
                                                     if (!empty($company)) {
                                                         foreach ($company as $cmpy) {
                                                             ?>
-                                                            <option value="<?php echo $cmpy->cc_id; ?>" <?php if ($cmpy->id == $EditData[0]->cc_id) {
+                                                            <option value="<?php echo $cmpy->id; ?>" <?php if ($cmpy->id == $EditData[0]->cc_id) {
                                                                 echo "selected=selected";
                                                             } ?>><?php echo $cmpy->company ?></option>
                                                 <?php }
@@ -263,10 +263,21 @@ else echo set_value('name'); ?>" required/>
                                               </div>  
 
                                               <div class="form-group ">
-                                                <label>Price</label>
+                                                <label>Max Weight Range</label>
+                                                <span id="max_weight"></span>
+                                               <input type="number" name="max_weight" class="form-control" value="<?= $EditData[0]->max_weight; ?>" required>
+                                              </div>
+                                              <div class="form-group ">
+                                                 <label>Max Weight Range Rate</label>
+                                                <span id="flat_price"></span>
+                                               <input type="number" name="flat_price" class="form-control" value="<?= $EditData[0]->flat_price; ?>" required>
+                                              </div>
+                                              <div class="form-group ">
+                                                 <label>Additional Weight Rate</label>
                                                 <span id="price"></span>
                                                <input type="number" name="price" class="form-control" value="<?= $EditData[0]->price; ?>" required>
                                               </div>
+                                              
                                               <div class="form-group " style="margin-bottom 50px !important; min-height: 250px;" >  
                                               <div class="form-group ">
     <label>City </label>
