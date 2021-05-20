@@ -158,16 +158,30 @@ class Zid extends CI_Controller {
                                 "wieght" => $products['weight']['value'],
                             );
                         }
-                        
+                        if($result1['order']['has_different_consignee']==true )
+                        {
+
+                           
+                            $recName=$result1['order']['consignee']['name'];
+                            $recMobile=$result1['order']['consignee']['mobile'];
+                            $recEmail=$result1['order']['consignee']['email'];
+                        }
+                        else
+                        {
+                            $recName=$result1['order']['customer']['name'];
+                            $recMobile=$result1['order']['customer']['mobile'];
+                            $recEmail=$result1['order']['customer']['email'];
+                           
+                        }
                         $param = array(
                             "sender_name" => $customers['name'],
                             "sender_email" => $customers['email'],
                             "origin" => $this->Zid_model->getdestinationfieldshow($customers['city'], 'city', $customers['super_id']),
                             "sender_phone" => $customers['phone'],
                             "sender_address" => $customers['address'],
-                            "receiver_name" => $result1['order']['customer']['name'],
-                            "receiver_phone" => $result1['order']['customer']['mobile'],
-                            "receiver_email" => $result1['order']['customer']['email'],
+                            "receiver_name" => $recName,
+                            "receiver_phone" => $recMobile,
+                            "receiver_email" => $recEmail,
                             "description" => $result1['message']['description'],
                             "destination" => $result1['order']['shipping']['address']['city']['name'],
                             "BookingMode" => ($result1['order']['payment']['method']['code'] == 'zid_cod' ? 'COD' : 'CC'),
