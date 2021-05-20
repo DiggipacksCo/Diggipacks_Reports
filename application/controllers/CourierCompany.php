@@ -984,8 +984,23 @@ class CourierCompany extends MY_Controller  {
                             }
                             $returnArr['responseError'][] = $slipNo . ':' . $errre_response;
                         }
-                    }
-                    elseif ($company_type== 'F')
+                    }elseif ($company== 'Beez'){
+                            //print "<pre>"; print_r($sku_data);die;
+                            $response = $this->Ccompany_model->BeezArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$sku_data);  
+                            if(isset($response['Message']) && !empty($response['Message'])){
+                                $returnArr['responseError'][] = $slipNo . ':' . $response['Message'];
+                            }else{
+                                
+                                $client_awb = $response;
+                                $url = 'https://login.beezerp.com/label/pdf/?t='.$client_awb;
+                                $generated_pdf = file_get_contents($url); 
+                                file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                                
+                                $beezlabel = base_url() . "assets/all_labels/$slipNo.pdf";
+                                $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $beezlabel,$c_id);
+                                array_push($succssArray, $slipNo);
+                            }
+                    }elseif ($company_type== 'F')
                     { // for all fastcoo clients treat as a CC 
                       
                         if ($company=='Ejack' ) 
