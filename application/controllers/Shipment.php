@@ -1697,7 +1697,7 @@ class Shipment extends MY_Controller {
                         $pid = $sallaReqArr['sku'];
                         $sallatoken = $salatoken;
                         // echo "<pre>"; print_r($sallaReqArr);
-                        $reszid = update_salla_qty_product($quantity, $pid, $sallatoken);  
+                        $reszid = update_salla_qty_product($quantity, $pid, $sallatoken,$custmoerID);
                     
                     
                     }
@@ -3222,7 +3222,7 @@ class Shipment extends MY_Controller {
                             $pid = $zidReqArr['zid_pid'];
                             $token = $token;
                             $storeID = $data['zid_store_id'];
-                            update_zid_product($quantity, $pid, $token, $storeID);
+                            update_zid_product($quantity, $pid, $token, $storeID,$custmoerID,$zidReqArr['sku']);
                         }
         
                         //==========update salla quantity===============//
@@ -3234,7 +3234,7 @@ class Shipment extends MY_Controller {
                             $pid = $sallaReqArr['sku'];
                             $sallatoken = $salatoken;
                             // echo "<pre>"; print_r($sallaReqArr);
-                            $reszid = update_salla_qty_product($quantity, $pid, $sallatoken);  
+                            $reszid = update_salla_qty_product($quantity, $pid, $sallatoken,$custmoerID);
                         
                         
                         }

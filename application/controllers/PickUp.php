@@ -615,7 +615,7 @@ class PickUp extends MY_Controller {
 
 
                 $slip_data[$key] ['slip_no'] = $data['slip_no'];
-                $slip_data[$key]['shippers_ref_no'] = $responseData['awb'];
+                //$slip_data[$key]['shippers_ref_no'] = $responseData['awb'];
                 $slip_data[$key]['code'] = $code;
                 $slip_data[$key]['delivered'] = $new_status;
                 // $slip_data[$key]['close_date'] = date('Y-m-d');
@@ -685,7 +685,7 @@ class PickUp extends MY_Controller {
                 $salatoken = GetallCutomerBysellerId($seller_id, 'salla_athentication');
 
                 if (!empty($salatoken)) {
-                  update_status_salla($sallaStatus , $note, $salatoken,$data['shippers_ref_no'] ); 
+                    update_status_salla($sallaStatus , $note, $salatoken,$data['shippers_ref_no'],$seller_id,$data['slip_no'] ); 
                 }
 
                 if (!empty($token)) {
@@ -1028,7 +1028,11 @@ class PickUp extends MY_Controller {
                             $activitiesArr[] = array('exp_date' => $rdata['expity_date'], 'st_location' => $fArray['stock_location'], 'item_sku' => $fArray['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $check_slipNo['cust_id'], 'qty' => $fArray['qty'], 'p_qty' => 0, 'qty_used' => $fArray['qty'], 'type' => 'Add', 'entrydate' => date("Y-m-d h:i:s"), 'awb_no' => $slip_no, 'super_id' => $this->session->userdata('user_details')['super_id'], 'shelve_no' => $fArray['shelve_no']);
                         }
 
-
+                        if (!empty($salatoken)) {
+                            $sallaStatus = 525144736; 
+                            $note = "ملغي";
+                            update_status_salla($sallaStatus , $note, $salatoken,$check_slipNo['shippers_ref_no'],$check_slipNo['cust_id'],$check_slipNo['slip_no'] );
+                            }
                        
 
                         if (!empty($salatoken)) {
@@ -1094,13 +1098,9 @@ class PickUp extends MY_Controller {
                     } 
                     $trackingurl = TRACKURL . $slip_no;
                     //updateZidStatus($orderID=null, $token=null, $status=null, $code=null, $label=null, $trackingurl=null)
-                    updateZidStatus($check_slipNo['booking_id'], $token, 'cancelled', $slip_no, $lable, $trackingurl);
+                    updateZidStatus($check_slipNo['booking_id'], $token, 'cancelled', $slip_no, $lable, $trackingurl,$check_slipNo['cust_id']);
                 }
-                if (!empty($salatoken)) {
-                $sallaStatus = 525144736; 
-                $note = "ملغي";
-               update_status_salla($sallaStatus , $note, $salatoken,$check_slipNo['shippers_ref_no'] ); 
-                }
+                
             }
 
 
@@ -3207,7 +3207,7 @@ public function awbPickupPrint_bulk_new($awb = array(),$type = null) {
                 } 
                 $trackingurl = TRACKURL . $slip_no;
                 //updateZidStatus($orderID=null, $token=null, $status=null, $code=null, $label=null, $trackingurl=null)
-                updateZidStatus($val['booking_id'], $token, $zidStatus, $slip_no, $lable, $trackingurl);
+                updateZidStatus($val['booking_id'], $token, $zidStatus, $slip_no, $lable, $trackingurl, $seller_id );
             }
         }
         if (!empty($updateSlip)) {
