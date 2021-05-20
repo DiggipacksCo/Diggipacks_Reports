@@ -225,7 +225,7 @@ class Seller_model extends CI_Model {
         } else {
             $this->db->insert('zid_deliver_options', $data);
         }
-        
+        //echo $this->db->last_query(); die;
     }
 
     public function deliverOptionExist($cust_id) {

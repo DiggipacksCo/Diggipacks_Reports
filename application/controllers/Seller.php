@@ -1019,8 +1019,9 @@ class Seller extends MY_Controller {
                 'delivery_estimated_time_ar' => $this->input->post('delivery_estimated_time_ar'),
                 'delivery_estimated_time_en' => $this->input->post('delivery_estimated_time_en'),
             );
-         //  ECHO "<PRE>";print_r($rdata);die;
+          ECHO "<PRE>";
              $customer = $this->Seller_model->edit_view_customerdata($cust_id);
+             //print_r($customer);
              $request = json_encode($rdata);
              
                 $curl = curl_init();
@@ -1059,10 +1060,10 @@ class Seller extends MY_Controller {
                         'delivery_id' => $deliver_id
                     );
                     
-                    $this->Seller_model->zidDeliveryOptionUpdate($data);
+                    $this->Seller_model->zidDeliveryOptionUpdate($data); 
                 }
                
-            
+            //die();
                 
                 $this->session->set_flashdata('msg', 'Data been updated successfully');
                 redirect('Seller/updateZidConfig/'.$cust_id);
