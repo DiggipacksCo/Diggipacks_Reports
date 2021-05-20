@@ -100,9 +100,8 @@ function GetAllQtyforSeller_new($cust_id = null) {
 }
 
 //*************************Quantity Update function in Zid*************************//
-function update_zid_product($quantity = null, $pid = null, $token = null, $storeID = null) {
-
-
+function update_zid_product($quantity = null, $pid = null, $token = null, $storeID = null,$cust_id=null,$sku) 
+{
     $param = array(
         'quantity' => $quantity,
         'id' => $pid,
@@ -129,14 +128,31 @@ function update_zid_product($quantity = null, $pid = null, $token = null, $store
         ),
     ));
 
-     $response = curl_exec($curl); 
+    $response = curl_exec($curl);
 
     curl_close($curl);
+    $ci = & get_instance();
+    $ci->load->database();
+    $datalog = array(
+  
+        'log'=> $response ,
+        'cust_id'=>  $cust_id,
+       'sku'=>$sku,
+       'qty'=>$quantity,
+        'system_name'=> 'zid',
+        'super_id'=>  $ci->session->userdata('user_details')['super_id']
+    );
+    
+    
+    
+  
+    
+    $ci->db->insert('salla_out_log', $datalog);
 }
 
-
 //**************************************************************************//
-function updateZidStatus($orderID = null, $token = null, $status = null, $code = null, $label = null, $trackingurl = null) {
+
+function updateZidStatus($orderID = null, $token = null, $status = null, $code = null, $label = null, $trackingurl = null,$cust_id=null) {
     //echo 'werwqerwqrewqerwqrwqerqew'.$token.'testerewrwrwerewrwererweer';
     $url = 'https://api.zid.sa/v1/managers/store/orders/' . $orderID . '/change-order-status';
     $curl = curl_init();
@@ -162,7 +178,25 @@ function updateZidStatus($orderID = null, $token = null, $status = null, $code =
     $response = curl_exec($curl);
 
     curl_close($curl);
-    $response;
+    $ci = & get_instance();
+    $ci->load->database();
+   
+    $datalog = array(
+        'slip_no' =>  $slip_no,
+        'status_id' =>  $status,
+        'note' =>  $trackingurl,
+        'log'=> $response ,
+        'cust_id'=>  $cust_id,
+        'booking_id'=> $orderID,
+        'system_name'=> 'zid',
+        'super_id'=>  $ci->session->userdata('user_details')['super_id']
+    );
+    
+    
+    
+   
+    
+    $ci->db->insert('salla_out_log', $datalog);
 }
 
 function ZidPcURL($storeID, $store_link, $bearer) {
@@ -244,8 +278,7 @@ curl_close($curl);
 
 }
 
-
-function update_status_salla($status = null, $note = null, $token = null,$id=null) 
+function update_status_salla($status = null, $note = null, $token = null,$id=null,$cust_id=null,$slip_no=null) 
 {
    
 
@@ -275,7 +308,25 @@ function update_status_salla($status = null, $note = null, $token = null,$id=nul
            ],
        ]);
  $response = curl_exec($curl);
-$err = curl_error($curl);
+    $err = curl_error($curl);
+
+    $ci = & get_instance();
+    $ci->load->database();
+    $datalog = array(
+    'slip_no' =>  $slip_no,
+    'status_id' =>  $status,
+    'note' =>  $note,
+    'log'=> $response ,
+    'cust_id'=>  $cust_id,
+    'booking_id'=> $id,
+    'system_name'=> 'salla',
+    'super_id'=>  $ci->session->userdata('user_details')['super_id']
+    );
 
 
+
+
+    $ci->db->insert('salla_out_log', $datalog);
+
+    /// echo $ci->db->last_query();exit;
 }

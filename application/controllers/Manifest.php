@@ -2643,7 +2643,7 @@ class Manifest extends CourierCompany_pickup {
                      $pid = $zidReqArr['zid_pid'];
                      $token = $token;
                       $storeID = $zid_store_id;
-                    $reszid = update_zid_product($quantity, $pid, $token, $storeID);    
+                      $reszid = update_zid_product($quantity, $pid, $token, $storeID,$seller_id,$zidReqArr['sku']);    
                 }
                     if (!empty($salatoken)) 
                     {
@@ -2652,7 +2652,7 @@ class Manifest extends CourierCompany_pickup {
                         $pid = $sallaReqArr['sku'];
                         $sallatoken = $salatoken;
                         // echo "<pre>"; print_r($sallaReqArr);
-                        $reszid = update_salla_qty_product($quantity, $pid, $sallatoken);  
+                        $reszid = update_salla_qty_product($quantity, $pid, $sallatoken,$seller_id);  
                     
                     
                     }
