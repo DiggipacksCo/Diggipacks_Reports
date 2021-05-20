@@ -20,36 +20,35 @@ class Finance extends MY_Controller {
 
 	public function run_shell_dynamic() {
 		
-         exec("php /var/www/html/diggipack_new/fs_files/fm-track/dynamic_invoice.php > /dev/null 2>&1 &");
-         exec("php /var/www/html/diggipack_new/fs_files/fm-track/return_dynamicinvoice.php > /dev/null 2>&1 &");
-         exec("php /var/www/html/diggipack_new/fs_files/fm-track/storage_charges.php > /dev/null 2>&1 &");
-         exec("php /var/www/html/diggipack_new/fs_files/fm-track/storage_dynamic_invoice.php > /dev/null 2>&1 &");
-         exec("php /var/www/html/diggipack_new/fs_files/fm-track/inventory_invoice.php > /dev/null 2>&1 &");
-         exec("php /var/www/html/diggipack_new/fs_files/fm-track/onhold_dynamicinvoice.php > /dev/null 2>&1 &");
-         exec("php /var/www/html/diggipack_new/fs_files/fm-track/pickup_dynamicinvoice.php > /dev/null 2>&1 &");
-         exec("php /var/www/html/diggipack_new/fs_files/fm-track/cancel_dynamic_invoice.php > /dev/null 2>&1 &");
-         exec("php /var/www/html/diggipack_new/fs_files/fm-track/inbound_dynamicinvoice.php > /dev/null 2>&1 &");
-		 exec("php /var/www/html/diggipack_new/fs_files/fm-track/storage_charges.php > /dev/null 2>&1 &");
-		 sleep(5);
-         exec("php /var/www/html/diggipack_new/fs_files/fm-track/storage_dynamic_invoice.php > /dev/null 2>&1 &");
+		exec("php /var/www/html/diggipack_new/fs_files/fm-track/dynamic_invoice.php > /dev/null 2>&1 &"); //dynamic_invoice
+        exec("php /var/www/html/diggipack_new/fs_files/fm-track/return_dynamicinvoice.php > /dev/null 2>&1 &"); //return_dynamicinvoice
+        exec("php /var/www/html/diggipack_new/fs_files/fm-track/storage_charges.php > /dev/null 2>&1 &"); //storage_charges
+        exec("php /var/www/html/diggipack_new/fs_files/fm-track/storage_dynamic_invoice.php > /dev/null 2>&1 &"); //storage_dynamic_invoice
+        exec("php /var/www/html/diggipack_new/fs_files/fm-track/inventory_invoice.php > /dev/null 2>&1 &"); //inventory_invoice
+        exec("php /var/www/html/diggipack_new/fs_files/fm-track/onhold_dynamicinvoice.php > /dev/null 2>&1 &"); //onhold_dynamicinvoice
+        exec("php /var/www/html/diggipack_new/fs_files/fm-track/pickup_dynamicinvoice.php > /dev/null 2>&1 &"); //pickup_dynamicinvoice
+        exec("php /var/www/html/diggipack_new/fs_files/fm-track/cancel_dynamic_invoice.php > /dev/null 2>&1 &"); //cancel_dynamic_invoice
+        exec("php /var/www/html/diggipack_new/fs_files/fm-track/inbound_dynamicinvoice.php > /dev/null 2>&1 &"); //inbound_dynamicinvoice
+        exec("php /var/www/html/diggipack_new/fs_files/fm-track/storage_calculation.php > /dev/null 2>&1 &"); //storage_calculation
+        exec("php /var/www/html/diggipack_new/fs_files/fm-track/skubarcode_invoice.php > /dev/null 2>&1 &"); //skubarcode_invoice        
+        sleep(5);
+        exec("php /var/www/html/diggipack_new/fs_files/fm-track/storage_dynamic_invoice.php > /dev/null 2>&1 &"); //storage_dynamic_invoice      
 		 
         return true;
     }
 
 	public function run_shell_fixrate() {
 	
-	         exec("php /var/www/html/diggipack_new/fs_files/fm-track/fixrate_invoice.php > /dev/null 2>&1 &",$output);
-	         exec("php /var/www/html/diggipack_new/fs_files/fm-track/return_fixrateinvoice.php > /dev/null 2>&1 &", $output1);
-	         exec("php /var/www/html/diggipack_new/fs_files/fm-track/storage_charges.php > /dev/null 2>&1 &", $output2);
-			 exec("php /var/www/html/diggipack_new/fs_files/fm-track/storage_fixrate_invoice.php > /dev/null 2>&1 &", $output7);
-	         exec("php /var/www/html/diggipack_new/fs_files/fm-track/inventory_invoice.php > /dev/null 2>&1 &", $output4);
-	         exec("php /var/www/html/diggipack_new/fs_files/fm-track/onhold_fixrateinvoice.php > /dev/null 2>&1 &", $output5);
-	         exec("php /var/www/html/diggipack_new/fs_files/fm-track/pickup_fixrateinvoice.php > /dev/null 2>&1 &", $output6);	      
-	         exec("php /var/www/html/diggipack_new/fs_files/fm-track/cancel_fixrate_invoice.php > /dev/null 2>&1 &", $output8);
-			 exec("php /var/www/html/diggipack_new/fs_files/fm-track/storage_charges.php > /dev/null 2>&1 &", $output2);
-			 sleep(5);
-			 exec("php /var/www/html/diggipack_new/fs_files/fm-track/storage_fixrate_invoice.php > /dev/null 2>&1 &", $output7);
-					
+            exec("php /var/www/html/diggipack_new/fs_files/fm-track/fixrate_invoice.php > /dev/null 2>&1 &",$output); //fixrate_invoice
+            exec("php /var/www/html/diggipack_new/fs_files/fm-track/return_fixrateinvoice.php > /dev/null 2>&1 &", $output1); //return_fixrateinvoice
+            exec("php /var/www/html/diggipack_new/fs_files/fm-track/storage_charges.php > /dev/null 2>&1 &", $output2);  //storage_charges
+            exec("php /var/www/html/diggipack_new/fs_files/fm-track/storage_fixrate_invoice.php > /dev/null 2>&1 &", $output7); //storage_fixrate_invoice
+            exec("php /var/www/html/diggipack_new/fs_files/fm-track/inventory_invoice.php > /dev/null 2>&1 &", $output4);  //inventory_invoice
+            exec("php /var/www/html/diggipack_new/fs_files/fm-track/onhold_fixrateinvoice.php > /dev/null 2>&1 &", $output5); //onhold_fixrateinvoice
+            exec("php /var/www/html/diggipack_new/fs_files/fm-track/pickup_fixrateinvoice.php > /dev/null 2>&1 &", $output6);	 //pickup_fixrateinvoice        
+            exec("php /var/www/html/diggipack_new/fs_files/fm-track/cancel_fixrate_invoice.php > /dev/null 2>&1 &", $output8); //cancel_fixrate_invoice
+            sleep(5);           
+            exec("php /var/www/html/diggipack_new/fs_files/fm-track/storage_fixrate_invoice.php > /dev/null 2>&1 &", $output7);				
 	        return true;
 	    }
 

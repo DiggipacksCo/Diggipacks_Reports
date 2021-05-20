@@ -10,6 +10,40 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />  
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
     </head>
+
+    <style>
+.subject-info-box-1,
+.subject-info-box-2 {
+    float: left;
+    width: 45%;
+    
+    select[multiple],
+select[size] {
+ 
+
+        height: 400px !important;
+        padding: 0;
+
+        option {
+            padding: 4px 10px 4px 10px;
+        }
+
+        option:hover {
+            background: #EEEEEE;
+        }
+    }
+}
+
+.subject-info-arrows {
+    float: left;
+    width: 10%;
+
+    input {
+        width: 70%;
+        margin-bottom: 5px;
+    }
+}
+</style>
     <style>
         .bigdrop {
             width: 100% !important;
@@ -178,7 +212,7 @@
                     <!-- Content area -->
                     <div class="content">
                         <div class="panel panel-flat">
-                            <div class="panel-heading" dir="ltr">
+                            <div class="panel-heading">
                                 <h1><strong><?= lang('lang_Add_Zone'); ?></strong></h1>
                             </div>
                             <hr>
@@ -187,15 +221,16 @@
                                 <?php if ($this->session->flashdata('err_msg') != '') {
                                     echo '<div class="alert alert-warning" role="alert">  ' . $this->session->flashdata('err_msg') . '.</div>';
                                 } ?>
-                                    <?php if (empty($EditData)) { ?>
+                                   <?php if (empty($EditData)) { ?>
                                     <form action="<?= base_url('Zone/add'); ?>" method="post"  name="add_customer" enctype="multipart/form-data">
                                         <?php } else { ?>
                                         <form action="<?= base_url('Zone/editZoneUpdate/' . $id); ?>" method="post"  name="add_customer" enctype="multipart/form-data">
 <?php } ?>
 
+
+
                                         <fieldset class="scheduler-border">
                                             <legend class="scheduler-border"><?= lang('lang_Zone_Details'); ?></legend>
-
 
                                             <div class="form-group">
                                                 <label><?= lang('lang_Zone_Name'); ?></label>
@@ -203,59 +238,76 @@
 else echo set_value('name'); ?>" required/>
                                             </div>
 
+
                                             <div class="form-group">
                                                 <label><?= lang('lang_Courier_Company'); ?></label>
                                                 <span id="c_id"></span>
                                                 <select name="c_id" id="" required class="js-select4 bigdrop"  required > 
                                                 <option value="0" <?php if ($cmpy->id == 0) {
-                                                                echo "selected=selected";} ?>><?= lang('lang_Last_Mile'); ?> </option>
+                                                                echo "selected=selected";} ?>>Last Mile </option>
                                                     <?php
                                                     if (!empty($company)) {
                                                         foreach ($company as $cmpy) {
                                                             ?>
-                                                            <option value="<?php echo $cmpy->id; ?>" <?php if ($cmpy->id == $EditData[0]->cc_id) {
+                                                            <option value="<?php echo $cmpy->cc_id; ?>" <?php if ($cmpy->id == $EditData[0]->cc_id) {
                                                                 echo "selected=selected";
                                                             } ?>><?php echo $cmpy->company ?></option>
                                                 <?php }
                                             } ?>
                                                 </select>
                                             </div>
-
-<?php
-$alreayCityIds = json_decode($EditData[0]->city_id);
-// print_r($alreayCityIds);
-?>
                                             <div class="form-group ">
-                                                <label>City</label>
-                                                <span id="city"></span>
-                                                <select name="city_id[]" class="selectpicker"   data-show-subtext="true" data-live-search="true"   data-width="100%" multiple> 
-
-                                                <?php
-                                                if (!empty($city_drp)) {
-                                                    foreach ($city_drp as $cry) {
-                                                        ?>
-                                                            <option value="<?php echo $cry->id; ?>" <?php if (in_array($cry->id, $alreayCityIds)) {
-                                                            echo "selected=selected";
-                                                        } ?>><?php echo $cry->city ?></option>
-                                                    <?php }
-                                                    } ?>
-                                                  </select>
-                                            </div>
-
-                                               <div class="form-group ">
-                                                <label><?= lang('lang_Capcity'); ?></label>
+                                                <label>Capcity</label>
                                                 <span id="capacity"></span>
                                                <input type="number" name="capacity" class="form-control" min="0"  onChange="updateTextInput(this.value);" value="<?= $EditData[0]->capacity; ?>" required>
                                               </div>  
 
                                               <div class="form-group ">
-                                                <label><?= lang('lang_Price'); ?></label>
+                                                <label>Price</label>
                                                 <span id="price"></span>
                                                <input type="number" name="price" class="form-control" value="<?= $EditData[0]->price; ?>" required>
                                               </div>
+                                              <div class="form-group " style="margin-bottom 50px !important; min-height: 250px;" >  
+                                              <div class="form-group ">
+    <label>City </label>
+    </div>  
+                                 <div class="subject-info-box-1">
+                                    <select multiple="multiple" id='lstBox1'  class="form-control">
+                                    <?php if (!empty($ListArr)): ?>
+                                                <?php foreach ($ListArr as $rows):
+                                                    ?>
+<option value="<?= $rows['id']; ?>"> <?= $rows['city']; ?> </option>
+                                            <?php endforeach; ?>
+                                            <?php endif; ?>
+                                    </select>
+                                    </div>
+                                   
+                                    <div class="subject-info-arrows text-center">
+                                    <input type='button' style="margin-top:5px;" id='btnAllRight' value='>>' class="btn btn-info" /><br />
+                                    <input type='button' style="margin-top:5px;"id='btnRight' value='>' class="btn btn-info" /><br />
+                                    <input type='button' style="margin-top:5px;" id='btnLeft' value='<' class="btn btn-info" /><br />
+                                    <input type='button' style="margin-top:5px;" id='btnAllLeft' value='<<' class="btn btn-info" />
+                                    </div>
+                                    <div class="subject-info-box-2">
+                                    <select multiple="multiple" name="city_id[]"id='lstBox2' class="form-control">
+                                    <?php if (!empty($pre)): ?>
+                                                <?php foreach ($pre as $rows):
+                                                    ?>
+<option selected value="<?= $rows['id']; ?>" > <?= $rows['city']; ?> </option>
+                                            <?php endforeach; ?>
+                                            <?php endif; ?>  
+                                    </select>
+                                    </div>
+                                    </div>
+                                  
+                                                                          
 
+                                    <div class="form-group " >  
+                                      
 
-                                            <button type="submit" class="btn btn-primary" name="submit" value="submit"><?= lang('lang_Add_NEW_ZONE'); ?></button>
+                                              <button class="btn btn-warning" type="button"  id="selectAll">Confirm</button>
+                                            <button type="submit" class="btn btn-primary" name="submit" value="submit">Add New Zone</button>
+                                    </div>
                                     </form>
                             </div>
                         </div>
@@ -313,3 +365,80 @@ $alreayCityIds = json_decode($EditData[0]->city_id);
     });
 </script>  
 
+
+
+<Script>
+        $(document).ready(function(){
+        $('#selectAll').click(function(){
+           
+            $('#lstBox2 option').prop('selected', true);
+            $('#subButton').prop('disabled', false);
+        });
+        });
+
+
+                        (function () {
+
+    
+
+
+
+  $("#btnRight").click(function (e) {
+    var selectedOpts = $("#lstBox1 option:selected");
+    if (selectedOpts.length == 0) {
+      alert("Nothing to move.");
+      e.preventDefault();
+    }
+
+    $("#lstBox2").append($(selectedOpts).clone());
+    $(selectedOpts).remove();
+    $('#subButton').prop('disabled', true);
+    e.preventDefault();
+  });
+
+  $("#btnAllRight").click(function (e) {
+   var isconfirm= confirm("Do you really want to add cities! its huge...");
+   if(isconfirm)
+{
+
+
+    var selectedOpts = $("#lstBox1 option");
+    if (selectedOpts.length == 0) {
+      alert("Nothing to move.");
+      e.preventDefault();
+    }
+
+    $("#lstBox2").append($(selectedOpts).clone());
+    $(selectedOpts).remove();
+    $('#subButton').prop('disabled', true);
+    e.preventDefault();
+}
+  });
+
+  $("#btnLeft").click(function (e) {
+    var selectedOpts = $("#lstBox2 option:selected");
+    if (selectedOpts.length == 0) {
+      alert("Nothing to move.");
+      e.preventDefault();
+    }
+
+    $("#lstBox1").append($(selectedOpts).clone());
+    $(selectedOpts).remove();
+    $('#subButton').prop('disabled', true);
+    e.preventDefault();
+  });
+
+  $("#btnAllLeft").click(function (e) {
+    var selectedOpts = $("#lstBox2 option");
+    if (selectedOpts.length == 0) {
+      alert("Nothing to move.");
+      e.preventDefault();
+    }
+
+    $("#lstBox1").append($(selectedOpts).clone());
+    $(selectedOpts).remove();
+    $('#subButton').prop('disabled', true);
+    e.preventDefault();
+  });
+})(jQuery);
+                        </Script>
