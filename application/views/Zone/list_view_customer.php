@@ -71,9 +71,9 @@
                                                 <th><?= lang('lang_company'); ?></th>
                                                 <th><?= lang('lang_Capacity'); ?></th>
                                                 <th><?= lang('lang_City'); ?></th>
-                                                <th>Max Weight</th>   
-                                                <th>Flat Price</th> 
-                                                <th>Price</th>                                                
+                                                <th>Max Weight Range</th>   
+                                                <th>Max Weight Range Rate</th> 
+                                                <th>Additional Weight Rate</th>                                                
                                                 <th><?= lang('lang_Action'); ?></th>
                                             </tr>
                                         </thead>
