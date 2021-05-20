@@ -275,9 +275,11 @@ public function previousCity_customer($id=null){
 
         
   public function UpdateZoneCompanyLIst(array $data,$id=null)
-  {
+  { 
+   		
       $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
-	 return $this->db->update('zone_list_fm',$data,array('id'=>$id));
+	  return $this->db->update('zone_list_fm',$data,array('id'=>$id));
+	  
   }
 
   public function UpdateZoneCompanyLIstCustomer(array $data,$id=null)

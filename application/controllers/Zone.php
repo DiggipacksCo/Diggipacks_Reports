@@ -112,11 +112,14 @@ class Zone extends MY_Controller {
 
     public function editZoneUpdate($id = null) {
         if ($id > 0) {
+            //print "<pre>"; print_r($this->input->post());die;
             $data = array(
                 'name' => $this->input->post('name'),
                 'capacity' => $this->input->post('capacity'),
                 'cc_id' => $this->input->post('c_id'),
                 'city_id' => json_encode($this->input->post('city_id')),
+                'max_weight' => $this->input->post('max_weight'),
+                'flat_price' => $this->input->post('flat_price'),
                 'price' => $this->input->post('price'),
             );
             $this->Zone_model->UpdateZoneCompanyLIst($data, $id);
@@ -134,6 +137,8 @@ class Zone extends MY_Controller {
                 'capacity' => $this->input->post('capacity'),
                 'cc_id' => $this->input->post('c_id'),
                 'city_id' => json_encode($this->input->post('city_id')),
+                'max_weight' => $this->input->post('max_weight'),
+                'flat_price' => $this->input->post('flat_price'),
                 'price' => $this->input->post('price'),
             );
             $this->Zone_model->UpdateZoneCompanyLIstCustomer($data, $id);
@@ -253,6 +258,8 @@ class Zone extends MY_Controller {
                 'cc_id' => $this->input->post('c_id'),
                 'super_id' => $this->session->userdata('user_details')['super_id'],
                 'city_id' => json_encode($this->input->post('city_id')),
+                'max_weight' => $this->input->post('max_weight'),
+                'flat_price' => $this->input->post('flat_price'),
                 'price' => $this->input->post('price'),
             );
             if (empty($errors)) {
@@ -304,6 +311,8 @@ class Zone extends MY_Controller {
                 'cust_id' => $this->input->post('cust_id'),
                 'super_id' => $this->session->userdata('user_details')['super_id'],
                 'city_id' => json_encode($this->input->post('city_id')),
+                'max_weight' => $this->input->post('max_weight'),
+                'flat_price' => $this->input->post('flat_price'),
                 'price' => $this->input->post('price'),
             );
             if (empty($errors)) {

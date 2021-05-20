@@ -268,7 +268,7 @@ if (!function_exists('Getselletdetails')) {
         $sql = "SELECT * FROM user where id ='" . $ci->session->userdata('user_details')['super_id'] . "'";
         $query = $ci->db->query($sql);
         $result = $query->result_array();
-     // echo   $ci->db->last_query(); exit; 
+     
         return $result;
     }
 }
