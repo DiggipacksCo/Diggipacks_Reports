@@ -247,8 +247,9 @@ $result=$query->row_array();
 
 
 //*************************Quantity Update function in Salla*************************//
-function update_salla_qty_product($quantity = null, $pid = null, $token = null) 
+function update_salla_qty_product($quantity = null, $pid = null, $token = null,$cust_id=null) 
 {
+   
     
     $param=array('quantity'=>$quantity);
     $request = json_encode($param);
@@ -274,7 +275,25 @@ function update_salla_qty_product($quantity = null, $pid = null, $token = null)
            ],
        ]);
  $response = curl_exec($curl);
-curl_close($curl);
+        curl_close($curl);
+        $ci = & get_instance();
+        $ci->load->database();
+        //$this->ci->load->library('session');
+        $datalog = array(
+        
+            'log'=> $response ,
+            'cust_id'=>  $cust_id,
+        'sku'=>$pid,
+        'qty'=>$quantity,
+            'system_name'=> 'salla',
+            'super_id'=>  $ci->session->userdata('user_details')['super_id']
+        );
+
+
+
+
+
+    $ci->db->insert('salla_out_log', $datalog);
 
 }
 
