@@ -3217,7 +3217,7 @@ array_push($itemArray,$peiceArray);
         $lang = getdestinationfieldshow($ShipArr['origin'], 'longitute');
         $country = getdestinationfieldshow($ShipArr['destination'], 'country');
         
-        if(empty($box_pieces1)){
+        if(empty($box_pieces1)){ 
             $box_pieces = 1;
         }else{ 
              $box_pieces = $box_pieces1 ; 

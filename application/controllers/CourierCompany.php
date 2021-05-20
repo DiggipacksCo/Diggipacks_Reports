@@ -975,7 +975,7 @@ class CourierCompany extends MY_Controller  {
                             header('Content-Type: application/pdf');
                             $lableSp=   file_get_contents(base_url().'awbPrint1/'.$slipNo );
                             file_put_contents("assets/all_labels/$slipNo.pdf", $lableSp);
-                         
+                          
                             array_push($succssArray, $slipNo);
                         }else{
                             $errre_response = $response['Items'][0]['Message'];
