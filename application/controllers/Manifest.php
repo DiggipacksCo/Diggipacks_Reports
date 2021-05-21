@@ -3,7 +3,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 require_once(dirname(__FILE__) . "/CourierCompany_pickup.php");
 
-class Manifest extends CourierCompany_pickup {
+class Manifest extends CourierCompany_pickup { 
 
     function __construct() {
         parent::__construct();
