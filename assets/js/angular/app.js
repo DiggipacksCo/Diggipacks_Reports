@@ -714,8 +714,8 @@ var app = angular.module('fulfill', [])
                             $scope.awbArray.push(value);
                             angular.forEach(JSON.parse(value.sku), function (value1) {
                                 //console.log(value1)
-
-                                $scope.shipData.push({'slip_no': value.slip_no, 'sku': value1.sku, 'piece': value1.piece, 'scaned': 0, 'extra': 0, 'print_url': value.print_url, 'frwd_company_id': value.frwd_company_id, 'frwd_company_awb': value.frwd_company_awb});
+                                $scope.scan_new.weight=value.weight;
+                                $scope.shipData.push({'slip_no': value.slip_no, 'sku': value1.sku, 'piece': value1.piece, 'scaned': 0, 'extra': 0, 'print_url': value.print_url, 'frwd_company_id': value.frwd_company_id,'weight': value.weight, 'frwd_company_awb': value.frwd_company_awb});
                                 $scope.SKuMediaArr.push({'sku': value1.sku, 'piece': value1.piece, 'item_path': value1.item_path});
 
                                 //$scope.Items.push( 'slip_no: ' +value.slip_no);
@@ -724,7 +724,7 @@ var app = angular.module('fulfill', [])
                             //$scope.Items.push( 'slip_no: ' +value.slip_no);
                         });
 
-                        // console.log( $scope.SKuMediaArr);
+                    // console.log(  $scope.shipData);
                         // $scope.GetcheckskuOtherData($scope.shipData[$scope.arrayIndexnew].sku,$scope.shipData[$scope.arrayIndexnew].piece);
 
 
@@ -799,7 +799,7 @@ var app = angular.module('fulfill', [])
 
                 } else
                 {
-                    if ($scope.scan.sku.length > 0)
+                    if ($scope.scan.sku!=null )
                     {
                         $scope.Message = null;
                         $scope.warning = $scope.scan.sku + ', SKU not available for this shipment!';
@@ -946,11 +946,13 @@ var app = angular.module('fulfill', [])
 
                     $scope.GetremoveBtn=true;
                      $scope.scan={};
+                     $scope.scan_new.box_no=1;
+                     $scope.scan_new.weight=null;
 
                             $scope.SKuMediaArr = {};
                             $scope.shipData = [];
                             $scope.completeArray = [];
-                            $scope.Message = "Completed order Packed!";
+                            $scope.Message = "Completed, order Packed!";
 
 
                         }, function (error) {

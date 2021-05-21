@@ -255,11 +255,7 @@ else echo set_value('name'); ?>" required/>
                                                         </select>
                                                         <?php } ?>
                                                     </div> 
-                                            <div class="form-group">
-                                                <label><?= lang('lang_Zone_Name'); ?></label>
-                                                <input type="text" class="form-control" id="company" name="name" value="<?php if (!empty($EditData)) echo $EditData[0]->name;
-else echo set_value('name'); ?>" required/>
-                                            </div>
+                                      
 
                                             <div class="form-group">
                                                 <label><?= lang('lang_Courier_Company'); ?></label>
