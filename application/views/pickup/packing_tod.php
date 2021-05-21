@@ -204,6 +204,12 @@
                                                     </div>
                                                     <div class="col-md-1" ng-show="GetremoveBtn" >
                                                         <div class="form-group"><a class="" ng-click="GetremoveShipemtData(scan.slip_no);"><i class="far fa-times-circle fa-3x" style="color:red;"></i></a></div></div>
+                                                        <div class="col-md-2">
+                  <div class="form-group">
+                 
+                      <input type="float"   ng-model="scan_new.weight" class="form-control" placeHolder='weight' />
+                  </div>
+                </div>
                                                     <div class="col-md-2">
                                                         <div class="form-group">
 

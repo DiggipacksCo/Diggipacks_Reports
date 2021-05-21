@@ -329,7 +329,7 @@ class Pickup_model extends CI_Model {
             $this->db->where('pickuplist_tbl.wh_id', $this->session->userdata('user_details')['wh_id']);
         }
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
-        $this->db->select('`id`, `pickupId`, `assigned_to`, `slip_no`, `origin`, `destination`, `reciever_name`, `reciever_address`, `reciever_phone`, `sku`, `pickup_status`, `piece`, `entrydate`, `pickupDate`,sender_name,print_url');
+        $this->db->select('`id`, `pickupId`, `assigned_to`, `slip_no`, `origin`, `destination`, `reciever_name`, `reciever_address`, `reciever_phone`, `sku`, `pickup_status`, `piece`, `entrydate`, `pickupDate`,sender_name,print_url,weight');
         $this->db->from('pickuplist_tbl');
         if (!empty($awb)) {
             $this->db->where('slip_no', $awb);

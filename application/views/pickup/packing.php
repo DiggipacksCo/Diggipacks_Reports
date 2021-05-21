@@ -195,7 +195,7 @@
                    
                          
                  
-               <div class="col-md-3">
+               <div class="col-md-2">
                   <div class="form-group">
                  
                       
@@ -211,10 +211,17 @@
                   </div>
                 </div>
            
-            <div class="col-md-3">
+            <div class="col-md-2">
                   <div class="form-group">
                  
                       <input type="text"   ng-model="scan_new.box_no" ng-blur="GetCheckBoxNo();" class="form-control" placeHolder='Box No.' />
+                  </div>
+                </div>
+
+                <div class="col-md-2">
+                  <div class="form-group">
+                 
+                      <input type="float"   ng-model="scan_new.weight" class="form-control" placeHolder='weight' />
                   </div>
                 </div>
                <div class="col-md-3">

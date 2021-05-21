@@ -200,6 +200,7 @@ class PickUp extends MY_Controller {
             $Pickingcharge[$key]['super_id'] = $this->session->userdata('user_details')['super_id'];
             $Pickingcharge[$key]['slip_no'] = $data['slip_no'];
             $picklistValue[$key]['tods_barcode'] = '';
+            $picklistValue[$key]['weight'] =$boxArr['weight'];
             $picklistValueNew[$key]['no_of_boxes'] = $totalPieces;
           //  echo $data['box_no']."dddd". $box_no;
             if($box_no>0)
@@ -222,19 +223,47 @@ class PickUp extends MY_Controller {
             $key++;
         }
 
-        //print_r($Pickingcharge); die;
+        //print_r($dataArray['exportData']); die;
         
         foreach ($slip_data as $awb_data) {
 
             // echo $slip_data[$key]['slip_no'];exit;
             //sms_prepared($awb_data);
         }
+        $statusvaluenew=array();
+       // echo $dataArray['exportData'][0]['weight'].'//'.$boxArr['weight'];exit;
+        if($dataArray['exportData'][0]['weight']!=$boxArr['weight'])
         //die;
+        {
+        $statusvaluenew['user_id'] = $this->session->userdata('user_details')['user_id'];
+        $statusvaluenew['user_type'] = 'fulfillment';
+        $statusvaluenew['slip_no'] = $dataArray['exportData'][0]['slip_no'];
+        $statusvaluenew['new_status'] = 4;
+        $statusvaluenew['code'] = 'PK';
+        $statusvaluenew['Activites'] = 'Weight updated ';
+        $statusvaluenew['Details'] = 'Weight updated from '.$dataArray['exportData'][0]['weight'].' Kg  to '.$boxArr['weight'].' Kg  by ' . getUserNameById($this->session->userdata('user_details')['user_id']);
+        $statusvaluenew['entry_date'] = date('Y-m-d H:i:s');
+        $statusvaluenew['super_id'] = $this->session->userdata('user_details')['super_id'];
+       
+            $updateArray = array(
+                'code' => 'PK',
+                'delivered' => 4,
+                'weight'=> $boxArr['weight']
+            );
+        }
+        else
+        {
+
+            $updateArray = array(
+                'code' => 'PK',
+                'delivered' => 4,
+               
+            );   
+        }
+      
+       
         $shipData = array();
-        $updateArray = array(
-            'code' => 'PK',
-            'delivered' => 4
-        );
+       
 
         $shipData['where_in'] = $slip_data;
         $shipData['update'] = $updateArray;
@@ -262,12 +291,18 @@ class PickUp extends MY_Controller {
             // GetrequestShippongCompany($shippingArr);
             //echo  print_r($this->Status_model->insertStatus($statusvalue)); exit;
             if ($this->Status_model->insertStatus($statusvalue)) {
-
+            
+               
+            
 
                 //print_r($statusvalue);
                 $this->Pickup_model->GetallDatapickingChargeAdded($Pickingcharge);
 
                 $this->Shipment_model->updateStatus($shipData);
+                if(!empty($statusvaluenew))
+                {
+                    $this->Status_model->insertStatussingle($statusvaluenew);
+                }
 // 
                 echo json_encode($this->exportExcel($_POST['exportData'], $file_name));
             }
@@ -400,10 +435,24 @@ class PickUp extends MY_Controller {
         }
         //die;
         $shipData = array();
-        $updateArray = array(
-            'code' => 'PK',
-            'delivered' => 4
-        );
+        if($boxArr['weight']>0)
+        {
+            $updateArray = array(
+                'code' => 'PK',
+                'delivered' => 4,
+                'weight'=> $boxArr['weight']
+            );
+        }
+        else
+        {
+
+            $updateArray = array(
+                'code' => 'PK',
+                'delivered' => 4,
+               
+            );   
+        }
+      
 
         $shipData['where_in'] = $slip_data;
         $shipData['update'] = $updateArray;

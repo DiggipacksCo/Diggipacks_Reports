@@ -1871,7 +1871,7 @@ class Ccompany_model extends CI_Model {
             "latitude" => $lat,
             "longitude" => $lang,
         );
-        $all_param_data = json_encode($param);
+        $all_param_data = json_encode($param); 
         $live_url = $API_URL."/new?secret=$Secretkey";
         $headers = array("Content-type:application/json");
 

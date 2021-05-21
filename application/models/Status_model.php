@@ -16,6 +16,13 @@ public function insertStatus($data){
        return $query1=$this->db->insert_batch('status_fm',$data);
         //echo $this->db->last_query();   
   }
+
+  public function insertStatussingle($data){
+    
+    // return $data; exit;
+    return $query1=$this->db->insert('status_fm',$data);
+     //echo $this->db->last_query();   
+}
   
   public function allstatus(){
    $query = $this->db->get('status_main_cat_fm');
