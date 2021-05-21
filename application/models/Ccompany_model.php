@@ -3186,6 +3186,132 @@ array_push($itemArray,$peiceArray);
           return $output; 
        // die; 
     }
+    
+    public function BeezArray(array $ShipArr, array $counrierArr, $complete_sku = null, $c_id = null,$box_pieces1 = null,$sku_data = null)
+    {
+               
+        //echo $complete_sku;die;
+       // print "<pre>"; print_r($ShipArr);die;
+        $apiUrl = $counrierArr['api_url']."Orders/PostOrder";
+        $Receiver_name = $ShipArr['reciever_name'];
+        $Receiver_email = $ShipArr['reciever_email'];
+        $Receiver_phone = $ShipArr['reciever_phone'];
+        $Receiver_address = $ShipArr['reciever_address'];
+        if (empty($Receiver_address)) {
+            $Receiver_address = 'N/A';
+        }
+    
+        $Reciever_city = getdestinationfieldshow($ShipArr['destination'], 'beez_city');
+        if(empty($Reciever_city)){
+            
+            $successstatus = "Failed";
+            $logresponse = "Reciver city is empty.";
+
+            $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
+            $responseArray['Message'] = $logresponse;
+            return $responseArray;
+        }
+        
+        //print "<pre>"; print_r($lineItemsArray);die;
+        $lat = getdestinationfieldshow($ShipArr['origin'], 'latitute');
+        $lang = getdestinationfieldshow($ShipArr['origin'], 'longitute');
+        $country = getdestinationfieldshow($ShipArr['destination'], 'country');
+        
+        if(empty($box_pieces1)){ 
+            $box_pieces = 1;
+        }else{ 
+             $box_pieces = $box_pieces1 ; 
+        }
+        
+        $itemsArray = array();
+        
+        foreach ($sku_data as $key => $val) {
+                $itemsArray[] = array("ProductName"=>$val['name'],'Quantity'=>$box_pieces,'SKU'=>$val['sku'],'UPC'=>'','Description'=>$complete_sku);
+        }
+        if ($ShipArr['mode'] == "COD") {
+            $total_cod_amt = $ShipArr['total_cod_amt'];
+        }else{
+            $total_cod_amt = 0;
+        }
+        $requestArray = array(
+                "LineItems"=>$itemsArray,
+                "Edit"=>false, // if new order forwarding than Edit= false else True
+                "Payment"=> false, // if we use beez payment gateway to get payment than Payment = True else False
+                "PaymentAmount"=>  $total_cod_amt, // if we use beez payment gateway to get payment than PaymentAmount >0  else 0.00
+                "TrackingNumber"=> "",
+                "AccountNumber"=> $counrierArr['courier_account_no'],
+                "ApiKey"=> $counrierArr['auth_token'],
+                "RequestedBy"=> "",
+                "OrderNumber"=> $ShipArr['slip_no'],
+                "Shipping"=> true,
+                "ShipmentType"=> "C", //Types of delivery: “D” –Dry, “C” – Cold 
+                "CustomerNote"=> "",
+                "Description"=> "",
+                "COD"=> $total_cod_amt,
+                "PickupLocation"=>"24.7188702, 46.6655761", //Should Register PickupLocation in Beez System before using it in API
+                "BillingAddress"=>array(
+                    array(
+                        "CustomerFirstname"=> $Receiver_name,
+                        "CustomerLastname"=> $Receiver_name,
+                        "CustomerPhone1"=> "+".$Receiver_phone,
+                        "CustomerPhone2"=> "+".$Receiver_phone,
+                        "Lat"=> $lat,
+                        "Lng"=> $lang,
+                        "Line1"=> $Receiver_address,
+                        "Line2"=> "",
+                        "District"=> $Reciever_city,
+                        "City"=> $Reciever_city,
+                        "Province"=>"",
+                        "PostCode"=> "",
+                        "Country"=> $country,
+                      )  
+                ),
+                "ShippingAddress"=>array(
+                    array(
+            "CustomerFirstname"=> $Receiver_name,
+            "CustomerLastname"=> $Receiver_name,
+            "CustomerPhone1"=> "+".$Receiver_phone,
+            "CustomerPhone2"=> "+".$Receiver_phone,
+            "Lat"=> $lat,
+            "Lng"=> $lang,
+            "Line1"=>$Receiver_address,
+            "Line2"=> "",
+            "District"=> $Reciever_city,
+            "City"=> $Reciever_city,
+            "Province"=>"",
+            "PostCode"=> "",
+            "Country"=> $country,
+                    )
+                )
+            );
+        $params = json_encode($requestArray);
+        //echo $params;die;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $apiUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_HEADER, FALSE);
+        curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            "Content-Type: application/json",
+            "Accept: application/json"
+        ));
+        $response = curl_exec($ch); 
+    
+        curl_close($ch);
+    
+        $responseArray = json_decode($response,true);
+        //print "<pre>"; print_r($responseArray);die;
+        $logresponse = json_encode($response);
+        if(isset($responseArray['Message']) && !empty($responseArray['Message'])){
+            $successstatus = "Failed";
+        }else{
+            $successstatus = "Success";
+        }
+        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
+        
+        return $responseArray;
+    }
 
 
 }
