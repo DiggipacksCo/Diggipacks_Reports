@@ -131,21 +131,169 @@
                                             <?php
                                             foreach ($shipmentdata as $awbdata) {
                                                 echo '<tr>
-						<td>' . $awbdata['entrydate'] . '</td>
-						<td>' . getdestinationfieldshow($awbdata['origin'], 'city') . '</td>
-						<td>' . getdestinationfieldshow($awbdata['destination'], 'city') . '</td>
-						<td>' . $awbdata['pieces'] . '</td>
-						
-						<td>' . $awbdata['weight'] . '</td>
-						<td>' . getallmaincatstatus($awbdata['delivered'], 'main_status') . '</td>
-						<td>' . getallmaincatstatus($awbdata['delivered'], 'main_status') . '</td>
-						<td><a href="' . base_url() . 'TrackingDetails/' . $awbdata['id'] . '" class="btn btn-primary">View Details</a></td>
-						
-						</tr>';
+                        <td>' . $awbdata['entrydate'] . '</td>
+                        <td>' . getdestinationfieldshow($awbdata['origin'], 'city') . '</td>
+                        <td>' . getdestinationfieldshow($awbdata['destination'], 'city') . '</td>
+                        <td>' . $awbdata['pieces'] . '</td>
+                        
+                        <td>' . $awbdata['weight'] . '</td>
+                        <td>' . getallmaincatstatus($awbdata['delivered'], 'main_status') . '</td>
+                        <td>' . getallmaincatstatus($awbdata['delivered'], 'main_status') . '</td>
+                        <td><a href="' . base_url() . 'TrackingDetails/' . $awbdata['id'] . '" class="btn btn-primary">View Details</a></td>
+                        
+                        </tr>';
                                             }
                                             ?>
                                         </thead>
                                     </table>
+
+                                     <div class="panel-heading">
+                                        <h1><strong>Sender Info</strong></h1>
+                                    </div>
+                                  
+                                      <table class="table table-striped table-hover table-bordered"  style="width:100%;">
+                                        <thead>
+                                            <?php
+                                            if ($Shipmentinfo['sender_name '] != '')
+                                                echo' <tr><th><b class="size-2">Sender</b></th><td>' . $Shipmentinfo['sender_name '] . '</td></tr>';
+                                            else
+                                                 echo' <tr><th><b class="size-2">Sender</b></th><td style="color:grey;">No Info Found</td></tr>';
+
+                                           
+                                            if ($Shipmentinfo['sender_address'] != '')
+                                                echo' <tr><th><b class="size-2">Sender Address</b></th><td>' . $Shipmentinfo['sender_address'] . '</td></tr>';
+                                            else
+                                                 echo' <tr><th><b class="size-2">Sender Address</b></th><td style="color:grey;">No Info Found</td></tr>';
+
+                                            if ($Shipmentinfo['sender_phone'] != '')
+                                            echo'<tr><th><b class="size-2">Sender Mobile</b></th><td>' . ($Shipmentinfo['sender_phone']) . '</td></tr>';
+                                               else
+                                                 echo' <tr><th><b class="size-2">Sender Mobile</b></th><td style="color:grey;">No Info Found</td></tr>';
+
+                                            if ($Shipmentinfo['sender_email '] != '')
+                                            echo'<tr><th><b class="size-2">Sender Email</b></th><td>' . ($Shipmentinfo['sender_email  ']) . '</td></tr>';
+                                                 else
+                                                 echo' <tr><th><b class="size-2">Sender Email</b></th><td style="color:grey;">No Info Found</td></tr>';
+
+                                            ?>
+                                            <?php
+                                            foreach ($shipmentdata as $awbdata) {
+                                                echo '<tr>
+                        <td>' . $awbdata['entrydate'] . '</td>
+                        <td>' . getdestinationfieldshow($awbdata['origin'], 'city') . '</td>
+                        <td>' . getdestinationfieldshow($awbdata['destination'], 'city') . '</td>
+                        <td>' . $awbdata['pieces'] . '</td>
+                        
+                        <td>' . $awbdata['weight'] . '</td>
+                        <td>' . getallmaincatstatus($awbdata['delivered'], 'main_status') . '</td>
+                        <td>' . getallmaincatstatus($awbdata['delivered'], 'main_status') . '</td>
+                        <td><a href="' . base_url() . 'TrackingDetails/' . $awbdata['id'] . '" class="btn btn-primary">View Details</a></td>
+                        
+                        </tr>';
+                                            }
+                                            ?>
+                                        </thead>
+                                    </table>
+
+                                    <div class="panel-heading">
+                                        <h1><strong>Receiver Info</strong></h1>
+                                    </div>
+                                    <table class="table table-striped table-hover table-bordered"  style="width:100%;">
+                                        <thead>
+                                            <?php
+                                            if ($Shipmentinfo['reciever_name'] != '')
+                                                echo' <tr><th><b class="size-2">Receiver</b></th><td>' . $Shipmentinfo['reciever_name'] . '</td></tr>';
+                                            else
+                                                echo' <tr><th><b class="size-2">Sender</b></th><td style="color:grey;">No Info Found</td></tr>';
+
+                                            if ($Shipmentinfo['reciever_address'] != '')
+                                                echo'<tr><th><b class="size-2">Receiver Address</b></th><td>' . $Shipmentinfo['reciever_address'] . '</td></tr>';
+                                            else
+                                                echo' <tr><th><b class="size-2">Receiver Address</b></th><td style="color:grey;">No Info Found</td></tr>';
+                                           
+                                            if ($Shipmentinfo['reciever_phone'] != '')
+                                                echo'<tr><th><b class="size-2">Receiver Mobile</b></th><td>' . ($Shipmentinfo['reciever_phone']) . '</td></tr>';
+                                            else
+                                                echo' <tr><th><b class="size-2">Receiver Mobile</b></th><td style="color:grey;">No Info Found</td></tr>';
+
+
+                                           
+                                            if ($Shipmentinfo['reciever_email'] != '')
+                                                echo' <tr><th><b class="size-2">Receiver Email</b></th><td>' . ($Shipmentinfo['reciever_email']) . '</td></tr>';
+                                            else
+                                                echo' <tr><th><b class="size-2">Receiver Email</b></th><td style="color:grey;">No Info Found</td></tr>';
+                         
+                                            ?>
+                                            <?php
+                                            foreach ($shipmentdata as $awbdata) {
+                                                echo '<tr>
+                        <td>' . $awbdata['entrydate'] . '</td>
+                        <td>' . getdestinationfieldshow($awbdata['origin'], 'city') . '</td>
+                        <td>' . getdestinationfieldshow($awbdata['destination'], 'city') . '</td>
+                        <td>' . $awbdata['pieces'] . '</td>
+                        
+                        <td>' . $awbdata['weight'] . '</td>
+                        <td>' . getallmaincatstatus($awbdata['delivered'], 'main_status') . '</td>
+                        <td>' . getallmaincatstatus($awbdata['delivered'], 'main_status') . '</td>
+                        <td><a href="' . base_url() . 'TrackingDetails/' . $awbdata['id'] . '" class="btn btn-primary">View Details</a></td>
+                        
+                        </tr>';
+                                            }
+                                            ?>
+                                        </thead>
+                                    </table>
+
+                                    <div class="panel-heading">
+                                    <h1><strong>Forwarded Info</strong></h1>
+                                    </div>
+                                    <table class="table table-striped table-hover table-bordered"  style="width:100%;">
+                                        <thead>
+                                            <?php
+                                            if ($Shipmentinfo['frwd_date'] != '')
+                                                echo' <tr><th><b class="size-2">Forwarded Date</b></th><td>' . $Shipmentinfo['frwd_date'] . '</td></tr>';
+                                            else
+                                                echo' <tr><th><b class="size-2">Forwarded Date</b></th><td style="color:grey;">No Info Found</td></tr>';
+
+                                           
+                                            if ($Shipmentinfo['frwd_company_id'] != '0')
+                                                echo   '<tr><th><b class="size-2">Forwarded Company</b></th><td>' . GetCourCompanynameId($Shipmentinfo['frwd_company_id'], 'company') . '</td></tr>';
+                                            else
+                                                echo' <tr><th><b class="size-2">Forwarded Company </b></th><td style="color:grey;">No Info Found</td></tr>';
+                                           
+                                           
+                                            if ($Shipmentinfo['frwd_company_awb'] != '')
+                                                echo'<tr><th><b class="size-2">Forwarded AWB No.</b></th><td>' . ($Shipmentinfo['frwd_company_awb']) . '</td></tr>';
+                                            else
+                                                echo' <tr><th><b class="size-2">Forwarded AWB No.</b></th><td style="color:grey;">No Info Found</td></tr>';
+
+
+                                           
+                                            if ($Shipmentinfo['forwarded'] != '0')
+                                                echo' <tr><th><b class="size-2">Forwarded </b></th><td> Yes </td></tr>';
+                                            else
+                                                echo' <tr><th><b class="size-2">Forwarded </b></th><td style="color:grey;">No</td></tr>';
+                         
+                                          
+                                            ?>
+                                            <?php
+                                            foreach ($shipmentdata as $awbdata) {
+                                                echo '<tr>
+                        <td>' . $awbdata['entrydate'] . '</td>
+                        <td>' . getdestinationfieldshow($awbdata['origin'], 'city') . '</td>
+                        <td>' . getdestinationfieldshow($awbdata['destination'], 'city') . '</td>
+                        <td>' . $awbdata['pieces'] . '</td>
+                        
+                        <td>' . $awbdata['weight'] . '</td>
+                        <td>' . getallmaincatstatus($awbdata['delivered'], 'main_status') . '</td>
+                        <td>' . getallmaincatstatus($awbdata['delivered'], 'main_status') . '</td>
+                        <td><a href="' . base_url() . 'TrackingDetails/' . $awbdata['id'] . '" class="btn btn-primary">View Details</a></td>
+                        
+                        </tr>';
+                                            }
+                                            ?>
+                                        </thead>
+                                    </table>
+
 
                                     <div class="panel-heading">
                                         <h1><strong>Dimension Details</strong></h1>
@@ -153,10 +301,10 @@
                                     <?php
                                     $skuArr = Getallskudatadetails_tracking($Shipmentinfo['slip_no']);
                                     echo ' <table class="table table-striped table-hover table-bordered dataTable bg-*" id="example" style="width:100%;">
-			  <thead>
+              <thead>
                   <tr>
                     <th width="20">Sr.No</th><th>SKU</th><th>Weight</th><th>Pieces</th><th>Description</th></thead>
-			  ';
+              ';
                                     foreach ($skuArr as $key => $skuval) {
                                         $counter2 = $key + 1;
                                         echo '<tr><td>' . $counter2 . '</td><td>' . $skuval['sku'] . '</td><td>' . $skuval['wieght'] . ' KG</td><td>' . $skuval['piece'] . '</td><td>' . $skuval['description'] . '</td></tr>';
@@ -188,9 +336,9 @@
                                             foreach ($THData as $historydata) {
                                                 $counter1 = $counter + 1;
                                                 echo'<tr>
-				<td>' . $counter1 . '</td>
-				<td>' . date("Y-m-d", strtotime($historydata['entry_date'])) . '</td>
-				<td>' . $historydata['Activites'] . '</td>';
+                <td>' . $counter1 . '</td>
+                <td>' . date("Y-m-d", strtotime($historydata['entry_date'])) . '</td>
+                <td>' . $historydata['Activites'] . '</td>';
 //    if ($historydata['new_location'] > 0)
 //        echo'<td>' . getdestinationfieldshow($historydata['new_location'], 'city') . '</td>';
 //    else
@@ -200,9 +348,9 @@
 //    else
 //        echo'<td>--</td>';
                                                 echo'<td>' . $historydata['code'] . '</td>
-				<td>' . $historydata['Details'] . '</td>
-				<td>' . getUserNameByIdType($historydata['user_id'], $historydata['user_type'], $Shipmentinfo['Api_Integration']) . '</td>
-				<td>' . $historydata['user_type'] . '</td>';
+                <td>' . $historydata['Details'] . '</td>
+                <td>' . getUserNameByIdType($historydata['user_id'], $historydata['user_type'], $Shipmentinfo['Api_Integration']) . '</td>
+                <td>' . $historydata['user_type'] . '</td>';
                                                 if ($historydata['comment'])
                                                     echo'<td>' . $historydata['comment'] . '</td>';
                                                 else
@@ -226,6 +374,8 @@
                 <!-- /main content --> 
 
             </div>
+            </div>
+           </div>
             <!-- /page content --> 
 
 
