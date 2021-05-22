@@ -49,7 +49,8 @@ class CourierCompany_auto extends CI_Controller {
 
         $invalid_slipNO = array();
         $succssArray = array();
-//echo print_r($postData);exit;
+//echo print_r($postData);exit; 
+
         if (!empty($shipmentLoopArray)) {
             if (!empty($postData)) {
 
@@ -105,7 +106,7 @@ class CourierCompany_auto extends CI_Controller {
                         $counrierArr['company_type'] = $company_type ;
                         $counrierArr['auth_token'] = $auth_token;
                     //     echo '<pre>';
-                    //    print_r( $counrierArr); //exit;
+                    //    print_r( $counrierArr); exit;
 
                         if (!empty($ShipArr)) {
                             $sku_data = $this->Ccompany_auto_model->Getskudetails_forward($slipNo, $super_id);
@@ -655,41 +656,38 @@ class CourierCompany_auto extends CI_Controller {
                                 }
                             } elseif ($company == 'Aymakan') {
 
+                                   // echo "kgjhgsjhdfghs"; die;
                                 $response = $this->Ccompany_auto_model->AymakanArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1,$complete_sku);
                                 $responseArray = json_decode($response, true);
-                           //print_r( $responseArray );
+                                   
+                               // print_r( $responseArray ); //die; 
+
                                 if (empty($responseArray['message'])) 
                                 {
                                          $client_awb = $responseArray['data']['shipping']['tracking_number'];
                                          
                                          if(!empty($box_pieces1) && $box_pieces1>1)
                                           {
-                                             $tracking_url= $counrierArr['api_url']."bulk_awb/trackings/";
-                                             
+                                             $tracking_url= $counrierArr['api_url']."bulk_awb/trackings/";                                             
                                              $aymakanlabel= $this->Ccompany_auto_model->Aymakan_tracking($client_awb, $tracking_url,$auth_token);
-                                            $label= json_decode($aymakanlabel,TRUE);
-                                          
+                                             $label= json_decode($aymakanlabel,TRUE);                                          
                                              $mediaData = $label['data']['bulk_awb_url'];
-                                            }
+                                          }
                                           else
                                           { 
-                                             
-                                            $tracking_url= $counrierArr['api_url']."awb/tracking/";
-                                               
+                                              $tracking_url= $counrierArr['api_url']."awb/tracking/";                                               
                                               $aymakanlabel= $this->Ccompany_auto_model->Aymakan_tracking($client_awb, $tracking_url,$auth_token);
-                                              $label= json_decode($aymakanlabel, TRUE);
-                                              
+                                              $label= json_decode($aymakanlabel, TRUE);                                              
                                               $mediaData = $label['data']['awb_url'];
                                              
-                                             
-                                             }   
+                                          }   
                                        
                                     //****************************aymakan arrival label print cURL****************************
                                     file_put_contents("assets/all_labels/$slipNo.pdf", file_get_contents($mediaData));
-                                     $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+                                      $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
     
                                     //****************************aymakan label print cURL****************************
-                                     $CURRENT_DATE = date("Y-m-d H:i:s");
+                                        $CURRENT_DATE = date("Y-m-d H:i:s");
                                         $CURRENT_TIME = date("H:i:s");
                                                                  
                                     $Update_data = $this->Ccompany_auto_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
@@ -700,7 +698,8 @@ class CourierCompany_auto extends CI_Controller {
                                         $returnArr['responseError'][] = $slipNo . ':' . $responseArray['message'].':'.json_encode($responseArray['errors']);
                                         
                                 }   
-                            } elseif ($company == 'Shipsy') {
+                            }
+                            elseif ($company == 'Shipsy') {
 
                                 $response = $this->Ccompany_auto_model->ShipsyArray($ShipArr, $counrierArr, $Auth_token, $box_pieces1, $c_id, $super_id);
 
@@ -723,7 +722,8 @@ class CourierCompany_auto extends CI_Controller {
 
                                     $returnArr['responseError'][] = $slipNo . ':' . $response_array['error']['message'];
                                 }
-                            } elseif ($company == 'Shipadelivery') {
+                            } 
+                            elseif ($company == 'Shipadelivery') {
 
 
                                 $response = $this->Ccompany_auto_model->ShipadeliveryArray($ShipArr, $counrierArr, $Auth_token, $c_id);
