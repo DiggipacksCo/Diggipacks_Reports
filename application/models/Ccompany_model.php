@@ -3153,7 +3153,7 @@ array_push($itemArray,$peiceArray);
                 'courier_pin_no' => '',
                 'start_awb_sequence' =>'',
                 'end_awb_sequence' => '',
-                'company' => '',
+                'company' =>  $couSel ->company,
                 'status' => 'N',
                 'deleted' => 'N',
                 'entrydate' =>  $CURRENT_DATE,

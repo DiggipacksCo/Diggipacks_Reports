@@ -249,7 +249,7 @@ else echo set_value('name'); ?>" required/>
                                                     if (!empty($company)) {
                                                         foreach ($company as $cmpy) {
                                                             ?>
-                                                            <option value="<?php echo $cmpy->id; ?>" <?php if ($cmpy->id == $EditData[0]->cc_id) {
+                                                            <option value="<?php echo $cmpy->cc_id; ?>" <?php if ($cmpy->cc_id == $EditData[0]->cc_id) {
                                                                 echo "selected=selected";
                                                             } ?>><?php echo $cmpy->company ?></option>
                                                 <?php }

@@ -591,24 +591,31 @@ class CourierCompany_auto extends CI_Controller {
                                     }
                                 }
                             } elseif ($company == 'Saee') {
-                                $response = $this->Ccompany_auto_model->SaeeArray($ShipArr, $counrierArr, $Auth_token, $c_id, $super_id);
-                                $safe_response = $response;
-
-                                if ($safe_response['success'] == 'true') {
-                                    $client_awb = $safe_response['waybill'];
-                                    //****************************Saee arrival label print cURL****************************
-
-                                    $label_response = saee_label_curl($client_awb, $Auth_token);
-                                    file_put_contents("assets/all_labels/$slipNo.pdf", $label_response);
-                                    $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
-
-                                    //****************************Saee label print cURL****************************
+                                
+                                $response = $this->Ccompany_auto_model->SaeeArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1);
+                                $safe_response =  $response; 
+                               // echo "<pre>";  print_r($safe_response); 
+                               if ($safe_response['success'] == 'true') 
+                               {
+                                         $client_awb = $safe_response['waybill'];
+                                   //****************************Saee arrival label print cURL****************************
+                                   $API_URL = $counrierArr['api_url'];
+                                   $label_response = saee_label_curl($client_awb, $Auth_token,$API_URL );
+                                   file_put_contents("assets/all_labels/$slipNo.pdf", $label_response);
+                                    echo  $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+   
+                                   //****************************Saee label print cURL****************************
                                     $CURRENT_DATE = date("Y-m-d H:i:s");
                                     $CURRENT_TIME = date("H:i:s");
-
-                                    $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
-                                    array_push($succssArray, $slipNo);
-                                }
+   
+                                   $Update_data = $this->Ccompany_auto_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                   array_push($succssArray, $slipNo);
+                                 
+                               }  
+                               else {
+                                   $returnArr['responseError'][] = $slipNo . ':' . $response['error'];
+                                  //$returnArr['responseError'][] = $slipNo . ':' . $response['invalid_parameters'][0];
+                              }             
                             } elseif ($company == 'Emdad') {
                                 //print_r($counrierArr);exit;
 

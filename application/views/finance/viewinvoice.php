@@ -86,11 +86,12 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="10" align="justify">&nbsp;</td>
+					<td colspan="11" align="justify">&nbsp;</td>
 				</tr>
 				<tr>	
 					<th>Sr No. </th>					
 					<th>AWB no. </th>
+					<th>Weight (Kg)</th>
 					<th>Handling Fees</th>
 					<th>Special Packing </th>
 					<th>Return Charge</th>
@@ -126,7 +127,8 @@
  						 $counter = $key + 1;
  						echo ' <tr>
 								<td align="center">' . $counter. '</td>
-								<td align="center">' . $rowData['slip_no'] . '</td>							
+								<td align="center">' . $rowData['slip_no'] . '</td>	
+								<td align="center">' . $rowData['weight'] . '</td>								
 						        <td align="center">' . $rowData['handline_fees'] . '</td>
 						        <td align="center">' . $special_packing . '</td>
 						        <td align="center">' . $rowData['return_charge'] . '</td>
@@ -148,7 +150,7 @@
  					$tot_with_vat  = round(($tot + $totvat),2);
  					$bank_fees = GetalldashboardClientField($invoiceData[0]['cust_id'], 'bank_fees');
 					?>	
-					<th colspan="2"> Total Charges</th>					
+					<th colspan="3"> Total Charges</th>					
 					<th><?=$totalValue['handline_fees'];?></th>
 					<th><?=$totalValue['special_packing'];?></th>
 					<th><?=$totalValue['return_charge'];?></th>
@@ -164,7 +166,7 @@
 				<tr>
 
 					 
-				<td colspan="10">
+				<td colspan="11">
 					<?php 
 					$TOTAL = round(($tot + $totalValue['pickup_charge']+$totalValue['storage_charges']+$totalValue['onhold_charges']),2);
 					$TOTALvat    = round((($TOTAL * 15)/100),2) ;

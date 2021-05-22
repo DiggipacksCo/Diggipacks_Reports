@@ -1313,26 +1313,39 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
                  return $awb_array;
             }
 	}
-	public function SaeeArray(array $ShipArr, array $counrierArr, $Auth_token = null,$c_id,$super_id) {
-        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city',$super_id);
-        $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'city',$super_id);
-        $lat = getdestinationfieldshow_auto_array($ShipArr['origin'], 'latitute',$super_id);
-        $lang = getdestinationfieldshow_auto_array($ShipArr['origin'], 'longitute',$super_id);
-        $store = getallsellerdatabyID($ShipArr['cust_id'], 'company');   
+    public function SaeeArray(array $ShipArr, array $counrierArr, $Auth_token = null,$c_id,$box_pieces1) {
+     
+       $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'aymakan',$ShipArr['super_id']);
+       $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'aymakan',$ShipArr['super_id']); 
+
+
+        $lat = getdestinationfieldshow($ShipArr['origin'], 'latitute');
+        $lang = getdestinationfieldshow($ShipArr['origin'], 'longitute');
         $API_URL = $counrierArr['api_url'];
         $Secretkey = $counrierArr['auth_token'];
+         $ShipArr['cust_id'];
+         $store = getallsellerdatabyID($ShipArr['cust_id'], 'company');   
 
-        $weight = $ShipArr['weight'];
+             $box_pieces = 1 ; 
+        
 
+        if($ShipArr['weight']==0)
+        {  
+            $weight= 1;
+        }
+        else { 
+            $weight = $ShipArr['weight'] ; 
+        }
+       
         if ($ShipArr['mode'] == 'COD') {
             $BookingMode = 'COD';
-            $codValue = 0;
+            $codValue = $ShipArr['total_cod_amt'];
         } elseif ($ShipArr['mode'] == 'CC') {
             $BookingMode = 'CC';
             $codValue = 0;
         }
 
-
+ 
         $param = array(
             "ordernumber" => $ShipArr['slip_no'],
             "cashondelivery" => $codValue,
@@ -1349,7 +1362,7 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
             "hs_code" => 'FASTCOO',
             "category_id" => '',
             "weight" => $weight,
-            "quantity" => $ShipArr['pieces'],
+            "quantity" => $box_pieces,
             "description" => "",
             "email" => $ShipArr['reciever_email'],
             "pickup_address_id" => '',
@@ -1364,38 +1377,36 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
             "latitude" => $lat,
             "longitude" => $lang,
         );
-        $all_param_data = json_encode($param);
-        $live_url = "https://corporate.saeex.com/deliveryrequest/new?secret=$Secretkey";
+        $all_param_data = json_encode($param); 
+
+      //  Echo "<pre>"; print_r($param); exit; 
+        $live_url = $API_URL."/new?secret=$Secretkey";
         $headers = array("Content-type:application/json");
-        if(empty($receiver_city)){
-            $response = array('error' => 'Receiver city is empty ');
-            return $response; 
-        }
-        else{
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $live_url);
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $all_param_data);
-            $response = curl_exec($ch);
-            curl_close($ch);      
 
-            $response = json_decode($response, true);
-            $logresponse =   json_encode($response);  
-            $successres = $response['success']; 
-            //echo "<pre>"; print_r($logresponse)   ;    die;
-            if($successres == 'true') 
-            {
-                $successstatus  = "Success";
-            }else {
-                $successstatus  = "Fail";
-            }
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $live_url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $all_param_data);
+        $response = curl_exec($ch);
+        curl_close($ch);      
 
-            $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$super_id);
-            return $response;
+        $response = json_decode($response, true);
+        $logresponse =   json_encode($response);  
+        $successres = $response['success']; 
+
+        if($successres == 'true' || $successres == true) 
+        {
+            $successstatus  = "Success";
+        }else {
+            $successstatus  = "Fail";
         }
+
+        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
+        return $response;
     }
+
 
     public function EmdadArray($ShipArr, $counrierArr, $complete_sku, $c_id, $super_id) {
         $sender_email = $counrierArr['user_name']; //provided by company  :  (column name: password || date

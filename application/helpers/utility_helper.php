@@ -1078,6 +1078,7 @@ if (!function_exists('PrintPiclist3PL')) {
             }
             else if (GetCourCompanynameIdbulkprint($frwd_company_id, 'company') == 'Saee'){
                 $pdf = new FPDI('P', 'mm', array(250, 175));
+
             }  else if (GetCourCompanynameIdbulkprint($frwd_company_id, 'company') == 'Beez'){
                 $pdf = new FPDI('P', 'mm', array(170, 130));
             }
@@ -1161,7 +1162,7 @@ if (!function_exists('PrintPiclist3PL_bulk')) {
             //print_r($fileArray);exit;
 
             $files = $fileArray;
-            //echo $frwd_company_id; die;
+            //echo GetCourCompanynameIdbulkprint($frwd_company_id, 'company');  die;
             if (GetCourCompanynameIdbulkprint($frwd_company_id, 'company') == 'Clex' || GetCourCompanynameIdbulkprint($frwd_company_id, 'company') == 'Labaih' ) {
                 $pdf = new FPDI('P', 'mm');
             } 

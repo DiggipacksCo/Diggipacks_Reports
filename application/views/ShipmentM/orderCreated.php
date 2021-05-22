@@ -55,7 +55,8 @@
                                         <h1>
                                             <strong>Orders Created</strong>
                                             <!--<a  id="btnExport" ><i class="icon-file-excel pull-right" style="font-size: 35px;"></i></a>
-                                          <!-- <a id="pdf" ><i class="icon-file-pdf pull-right" style="font-size: 35px;color: red;"></i></a>-->
+                                          <a id="pdf" ><i class="icon-file-pdf pull-right" style="font-size: 35px;color: red;"></i></a>-->
+                                         
                                             <a  ng-click="exportExcel();" ><i class="icon-file-excel pull-right" style="font-size: 35px;"></i></a>   
 
                                             <select id="exportlimit" class="custom-select pull-right" ng-model="exportlimit" name="exprort_limit" required="" style="    font-size: 16px;padding: 5px;margin-right: 10px;" >
@@ -194,9 +195,13 @@
                                                     </div></div>
 
                                                      <div class="col-md-12">
-                                                    <div class="form-group" ><button  class="btn btn-danger ml-10" ng-click="loadMore(1, 1);" >Search</button><button type="button" class="btn btn-success ml-10" >Total <span class="badge">{{shipData.length}}/{{totalCount}}</span></button>
-                                                        <button  class="btn btn-info ml-10" ng-click="GetOpenPopPicker();" >Generate Pickup  <!--  generatePickup(); --> List</button></div>
-                                                    </div>
+                                                    <div class="form-group" >
+                                                    <button  class="btn btn-danger ml-10" ng-click="loadMore(1, 1);" >Search</button>
+                                                    <button type="button" class="btn btn-success ml-10" >Total <span class="badge">{{shipData.length}}/{{totalCount}}</span></button>
+                                                    
+                                                    <button  class="btn btn-info ml-10" ng-click="GetOpenPopPicker();" >Generate Pickup  <!--  generatePickup(); --> List</button>
+                                                        <a ng-click ="runshell();"class="btn btn-danger ml-10" >Create Order forwarding</a>
+                                                    </div></div>
 
 
 

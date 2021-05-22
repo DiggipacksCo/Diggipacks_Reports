@@ -59,7 +59,7 @@
                                         <h1>
                                             <strong>All  Orders</strong>
                                             <!--<a  ng-click="exportExcel();" >-->
-                                                <a ng-click ="runshell_tracking();" ><i class="icon-sync pull-right" style="font-size: 35px;"></i></a>
+                                                <a ng-click ="runshell();" ><i class="icon-sync pull-right" style="font-size: 35px;"></i></a>
                                             <a  ng-click="getExcelDetails();" >   
                                                 <i class="icon-file-excel pull-right" style="font-size: 35px;"></i></a> 
 
