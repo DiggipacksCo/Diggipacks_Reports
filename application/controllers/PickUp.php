@@ -2517,8 +2517,8 @@ else
                 //  echo "other";
                 //$this->Printpicklist3PL_bulk($newslipArray, $company_id);
                 $returncondition = $this->Printpicklist3PL_bulk($newslipArray, $company_id);
-                 //print_r($returncondition); 
-                //die; 
+                //  print_r($returncondition); 
+                // die; 
 
                 if(empty($returncondition))
                  {
