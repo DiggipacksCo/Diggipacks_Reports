@@ -1963,7 +1963,7 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
        $valpiecesarray =  array (
              'ready' => true,
              'weight' => (float)$ShipArr['weight'],
-             'quantity' => (int)$ShipArr['pieces']                     
+             'quantity' => 1                     
            );
 
       // echo "<br/> <pre>"; print_r($valpiecesarray);  exit;
@@ -1971,8 +1971,8 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
        $valpieces =  json_encode($valpiecesarray);
      // $client_awb = "SD001351088"; 
            
-           $curl = curl_init();
-         $client_awb = trim($client_awb); 
+            $curl = curl_init();
+            $client_awb = trim($client_awb); 
 
            curl_setopt_array($curl, array(
              CURLOPT_URL => $counrierArr['api_url'].'/'.$client_awb."?apikey=".$counrierArr['auth_token'],
