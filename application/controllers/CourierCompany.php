@@ -289,7 +289,8 @@ class CourierCompany extends MY_Controller  {
                 
                 $ShipArr_custid =  $ShipArr['cust_id']; 
                 $counrierArr_table=$this->Ccompany_model->GetdeliveryCompanyUpdateQry($postData['cc_id'],$ShipArr_custid);   
-                $c_id = $counrierArr_table['id'];
+                $c_id = $counrierArr_table['cc_id'];
+               // $c_id = $counrierArr_table['id'];
                 $cc_id = $counrierArr_table['cc_id'];
 
               if ($counrierArr_table['type'] == 'test') {

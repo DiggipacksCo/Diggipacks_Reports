@@ -1813,7 +1813,8 @@ class Ccompany_model extends CI_Model {
         $lang = getdestinationfieldshow($ShipArr['origin'], 'longitute');
         $API_URL = $counrierArr['api_url'];
         $Secretkey = $counrierArr['auth_token'];
-        $store = getallsellerdatabyID($ShipArr['cust_id'], 'company');   
+         $ShipArr['cust_id'];
+         $store = getallsellerdatabyID($ShipArr['cust_id'], 'company');   
 
         if(empty($box_pieces1))
         {

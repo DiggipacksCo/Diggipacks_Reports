@@ -2456,6 +2456,7 @@ class Shipment extends MY_Controller {
             $refsno = $_POST['s_type_val'];
         if ($_POST['s_type'] == 'MOBL')
             $mobileno = $_POST['s_type_val'];
+            
         $from = $_POST['from'];
         $to = $_POST['to'];
         $wh_id = $_POST['wh_id'];
