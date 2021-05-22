@@ -54,7 +54,8 @@ class CourierCompany_auto extends CI_Controller {
             if (!empty($postData)) {
 
                $courier_data = $this->forwardShipment($postData['slip_no'], $super_id);
-              //print_r($courier_data);exit;
+             
+            //print_r($courier_data);exit;
                 if (!empty($courier_data)) {
 
                     foreach ($shipmentLoopArray as $key => $slipNo) {
@@ -65,7 +66,7 @@ class CourierCompany_auto extends CI_Controller {
                         $zone_id = $courier_data[0]['id'];
                         $counrierArr_table = $this->Ccompany_auto_model->GetdeliveryCompanyUpdateQry($courier_id, $super_id,$ShipArr_custid);
                     //   echo '<pre>';
-                    //     print_r( $counrierArr_table); exit;
+                   //   print_r( $counrierArr_table); exit;
                    
     
                         $c_id = $counrierArr_table['cc_id'];
@@ -103,8 +104,8 @@ class CourierCompany_auto extends CI_Controller {
                         $counrierArr['api_url'] = $api_url;
                         $counrierArr['company_type'] = $company_type ;
                         $counrierArr['auth_token'] = $auth_token;
-
-                        //print_r( $counrierArr); exit;
+                    //     echo '<pre>';
+                    //    print_r( $counrierArr); //exit;
 
                         if (!empty($ShipArr)) {
                             $sku_data = $this->Ccompany_auto_model->Getskudetails_forward($slipNo, $super_id);
@@ -654,27 +655,51 @@ class CourierCompany_auto extends CI_Controller {
                                 }
                             } elseif ($company == 'Aymakan') {
 
-                                $response = $this->Ccompany_auto_model->AymakanArray($ShipArr, $counrierArr, $Auth_token, $c_id, $super_id);
+                                $response = $this->Ccompany_auto_model->AymakanArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1,$complete_sku);
                                 $responseArray = json_decode($response, true);
-                                $err = $responseArray['errors']['reference'][0];
-
-                                if (empty($responseArray['errors'])) {
-                                    $client_awb = $responseArray['data']['shipping']['tracking_number'];
-                                    $mediaData = $responseArray['data']['shipping']['label'];
+                           //print_r( $responseArray );
+                                if (empty($responseArray['message'])) 
+                                {
+                                         $client_awb = $responseArray['data']['shipping']['tracking_number'];
+                                         
+                                         if(!empty($box_pieces1) && $box_pieces1>1)
+                                          {
+                                             $tracking_url= $counrierArr['api_url']."bulk_awb/trackings/";
+                                             
+                                             $aymakanlabel= $this->Ccompany_auto_model->Aymakan_tracking($client_awb, $tracking_url,$auth_token);
+                                            $label= json_decode($aymakanlabel,TRUE);
+                                          
+                                             $mediaData = $label['data']['bulk_awb_url'];
+                                            }
+                                          else
+                                          { 
+                                             
+                                            $tracking_url= $counrierArr['api_url']."awb/tracking/";
+                                               
+                                              $aymakanlabel= $this->Ccompany_auto_model->Aymakan_tracking($client_awb, $tracking_url,$auth_token);
+                                              $label= json_decode($aymakanlabel, TRUE);
+                                              
+                                              $mediaData = $label['data']['awb_url'];
+                                             
+                                             
+                                             }   
+                                       
                                     //****************************aymakan arrival label print cURL****************************
                                     file_put_contents("assets/all_labels/$slipNo.pdf", file_get_contents($mediaData));
-                                    $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
-
+                                     $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+    
                                     //****************************aymakan label print cURL****************************
-                                    $CURRENT_DATE = date("Y-m-d H:i:s");
-                                    $CURRENT_TIME = date("H:i:s");
-
-                                    $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
-                                    array_push($succssArray, $slipNo);
-                                } else {
-
-                                    $returnArr['responseError'][] = $slipNo . ':' . $responseArray['errors']['reference'][0];
-                                }
+                                     $CURRENT_DATE = date("Y-m-d H:i:s");
+                                        $CURRENT_TIME = date("H:i:s");
+                                                                 
+                                    $Update_data = $this->Ccompany_auto_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                   array_push($succssArray, $slipNo); 
+                                }   
+                                else{
+                                      
+                                        $returnArr['responseError'][] = $slipNo . ':' . $responseArray['message'].':'.json_encode($responseArray['errors']);
+                                        
+                                }   
                             } elseif ($company == 'Shipsy') {
 
                                 $response = $this->Ccompany_auto_model->ShipsyArray($ShipArr, $counrierArr, $Auth_token, $box_pieces1, $c_id, $super_id);
@@ -875,6 +900,8 @@ class CourierCompany_auto extends CI_Controller {
             $fullData = $this->shipDetailDefault($awb, $super_id);
         }
 
+//         echo '<pre>';
+//  print_r($fullData);exit;
         $lastArray = array();
         foreach ($fullData as $data) {
 

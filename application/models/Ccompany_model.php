@@ -1905,14 +1905,11 @@ class Ccompany_model extends CI_Model {
     public function AymakanArray(array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null,$box_pieces1) {
         
         $sender_city = getdestinationfieldshow($ShipArr['origin'], 'Aymakan');
-        
         $receiver_city = getdestinationfieldshow($ShipArr['destination'], 'Aymakan');
-        
         $store = getallsellerdatabyID($ShipArr['cust_id'], 'company');        
         $entry_date = date('Y-m-d H:i:s');
         $pickup_date = date("Y-m-d", strtotime($entry_date));
-        $API_URL = $counrierArr['api_url'];
-        
+        $API_URL = $counrierArr['api_url']."create";
         $api_key = $counrierArr['auth_token'];
         $currency = "SAR";  
 
@@ -1959,7 +1956,7 @@ class Ccompany_model extends CI_Model {
             "delivery_address" => $ShipArr['reciever_address'],
             "delivery_country" => 'SA',
             "delivery_phone" => $ShipArr['reciever_phone'],
-            "delivery_description" => $item_description,
+            "delivery_description" =>$complete_sku,
             "collection_name" => $ShipArr['sender_name'],
             "collection_address" => $ShipArr['sender_address'],
             "collection_email" => $ShipArr['sender_email'],
@@ -1971,7 +1968,6 @@ class Ccompany_model extends CI_Model {
             "weight" => $weight,
             "pieces" => $box_pieces
         );     
-        
         $json_final_date = json_encode($all_param_data);
         $headers = array(
             "Accept:application/json",
@@ -1985,11 +1981,10 @@ class Ccompany_model extends CI_Model {
         $response = curl_exec($ch);
         curl_close($ch);
         $responseArray = json_decode($response, true);
-        
         $logresponse =   json_encode($response);  
-        $successres = $responseArray['errors'];
+        $successres = $responseArray['message'];
 
-        if(empty($successres)) 
+        if(empty($successres) )
         {
             $successstatus  = "Success";
         }else {
@@ -3151,37 +3146,37 @@ array_push($itemArray,$peiceArray);
         foreach($ccdata as $couSel){
             $sellearray[] = array(
                 'image' =>$couSel ->image,
-                'user_name' =>$couSel ->user_name,
-                'company_url' => $couSel ->company_url,
-                'password' =>$couSel ->password,
-                'courier_account_no' => $couSel ->courier_account_no,
-                'courier_pin_no' => $couSel ->courier_pin_no,
-                'start_awb_sequence' =>$couSel ->start_awb_sequence,
-                'end_awb_sequence' => $couSel ->end_awb_sequence,
-                'company' => $couSel ->company,
-                'status' => $couSel ->status,
-                'deleted' => $couSel ->deleted,
-                'entrydate' => $couSel ->entrydate,
-                'auth_token' => $couSel ->auth_token,
-                'api_url' => $couSel ->api_url,
-                'user_name_t' => $couSel ->user_name_t,
-                'password_t' =>$couSel ->password_t,
-                'courier_account_no_t' =>$couSel ->courier_account_no_t,
-                'courier_pin_no_t' => $couSel ->courier_pin_no_t,
-                'start_awb_sequence_t' => $couSel ->start_awb_sequence_t,
-                'end_awb_sequence_t' =>$couSel ->end_awb_sequence_t,
-                'auth_token_t' => $couSel ->auth_token_t,
-                'api_url_t' =>$couSel ->api_url_t,
-                'type' => $couSel ->type,
+                'user_name' =>'',
+                'company_url' => '',
+                'password' =>'',
+                'courier_account_no' => '',
+                'courier_pin_no' => '',
+                'start_awb_sequence' =>'',
+                'end_awb_sequence' => '',
+                'company' => '',
+                'status' => 'N',
+                'deleted' => 'N',
+                'entrydate' =>  $CURRENT_DATE,
+                'auth_token' => '',
+                'api_url' => '',
+                'user_name_t' => '',
+                'password_t' =>'',
+                'courier_account_no_t' =>'',
+                'courier_pin_no_t' => '',
+                'start_awb_sequence_t' => '',
+                'end_awb_sequence_t' =>'',
+                'auth_token_t' =>'',
+                'api_url_t' =>'',
+                'type' => 'test',
                 'super_id' => $couSel ->super_id,
                 'cc_id' => $couSel ->cc_id,
                 'company_type' => $couSel ->company_type,
                 'capacity' => $couSel ->capacity,
                 'n_column' => $couSel ->n_column,
                 'delivery_days' => $couSel ->delivery_days,
-                'cust_id' => $cust_id,
+                'cust_id' => $cust_id, 
 
-            );     
+            );    
         }
 
        $output =   $this->db->insert_batch('courier_company_seller', $sellearray);

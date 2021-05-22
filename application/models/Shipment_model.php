@@ -1664,6 +1664,7 @@ class Shipment_model extends CI_Model {
         /* if(!empty($sku)){
           $this->db->where('diamention_fm.sku',$sku);
           } */
+        $this->db->group_by('shipment_fm.slip_no');
 
         if (!empty($seller)) {
             $seller = array_filter($seller);
@@ -1684,7 +1685,7 @@ class Shipment_model extends CI_Model {
         if ($query->num_rows() > 0) {
 
             $data = $query->result_array();
-            return $data[0]['sh_count'];
+            return $query->num_rows();
             // return $page_no.$this->db->last_query();
         }
         return 0;

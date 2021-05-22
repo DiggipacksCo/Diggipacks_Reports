@@ -236,6 +236,7 @@ class Seller extends MY_Controller {
         $this->load->view('SellerM/add_courier_company', $data);      
        
     }
+    
     public function updateCourier() {
         $dataArray = $this->input->post();
         $idArray = $dataArray['id'];
