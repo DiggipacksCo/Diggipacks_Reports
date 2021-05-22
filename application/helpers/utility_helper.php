@@ -196,7 +196,7 @@ if (!function_exists('GetcheckSlipNo3plButton_bulpage')) {
     function GetcheckSlipNo3plButton_bulpage() {
         $ci = & get_instance();
         $ci->load->database();
-        $listingQry = "select shipment_fm.frwd_company_id,courier_company.company from shipment_fm LEFT JOIN  courier_company ON shipment_fm.frwd_company_id=courier_company.id where shipment_fm.deleted='N'  and shipment_fm.frwd_company_id>0 and shipment_fm.super_id='" . $ci->session->userdata('user_details')['super_id'] . "' group by shipment_fm.frwd_company_id  ORDER  BY shipment_fm.frwd_company_id asc";
+        $listingQry = "select shipment_fm.frwd_company_id,shipment_fm.cust_id,courier_company.company from shipment_fm LEFT JOIN  courier_company ON shipment_fm.frwd_company_id=courier_company.id where shipment_fm.deleted='N'  and shipment_fm.frwd_company_id>0 and shipment_fm.super_id='" . $ci->session->userdata('user_details')['super_id'] . "' group by shipment_fm.frwd_company_id  ORDER  BY shipment_fm.frwd_company_id asc";
         $query = $ci->db->query($listingQry);
         $status_update_data = $query->result_array();
         return $status_update_data;
@@ -385,6 +385,21 @@ if (!function_exists('GetCourCompanynameId')) {
         $ci->load->database();
         $sql = "SELECT $field FROM courier_company where cc_id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
         $query = $ci->db->query($sql);
+        // echo   $ci->db->last_query();
+        // die; 
+        $result = $query->row_array();
+        return $result[$field];
+    }
+}
+
+if (!function_exists('GetCourCompanynameIdbulkprint')) {
+    function GetCourCompanynameIdbulkprint($id = null, $field = null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        $sql = "SELECT $field FROM courier_company where id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $query = $ci->db->query($sql);
+        // echo   $ci->db->last_query();
+        // die; 
         $result = $query->row_array();
         return $result[$field];
     }
@@ -1055,21 +1070,23 @@ if (!function_exists('PrintPiclist3PL')) {
 
             $files = $fileArray;
 
-            if (GetCourCompanynameId($frwd_company_id, 'company') == 'Esnad' || GetCourCompanynameId($frwd_company_id, 'company') == 'Labaih' || GetCourCompanynameId($frwd_company_id, 'company') == 'Clex' ) {
+           if (GetCourCompanynameIdbulkprint($frwd_company_id, 'company') == 'Clex' || GetCourCompanynameIdbulkprint($frwd_company_id, 'company') == 'Labaih' ) {
                 $pdf = new FPDI('P', 'mm');
             } 
-            else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Barqfleet')   
-            {
-                $pdf = new FPDI('P', 'mm', array(160, 102));   
-            }
-            else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Saee'){
-                $pdf = new FPDI('P', 'mm', array(250, 175));
-            }
-            else if ( GetCourCompanynameId($frwd_company_id, 'company') == 'Shipadelivery') {
+            else if ( GetCourCompanynameIdbulkprint($frwd_company_id, 'company') == 'Shipadelivery') {
                 $pdf = new FPDI('L', 'mm', array(102, 160));
             }
-            else
-                $pdf = new FPDI('P', 'mm', array(101, 152));
+            else if (GetCourCompanynameIdbulkprint($frwd_company_id, 'company') == 'Saee'){
+                $pdf = new FPDI('P', 'mm', array(250, 175));
+            }  else if (GetCourCompanynameIdbulkprint($frwd_company_id, 'company') == 'Beez'){
+                $pdf = new FPDI('P', 'mm', array(170, 130));
+            }
+            else if (GetCourCompanynameIdbulkprint($frwd_company_id, 'company') == 'Barqfleet' || GetCourCompanynameIdbulkprint($frwd_company_id, 'company') == 'GLT' ) {
+                $pdf = new FPDI('P', 'mm', array(110, 160));
+            } else {
+                $pdf = new FPDI('P', 'mm', array(102, 160));
+            }
+
 
             // iterate over array of files and merge
             foreach ($files as $file) {
@@ -1145,23 +1162,24 @@ if (!function_exists('PrintPiclist3PL_bulk')) {
 
             $files = $fileArray;
             //echo $frwd_company_id; die;
-            if (GetCourCompanynameId($frwd_company_id, 'company') == 'Clex' || GetCourCompanynameId($frwd_company_id, 'company') == 'Labaih' ) {
+            if (GetCourCompanynameIdbulkprint($frwd_company_id, 'company') == 'Clex' || GetCourCompanynameIdbulkprint($frwd_company_id, 'company') == 'Labaih' ) {
                 $pdf = new FPDI('P', 'mm');
             } 
-            else if ( GetCourCompanynameId($frwd_company_id, 'company') == 'Shipadelivery') {
+            else if ( GetCourCompanynameIdbulkprint($frwd_company_id, 'company') == 'Shipadelivery') {
                 $pdf = new FPDI('L', 'mm', array(102, 160));
             }
-            else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Saee'){
+            else if (GetCourCompanynameIdbulkprint($frwd_company_id, 'company') == 'Saee'){
                 $pdf = new FPDI('P', 'mm', array(250, 175));
-                
-            }  else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Beez'){
+            }  else if (GetCourCompanynameIdbulkprint($frwd_company_id, 'company') == 'Beez'){
                 $pdf = new FPDI('P', 'mm', array(170, 130));
             }
-            else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Barqfleet' || GetCourCompanynameId($frwd_company_id, 'company') == 'GLT' ) {
+            else if (GetCourCompanynameIdbulkprint($frwd_company_id, 'company') == 'Barqfleet' || GetCourCompanynameIdbulkprint($frwd_company_id, 'company') == 'GLT' ) {
                 $pdf = new FPDI('P', 'mm', array(110, 160));
             } else {
                 $pdf = new FPDI('P', 'mm', array(102, 160));
             }
+
+
             
             // iterate over array of files and merge
             foreach ($files as $file) {
