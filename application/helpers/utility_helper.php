@@ -383,7 +383,7 @@ if (!function_exists('GetCourCompanynameId')) {
     function GetCourCompanynameId($id = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM courier_company where id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT $field FROM courier_company where cc_id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result[$field];
@@ -1153,6 +1153,7 @@ if (!function_exists('PrintPiclist3PL_bulk')) {
             }
             else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Saee'){
                 $pdf = new FPDI('P', 'mm', array(250, 175));
+                
             }  else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Beez'){
                 $pdf = new FPDI('P', 'mm', array(170, 130));
             }
@@ -1408,6 +1409,7 @@ if (!function_exists('getallsellerdatabyID')) {
         $sql = "SELECT $field FROM customer where id='$id' and access_fm='Y' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
         
         $query = $ci->db->query($sql);
+       // echo  $ci->db->last_query; die();     
         $result = $query->row_array();
         return $result[$field];
     }

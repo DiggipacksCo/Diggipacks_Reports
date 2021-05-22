@@ -1813,6 +1813,8 @@ class Ccompany_model extends CI_Model {
         $lang = getdestinationfieldshow($ShipArr['origin'], 'longitute');
         $API_URL = $counrierArr['api_url'];
         $Secretkey = $counrierArr['auth_token'];
+         $ShipArr['cust_id'];
+         $store = getallsellerdatabyID($ShipArr['cust_id'], 'company');   
 
         if(empty($box_pieces1))
         {
@@ -1861,7 +1863,7 @@ class Ccompany_model extends CI_Model {
             "email" => $ShipArr['reciever_email'],
             "pickup_address_id" => '',
             "Pickup_address_code" => '',
-            "sendername" => $ShipArr['sender_name'],
+            "sendername" => "DIGGIPACKS-".$store,
             "sendermail" => $ShipArr['sender_email'],
             "senderphone" => $ShipArr['sender_phone'],
             "senderaddress" => $ShipArr['sender_address'],
@@ -3244,7 +3246,7 @@ array_push($itemArray,$peiceArray);
                 "RequestedBy"=> "",
                 "OrderNumber"=> $ShipArr['slip_no'],
                 "Shipping"=> true,
-                "ShipmentType"=> "C", //Types of delivery: “D” –Dry, “C” – Cold 
+                "ShipmentType"=> "C", //Types of delivery: ï¿½Dï¿½ ï¿½Dry, ï¿½Cï¿½ ï¿½ Cold 
                 "CustomerNote"=> "",
                 "Description"=> "",
                 "COD"=> $total_cod_amt,

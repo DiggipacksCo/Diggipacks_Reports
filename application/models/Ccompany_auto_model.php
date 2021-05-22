@@ -1318,7 +1318,7 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'city',$super_id);
         $lat = getdestinationfieldshow_auto_array($ShipArr['origin'], 'latitute',$super_id);
         $lang = getdestinationfieldshow_auto_array($ShipArr['origin'], 'longitute',$super_id);
-
+        $store = getallsellerdatabyID($ShipArr['cust_id'], 'company');   
         $API_URL = $counrierArr['api_url'];
         $Secretkey = $counrierArr['auth_token'];
 
@@ -1354,7 +1354,7 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
             "email" => $ShipArr['reciever_email'],
             "pickup_address_id" => '',
             "Pickup_address_code" => '',
-            "sendername" => $ShipArr['sender_name'],
+            "sendername" => "DIGGIPACKS-".$store,
             "sendermail" => $ShipArr['sender_email'],
             "senderphone" => $ShipArr['sender_phone'],
             "senderaddress" => $ShipArr['sender_address'],

@@ -1450,7 +1450,7 @@ class Manifest extends CourierCompany_pickup {
 
     public function Getnewrequestmanifest() {
         //echo "sssssss"; die;
-        $this->db->query("update pickup_request set seen=1 where super_id='" . $this->session->userdata('user_details')['super_id'] . "'");
+        $this->db->query("update pickup_request set seen=1 where super_id='" . $this->session->userdata('user_details')['super_id'] . "' and seen=0");
         $this->load->view('manifest/newmanifestrequest');
     }
 
@@ -1475,7 +1475,7 @@ class Manifest extends CourierCompany_pickup {
         $filterarray = array('seller_id' => $seller_id, 'manifestid' => $manifestid, 'sort_list' => $sort_list);
 
         $shipments = $this->Manifest_model->getnewgenratemanifestdata($to, $from, $page_no, $filterarray);
-
+       // echo json_encode($shipments); die;
         $manifestarray = $shipments['result'];
         $ii = 0;
         $seller_ids = "";
@@ -1493,7 +1493,7 @@ class Manifest extends CourierCompany_pickup {
             $ii++;
         }
 
-        ///	echo json_encode($sellers); die;
+        	
         $sellers = Getallsellerdata($seller_ids);
         $dataArray['result'] = $manifestarray;
         $dataArray['count'] = $shipments['count'];
