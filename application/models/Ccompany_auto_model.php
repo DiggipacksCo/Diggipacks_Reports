@@ -36,7 +36,7 @@ class Ccompany_auto_model extends CI_Model {
          $this->db->where('cust_id', $ShipArr_custid);
          $this->db->order_by("company");
          $query = $this->db->get();
-       //  echo $this->db->last_query(); //exit;
+     //   echo $this->db->last_query(); exit;
  
          if ($query->num_rows()> 0)
          {
@@ -1611,8 +1611,8 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
             "weight" => $ShipArr['weight'],
             "pieces" =>$ShipArr['pieces']
         );
-       // print_r($all_param_data);
-        //exit;
+    //    print_r($all_param_data);
+    //     exit;
         $json_final_date = json_encode($all_param_data);
     // print_r($json_final_date);exit;
         $headers = array(
@@ -1656,6 +1656,33 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
             return $response;
         }
     }
+
+    public function Aymakan_tracking($client_awb= null, $tracking_url= null,$auth_token=null)
+    {
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+              CURLOPT_URL => $tracking_url.$client_awb,
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => '',
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 0,
+              CURLOPT_FOLLOWLOCATION => true,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => 'GET',
+              CURLOPT_HTTPHEADER => array(
+                'Accept: application/json',
+                'Authorization: '.$auth_token
+              ),
+            ));
+
+            $response = curl_exec($curl);
+             
+            curl_close($curl);
+            return $response;
+    }
+
     public function ShipsyArray(array $ShipArr, array $counrierArr, $box_pieces = null, $c_id = null, $super_id = null) {
         //print_r($ShipArr);exit;
         $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'shipsy_city');

@@ -1905,14 +1905,11 @@ class Ccompany_model extends CI_Model {
     public function AymakanArray(array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null,$box_pieces1) {
         
         $sender_city = getdestinationfieldshow($ShipArr['origin'], 'Aymakan');
-        
         $receiver_city = getdestinationfieldshow($ShipArr['destination'], 'Aymakan');
-        
         $store = getallsellerdatabyID($ShipArr['cust_id'], 'company');        
         $entry_date = date('Y-m-d H:i:s');
         $pickup_date = date("Y-m-d", strtotime($entry_date));
-        $API_URL = $counrierArr['api_url'];
-        
+        $API_URL = $counrierArr['api_url']."create";
         $api_key = $counrierArr['auth_token'];
         $currency = "SAR";  
 
@@ -1959,7 +1956,7 @@ class Ccompany_model extends CI_Model {
             "delivery_address" => $ShipArr['reciever_address'],
             "delivery_country" => 'SA',
             "delivery_phone" => $ShipArr['reciever_phone'],
-            "delivery_description" => $item_description,
+            "delivery_description" =>$complete_sku,
             "collection_name" => $ShipArr['sender_name'],
             "collection_address" => $ShipArr['sender_address'],
             "collection_email" => $ShipArr['sender_email'],
@@ -1971,7 +1968,6 @@ class Ccompany_model extends CI_Model {
             "weight" => $weight,
             "pieces" => $box_pieces
         );     
-        
         $json_final_date = json_encode($all_param_data);
         $headers = array(
             "Accept:application/json",
@@ -1985,11 +1981,10 @@ class Ccompany_model extends CI_Model {
         $response = curl_exec($ch);
         curl_close($ch);
         $responseArray = json_decode($response, true);
-        
         $logresponse =   json_encode($response);  
-        $successres = $responseArray['errors'];
+        $successres = $responseArray['message'];
 
-        if(empty($successres)) 
+        if(empty($successres) )
         {
             $successstatus  = "Success";
         }else {
