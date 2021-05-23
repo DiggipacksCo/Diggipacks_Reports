@@ -74,6 +74,25 @@ $scope.dropexport=[];
   
         
     };   
+
+   
+    $scope.runshell = function ()
+    {
+
+        $http({
+            url: "Shipment/runshell",
+            method: "POST",                   
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+
+        }).then(function (response) {
+            
+            alert("Sync process has been start. Please wait for 10 minute to update data. ");
+            
+
+        })
+
+    } 
+
     
     $scope.GetOpenPopPicker=function ()
     {

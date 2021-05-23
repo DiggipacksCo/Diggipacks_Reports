@@ -70,7 +70,7 @@ class Finance extends MY_Controller {
 
 			if($val['booking_id'] == '')
 			 {
-				$chargesArray['storage_charges']=$chargesArray['storage_charges']+$val['storage_charges'];
+				$chargesArray['storage_charges']=$chargesArray['storage_charges']+$val['storage_charges']; 
 				$chargesArray['pickup_charge']=$chargesArray['pickup_charge']+$val['pickup_charge'];
 				$chargesArray['onhold_charges']=$chargesArray['onhold_charges']+$val['onhold_charges'];
 			 }

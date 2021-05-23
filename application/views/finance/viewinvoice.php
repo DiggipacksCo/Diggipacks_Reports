@@ -50,12 +50,12 @@
 			<table id="print" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;"width: 100%;>
 				<tr>
 					<!-- <td colspan="5"></td> -->
-					<td colspan="10" style="text-align:center;"><strong>Tax Invoice - فاتورة ضريبية</strong></td>
+					<td colspan="11" style="text-align:center;"><strong>Tax Invoice - فاتورة ضريبية</strong></td>
 				<!-- 	<td colspan="9"></td> -->
 				</tr>
 				<tr>
 
-					<td colspan="3" style="padding:2%;"> 
+					<td colspan="4" style="padding:2%;"> 
 						<b>UID Account Number:-&nbsp;<?=GetalldashboardClientField($invoiceData[0]['cust_id'], 'uniqueid');?> - رقم الحساب</b>
 						<br/> <b>Customers Name:-&nbsp;<?=GetalldashboardClientField($invoiceData[0]['cust_id'], 'company');?> - اسم العميل</b>
 						<br/> <b>Address:-&nbsp;<?=GetalldashboardClientField($invoiceData[0]['cust_id'], 'address');?>  - عنوان</b>
@@ -68,29 +68,30 @@
 
 					<td colspan="3" align="center"> 
 						<img src="<?= SUPERPATH . Getsite_configData_field('logo'); ?>"  height="70px;"/>
-						<!-- <img src="https://super.fastcoo-tech.com/assets/331.png.webp" height="70px;" />  -->
+					
 					</td>
 
-					<td colspan="4"style="padding:2%;" ><b align="left">Name Of Company - Fastcoo - اسم الشركة </b>
+					<td colspan="4"style="padding:2%;" ><b align="left">Name Of Company - <?= Getsite_configData_field('company_name'); ?> - اسم الشركة </b>
 
 
 						<br/> <b>Vat Id No.:-&nbsp;<?= Getsite_configData_field('vat'); ?>- الرقم الضريبي </b>
 
 
 					
-						<br/> <b>IBAN #:-&nbsp;<?=GetalldashboardClientField($invoiceData[0]['cust_id'], 'iban_number');?> </b>
+						<!-- <br/> <b>IBAN #:-&nbsp;<?=GetalldashboardClientField($invoiceData[0]['cust_id'], 'iban_number');?> </b> -->
 						<br/> <b>Invoice No:-&nbsp;<?=$invoiceData[0]['invoice_no'];?> - رقم الفاتورة</b>
 						<br/> <b>Invoice Date:-&nbsp;<?=$invoiceData[0]['invoice_date'];?> - تاريخ الفاتورة</b>
-						<br/><b>Toll Free no :-<?=site_config_detaiil($invoiceData[0]['super_id'], 'tollfree_fm');?></b>
+						<br/><b>Toll Free no :-<?=Getsite_configData_field( 'tollfree_fm');?></b>
 						
 					</td>
 				</tr>
 				<tr>
-					<td colspan="10" align="justify">&nbsp;</td>
+					<td colspan="11" align="justify">&nbsp;</td>
 				</tr>
 				<tr>	
 					<th>Sr No. </th>					
 					<th>AWB no. </th>
+					<th>Weight (Kg)</th>
 					<th>Handling Fees</th>
 					<th>Special Packing </th>
 					<th>Return Charge</th>
@@ -102,7 +103,8 @@
 				</tr>
 
 					<?php
-					
+					// echo '<pre>';
+					// print_r($invoiceData);
 					foreach ($invoiceData as $key => $rowData) {
 					  //	$pickup_charge += $rowData['pickup_charge'];
  						$invoice_no = $rowData['invoice_no'];
@@ -126,7 +128,8 @@
  						 $counter = $key + 1;
  						echo ' <tr>
 								<td align="center">' . $counter. '</td>
-								<td align="center">' . $rowData['slip_no'] . '</td>							
+								<td align="center">' . $rowData['slip_no'] . '</td>	
+								<td align="center">' . $rowData['weight'] . '</td>								
 						        <td align="center">' . $rowData['handline_fees'] . '</td>
 						        <td align="center">' . $special_packing . '</td>
 						        <td align="center">' . $rowData['return_charge'] . '</td>
@@ -148,7 +151,7 @@
  					$tot_with_vat  = round(($tot + $totvat),2);
  					$bank_fees = GetalldashboardClientField($invoiceData[0]['cust_id'], 'bank_fees');
 					?>	
-					<th colspan="2"> Total Charges</th>					
+					<th colspan="3"> Total Charges</th>					
 					<th><?=$totalValue['handline_fees'];?></th>
 					<th><?=$totalValue['special_packing'];?></th>
 					<th><?=$totalValue['return_charge'];?></th>
@@ -164,7 +167,7 @@
 				<tr>
 
 					 
-				<td colspan="10">
+				<td colspan="11">
 					<?php 
 					$TOTAL = round(($tot + $totalValue['pickup_charge']+$totalValue['storage_charges']+$totalValue['onhold_charges']),2);
 					$TOTALvat    = round((($TOTAL * 15)/100),2) ;
