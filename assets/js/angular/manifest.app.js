@@ -79,6 +79,10 @@ var app = angular.module('AppManifest', [])
             $scope.Error_msg = {};
             $scope.saveassigntodriver = function ()
             {
+
+               
+
+
                 if ($scope.returnUpdate.assign_type == 'D')
                 {
                     $scope.returnUpdate.cc_id = "";
@@ -112,7 +116,9 @@ var app = angular.module('AppManifest', [])
                             if (response.data.status == 'succ')
                             {
                                 alert("Successfully Assign");
-                                location.reload();
+                                $window.location.href = '/showpickuplist';
+
+                                //location.reload();
                             }
                           
                          else
@@ -486,7 +492,8 @@ $scope.data={};
                 }).then(function (response) {
 
                     alert("Successfully Updated!");
-                    $window.location.reload();
+                    //$window.location.reload();
+                    location.href = 'show_assignedlist';
 
 
 
@@ -732,6 +739,7 @@ $scope.data={};
             $scope.Error_msg = {};
             $scope.saveassigntodriver = function ()
             {
+                location.href = 'showpickuplist';
                 if ($scope.AssignData.assign_type == 'D')
                 {
                     $scope.AssignData.cc_id = "";
@@ -765,7 +773,7 @@ $scope.data={};
                              if (response.data.status == 'succ')
                             {
                                 $scope.Success_msg = response.data.Success_msg;
-                                location.reload();
+                                 location.href = 'showpickuplist';
                             } else
                             {
                                 //$scope.invalidSslip_no = response.data.invalid_slipNO;
@@ -788,6 +796,7 @@ $scope.data={};
                 {
                     if ($scope.AssignData.assign_type == 'D')
                         alert("Please Select Driver");
+                        
                     else
                         alert("Please Select Courier Company");
                 }
@@ -919,7 +928,8 @@ $scope.data={};
                         if (response.data == "true")
                         {
                             alert("Successfully Status Updated");
-                            location.reload();
+                            location.href = 'showmenifest';
+                            
                         } else
                         {
                             alert("try again");
