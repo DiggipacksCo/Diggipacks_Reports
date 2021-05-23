@@ -49,25 +49,25 @@ class CourierCompany_auto extends CI_Controller {
 
         $invalid_slipNO = array();
         $succssArray = array();
-//echo print_r($postData);exit; 
+    //echo print_r($shipmentLoopArray);exit; 
 
         if (!empty($shipmentLoopArray)) {
             if (!empty($postData)) {
 
-               $courier_data = $this->forwardShipment($postData['slip_no'], $super_id);
+              $courier_data = $this->forwardShipment($postData['slip_no'], $super_id);
              
-            //print_r($courier_data);exit;
+           // print_r($courier_data);exit;
                 if (!empty($courier_data)) {
 
                     foreach ($shipmentLoopArray as $key => $slipNo) {
                         $ShipArr = $this->Ccompany_auto_model->GetSlipNoDetailsQry(trim($slipNo), $super_id);
                        //print_r($ShipArr);
-                        $ShipArr_custid =  $ShipArr['cust_id']; 
+                    $ShipArr_custid =  $ShipArr['cust_id']; 
                         $courier_id = $courier_data[0]['cc_id'];
                         $zone_id = $courier_data[0]['id'];
                         $counrierArr_table = $this->Ccompany_auto_model->GetdeliveryCompanyUpdateQry($courier_id, $super_id,$ShipArr_custid);
                     //   echo '<pre>';
-                   //   print_r( $counrierArr_table); exit;
+                    //  print_r( $counrierArr_table); exit;
                    
     
                         $c_id = $counrierArr_table['cc_id'];
@@ -404,37 +404,35 @@ class CourierCompany_auto extends CI_Controller {
                                     $returnArr['responseError'][] = $slipNo . ':' . $response['invalid_parameters'][0];
                                 }
                             } elseif ($company == 'Clex') {
-                              //  echo 'amb';exit; 
-                               $response = $this->Ccompany_auto_model->ClexArray($ShipArr, $counrierArr, $complete_sku,$box_pieces,$super_id,$c_id);
-                               //echo $this->session->userdata('user_details')['super_id'];
-                             // print_r($response);
-                               if ($response['data'][0]['cn_id']) {
-                                   $client_awb = $response['data'][0]['cn_id'];
-                                    $label_url_new = clex_label_curl($Auth_token, $client_awb);
-                                    $generated_pdf = file_get_contents($label_url_new);
-                                   file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
-                                   $CURRENT_DATE = date("Y-m-d H:i:s");
-                                   $CURRENT_TIME = date("H:i:s");
-                                   $fastcoolabel = base_url()."assets/all_labels/$slipNo.pdf";
-                                   $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
-                                   array_push($succssArray, $slipNo);
-                               } else {
-                                   if($response['already_exist'])
-                                   {
-                                       $label_url_new = clex_label_curl($Auth_token, $response['consignment_id'][0]);
-                                       
-                                       $generated_pdf = file_get_contents($label_url_new);
-                                      file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
-                                   $returnArr['responseError'][] = $slipNo . ':' . $response['already_exist'][0]." ".$response['consignment_id'][0];
-                                   }
-                                   elseif($response['origin_city'])
-                                        $returnArr['responseError'][] = $slipNo . ':' . $response['origin_city'][0];
-                                    elseif($response['destination_city'])
-                                        $returnArr['responseError'][] = $slipNo . ':' . $response['destination_city'][0];
-                                   else
-                                       $returnArr['responseError'][] = $slipNo . ':' . $response['message'];
-                                       
-                               }
+                                $response = $this->Ccompany_auto_model->ClexArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id);
+                                //echo $this->session->userdata('user_details')['super_id'];
+                             //   print_r($response);
+                                if ($response['data'][0]['cn_id']) {
+                                    $client_awb = $response['data'][0]['cn_id'];
+                                     $label_url_new = clex_label_curl($Auth_token, $client_awb);
+                                     $generated_pdf = file_get_contents($label_url_new);
+                                    file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+        
+                                    $fastcoolabel = base_url()."assets/all_labels/$slipNo.pdf";
+                                    $Update_data = $this->Ccompany_auto_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                    array_push($succssArray, $slipNo);
+                                } else {
+                                    if($response['already_exist'])
+                                    {
+                                        $label_url_new = clex_label_curl($Auth_token, $response['consignment_id'][0]);
+                                        
+                                        $generated_pdf = file_get_contents($label_url_new);
+                                       file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                                    $returnArr['responseError'][] = $slipNo . ':' . $response['already_exist'][0]." ".$response['consignment_id'][0];
+                                    }
+                                    elseif($response['origin_city'])
+                                         $returnArr['responseError'][] = $slipNo . ':' . $response['origin_city'][0];
+                                     elseif($response['destination_city'])
+                                         $returnArr['responseError'][] = $slipNo . ':' . $response['destination_city'][0];
+                                    else
+                                        $returnArr['responseError'][] = $slipNo . ':' . $response['message'];
+                                        
+                                }
                             } elseif ($company == 'Barqfleet') {
                                 $response_ww = $this->Ccompany_auto_model->BarqfleethArray($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $c_id, $super_id);
                                 $response_array = json_decode($response_ww, TRUE);
@@ -501,97 +499,95 @@ class CourierCompany_auto extends CI_Controller {
                                     $returnArr['responseError'][] = $slipNo . ':' . "invalid details";
                                 }
                             } elseif ($company == 'NAQEL') {
-                               //echo 'xxxx'.$super_id;exit;
-                                $awb_array = $this->Ccompany_auto_model->NaqelArray($ShipArr, $counrierArr, $complete_sku, $box_pieces, $Auth_token, $c_id, $super_id);
 
+                                $awb_array = $this->Ccompany_auto_model->NaqelArray($ShipArr,$counrierArr, $complete_sku,$box_pieces1, $Auth_token,$c_id);
                                 $HasError = $awb_array['HasError'];
-
                                 $error_message = $awb_array['Message'];
-                                if ($awb_array['HasError'] !== true) {
-
+                                
+                                if ($awb_array['HasError'] =='false') 
+                                {
+                                   
                                     $client_awb = $awb_array['WaybillNo'];
-
-                                    if (!empty($client_awb)) {
-                                        //echo "client_awb = ". $client_awb; echo "<br> <br/>";
-                                        $user_name = $counrierArr['user_name'];
-                                        $password = $counrierArr['password'];
-                                        $xml_for_label = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">
-                                        <soapenv:Header/>
-                                        <soapenv:Body>
-                                        <tem:GetWaybillSticker>
-                                            <tem:clientInfo>
-                                                <tem:ClientAddress>
-                                                    <tem:PhoneNumber>' . $ShipArr['sender_phone'] . '</tem:PhoneNumber>
-                                                    <tem:POBox>0</tem:POBox>
-                                                    <tem:ZipCode>0</tem:ZipCode>
-                                                    <tem:Fax>0</tem:Fax>
-                                                    <tem:FirstAddress>' . $ShipArr['sender_address'] . '</tem:FirstAddress>
-                                                    <tem:Location>' . $sender_city . '</tem:Location>
-                                                    <tem:CountryCode>KSA</tem:CountryCode>
-                                                    <tem:CityCode>RUH</tem:CityCode>
-                                                </tem:ClientAddress>
-                                                <tem:ClientContact>
-                                                    <tem:Name>' . $ShipArr['sender_name'] . '</tem:Name>
-                                                    <tem:Email>' . $ShipArr['sender_email'] . '</tem:Email>
-                                                    <tem:PhoneNumber>' . $ShipArr['sender_phone'] . '</tem:PhoneNumber>
-                                                    <tem:MobileNo>' . $ShipArr['sender_phone'] . '</tem:MobileNo>
-                                                </tem:ClientContact>
-                                                <tem:ClientID>' . $user_name . '</tem:ClientID>
-                                                <tem:Password>' . $password . '</tem:Password>
-                                                <tem:Version>9.0</tem:Version>
-                                            </tem:clientInfo>
-                                            <tem:WaybillNo>' . $client_awb . '</tem:WaybillNo>
-                                            <tem:StickerSize>FourMSixthInches</tem:StickerSize>
-                                        </tem:GetWaybillSticker>
-                                        </soapenv:Body>
-                                        </soapenv:Envelope>';
-                                        //print_r($xml_for_label);//exit;
-                                        $headers = array(
-                                            "Content-type: text/xml",
-                                            "Content-length: " . strlen($xml_for_label),
-                                        );
-
-                                        $url = $counrierArr['api_url'] . "?op=GetWaybillSticker";
-
-                                        $ch = curl_init();
-                                        curl_setopt($ch, CURLOPT_URL, $url);
-                                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                                        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-                                        curl_setopt($ch, CURLOPT_POST, true);
-                                        curl_setopt($ch, CURLOPT_POSTFIELDS, $xml_for_label);
-                                        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-                                        $response = trim(curl_exec($ch));
-
-                                        curl_close($ch);
-
-                                        $xml_data = new SimpleXMLElement(str_ireplace(array("soap:", "<?xml version=\"1.0\" encoding=\"utf-16\"?>"), "", $response));
-                                        $mediaData = $xml_data->Body->GetWaybillStickerResponse->GetWaybillStickerResult[0];
-
-                                        if (!empty($mediaData)) {
-                                            $pdf_label = json_decode(json_encode((array) $mediaData), TRUE);
-                                            header('Content-Type: application/pdf');
-                                            $img = base64_decode($pdf_label[0]);
-
-                                            $savefolder = $img;
-                                            file_put_contents("assets/all_labels/$slipNo.pdf", $savefolder);
-
-                                            //*********NAQEL arrival label print cURL****************************
-
-                                            $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
-
-                                            //****************NAQEL label print cURL****************************
-                                            $CURRENT_DATE = date("Y-m-d H:i:s");
-                                            $CURRENT_TIME = date("H:i:s");
-
-                                            $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
-                                            array_push($succssArray, $slipNo);
+                                        if (!empty($client_awb)) 
+                                        {
+                                            $user_name = $counrierArr['user_name'];    
+                                            $password = $counrierArr['password'];
+                                            $xml_for_label = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">
+                                                <soapenv:Header/>
+                                                <soapenv:Body>
+                                                <tem:GetWaybillSticker>
+                                                    <tem:clientInfo>
+                                                        <tem:ClientAddress>
+                                                            <tem:PhoneNumber>' . $ShipArr['sender_phone'] . '</tem:PhoneNumber>
+                                                            <tem:POBox>0</tem:POBox>
+                                                            <tem:ZipCode>0</tem:ZipCode>
+                                                            <tem:Fax>0</tem:Fax>
+                                                            <tem:FirstAddress>' . $ShipArr['sender_address'] . '</tem:FirstAddress>
+                                                            <tem:Location>' . $sender_city . '</tem:Location>
+                                                            <tem:CountryCode>KSA</tem:CountryCode>
+                                                            <tem:CityCode>RUH</tem:CityCode>
+                                                        </tem:ClientAddress>
+                                                        <tem:ClientContact>
+                                                            <tem:Name>' . $ShipArr['sender_name'] . '</tem:Name>
+                                                            <tem:Email>' . $ShipArr['sender_email'] . '</tem:Email>
+                                                            <tem:PhoneNumber>' . $ShipArr['sender_phone'] . '</tem:PhoneNumber>
+                                                            <tem:MobileNo>' . $ShipArr['sender_phone'] . '</tem:MobileNo>
+                                                        </tem:ClientContact>
+                                                        <tem:ClientID>' . $user_name . '</tem:ClientID>
+                                                        <tem:Password>' . $password . '</tem:Password>
+                                                        <tem:Version>9.0</tem:Version>
+                                                    </tem:clientInfo>
+                                                    <tem:WaybillNo>' . $client_awb . '</tem:WaybillNo>
+                                                    <tem:StickerSize>FourMSixthInches</tem:StickerSize>
+                                                </tem:GetWaybillSticker>
+                                                </soapenv:Body>
+                                                </soapenv:Envelope>';
+                                          
+                                            $headers = array(
+                                                "Content-type: text/xml",
+                                                "Content-length: " . strlen($xml_for_label),
+                                            );
+        
+                                            $url = $counrierArr['api_url']."?op=GetWaybillSticker";
+        
+                                            $ch = curl_init();
+                                                curl_setopt($ch, CURLOPT_URL, $url);
+                                                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                                                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+                                                curl_setopt($ch, CURLOPT_POST, true);
+                                                curl_setopt($ch, CURLOPT_POSTFIELDS, $xml_for_label);
+                                                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                                                $response = trim(curl_exec($ch));    
+                                      
+                                                curl_close($ch);
+                                            
+                                            $xml_data = new SimpleXMLElement(str_ireplace(array("soap:","<?xml version=\"1.0\" encoding=\"utf-16\"?>"), "", $response));
+                                            $mediaData = $xml_data->Body->GetWaybillStickerResponse->GetWaybillStickerResult[0];
+                                                         
+                                                if (!empty($mediaData)) 
+                                                {
+                                                    $pdf_label = json_decode(json_encode((array) $mediaData), TRUE);
+                                                    header('Content-Type: application/pdf');
+                                                    $img = base64_decode($pdf_label[0]);
+                                                    $savefolder = $img;
+                                                    file_put_contents("assets/all_labels/$slipNo.pdf", $savefolder);
+                                                    //*********NAQEL arrival label print cURL****************************
+                                                    $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+        
+                                                    //****************NAQEL label print cURL****************************
+                                                     $CURRENT_DATE = date("Y-m-d H:i:s");
+                                                     $CURRENT_TIME = date("H:i:s");
+                                                    $Update_data = $this->Ccompany_auto_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                                   array_push($succssArray, $slipNo);
+                                                }
                                         }
-                                    } else {
-                                        $returnArr['responseError'][] = $slipNo . ':' . $awb_array['Message'];
-                                    }
+                                        else
+                                           {
+                                               $returnArr['responseError'][] = $slipNo . ':' . $awb_array['Message'];
+                                           }
                                 }
                             } elseif ($company == 'Saee') {
-                                
+
                                 $response = $this->Ccompany_auto_model->SaeeArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1);
                                 $safe_response =  $response; 
                                // echo "<pre>";  print_r($safe_response); 
@@ -602,7 +598,7 @@ class CourierCompany_auto extends CI_Controller {
                                    $API_URL = $counrierArr['api_url'];
                                    $label_response = saee_label_curl($client_awb, $Auth_token,$API_URL );
                                    file_put_contents("assets/all_labels/$slipNo.pdf", $label_response);
-                                    echo  $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+                                      $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
    
                                    //****************************Saee label print cURL****************************
                                     $CURRENT_DATE = date("Y-m-d H:i:s");
@@ -902,7 +898,7 @@ class CourierCompany_auto extends CI_Controller {
     public function forwardShipment($awb = null, $super_id = null) {
 
         $fullData = $this->shipDetail($awb, $super_id);
-       // print_r($fullData);exit;
+     //print_r($fullData);exit;
         if (empty($fullData)) {
             $fullData = $this->shipDetailDefault($awb, $super_id);
         }
@@ -913,7 +909,8 @@ class CourierCompany_auto extends CI_Controller {
         foreach ($fullData as $data) {
 
             $dataArray = $this->zonListData($data['cc_id'], $data['destination'], $super_id,$data['cust_id']);
-           
+            // echo '<pre>';
+            //  print_r($data);exit;
             if (!empty($dataArray)) {
                 return $dataArray;
                 break;
@@ -965,7 +962,7 @@ class CourierCompany_auto extends CI_Controller {
             $this->db->where('cc_id', $ccid);
 
             $query = $this->db->get();
-           // echo $this->db->last_query()."<br>";
+           //echo $this->db->last_query()."<br>";
 
             if ($query->num_rows()> 0)
             {

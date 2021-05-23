@@ -69,13 +69,13 @@
 						<!-- <img src="https://super.fastcoo-tech.com/assets/331.png.webp" height="70px;" />  -->
 					</td>
 
-					<td colspan="8"style="padding:2%;" ><b align="left">Name Of Company - Fastcoo - اسم الشركة </b>
+					<td colspan="8"style="padding:2%;" ><b align="left">Name Of Company - <?= Getsite_configData_field('company_name'); ?>- اسم الشركة </b>
 						
 						<br/> <b>Vat Id No.:-&nbsp;<?= Getsite_configData_field('vat'); ?>- الرقم الضريبي </b>
 						<br/> <b>IBAN #:-&nbsp;<?=GetalldashboardClientField($invoiceData[0]['cust_id'], 'iban_number');?> </b>
 						<br/> <b>Invoice No:-&nbsp;<?=$invoiceData[0]['invoice_no'];?> - رقم الفاتورة</b>
 						<br/> <b>Invoice Date:-&nbsp;<?=$invoiceData[0]['invoice_date'];?> - تاريخ الفاتورة</b>
-						<br/><b>Toll Free no :-<?=site_config_detaiil($invoiceData[0]['super_id'], 'tollfree_fm');?></b>
+						<br/><b>Toll Free no :-<?=Getsite_configData_field( 'tollfree_fm');?></b>
 						
 					</td>
 				</tr>
