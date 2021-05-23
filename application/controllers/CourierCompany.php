@@ -251,7 +251,7 @@ class CourierCompany extends MY_Controller  {
     public function BulkForwardCompanyReady()
     {
         $postData = json_decode(file_get_contents('php://input'), true);
-       
+        $super_id = $postData['super_id'];
         $CURRENT_TIME = date('H:i:s');
         $CURRENT_DATE = date('Y-m-d H:i:s');
          if(!empty($postData['slip_arr']) && !empty($postData['otherArr']))
@@ -364,7 +364,7 @@ class CourierCompany extends MY_Controller  {
                     }
                     
                     if($company=='Aramex'){
-                            $params = $this->Ccompany_model->AramexArray($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1);
+                            $params = $this->Ccompany_model->AramexArray($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id);
 
                             $dataJson = json_encode($params);
                             $headers = array("Content-type:application/json");
@@ -419,7 +419,7 @@ class CourierCompany extends MY_Controller  {
 
                             $responseArray = json_decode($Auth_response, true);                      
                             $Auth_token = $responseArray['data']['id_token'];   						
-                            $response = $this->Ccompany_model->SafeArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1);
+                            $response = $this->Ccompany_model->SafeArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1,$super_id);
                             $safe_response = json_decode($response, true);                     
 
                             if ($safe_response['status'] == 'success') {
@@ -454,7 +454,7 @@ class CourierCompany extends MY_Controller  {
                             $Auth_response = Thabit_Auth_cURL($counrierArr);
                             $responseArray = json_decode($Auth_response, true);                      
                             $Auth_token = $responseArray['data']['id_token'];
-                            $response = $this->Ccompany_model->ThabitArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1);
+                            $response = $this->Ccompany_model->ThabitArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1,$super_id);
                             $thabit_response = json_decode($response, true);   
                             if ($thabit_response['status'] == 'success' ) {
                                 $thabit_order_ID = $thabit_response['data']['id'];
@@ -481,7 +481,7 @@ class CourierCompany extends MY_Controller  {
                         $esnad_awb_number = Get_esnad_awb($start_awb_sequence, $end_awb_sequence); 
                         $esnad_awb_number = $esnad_awb_number -1;
                         $Auth_token = $counrierArr['auth_token'];                      
-                        $response = $this->Ccompany_model->EsnadArray($ShipArr, $counrierArr, $esnad_awb_number, $complete_sku, $Auth_token,$c_id,$box_pieces1);                      
+                        $response = $this->Ccompany_model->EsnadArray($ShipArr, $counrierArr, $esnad_awb_number, $complete_sku, $Auth_token,$c_id,$box_pieces1,$super_id);                      
                         $responseArray = json_decode($response, true); 
                         
                         $status = $responseArray['success'];
@@ -519,7 +519,7 @@ class CourierCompany extends MY_Controller  {
                         }
                         
                     }elseif ($company == 'Barqfleet') {
-                            $response_ww = $this->Ccompany_model->BarqfleethArray($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services,$c_id,$box_pieces1);
+                            $response_ww = $this->Ccompany_model->BarqfleethArray($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services,$c_id,$box_pieces1,$super_id);
                             $response_array = json_decode($response_ww, TRUE);
                             
                             if ($response_array['code'] != '') {
@@ -564,7 +564,7 @@ class CourierCompany extends MY_Controller  {
                             $responseArray = json_decode($Auth_response, true);
                             $Auth_token = $responseArray['data']['id_token'];
 
-                            $response =$this->Ccompany_model->MakdoonArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1);
+                            $response =$this->Ccompany_model->MakdoonArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1,$super_id);
 
                             $safe_response = json_decode($response, true);
      
@@ -594,7 +594,7 @@ class CourierCompany extends MY_Controller  {
                             }
                             
                     }elseif ($company == 'Zajil') {
-                            $response = $this->Ccompany_model->ZajilArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1);
+                            $response = $this->Ccompany_model->ZajilArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$super_id);
                             if (!empty($response['data'])) {
                                 $success = $response['data'][0]['success'];
                                 if ($response['status'] == 'OK' && $success == true) {
@@ -614,7 +614,7 @@ class CourierCompany extends MY_Controller  {
                             }
                             
                     }elseif ($company == 'NAQEL'){
-                        $awb_array = $this->Ccompany_model->NaqelArray($ShipArr,$counrierArr, $complete_sku,$box_pieces1, $Auth_token,$c_id);
+                        $awb_array = $this->Ccompany_model->NaqelArray($ShipArr,$counrierArr, $complete_sku,$box_pieces1, $Auth_token,$c_id,$super_id);
                         $HasError = $awb_array['HasError'];
                         $error_message = $awb_array['Message'];
                         
@@ -702,7 +702,7 @@ class CourierCompany extends MY_Controller  {
                                    }
                         }
                     }elseif ($company == 'Saee'){
-                             $response = $this->Ccompany_model->SaeeArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1);
+                             $response = $this->Ccompany_model->SaeeArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1,$super_id);
                              $safe_response =  $response; 
                             // echo "<pre>";  print_r($safe_response); 
                             if ($safe_response['success'] == 'true') 
@@ -728,7 +728,7 @@ class CourierCompany extends MY_Controller  {
                            }                                     
                     }elseif ($company == 'Smsa'){
                        
-                            $response = $this->Ccompany_model->SMSAArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id);
+                            $response = $this->Ccompany_model->SMSAArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id);
                             
                             $xml2 = new SimpleXMLElement($response);
                             $again = $xml2;
@@ -789,7 +789,7 @@ class CourierCompany extends MY_Controller  {
                             }
                             
                     }elseif ($company == 'Labaih'){       
-                            $response = $this->Ccompany_model->LabaihArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id);
+                            $response = $this->Ccompany_model->LabaihArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id);
                            
                             if ($response['status'] == 200) {
                                 $client_awb = $response['consignmentNo'];
@@ -809,7 +809,7 @@ class CourierCompany extends MY_Controller  {
                             
                     }elseif ($company == 'Clex'){
                             
-                        $response = $this->Ccompany_model->ClexArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id);
+                        $response = $this->Ccompany_model->ClexArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id);
                         //echo $this->session->userdata('user_details')['super_id'];
                      //   print_r($response);
                         if ($response['data'][0]['cn_id']) {
@@ -841,7 +841,7 @@ class CourierCompany extends MY_Controller  {
                         
                     }elseif ($company == 'Ajeek'){
                             
-                            $response = $this->Ccompany_model->AjeekArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id);
+                            $response = $this->Ccompany_model->AjeekArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id);
                             if ($response['contents']['order_id']) {
                                  $response['contents']['order_id'];
                                  $Auth_token = $counrierArr['auth_token'];
@@ -867,9 +867,9 @@ class CourierCompany extends MY_Controller  {
                                     
                             }
                     }elseif ($company == 'Aymakan'){
-                        $response = $this->Ccompany_model->AymakanArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1,$complete_sku);
+                        $response = $this->Ccompany_model->AymakanArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1,$complete_sku,$super_id);
                         $responseArray = json_decode($response, true);
-                   //print_r( $responseArray );
+                        //print_r( $responseArray );
                         if (empty($responseArray['message'])) 
                         {
                                  $client_awb = $responseArray['data']['shipping']['tracking_number'];
@@ -915,7 +915,7 @@ class CourierCompany extends MY_Controller  {
                             
                     }elseif($company == 'Shipsy'){
 						
-                        $response = $this->Ccompany_model->ShipsyArray($ShipArr, $counrierArr, $Auth_token, $box_pieces1,$c_id);
+                        $response = $this->Ccompany_model->ShipsyArray($ShipArr, $counrierArr, $Auth_token, $box_pieces1,$c_id,$super_id);
                         
                         $response_array = json_decode($response, true);
                         
@@ -951,7 +951,7 @@ class CourierCompany extends MY_Controller  {
                                 {
                                     $client_awb = $response_array[0]['deliveryInfo']['reference'];
   
-                                    $responsepie = $this->Ccompany_model->ShipaDelupdatecURL($counrierArr, $ShipArr, $client_awb ,$box_pieces1);
+                                    $responsepie = $this->Ccompany_model->ShipaDelupdatecURL($counrierArr, $ShipArr, $client_awb ,$box_pieces1,$super_id);
                                     $responsepieces = json_decode($responsepie, true); 
                                   //  echo "<pre>"; print_r($responsepieces); // die; 
                                    
@@ -980,7 +980,7 @@ class CourierCompany extends MY_Controller  {
                             
                                 
                     }elseif($company == 'Saudi Post'){
-                        $response = $this->Ccompany_model->SPArray($ShipArr, $counrierArr,$complete_sku, $Auth_token,$c_id,$box_pieces1);
+                        $response = $this->Ccompany_model->SPArray($ShipArr, $counrierArr,$complete_sku, $Auth_token,$c_id,$box_pieces1,$super_id);
                         
                         $response = json_decode($response, true);
                                         
@@ -1006,7 +1006,7 @@ class CourierCompany extends MY_Controller  {
                         }
                     }elseif ($company== 'Beez'){
                             //print "<pre>"; print_r($sku_data);die;
-                            $response = $this->Ccompany_model->BeezArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$sku_data);  
+                            $response = $this->Ccompany_model->BeezArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$sku_data,$super_id);  
                             if(isset($response['Message']) && !empty($response['Message'])){
                                 $returnArr['responseError'][] = $slipNo . ':' . $response['Message'];
                             }else{
@@ -1025,7 +1025,7 @@ class CourierCompany extends MY_Controller  {
                       
                         if ($company=='Ejack' ) 
                         {
-                                $response = $this->Ccompany_model->Ejack($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1);
+                                $response = $this->Ccompany_model->Ejack($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$super_id);
                                 $response = json_decode($response, true);
                                 if($response['error']=='')
                                 {
