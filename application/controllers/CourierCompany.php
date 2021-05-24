@@ -999,7 +999,7 @@ class CourierCompany extends MY_Controller  {
                                             header('Content-Type: application/pdf');
 
                                             file_put_contents("assets/all_labels/$slipNo.pdf", $shipaLabel);
-                                           echo  $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+                                            $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
                                             $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
                                             array_push($succssArray, $slipNo);
 
