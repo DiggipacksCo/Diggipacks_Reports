@@ -200,7 +200,7 @@
                                                     <button type="button" class="btn btn-success ml-10" >Total <span class="badge">{{shipData.length}}/{{totalCount}}</span></button>
                                                     
                                                     <button  class="btn btn-info ml-10" ng-click="GetOpenPopPicker();" >Generate Pickup  <!--  generatePickup(); --> List</button>
-                                                        <a ng-click ="runshell();"class="btn btn-danger ml-10" >Create Order forwarding</a>
+                                                        <a ng-click ="runshell();"class="btn btn-danger ml-10" > AUTO SYNC FRWD </a>
                                                     </div></div>
 
 

@@ -74,9 +74,9 @@ class Ccompany_model extends CI_Model {
         return $query->result_array();
     }
 
-    public function GetSlipNoDetailsQry($slip_no = null) {
+    public function GetSlipNoDetailsQry($slip_no = null,$super_id=null) {
 
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->where('super_id', $super_id);
 
         $this->db->select('*');
         $this->db->from('shipment_fm');
@@ -90,9 +90,9 @@ class Ccompany_model extends CI_Model {
 
    
 
-    public function GetdeliveryCompanyUpdateQry($cc_id = null,$ShipArr_custid = null) {
+    public function GetdeliveryCompanyUpdateQry($cc_id = null,$ShipArr_custid = null,$super_id=null) {
 
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->where('super_id', $super_id);
         $this->db->where('cc_id', $cc_id);
         $this->db->select('*');
         $this->db->from('courier_company_seller');
@@ -101,7 +101,7 @@ class Ccompany_model extends CI_Model {
         $this->db->where('cust_id', $ShipArr_custid);
         $this->db->order_by("company");
         $query = $this->db->get();
-            //echo $this->db->last_query();//exit;
+        //echo $this->db->last_query();//exit;
 
         if ($query->num_rows()> 0)
         {
@@ -111,7 +111,7 @@ class Ccompany_model extends CI_Model {
         }
         else 
         {
-            $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+            $this->db->where('super_id', $super_id);
             $this->db->where('cc_id', $cc_id);
             $this->db->select('*');
             $this->db->from('courier_company');
@@ -119,7 +119,7 @@ class Ccompany_model extends CI_Model {
             $this->db->where('status', 'Y');
             $this->db->order_by("company");
             $query = $this->db->get();
-           // echo $this->db->last_query();exit;
+          //  echo $this->db->last_query();exit;
             return $query->row_array();
 
         }
@@ -150,11 +150,13 @@ class Ccompany_model extends CI_Model {
         return $result[$field];
     }
 
-    public function getdestinationfieldshow_auto_array($id=null,$field=null,$super_id){
+	public function getdestinationfieldshow_auto_array($id=null,$field=null,$super_id){
 	
                 
-        $sql ="SELECT $field FROM country where id='$id' and super_id='".$super_id."'";
+     $sql ="SELECT $field FROM country where id='$id' and super_id='".$super_id."'";
        $query = $this->db->query($sql);
+
+      
        $result=$query->row_array();
        return $result[$field];
    }
@@ -270,7 +272,7 @@ class Ccompany_model extends CI_Model {
     public function GetshipmentUpdate_forward(array $data, $awb = null) {
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->update('shipment_fm', $data, array('slip_no' => $awb));
-       //   echo $this->db->last_query();
+        // $this->db->last_query(); 
     }
 
     public function GetstatuInsert_forward(array $data) {
@@ -522,14 +524,14 @@ class Ccompany_model extends CI_Model {
         $details = 'Forwarded to ' . $company;
         $statusArr = array(
             'slip_no' => $slipNo,
-            'new_location' => $this->session->userdata('user_details')['city'],
+           
             'new_status' => 10,
             'pickup_time' => $CURRENT_TIME,
             'pickup_date' => $CURRENT_DATE,
             'Activites' => 'Forward to Delivery Station',
             'Details' => $details,
             'entry_date' => $CURRENT_DATE,
-            'user_id' => $this->session->userdata('user_details')['user_id'],
+            'user_id' => $this->session->userdata('user_details')['super_id'],
             'user_type' => 'fulfillment',
             'comment' => $comment,
             'code' => 'FWD',
@@ -2497,11 +2499,14 @@ class Ccompany_model extends CI_Model {
         
     }
     
-    public function ShipadeliveryArray(array $ShipArr, array $counrierArr, $auth_token = null, $c_id = null,$super_id) {
+    public function ShipadeliveryArray(array $ShipArr, array $counrierArr, $auth_token = null, $c_id = null,$super_id=null) {
         ini_set('default_charset', 'UTF-8');
+      
         $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'shipsa_city',$super_id);
-        $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'shipsa_city',$super_id);
-       
+         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'shipsa_city',$super_id);
+//       echo '<pre>'; 
+// print_r($counrierArr); exit;
+
         if ($ShipArr['mode'] == 'COD') {
             $total_cod_amt = $ShipArr['total_cod_amt'];
             $paymentMethod = 'CashOnDelivery';
@@ -2546,7 +2551,8 @@ class Ccompany_model extends CI_Model {
             'sender' => $Sender,
             'recipient' => $Recipient
         );
-        
+        // echo "<pre>"; print_r($param);
+        // die; 
         $paramArray = json_encode($param);
 
       
