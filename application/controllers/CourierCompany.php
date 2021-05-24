@@ -250,10 +250,26 @@ class CourierCompany extends MY_Controller  {
     
     public function BulkForwardCompanyReady()
     {
+      
         $postData = json_decode(file_get_contents('php://input'), true);
-        $super_id = $postData['super_id'];
+        
         $CURRENT_TIME = date('H:i:s');
         $CURRENT_DATE = date('Y-m-d H:i:s');
+
+        if(!empty($postData['super_id']))
+        {  
+            
+            $user_details['super_id']=$postData['super_id'];
+            $this->session->set_userdata('user_details', $user_details);
+            $shipmentLoopArray[] = $postData['slip_no'];
+           
+             $super_id = $postData['super_id'];
+            $CURRENT_TIME = date('H:i:s');
+            $CURRENT_DATE = date('Y-m-d H:i:s');
+        }
+        else
+        {
+            $super_id= $this->session->userdata('user_details')['super_id'];
          if(!empty($postData['slip_arr']) && !empty($postData['otherArr']))
         {
            $shipmentLoopArray = $postData['slip_arr']; 
@@ -264,6 +280,8 @@ class CourierCompany extends MY_Controller  {
             $slipData = explode("\n", $postData['slip_no']);
             $shipmentLoopArray = array_unique($slipData);
         }
+    }
+    //print_r($shipmentLoopArray);exit; 
             $invalid_slipNO=array();
             $succssArray=array();
             if($postData['comment']!=''){
@@ -271,7 +289,7 @@ class CourierCompany extends MY_Controller  {
             }else{
                 $comment = '';
             }
-           
+          
         if(!empty($shipmentLoopArray))
         { 
            
@@ -281,16 +299,31 @@ class CourierCompany extends MY_Controller  {
                 
                 $box_pieces=$postData['otherArr']['box_pieces'];
 			    $box_pieces1= $postData['box_pieces'];
-               
+                 
             foreach ($shipmentLoopArray as $key => $slipNo) 
             {
-               
-                $ShipArr=$this->Ccompany_model->GetSlipNoDetailsQry(trim($slipNo));
+               // print_r($shipmentLoopArray);exit; 
+             
+              
+                $ShipArr=$this->Ccompany_model->GetSlipNoDetailsQry(trim($slipNo),$super_id);
                 
-                $ShipArr_custid =  $ShipArr['cust_id']; 
-                $counrierArr_table=$this->Ccompany_model->GetdeliveryCompanyUpdateQry($postData['cc_id'],$ShipArr_custid);   
+                if(!empty($postData['cc_id']))
+                $courier_id = $postData['cc_id'];
+                else{
+                    $courier_data = $this->forwardShipment($postData['slip_no'], $super_id);
+                    
+                    $courier_id = $courier_data[0]['cc_id'];
+                    $zone_id = $courier_data[0]['id'];
+                    
+                   
+                }
+                $ShipArr_custid =  $ShipArr['cust_id'];
+                $counrierArr_table=$this->Ccompany_model->GetdeliveryCompanyUpdateQry($courier_id,$ShipArr_custid,$super_id);   
                 $c_id = $counrierArr_table['cc_id'];
                // $c_id = $counrierArr_table['id'];
+
+              // print_r($counrierArr_table);exit;
+               
                 $cc_id = $counrierArr_table['cc_id'];
 
               if ($counrierArr_table['type'] == 'test') {
@@ -330,8 +363,9 @@ class CourierCompany extends MY_Controller  {
                 $counrierArr['create_order_url'] = $create_order_url;
                 $counrierArr['company_type'] = $company_type ;
                 $counrierArr['auth_token'] = $auth_token;
-
-
+                 $super_id = $ShipArr['super_id'];
+                
+             //  echo "<pre>"; print_r($counrierArr); die; 
 			 
               
                 if(!empty($ShipArr))
@@ -939,9 +973,10 @@ class CourierCompany extends MY_Controller  {
                         
                     }elseif($company == 'Shipadelivery'){
                         
-                       $response = $this->Ccompany_model->ShipadeliveryArray($ShipArr, $counrierArr, $Auth_token,$c_id);
+                       $response = $this->Ccompany_model->ShipadeliveryArray($ShipArr, $counrierArr, $Auth_token,$c_id,$super_id); 
                     
-                        $response_array = json_decode($response,true);    
+                        $response_array = json_decode($response,true);  
+                      
                         if(empty($response_array)){
                             $returnArr['responseError'][] = $slipNo . ':' .'Receiver City Empty ';
                         }
@@ -950,10 +985,12 @@ class CourierCompany extends MY_Controller  {
                             if($response_array[0]['code']== 0)
                                 {
                                     $client_awb = $response_array[0]['deliveryInfo']['reference'];
-  
+                                
                                     $responsepie = $this->Ccompany_model->ShipaDelupdatecURL($counrierArr, $ShipArr, $client_awb ,$box_pieces1,$super_id);
+                                   
+                               
                                     $responsepieces = json_decode($responsepie, true); 
-                                  //  echo "<pre>"; print_r($responsepieces); // die; 
+                                  
                                    
                                          if ($responsepieces['status']=='Success')
                                          {
@@ -962,7 +999,7 @@ class CourierCompany extends MY_Controller  {
                                             header('Content-Type: application/pdf');
 
                                             file_put_contents("assets/all_labels/$slipNo.pdf", $shipaLabel);
-                                             $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+                                           echo  $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
                                             $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
                                             array_push($succssArray, $slipNo);
 
@@ -1297,6 +1334,118 @@ class CourierCompany extends MY_Controller  {
         $this->load->view('courierCompany/performance',$data);
 
     }
+
+
+    public function forwardShipment($awb = null, $super_id = null) {
+
+        $fullData = $this->shipDetail($awb, $super_id);
+     //print_r($fullData);exit;
+        if (empty($fullData)) {
+            $fullData = $this->shipDetailDefault($awb, $super_id);
+        }
+
+//         echo '<pre>';
+//  print_r($fullData);exit;
+        $lastArray = array();
+        foreach ($fullData as $data) {
+
+            $dataArray = $this->zonListData($data['cc_id'], $data['destination'], $super_id,$data['cust_id']);
+            // echo '<pre>';
+            //  print_r($data);exit;
+            if (!empty($dataArray)) {
+                return $dataArray;
+                break;
+            }
+        }
+    }
+
+    public function shipDetailDefault($slip_no, $super_id) {
+
+        $this->db->select('shipment_fm.cust_id,shipment_fm.destination,sellerDefaultCourier.cc_id,sellerDefaultCourier.priority');
+        $this->db->from('shipment_fm');
+        $this->db->join('sellerDefaultCourier', 'sellerDefaultCourier.super_id = shipment_fm.super_id');
+        $this->db->where('shipment_fm.slip_no', $slip_no);
+        $this->db->where('shipment_fm.super_id', $super_id);
+        $this->db->where('sellerDefaultCourier.status', '0');
+        $this->db->order_by('sellerDefaultCourier.priority', 'ASC');
+        $query = $this->db->get();
+        // echo "shipDetailDefault = ". $this->db->last_query(); die;
+        $result = $query->result_array();
+
+        return $result;
+    }
+
+    public function shipDetail($slip_no, $super_id) {
+
+        $this->db->select('shipment_fm.cust_id,shipment_fm.destination,sellerCourier.cc_id,sellerCourier.priority');
+        $this->db->from('shipment_fm');
+        $this->db->join('sellerCourier', 'sellerCourier.seller_id = shipment_fm.cust_id');
+        $this->db->where('shipment_fm.slip_no', $slip_no);
+        $this->db->where('shipment_fm.super_id', $super_id);
+        $this->db->where('sellerCourier.status', '0');
+        $this->db->order_by('sellerCourier.priority', 'ASC');
+        $query = $this->db->get();
+        //echo "shipDetail = ". $this->db->last_query(); die; 
+        $result = $query->result_array();
+
+        return $result;
+    }
+
+    public function zonListData($ccid, $dest, $super_id,$cust_id) {
+//echo $dest."<br>";
+
+
+            $this->db->select('id,cc_id,city_id');
+            $this->db->from('zone_list_customer_fm');
+            $this->db->where('zone_list_customer_fm.super_id', $super_id);
+            $this->db->where('capacity>todayCount');
+            $this->db->where('cust_id',$cust_id);
+            $this->db->where('cc_id', $ccid);
+
+            $query = $this->db->get();
+           //echo $this->db->last_query()."<br>";
+
+            if ($query->num_rows()> 0)
+            {
+                $result = $query->result_array();
+            }
+            else
+            {
+
+                $this->db->select('id,cc_id,city_id');
+                $this->db->from('zone_list_fm');
+                $this->db->where('zone_list_fm.super_id', $super_id);
+                $this->db->where('capacity>todayCount');
+                $this->db->where('cc_id', $ccid);
+        
+                $query1 = $this->db->get();
+                // echo $this->db->last_query()."<br>";
+                $result = $query1->result_array();
+                if ($query1->num_rows()> 0)
+                {
+                    $result = $query1->result_array();
+                }
+
+            }
+           
+           
+        if(!empty($result)){
+            $rData = array();
+            foreach ($result as $n) {
+                if (in_array($dest, json_decode($n['city_id'], true))) {
+                    array_push($rData, $n);
+                }
+            }
+        }
+
+        if (!empty($rData)) {
+            return $rData;
+        } else {
+            return false;
+        }
+    }
+
+
 
 }
 ?>

@@ -46,9 +46,12 @@ class MY_Controller extends CI_Controller {
         }
 		   if ($this->session->userdata('user_details')['user_id'] == null || $this->session->userdata('user_details')['user_id'] < 1) {
             
-             if ($this->router->class != 'Login') 
-             {                        
+             if ($this->router->class != 'Login'  ) 
+             {   if ($this->router->class != 'CourierCompany'  ) 
+                { 
+                                 
                  redirect(base_url());
+                }
              }
              
          }  
