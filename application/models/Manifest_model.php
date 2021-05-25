@@ -201,7 +201,7 @@ class Manifest_model extends CI_Model {
             $start = ($page_no - 1) * $limit;
         }
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
-        $this->db->select('COUNT(id) as id_count,COUNT(qty) as qtyall,id,uniqueid,sku,qty,assign_to,req_date,pstatus,code,seller_id,on_hold,itemupdated,address,city,3pl_awb,3pl_name,3pl_label,3pl_date,boxes,description');
+        $this->db->select('COUNT(id) as id_count,COUNT(qty) as qtyall,id,uniqueid,sku,qty,assign_to,req_date,pstatus,code,seller_id,on_hold,itemupdated,address,city,3pl_awb,3pl_name,3pl_label,3pl_date,boxes,description,manifest_type');
         $this->db->from('pickup_request');
         //if($this->session->userdata('user_details')['user_type']==)
         if ($filterarray['seller_id'])

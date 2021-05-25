@@ -168,7 +168,7 @@
                                                 <th><?=lang('lang_City');?></th> 
                                                 <th><?=lang('lang_Address');?></th> 
                                                 <th><?=lang('lang_Status');?></th>
-                                                <th><?=lang('lang_code');?></th>
+                                                <th><?=lang('lang_Type');?></th>
                                                 <th><?=lang('lang_Seller');?></th>
                                                 <th><?=lang('lang_Request_Date');?></th>
 
@@ -195,7 +195,7 @@
                                             <td >{{data.address}}</td>
 
                                             <td > {{data.pstatus}}</td>
-                                            <td > {{data.code}}</td>
+                                            <td > <span ng-if="data.manifest_type=='D'">Drop Off</span> <span ng-if="data.manifest_type=='P'">Pickup</span></td>
                                             <td > {{data.seller_id}}</td>
                                             <td > {{data.req_date}}</td>
 

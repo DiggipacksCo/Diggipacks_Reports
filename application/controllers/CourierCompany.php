@@ -308,8 +308,9 @@ class CourierCompany extends MY_Controller  {
                 $ShipArr=$this->Ccompany_model->GetSlipNoDetailsQry(trim($slipNo),$super_id);
                 
                 if(!empty($postData['cc_id']))
-                $courier_id = $postData['cc_id'];
+                    $courier_id = $postData['cc_id'];
                 else{
+
                     $courier_data = $this->forwardShipment($postData['slip_no'], $super_id);
                     
                     $courier_id = $courier_data[0]['cc_id'];
@@ -319,10 +320,11 @@ class CourierCompany extends MY_Controller  {
                 }
                 $ShipArr_custid =  $ShipArr['cust_id'];
                 $counrierArr_table=$this->Ccompany_model->GetdeliveryCompanyUpdateQry($courier_id,$ShipArr_custid,$super_id);   
-                $c_id = $counrierArr_table['cc_id'];
+              //  echo $super_id ;
+                  $c_id = $counrierArr_table['cc_id'];
                // $c_id = $counrierArr_table['id'];
 
-              // print_r($counrierArr_table);exit;
+             //print_r($zone_id);exit;
                
                 $cc_id = $counrierArr_table['cc_id'];
 
@@ -365,7 +367,7 @@ class CourierCompany extends MY_Controller  {
                 $counrierArr['auth_token'] = $auth_token;
                  $super_id = $ShipArr['super_id'];
                 
-             //  echo "<pre>"; print_r($counrierArr); die; 
+          // echo "<pre>"; print_r($counrierArr); die; 
 			 
               
                 if(!empty($ShipArr))
@@ -938,7 +940,7 @@ class CourierCompany extends MY_Controller  {
                              $CURRENT_DATE = date("Y-m-d H:i:s");
                                 $CURRENT_TIME = date("H:i:s");
                                                          
-                            $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                            $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$super_id);
                            array_push($succssArray, $slipNo); 
                         }   
                         else{
@@ -972,10 +974,10 @@ class CourierCompany extends MY_Controller  {
                         }
                         
                     }elseif($company == 'Shipadelivery'){
-                        
+                       
                        $response = $this->Ccompany_model->ShipadeliveryArray($ShipArr, $counrierArr, $Auth_token,$c_id,$super_id); 
                     
-                        $response_array = json_decode($response,true);  
+                        $response_array = json_decode($response,true); 
                       
                         if(empty($response_array)){
                             $returnArr['responseError'][] = $slipNo . ':' .'Receiver City Empty ';
@@ -1339,7 +1341,7 @@ class CourierCompany extends MY_Controller  {
     public function forwardShipment($awb = null, $super_id = null) {
 
         $fullData = $this->shipDetail($awb, $super_id);
-     //print_r($fullData);exit;
+      //print_r($fullData);exit;
         if (empty($fullData)) {
             $fullData = $this->shipDetailDefault($awb, $super_id);
         }
@@ -1351,7 +1353,7 @@ class CourierCompany extends MY_Controller  {
 
             $dataArray = $this->zonListData($data['cc_id'], $data['destination'], $super_id,$data['cust_id']);
             // echo '<pre>';
-            //  print_r($data);exit;
+           //   print_r($dataArray);exit;
             if (!empty($dataArray)) {
                 return $dataArray;
                 break;

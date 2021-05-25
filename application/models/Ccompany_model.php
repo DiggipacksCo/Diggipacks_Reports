@@ -1911,17 +1911,18 @@ class Ccompany_model extends CI_Model {
         $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
         return $response;
     }
+    public function AymakanArray(array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null,$box_pieces1,$complete_sku=null,$super_id) {
 
-
-    public function AymakanArray(array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null,$box_pieces1,$super_id) {
-        
         $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'Aymakan',$super_id);
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'Aymakan',$super_id);
+
         $store = getallsellerdatabyID($ShipArr['cust_id'], 'company');        
         $entry_date = date('Y-m-d H:i:s');
         $pickup_date = date("Y-m-d", strtotime($entry_date));
-        $API_URL = $counrierArr['api_url']."create";
-        $api_key = $counrierArr['auth_token'];
+
+           $API_URL = $counrierArr['api_url']."create";
+          $api_key = $counrierArr['auth_token'];
+
         $currency = "SAR";  
 
          if(empty($box_pieces1))
@@ -1978,8 +1979,11 @@ class Ccompany_model extends CI_Model {
             "pickup_date" => $pickup_date,
             "weight" => $weight,
             "pieces" => $box_pieces
-        );     
-        $json_final_date = json_encode($all_param_data);
+        );  
+
+        $json_final_date = json_encode($all_param_data);  
+
+
         $headers = array(
             "Accept:application/json",
             "Authorization: $api_key");
@@ -1994,8 +1998,9 @@ class Ccompany_model extends CI_Model {
         $responseArray = json_decode($response, true);
         $logresponse =   json_encode($response);  
         $successres = $responseArray['message'];
+        $successreserror = $responseArray['error'];
 
-        if(empty($successres) )
+        if(empty($successres) && ($successreserror !=true))
         {
             $successstatus  = "Success";
         }else {
@@ -2004,6 +2009,33 @@ class Ccompany_model extends CI_Model {
 
         $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
         return $response;
+    }
+
+   
+    public function Aymakan_tracking($client_awb= null, $tracking_url= null,$auth_token=null)
+    {
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+              CURLOPT_URL => $tracking_url.$client_awb,
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => '',
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 0,
+              CURLOPT_FOLLOWLOCATION => true,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => 'GET',
+              CURLOPT_HTTPHEADER => array(
+                'Accept: application/json',
+                'Authorization: '.$auth_token
+              ),
+            ));
+
+            $response = curl_exec($curl);
+             
+            curl_close($curl);
+            return $response;
     }
 
     public function SMSAArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id) {
@@ -2505,7 +2537,7 @@ class Ccompany_model extends CI_Model {
         $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'shipsa_city',$super_id);
          $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'shipsa_city',$super_id);
 //       echo '<pre>'; 
-// print_r($counrierArr); exit;
+// print_r($receiver_city); exit;
 
         if ($ShipArr['mode'] == 'COD') {
             $total_cod_amt = $ShipArr['total_cod_amt'];
@@ -2551,11 +2583,13 @@ class Ccompany_model extends CI_Model {
             'sender' => $Sender,
             'recipient' => $Recipient
         );
-        // echo "<pre>"; print_r($param);
-        // die; 
+        
+        
+      //  echo "<pre>"; print_r($param);
+     
         $paramArray = json_encode($param);
 
-      
+       
         if (empty($param[0]['recipient']['city']))
         {
             
@@ -2563,7 +2597,9 @@ class Ccompany_model extends CI_Model {
             return $response;
         }
         else {
-            
+
+            // echo $param[0]['recipient']['city'];   
+            // echo "auth = ".$counrierArr['api_url'];//  die; 
               $curl = curl_init();        
                   curl_setopt_array($curl, array(
                   CURLOPT_URL => $counrierArr['api_url']."?apikey=".$counrierArr['auth_token'],
@@ -2582,7 +2618,7 @@ class Ccompany_model extends CI_Model {
                   ),
                 ));
 
-                $response = curl_exec($curl);
+                 $response = curl_exec($curl);
                 
                  curl_close($curl);
                  $logresponse =   json_encode($response);                   

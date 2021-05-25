@@ -86,9 +86,16 @@
                                         <input type="text" class="form-control" maxlength="4" name='default_awb_char_fm' id="default_awb_char_fm" placeholder="Default AWB" value="<?= $EditData['default_awb_char_fm'] ?>">
                                     </div>
                                     <div class="form-group">
+                                        <label for="dropoff_option"><strong>Drop Off Details</strong></label>
+                                        <textarea  class="form-control" placeholder="Drop Off Details"  name='dropoff_option' id="dropoff_option" ><?= $EditData['dropoff_option'] ?></textarea>
+                                        
+                                    </div>
+
+                                    <div class="form-group">
                                         <label for="tollfree_fm"><strong>AWB Tollfree No.</strong></label>
                                         <input type="text" class="form-control" maxlength="12" name='tollfree_fm' id="tollfree_fm" placeholder="AWB Tollfree No" value="<?= $EditData['tollfree_fm'] ?>">
                                     </div>
+
                                     <div class="form-group">
                                         <label for="font_color"><strong>Font Color:</strong></label>
                                         <input type="color" class="form-control"  name='font_color' id="font_color" placeholder="font_color" value="<?= $EditData['font_color'] ?>">
