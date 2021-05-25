@@ -307,14 +307,23 @@ class CourierCompany extends MY_Controller  {
               
                 $ShipArr=$this->Ccompany_model->GetSlipNoDetailsQry(trim($slipNo),$super_id);
                 
-                if(!empty($postData['cc_id']))
-                    $courier_id = $postData['cc_id'];
-                else{
-
-                    $courier_data = $this->forwardShipment($postData['slip_no'], $super_id);
+                if(!empty($postData['cc_id'])){
                     
+                   // $courier_id = $postData['cc_id'];
+                    $courier_data = $this->forwardShipment($postData['slip_no'], $super_id);
                     $courier_id = $courier_data[0]['cc_id'];
                     $zone_id = $courier_data[0]['id'];
+                    $zone_cust_id = $courier_data[0]['cust_id'];
+                  // echo "<pre>";  print_r($courier_data);exit;
+                }
+
+                else{
+
+                    $courier_data = $this->forwardShipment($postData['slip_no'], $super_id);                    
+                    $courier_id = $courier_data[0]['cc_id'];
+                    $zone_id = $courier_data[0]['id'];
+                    $zone_cust_id = $courier_data[0]['cust_id'];
+                   // echo "<pre>"; print_r($courier_data); //exit;
                     
                    
                 }
@@ -367,7 +376,7 @@ class CourierCompany extends MY_Controller  {
                 $counrierArr['auth_token'] = $auth_token;
                  $super_id = $ShipArr['super_id'];
                 
-          // echo "<pre>"; print_r($counrierArr); die; 
+            //  echo "<pre>"; print_r($counrierArr); //die; 
 			 
               
                 if(!empty($ShipArr))
@@ -444,6 +453,7 @@ class CourierCompany extends MY_Controller  {
                                         $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
 
                                         $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                        $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
 
                                         array_push($succssArray, $slipNo);
                                 }
@@ -476,6 +486,7 @@ class CourierCompany extends MY_Controller  {
                                     //****************************safe arrival label print cURL****************************
 
                                     $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                    $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
 
                                     array_push($succssArray, $slipNo);
 
@@ -506,6 +517,7 @@ class CourierCompany extends MY_Controller  {
                                 $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
                                     //**************************** Thabit label print cURL****************************
                                     $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                    $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
                                     array_push($succssArray, $slipNo);
                                     array_push($DataArray, $slipNo);
                                     
@@ -543,6 +555,7 @@ class CourierCompany extends MY_Controller  {
                             $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf'; 
 
                             $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $esnad_awb_link,$c_id);
+                            $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
                 
                             array_push($succssArray, $slipNo);
                             array_push($DataArray, $slipNo);
@@ -589,6 +602,7 @@ class CourierCompany extends MY_Controller  {
                                 //****************************makdoom label print cURL****************************
 
                                 $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id, $barq_order_id);
+                                $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
                                array_push($succssArray, $slipNo);
 
                            }
@@ -625,6 +639,7 @@ class CourierCompany extends MY_Controller  {
                                     $CURRENT_TIME = date("H:i:s");
 
                                 $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
                                 array_push($succssArray, $slipNo);
                               
                             }
@@ -641,6 +656,7 @@ class CourierCompany extends MY_Controller  {
                                     file_put_contents("assets/all_labels/$slipNo.pdf", $label_response);
                                     $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
                                     $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                    $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
                                     array_push($succssArray, $slipNo);
                                 } else {
                                     $returnArr['responseError'][] = $slipNo . ':' . $response['data'][0]['reason'];
@@ -729,6 +745,7 @@ class CourierCompany extends MY_Controller  {
                                              $CURRENT_DATE = date("Y-m-d H:i:s");
                                              $CURRENT_TIME = date("H:i:s");
                                             $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                            $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
                                            array_push($succssArray, $slipNo);
                                         }
                                 }
@@ -755,6 +772,7 @@ class CourierCompany extends MY_Controller  {
                                  $CURRENT_TIME = date("H:i:s");
 
                                 $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
                                 array_push($succssArray, $slipNo);
                               
                             }  
@@ -812,6 +830,7 @@ class CourierCompany extends MY_Controller  {
                                         $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
 
                                         $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                        $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
 
                                         array_push($succssArray, $slipNo);
 
@@ -836,6 +855,7 @@ class CourierCompany extends MY_Controller  {
 
                                 $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
                                	$Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                   $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
                                 array_push($succssArray, $slipNo);
                             } 
                             else {
@@ -856,6 +876,7 @@ class CourierCompany extends MY_Controller  {
 
                             $fastcoolabel = base_url()."assets/all_labels/$slipNo.pdf";
                             $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                            $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
                             array_push($succssArray, $slipNo);
                         } else {
                             if($response['already_exist'])
@@ -895,6 +916,7 @@ class CourierCompany extends MY_Controller  {
                                     $CURRENT_TIME = date("H:i:s");
 
                                 $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
                                array_push($succssArray, $slipNo);
 
                             }  else{
@@ -902,7 +924,8 @@ class CourierCompany extends MY_Controller  {
                                     $returnArr['responseError'][] = $slipNo . ':' . $response['description'];
                                     
                             }
-                    }elseif ($company == 'Aymakan'){
+                    }elseif ($company == 'Aymakan'){                       
+
                         $response = $this->Ccompany_model->AymakanArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1,$complete_sku,$super_id);
                         $responseArray = json_decode($response, true);
                         //print_r( $responseArray );
@@ -941,7 +964,8 @@ class CourierCompany extends MY_Controller  {
                                 $CURRENT_TIME = date("H:i:s");
                                                          
                             $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$super_id);
-                           array_push($succssArray, $slipNo); 
+                            $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
+                                array_push($succssArray, $slipNo); 
                         }   
                         else{
                               
@@ -967,6 +991,7 @@ class CourierCompany extends MY_Controller  {
                             file_put_contents("assets/all_labels/$slipNo.pdf", file_get_contents($mediaData));
                              $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
                             $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                            $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
                             array_push($succssArray, $slipNo);
                         }else{
                             
@@ -1003,6 +1028,7 @@ class CourierCompany extends MY_Controller  {
                                             file_put_contents("assets/all_labels/$slipNo.pdf", $shipaLabel);
                                             $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
                                             $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                            $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
                                             array_push($succssArray, $slipNo);
 
                                          }
@@ -1029,6 +1055,7 @@ class CourierCompany extends MY_Controller  {
                           
                             $fastcoolabel='SP';
                             $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$barq_order_id,$box_pieces1);
+                            $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
                             
 
                             header('Content-Type: application/pdf');
@@ -1057,6 +1084,7 @@ class CourierCompany extends MY_Controller  {
                                 
                                 $beezlabel = base_url() . "assets/all_labels/$slipNo.pdf";
                                 $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $beezlabel,$c_id);
+                                $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
                                 array_push($succssArray, $slipNo);
                             }
                     }elseif ($company == 'GLT')
@@ -1083,6 +1111,7 @@ class CourierCompany extends MY_Controller  {
                                 $CURRENT_TIME = date("H:i:s");
 
                                 $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                                $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
 
                                 array_push($succssArray, $slipNo);
                             }
@@ -1123,6 +1152,7 @@ class CourierCompany extends MY_Controller  {
                                 $CURRENT_TIME = date("H:i:s");
                                
                                 $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
 
 
                                 $details = 'Forwarded to ' . $ClientArr['company'];
@@ -1154,6 +1184,7 @@ class CourierCompany extends MY_Controller  {
                                     $CURRENT_TIME = date("H:i:s");
                                     $comment = $responseData['message'];
                                    $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fetchrlabel,$c_id);
+                                   $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
                                     $returnArr['successAbw'][] = 'AWB No.' . $slipNo . ' :'. $responseData['message'];
 
                                     $this->session->set_flashdata('msg', $returnArr);
@@ -1179,6 +1210,7 @@ class CourierCompany extends MY_Controller  {
                                 file_put_contents("assets/all_labels/".$slipNo.".pdf", $pdf_file);
                                 $imile_label = base_url() . "assets/all_labels/$slipNo.pdf";
                                 $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $imile_label,$c_id);
+                                $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
                                 array_push($succssArray, $slipNo);
                                 
                             }else if($response['code'] == 30001){
@@ -1217,6 +1249,7 @@ class CourierCompany extends MY_Controller  {
                             $CURRENT_TIME = date("H:i:s");                               
 
                             $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                            $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
 
                             array_push($succssArray, $slipNo);
                         }                            
@@ -1242,6 +1275,7 @@ class CourierCompany extends MY_Controller  {
         
                                     $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
                                     $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                    $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
                                     array_push($succssArray, $slipNo);
                                 } else {
                                     $returnArr['responseError'][] = $slipNo . ':' . $response['refrence_id'];
@@ -1262,6 +1296,7 @@ class CourierCompany extends MY_Controller  {
 
                                 $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
                                 $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
                                 array_push($succssArray, $slipNo);
                             } else {
                                 $returnArr['responseError'][] = $slipNo . ':' . $response['refrence_id'];
@@ -1275,19 +1310,20 @@ class CourierCompany extends MY_Controller  {
                             $responseArray = json_decode($response, true);     
                             if($responseArray['status']==200) 
                             {  
-                                
                                 $client_awb = $responseArray['awb_no'];                                
                                 $mediaData = $responseArray['label_print'];
                                 //****************************fastcoo label print cURL****************************
+
                                 file_put_contents("assets/all_labels/$slipNo.pdf", file_get_contents($mediaData));
                                 $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+
                                 //****************************fastcoo label print cURL****************************
                                 $CURRENT_DATE = date("Y-m-d H:i:s");
                                 $CURRENT_TIME = date("H:i:s");
 
                                 $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
-                                array_push($succssArray, $slipNo);
-                           
+                                $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
+                                array_push($succssArray, $slipNo);                           
                             }                               
                             else
                             {
@@ -1341,25 +1377,102 @@ class CourierCompany extends MY_Controller  {
     public function forwardShipment($awb = null, $super_id = null) {
 
         $fullData = $this->shipDetail($awb, $super_id);
-      //print_r($fullData);exit;
-        if (empty($fullData)) {
-            $fullData = $this->shipDetailDefault($awb, $super_id);
-        }
-
-//         echo '<pre>';
-//  print_r($fullData);exit;
-        $lastArray = array();
-        foreach ($fullData as $data) {
-
-            $dataArray = $this->zonListData($data['cc_id'], $data['destination'], $super_id,$data['cust_id']);
-            // echo '<pre>';
-           //   print_r($dataArray);exit;
-            if (!empty($dataArray)) {
-                return $dataArray;
-                break;
+    //   print_r($fullData);exit;
+        if (!empty($fullData)) {
+            
+           // echo "customer default <br/>" ; 
+            $lastArray = array();
+            foreach ($fullData as $data) {
+        
+                $dataArray = $this->zonListDatacustomer($data['cc_id'], $data['destination'], $super_id,$data['cust_id']);
+                // echo '<pre>';
+                // print_r($dataArray);exit;
+            
+                if (!empty($dataArray)) {
+                    return $dataArray;
+                    break;
+                }
             }
         }
+        else{
+           // echo "default <br/>" ; 
+            $fullData = $this->shipDetailDefault($awb, $super_id);
+            $lastArray = array();
+            foreach ($fullData as $data) {
+        
+                $dataArray = $this->zonListDatadefault($data['cc_id'], $data['destination'], $super_id,$data['cust_id']);           
+                if (!empty($dataArray)) {
+                    return $dataArray;
+                    break;
+                }
+            }
+
+        }
     }
+
+    public function zonListDatadefault($ccid, $dest, $super_id,$cust_id) {
+        //echo $dest."<br>";
+         
+                $this->db->select('id,cc_id,city_id');
+                $this->db->from('zone_list_fm');
+                $this->db->where('zone_list_fm.super_id', $super_id);
+                $this->db->where('capacity>todayCount');
+                $this->db->where('cc_id', $ccid);
+        
+                $query1 = $this->db->get();
+             // echo $this->db->last_query()."<br>"; die; 
+                $result = $query1->result_array();
+                if ($query1->num_rows()> 0)
+                {
+                    $result = $query1->result_array();
+                
+                    $rData = array();
+                    foreach ($result as $n) {
+                        if (in_array($dest, json_decode($n['city_id'], true))) {
+                            array_push($rData, $n);
+                        }
+                    }
+                }
+
+                if (!empty($rData)) {
+                    return $rData;
+                } else {
+                    return false;
+                }
+    }
+
+
+
+    public function zonListDatacustomer($ccid, $dest, $super_id,$cust_id) {
+        //echo $dest."<br>";
+            $this->db->select('id,cc_id,city_id,cust_id');
+            $this->db->from('zone_list_customer_fm');
+            $this->db->where('zone_list_customer_fm.super_id', $super_id);
+            $this->db->where('capacity > todayCount');
+            $this->db->where('cust_id',$cust_id);
+            $this->db->where('cc_id', $ccid);
+
+            $query = $this->db->get();
+           // echo $this->db->last_query()."<br>";// die ; 
+
+            if ($query->num_rows() > 0)
+            {
+                $result = $query->result_array();    
+                $rData = array();
+                foreach ($result as $n) {
+                    if (in_array($dest, json_decode($n['city_id'], true))) {
+                        array_push($rData, $n);
+                    }
+                }
+            }
+
+            if (!empty($rData)) {
+                return $rData;
+            } else {
+                return false;
+            }
+    }
+
 
     public function shipDetailDefault($slip_no, $super_id) {
 
@@ -1392,61 +1505,6 @@ class CourierCompany extends MY_Controller  {
 
         return $result;
     }
-
-    public function zonListData($ccid, $dest, $super_id,$cust_id) {
-//echo $dest."<br>";
-
-
-            $this->db->select('id,cc_id,city_id');
-            $this->db->from('zone_list_customer_fm');
-            $this->db->where('zone_list_customer_fm.super_id', $super_id);
-            $this->db->where('capacity>todayCount');
-            $this->db->where('cust_id',$cust_id);
-            $this->db->where('cc_id', $ccid);
-
-            $query = $this->db->get();
-           //echo $this->db->last_query()."<br>";
-
-            if ($query->num_rows()> 0)
-            {
-                $result = $query->result_array();
-            }
-            else
-            {
-
-                $this->db->select('id,cc_id,city_id');
-                $this->db->from('zone_list_fm');
-                $this->db->where('zone_list_fm.super_id', $super_id);
-                $this->db->where('capacity>todayCount');
-                $this->db->where('cc_id', $ccid);
-        
-                $query1 = $this->db->get();
-                // echo $this->db->last_query()."<br>";
-                $result = $query1->result_array();
-                if ($query1->num_rows()> 0)
-                {
-                    $result = $query1->result_array();
-                }
-
-            }
-           
-           
-        if(!empty($result)){
-            $rData = array();
-            foreach ($result as $n) {
-                if (in_array($dest, json_decode($n['city_id'], true))) {
-                    array_push($rData, $n);
-                }
-            }
-        }
-
-        if (!empty($rData)) {
-            return $rData;
-        } else {
-            return false;
-        }
-    }
-
 
 
 }
