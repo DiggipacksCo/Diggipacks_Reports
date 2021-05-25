@@ -145,6 +145,7 @@ class Generalsetting extends MY_Controller {
     public function updateform() {
         $company_name = $this->input->post('company_name');
         $company_address = $this->input->post('company_address');
+        $dropoff_option = $this->input->post('dropoff_option');
         $phone = $this->input->post('phone');
         $fax = $this->input->post('fax');
         $email = $this->input->post('email');
@@ -178,7 +179,7 @@ class Generalsetting extends MY_Controller {
 //            $small_img = $this->input->post('logo_old');
 
 
-        $updatearray = array("company_name" => $company_name, 'company_address' => $company_address, 'phone' => $phone, 'fax' => $fax, 'email' => $email, 'support_email' => $support_email, 'webmaster_email' => $webmaster_email, 'default_awb_char_fm' => $default_awb_char_fm, 'e_city' => $e_city, 'tollfree_fm' => $tollfree_fm, 'theme_color_fm' => $theme_color_fm, 'auto_assign_picker' => $auto_assign_picker,'font_color'=>$font_color,'vat'=>$vat);
+        $updatearray = array("company_name" => $company_name, 'company_address' => $company_address, 'phone' => $phone, 'fax' => $fax, 'email' => $email, 'support_email' => $support_email, 'webmaster_email' => $webmaster_email, 'default_awb_char_fm' => $default_awb_char_fm, 'e_city' => $e_city, 'tollfree_fm' => $tollfree_fm, 'theme_color_fm' => $theme_color_fm, 'auto_assign_picker' => $auto_assign_picker,'font_color'=>$font_color,'vat'=>$vat,'dropoff_option'=>$dropoff_option);
 
 
         $res = $this->General_model->Getupdatecompnaydata($updatearray);

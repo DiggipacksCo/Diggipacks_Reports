@@ -321,7 +321,7 @@
                                                         <ul class="dropdown-menu dropdown-menu-right">
                                                             <li><a href="<?= base_url(); ?>Shipment/edit_view/{{data.id}}"><i class="icon-pencil7"></i> Change Destination </a></li>    
                                                             <li><a class="dropdown-item" href="<?= base_url(); ?>awbPrint1/{{data.slip_no}}" target="_blank" style="  word-wrap: break-word;"><i class="fa fa-print fa-fw"></i>Label A4 </a> </li>     
-                                                            <li><a ng-if="data.frwd_company_awb != ''" class="dropdown-item" href="<?= base_url(); ?>Printpicklist3PL_bulk/{{data.slip_no}}/{{data.frwd_company_awb}}" target="_blank"> <i class="fa fa-print fa-fw"></i>3PL AWB</a> </li>   
+                                                            <li><a ng-if="data.frwd_company_awb != ''" class="dropdown-item" href="<?= base_url(); ?>Printpicklist3PL_bulk/{{data.slip_no}}/{{data.frwd_company_id}}" target="_blank"> <i class="fa fa-print fa-fw"></i>3PL AWB</a> </li>   
 
                                                                <?php //if (menuIdExitsInPrivilageArray(124) == 'Y') { ?>
                                                            <!--  <li><a ng-if="data.delivered == 'OC' || data.code == 'PG' || data.code == 'AP' || data.code == 'PK'" class="dropdown-item" ng-click="GetProcessOpenOrder(data.slip_no);" ng-confirm-click="are you sure want to open order?"> <i class="fa fa-openid fa-fw"></i>Open Order</a> </li>  -->
