@@ -543,6 +543,22 @@ class Ccompany_model extends CI_Model {
         return true;
     }
 
+    public function CapacityUpdate($zone_cust_id=null, $zone_id=null,$super_id = null)
+    {
+       if(empty($zone_cust_id)){
+            $this->db->query("UPDATE zone_list_fm SET todayCount = todayCount+1 WHERE id = ".$zone_id ." and super_id = ". $super_id);
+            //     echo  $this->db->last_query();
+            //  die; 
+        }
+        else{
+            $this->db->query("UPDATE zone_list_customer_fm SET todayCount = todayCount+1 WHERE id = ".$zone_id." and super_id = ".$super_id);
+            //     echo  $this->db->last_query();
+            //  die; 
+        }
+
+       
+    }
+
     public function SafeArray(array $ShipArr, array $counrierArr, $complete_sku = null, $Auth_token = null, $c_id = null,$box_pieces1=null,$super_id = null) {
         $sender_city_safe = getdestinationfieldshow_auto_array($ShipArr['origin'], 'safe_arrival',$super_id);//"181230058";
         $receiver_city_safe = getdestinationfieldshow_auto_array($ShipArr['destination'], 'safe_arrival',$super_id);//"181230058";
