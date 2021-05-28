@@ -579,7 +579,7 @@ class Seller extends MY_Controller {
     }
 
     public function SaveZidProducts() {
-       
+              
         foreach ($this->input->post('selsku') as  $value) {
           
             $skuarray = array();
@@ -595,23 +595,19 @@ class Seller extends MY_Controller {
                 'sku_size' => $this->input->post('sku_size'),
                 'entry_date' => date("Y-m-d H:i:s")
             );
-
-           
          
            $exist_zidsku_id = exist_zidsku_id($this->input->post('sku')[$value], $this->session->userdata('user_details')['super_id']);
-        //    echo "<pre>"; print_r($exist_zidsku_id); die; 
 
-            if ($exist_zidsku_id != '' || $exist_zidsku_id != 0) 
-            {
+            if ($exist_zidsku_id != '' || $exist_zidsku_id != 0) {
                 echo $product['sku'] . ' Exist<br>';
-            }
-            else {
+            } else {
                 AddSKUfromZid($skuarray);
             }
         }
         $this->session->set_flashdata('msg', "Selected Sku has been Added Successfully");
         redirect('Item');
     }
+
 
     public function zidconfig($id) {
         $this->load->view('SellerM/seller_zid', $data);
@@ -636,7 +632,6 @@ class Seller extends MY_Controller {
         return $response['cities'];
     }
     public function updateZidConfig($id) {
-
 
         $data['customer'] = $this->Seller_model->edit_view_customerdata($id);
         $data['seller'] = $this->Seller_model->edit_view($id);
@@ -670,6 +665,10 @@ class Seller extends MY_Controller {
      
         if ($this->input->post('updatezid')) {
 
+            if($this->input->post('zid_active')=='Y')
+            {
+                $zid_access='FM';
+            }
             $update_data = array(
                 'manager_token' => $this->input->post('manager_token'),
                 'zid_sid' => $this->input->post('zid_sid'),
@@ -677,7 +676,6 @@ class Seller extends MY_Controller {
                 'zid_active' => $this->input->post('zid_active'),
                 'zid_access'=>  $zid_access,
             );
-
 
             $user = $this->Seller_model->update_zid($id, $update_data);
 
@@ -701,13 +699,30 @@ class Seller extends MY_Controller {
 
         if ($this->input->post('updatesalla')) {
 
+           
+
             $update_data = array(
                 'salla_athentication' => $this->input->post('salla_manager_token'),
                 'salla_from_date' => $this->input->post('from'),
                 'salla_active' => $this->input->post('salla_active'),
+                'salla_status'=>$this->input->post('salla_status'),
+                'salla_webhook_subscribed'=> $this->input->post('salla_active')
             );
 
             if ($this->Seller_model->update_salla($id, $update_data)) {
+                $customer= $this->Seller_model->edit_view_customerdata($id);
+                if($this->input->post('salla_active'))
+                {
+                  
+                    $this->sallaWebhookSubscriptionDelete($customer) ;
+                    $this->sallaWebhookSubscriptionCreate($customer) ;
+                    
+                }
+                else
+                {
+                    $this->sallaWebhookSubscriptionDelete($customer) ; 
+                }
+                
                 $this->session->set_flashdata('msg', $this->input->post('name') . '   has been updated successfully');
                 redirect('Seller/updateSallaConfig/'.$id);
             }
@@ -715,6 +730,8 @@ class Seller extends MY_Controller {
 
         $this->load->view('SellerM/seller_sallaconfig', $data);
     }
+
+
 
    
 
@@ -896,17 +913,19 @@ class Seller extends MY_Controller {
     private function sallaWebhookSubscriptionCreate($customer) {
 
 
-        $event = "order.update";
+      
         if ($customer['salla_active'] == 'Y') {
 
+          
+            $event = "order.".$customer['salla_status'];
             $request = array(
                 "name" => "Salla Update ".$customer['uniqueid'], 
-                "event" => "order.updated", 
+                "event" =>  $event, 
                 "url" => "https://api.diggipacks.com/API/sallaOrder/".$customer['uniqueid'], 
                 "headers" => array(
                       array(
                          "key" => "X-EVENT-TYPE", 
-                         "value" => "order.updated.diggipacks" 
+                         "value" => "order.updated.fastcoo" 
                       )
                 ) ,
              ); 
@@ -941,9 +960,19 @@ class Seller extends MY_Controller {
     }
 
     private function sallaWebhookSubscriptionDelete($customer) {
+
+
+        $request = array(
+          
+            "url" => "https://api.diggipacks.com/API/sallaOrder/".$customer['uniqueid'],
+            
+            
+         ); 
+     //$this->config->item('salla_order_target_url') . '/' . $customer['uniqueid'],
+      $request=json_encode($request); 
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.zid.sa/v1/managers/webhooks?subscriber=Fastcoo&original_id=" . $customer['uniqueid'],
+            CURLOPT_URL => "https://api.salla.dev/admin/v2/webhooks/unsubscribe",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -951,6 +980,7 @@ class Seller extends MY_Controller {
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "DELETE",
+            CURLOPT_POSTFIELDS => $request,
             CURLOPT_HTTPHEADER => array(
                 "Accept: en",
                 "Accept-Language: en",
@@ -968,6 +998,7 @@ class Seller extends MY_Controller {
         }
         return false;
     }
+
 
     public function getsallaWebHooks() {
         $id = $this->input->post('cust_id');

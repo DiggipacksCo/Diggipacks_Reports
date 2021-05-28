@@ -86,6 +86,7 @@ class Seller_model extends CI_Model {
         }
     }
 
+
     public function edit($id, $data) {
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('id', $id);
@@ -204,7 +205,10 @@ class Seller_model extends CI_Model {
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         //print_r($data);exit;
         $this->db->where('id', $id);
+        
         return $this->db->update('customer', $data);
+        //echo $this->db->last_query(); die;
+        //return $abd ;  
     }
 
     public function zidCities() {

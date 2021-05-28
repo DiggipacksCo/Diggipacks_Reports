@@ -53,6 +53,11 @@ $lang['lang_OPEN_CONTAINER']="OPEN CONTAINER";
 $lang['lang_Flatbed_Truck']="Flatbed Truck";
 $lang['lang_nothing']="nothing";
 
+$lang['lang_UnSubscribe_Webhook'] = "Unsubscribed Webhook";
+$lang['lang_Check_Webhook_List'] = "Check Webhook List";
+$lang['lang_Salla_Webhook_Subscription'] = "Webhook Subscription"; 
+$lang['lang_Subscribe_Webhook'] = "Subscribe Webhook"; 
+
 $lang['lang_test1']="test1";
 $lang['lang_hello1']="hello1";
 $lang['lang_Vehicle_capacity']="Vehicle capacity";

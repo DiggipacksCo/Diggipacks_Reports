@@ -45,7 +45,7 @@
                             <!--style="padding-bottom:220px;background-color: lightgray;"-->
                             <div class="panel-heading">
                                 <!-- <h5 class="panel-title">Basic responsive table</h5> -->
-                                <h1><strong>Zid Product List</strong></h1>
+                                <h1><strong>Salla Product List</strong></h1>
 
                             </div>
                             <?php
@@ -111,7 +111,7 @@
                                                 <tr>
                                                     <th> <input type="checkbox" id="checkAll" /> &nbsp;Select Product</th>
                                                     <th>SKU</th>
-                                                    <th>Zid ID</th>
+                                                    <th>Salla ID</th>
                                                     <th>Name</th>
                                                    
                                                 </tr>

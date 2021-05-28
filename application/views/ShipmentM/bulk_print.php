@@ -85,7 +85,7 @@
                                             {
                                            echo' <div class="col-md-2" >
                                                 <div class="form-group">
-                                                <input type="hidden" name="'.$row['company'].'" value="'.$row['frwd_company_id'].'">
+                                                <input type="hidden" name="'.$row['company'].'" value="'.$row['cc_id'].'">
                                                     <input type="submit" name="print_ready" class="btn btn-primary form-control checkdisable" value="'.$row['company'].'">	
                                                 </div>
                                             </div>';

@@ -310,10 +310,10 @@ class CourierCompany extends MY_Controller  {
                 if(!empty($postData['cc_id'])){
                     
                    // $courier_id = $postData['cc_id'];
-                    $courier_data = $this->forwardShipment($postData['slip_no'], $super_id);
-                    $courier_id = $courier_data[0]['cc_id'];
-                    $zone_id = $courier_data[0]['id'];
-                    $zone_cust_id = $courier_data[0]['cust_id'];
+                   // $courier_data = $this->forwardShipment($postData['slip_no'], $super_id);
+                    $courier_id = $postData['cc_id'];
+                    //$zone_id = $courier_data[0]['id'];
+                    //$zone_cust_id = $courier_data[0]['cust_id'];
                   // echo "<pre>";  print_r($courier_data);exit;
                 }
 
@@ -1262,6 +1262,7 @@ class CourierCompany extends MY_Controller  {
                     elseif ($company_type== 'F')
                     { // for all fastcoo clients treat as a CC 
                       
+                        
                         if ($company=='Ejack' ) 
                         {
                                 $response = $this->Ccompany_model->Ejack($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$super_id);
@@ -1306,7 +1307,7 @@ class CourierCompany extends MY_Controller  {
 
                         else
                         {
-                            $response = $this->Ccompany_model->fastcooArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1);
+                            $response = $this->Ccompany_model->fastcooArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1,$super_id);
                             $responseArray = json_decode($response, true);     
                             if($responseArray['status']==200) 
                             {  

@@ -9,7 +9,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
 
-        <title>Inventory</title>
+        <title><?= lang('lang_Inventory'); ?></title>
         <?php $this->load->view('include/file'); ?>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script> 
@@ -19,6 +19,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 width: 24%;
             } 
         </style>
+        
     </head>
 
     <body >
@@ -37,33 +38,38 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <!-- Content area -->
                     <div class="content">
                         <div class="panel panel-flat">
-                            <div class="panel-heading"><h1><strong>Salla Configuration</strong></h1></div>
+                            <div class="panel-heading"><h1><strong><?= lang('lang_Salla_Configuration'); ?></strong></h1></div>
                             <hr>
                             <div class="panel-body">
                                 <form action="<?= base_url('Seller/updateSallaConfig/' . $customer['id']); ?>" method="post" enctype="multipart/form-data" autocomplete="off">
                                     <input type="hidden" class="form-control"  name="id" value="<?php echo $customer['id']; ?>">
 
                                     <fieldset class="scheduler-border" id="show_salla_details" style="">   
-                                        <legend class="scheduler-border">Salla Details</legend>
+                                        <legend class="scheduler-border">Salla <?= lang('lang_Details'); ?></legend>
                                         <div class="form-group">
-                                            <label>Salla Auth Token</label>
+                                            <label>Salla <?= lang('lang_Authentication_Token'); ?></label>
                                             <input type="text" class="form-control" name="salla_manager_token" id="salla_manager_token" value="<?php echo $customer['salla_athentication']; ?>" autocomplete="off">
                                         </div>
-                                        <div class="form-group"><strong>From Date:</strong>
-                                            <input type="text" class="form-control datepppp" id="from" name="from"  value="<?php echo $customer['salla_from_date']; ?>" autocomplete="off">
+
+                                        <div class="form-group">
+                                            <select name="salla_status" id="salla_status" required class="form-control">
+                                                <option value="" >Select Add Status</option>
+                                                <option <?php echo ($customer['salla_status'] == "created" ? 'selected' : ''); ?> value="created" >Created</option>  
+                                                <option <?php echo ($customer['salla_status'] == "updated" ? 'selected' : ''); ?> value="updated" >Updated</option>  
+                                            </select>
 
                                         </div>
                                                                    <div class="form-group">
 
                                             <label class="radio-inline">
-                                                <input type="radio" name="salla_active" <?php echo ($customer['salla_active'] == "Y" ? 'checked' : ''); ?> value="Y">Active
+                                                <input type="radio" name="salla_active" <?php echo ($customer['salla_active'] == "Y" ? 'checked' : ''); ?> value="Y"><?= lang('lang_active'); ?>
                                             </label>
                                             <label class="radio-inline">
-                                                <input type="radio" name="salla_active" <?php echo ($customer['salla_active'] == "N" ? 'checked' : ''); ?> value="N">Inactive
+                                                <input type="radio" name="salla_active" <?php echo ($customer['salla_active'] == "N" ? 'checked' : ''); ?> value="N"><?= lang('lang_inactive'); ?>
                                             </label>
                                         </div>
                                     </fieldset>
-                                    <button type="submit" name="updatesalla" value="1" class="btn btn-primary pull-right">Update</button>
+                                    <button type="submit" name="updatesalla" value="1" class="btn btn-primary pull-right"><?= lang('lang_Update'); ?></button>
                                 </form>
 
                             </div>
@@ -73,14 +79,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <form action="<?= base_url('Seller/sallaWebhookSubscribe/' . $customer['id']); ?>" method="post" enctype="multipart/form-data" autocomplete="off">
                                     <input type="hidden" class="form-control"  name="id" value="<?php echo $customer['id']; ?>">
                                     <fieldset class="scheduler-border" id="show_salla_details">   
-                                        <legend class="scheduler-border">Salla Webhook Subscription</legend>
+                                        <legend class="scheduler-border"><?= lang('lang_Salla_Webhook_Subscription'); ?></legend>
                                         <div div class="form-group">
                                             <?php //echo "<pre>";print_r($customer);die;?>
                                             <?php if ($customer['salla_webhook_subscribed'] == 'Y') { ?>
-                                                <a href="javascript://" class="btn btn-primary" onclick="checkWebook('<?php echo $customer['id']; ?>')">Check Webhook List</a>
-                                                <button type="submit" name="salla_webhook_subscribed" value="N" class="btn btn-danger">UnSubscribe Webhook</button> 
+                                                <a href="javascript://" class="btn btn-primary" onclick="checkWebook('<?php echo $customer['id']; ?>')"><?= lang('lang_Check_Webhook_List'); ?></a>
+                                                <button type="submit" name="salla_webhook_subscribed" value="N" class="btn btn-danger"><?= lang('lang_UnSubscribe_Webhook'); ?></button> 
                                             <?php } else { ?>
-                                                <button type="submit" name="salla_webhook_subscribed" value="Y" class="btn btn-primary pull-right" submit="return confirm('Are you sure you want to delete this Webook?');">Subscribe Webhook</button> 
+                                                <button type="submit" name="salla_webhook_subscribed" value="Y" class="btn btn-primary pull-right" submit="return confirm('Are you sure you want to delete this Webook?');"><?= lang('lang_Subscribe_Webhook'); ?></button> 
                                             <?php } ?>
 
                                         </div>
