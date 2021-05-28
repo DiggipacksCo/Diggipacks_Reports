@@ -13,7 +13,7 @@
         <?php $this->load->view('include/main_navbar'); ?>
 
         <!-- Page container -->
-        <div class="page-container"> 
+        <div class="page-container" ng-app="fulfill" ng-controller="ExportCtrl" ng-init="slipnosdetails('<?=implode(',', $traking_awb_no);?>');"> 
 
             <!-- Page content -->
             <div class="page-content">
@@ -36,7 +36,7 @@
                                 <!-- Marketing campaigns -->
                                 <div class="panel panel-flat">
                                     <div class="panel-heading">
-                                      <h1> <strong>Tracking Parcel List</strong>  <a id="btnExport" ><i class="icon-file-excel pull-right" style="font-size: 35px;"></i></a> </h1>
+                                      <h1> <strong>Tracking Parcel List</strong>  <a ng-click="getExcelDetails(filterData.exportlimit);" ><i class="icon-file-excel pull-right" style="font-size: 35px;"></i></a> </h1>
                                     </div>
 
 
@@ -49,23 +49,13 @@
                             <div class="panel-body" >
                                 <div class="table-responsive" style="padding-bottom:20px;" > 
                                     <!--style="background-color: green;"-->
-                                    <!-- <?php
+                                    <?php
                                     if (!empty($traking_awb_no))
                                         echo 'Tracking Result for AWB#<b>' . implode(',', $traking_awb_no) . '</b>';
-                                    ?> -->
-                                    <table class="table table-striped table-hover table-bordered dataTable bg-*" id="example" style="width:100%;">
+                                    ?>
+                                    <table class="table table-striped table-hover table-bordered dataTable" id="example" style="width:100%;">
                                         <thead>
-                                       
-                                            
-                                            <?php
-                                            //print_r($shipmentdata);
-                                            if (!empty($shipmentdata)) {
-                                                foreach ($shipmentdata as $awbdata) {
-                                                    echo '
-                                                    <tr >
-                                                    <td colspan=7>   Tracking Result for AWB#<b>' . $awbdata['slip_no']  . '</b></td>
-                                                    </tr>
-                                                    <tr>
+                                            <tr>
                                                 <th><b class="size-2">Date</b></th>
                                                 <th><b class="size-2">Origin</b></th>
                                                 <th><b class="size-2">Destination</b></th>
@@ -74,7 +64,11 @@
                                                 <th><b class="size-2">Status</b></th>
                                                 <th><b class="size-2">Action</b></th>
                                             </tr>
-                                                    <tr>
+                                            <?php
+                                            //print_r($shipmentdata);
+                                            if (!empty($shipmentdata)) {
+                                                foreach ($shipmentdata as $awbdata) {
+                                                    echo '<tr>
                                                         <td>' . $awbdata['entrydate'] . '</td>
                                                         <td>' . getdestinationfieldshow($awbdata['origin'], 'city') . '</td>
                                                         <td>' . getdestinationfieldshow($awbdata['destination'], 'city') . '</td>
@@ -85,10 +79,7 @@
 
                                                         <td><a href="' . base_url() . 'TrackingDetails/' . $awbdata['id'] . '" class="btn btn-primary" target="_black">View Details</a></td>
 
-                                                        </tr>
-                                                        
-                                                        <tr>  <td colspan=7> <hr></td></tr>
-                                                        ';
+                                                        </tr>';
                                                 }
                                             } else {
                                                 echo'<tr><td colspan="6" align="center">record not found</td></tr>';
@@ -100,6 +91,200 @@
                                 <hr>
                             </div>
                         </div>
+                        
+                           <div id="excelcolumn" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background-color: #0B70CD;">
+                            <h4 class="modal-title text-white" style="margin-bottom:12px;" ><?= lang('lang_Select_Column_to_download'); ?></h4>
+                            
+                            <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-sm-4">             
+                                    <label class="container">
+
+                                        <input type="checkbox" id='but_checkall' value='Check all' ng-model="checkall" ng-click='toggleAll()'/>   Select All
+                                        <span class="checkmark"></span>
+
+
+                                    </label>
+                                </div>
+
+                                <div class="col-md-12 row">
+                                    <div class="col-sm-4">          
+                                        <label class="container">  
+                                            <input type="checkbox" name="Date" value="Date"    ng-model="listData2.entrydate"> <?= lang('lang_Date'); ?>
+                                            <span class="checkmark"></span>
+                                        </label>   
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="Reference" value="Reference"   ng-model="listData2.booking_id"><?= lang('lang_Reference'); ?>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="Shipper_Reference" value="Shipper_Reference"   ng-model="listData2.shippers_ref_no"> <?= lang('lang_shipper_Refrence'); ?> #
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="AWB" value="AWB"   ng-model="listData2.slip_no"> <?= lang('lang_AWB_No'); ?>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="Origin" value="Origin"  ng-model="listData2.origin"> <?= lang('lang_Origin'); ?>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="Destination" value="Destination"  ng-model="listData2.destination"> <?= lang('lang_Destination'); ?>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="Sender" value="Sender"  ng-model="listData2.sender_name"><?= lang('lang_Sender'); ?>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="Sender_Address" value="Sender_Address"   ng-model="listData2.sender_address"> <?= lang('lang_Sender_Address'); ?>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="Sender_Phone" value="Sender_Phone"   ng-model="listData2.sender_phone"> <?= lang('lang_Sender_Phone'); ?>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="Receiver" value="Receiver"   ng-model="listData2.reciever_name"> <?= lang('lang_Receiver_Name'); ?>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="Recevier_Address" value="Recevier_Address"   ng-model="listData2.reciever_address"> <?= lang('lang_Receiver_Address'); ?>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="Receiver_Phone" value="Receiver_Phone"   ng-model="listData2.reciever_phone"><?= lang('lang_Receiver_Mobile'); ?>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="Mode" value="Mode"  ng-model="listData2.mode"> <?= lang('lang_Mode'); ?>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="Status" value="Status"  ng-model="listData2.delivered"> <?= lang('lang_Status'); ?>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="COD_Amount" value="COD_Amount"   ng-model="listData2.total_cod_amt"> <?= lang('lang_COD_Amount'); ?>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+
+
+
+
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="UID_Account" value="UID_Account"  ng-model="listData2.cust_id"> <?= lang('lang_UID_Account'); ?>
+                                            <span class="checkmark"></span> 
+                                        </label>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="Pieces" value="Pieces"  ng-model="listData2.pieces" > <?= lang('lang_Pieces'); ?>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="Weight" value="Weight"  ng-model="listData2.weight" > <?= lang('lang_Weight'); ?>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="Description" value="Description"  ng-model="listData2.status_describtion" > <?= lang('lang_Description'); ?>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <!-- <div class="col-sm-4">
+                                         <label class="container">
+                                             <input type="checkbox" name="Forward_through" value="Forward_through"  ng-model="listData2.frwd_throw" > Forward through
+                                             <span class="checkmark"></span> 
+                                         </label>
+                                     </div> -->
+                                    <div class="col-sm-4">    
+                                        <label class="container">
+                                            <input type="checkbox" name="Forward_awb" value="Forward_awb"  ng-model="listData2.frwd_awb_no"> <?= lang('lang_Forwarded_AWB_No'); ?>
+                                            <span class="checkmark"></span>    
+                                        </label>
+                                    </div>  
+                                    <div class="col-sm-4">    
+                                        <label class="container">
+                                            <input type="checkbox" name="transaction_no" value="transaction_no"  ng-model="listData2.transaction_no"> <?= lang('lang_Transaction_Number'); ?>
+                                            <span class="checkmark"></span>    
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">    
+                                        <label class="container">
+                                            <input type="checkbox" name="close_date" value="close_date"  ng-model="listData2.close_date"> <?= lang('lang_close_date'); ?>
+                                            <span class="checkmark"></span>    
+                                        </label>
+                                    </div>
+
+
+
+                                </div>
+                                <input type="hidden" name="exportlimit" value="exportlimit" ng-model="listData1.exportlimit">   
+
+                                <div class="row" style="padding-left: 40%;padding-top: 10px;">   
+
+
+                                    <button type="submit" class="btn btn-info pull-left" name="shipment_transfer" ng-click="transferShiptracking(listData2, listData1.exportlimit);"><?= lang('lang_Download_Excel_Report'); ?></button>  
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>  
+
+
+            </div>   
                         <!-- /basic responsive table -->
 <?php $this->load->view('include/footer'); ?>
                     </div>
@@ -154,27 +339,6 @@
         </div>
 
 
-        <script>
-        
-        var tableToExcel = (function() {
-  var uri = 'data:application/vnd.ms-excel;base64,'
-    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><meta http-equiv="content-type" content="text/plain; charset=UTF-8"/></head><body><table>{table}</table></body></html>'
-    , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
-    , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
-  return function(table, name) {
-    if (!table.nodeType) table = document.getElementById(table)
-    var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
-    var blob = new Blob([format(template, ctx)]);
-  var blobURL = window.URL.createObjectURL(blob);
-    return blobURL;
-  }
-})()
-
-$("#btnExport").click(function () {
-    var todaysDate = 'Trackiing Details '+ new Date();
-    var blobURL = tableToExcel('downloadtable', 'test_table');
-    $(this).attr('download',todaysDate+'.xls')
-    $(this).attr('href',blobURL);
-});</script>
+       
     </body>
 </html>

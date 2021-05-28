@@ -4244,6 +4244,25 @@ class Shipment extends MY_Controller {
          }
        // print_r($slipData); die;
     }
+    
+       
+     public function getexceldatatracking() {
+        $_POST = json_decode(file_get_contents('php://input'), true);
+       // print_r($_POST); die;
+        //$columns = implode(",",$_POST );
+        $data = $_POST['listData2'];
+        $SlipNos =$_POST['slip_nos'];
+        $dataAray = $this->Shipment_model->trackinglistexcelData($data, $SlipNos);
+
+        $file_name = 'tracking_shipments.csv';
+
+        $response = array(
+            'op' => 'ok',
+            'file_name' => $file_name,
+            'file' => "data:application/vnd.ms-excel;base64," . base64_encode($dataAray)
+        );
+        echo json_encode($response);
+    }
 
 }
 

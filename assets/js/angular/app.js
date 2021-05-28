@@ -83,6 +83,7 @@ var app = angular.module('fulfill', [])
                 $scope.filterData.status = 1;
                 if (reset == 1)
                 {
+                    $scope.count=1;
                     $scope.shipData = [];
                     $scope.Items = [];
                 }
@@ -714,8 +715,8 @@ var app = angular.module('fulfill', [])
                             $scope.awbArray.push(value);
                             angular.forEach(JSON.parse(value.sku), function (value1) {
                                 //console.log(value1)
-                                $scope.scan_new.weight=value.weight;
-                                $scope.shipData.push({'slip_no': value.slip_no, 'sku': value1.sku, 'piece': value1.piece, 'scaned': 0, 'extra': 0, 'print_url': value.print_url, 'frwd_company_id': value.frwd_company_id,'weight': value.weight, 'frwd_company_awb': value.frwd_company_awb});
+
+                                $scope.shipData.push({'slip_no': value.slip_no, 'sku': value1.sku, 'piece': value1.piece, 'scaned': 0, 'extra': 0, 'print_url': value.print_url, 'frwd_company_id': value.frwd_company_id, 'frwd_company_awb': value.frwd_company_awb});
                                 $scope.SKuMediaArr.push({'sku': value1.sku, 'piece': value1.piece, 'item_path': value1.item_path});
 
                                 //$scope.Items.push( 'slip_no: ' +value.slip_no);
@@ -724,7 +725,7 @@ var app = angular.module('fulfill', [])
                             //$scope.Items.push( 'slip_no: ' +value.slip_no);
                         });
 
-                    // console.log(  $scope.shipData);
+                        // console.log( $scope.SKuMediaArr);
                         // $scope.GetcheckskuOtherData($scope.shipData[$scope.arrayIndexnew].sku,$scope.shipData[$scope.arrayIndexnew].piece);
 
 
@@ -799,7 +800,7 @@ var app = angular.module('fulfill', [])
 
                 } else
                 {
-                    if ($scope.scan.sku!=null )
+                    if ($scope.scan.sku.length > 0)
                     {
                         $scope.Message = null;
                         $scope.warning = $scope.scan.sku + ', SKU not available for this shipment!';
@@ -946,13 +947,11 @@ var app = angular.module('fulfill', [])
 
                     $scope.GetremoveBtn=true;
                      $scope.scan={};
-                     $scope.scan_new.box_no=1;
-                     $scope.scan_new.weight=null;
 
-                            $scope.SKuMediaArr = {};
+                            $scope.SKuMediaArr = [];
                             $scope.shipData = [];
                             $scope.completeArray = [];
-                            $scope.Message = "Completed, order Packed!";
+                            $scope.Message = "Completed order Packed!";
 
 
                         }, function (error) {
@@ -1334,6 +1333,7 @@ var app = angular.module('fulfill', [])
                 "receivable_invoice_no": false,
                 "show_code": false,
                 "messenger_name": false,
+                "close_date": false,
             };
 
 
@@ -1375,6 +1375,7 @@ var app = angular.module('fulfill', [])
                 $scope.filterData.page_no = page_no;
                 if (reset == 1)
                 {
+                    $scope.count=1;
                     $scope.shipData = [];
                 }
 
@@ -1895,6 +1896,7 @@ var app = angular.module('fulfill', [])
                 $scope.filterData.status = 1;
                 if (reset == 1)
                 {
+                    $scope.count=1;
                     $scope.shipData = [];
                     $scope.Items = [];
                 }
@@ -2139,6 +2141,102 @@ var app = angular.module('fulfill', [])
             }
         })
 
+ .controller('ExportCtrl', function ($scope, $http, $window, $location) {
+      $scope.ExportData = {};
+    $scope.listData1 = [];
+    $scope.filterData={};
+    $scope.slipnos=null;
+    
+     $scope.listData2 = {
+                "entrydate": false,
+                "booking_id": false,
+                "shippers_ref_no": false,
+                "slip_no": false,
+                "origin": false,
+                "destination": false,
+                "sender_name": false,
+                "sender_address": false,
+                "sender_phone": false,
+                "reciever_name": false,
+                "reciever_address": false,
+                "reciever_phone": false,
+                "mode": false,
+                "delivered": false,
+                "total_cod_amt": false,
+                "cust_id": false,
+                "pieces": false,
+                "weight": false,
+                "status_describtion": false,
+                "frwd_awb_no": false,
+                "transaction_no": false,
+                "pay_Invoice_status": false,
+                "sub_category": false,
+                "onHold_Confirm": false,
+                "onHold_Date": false,
+                "onHold_Reason": false,
+                "shelv_no": false,
+                "schedule_date": false,
+                "time_slot": false,
+                "area_street": false,
+                "area": false,
+                "dest_lat": false,
+                "dest_lng": false,
+                "delever_date": false,
+                "frwd_throw": false,
+                "payable_status": false,
+                "receivable_status": false,
+                "receivable_invoice_no": false,
+                "show_code": false,
+                "messenger_name": false,
+                "close_date": false,
+            };
+    $scope.slipnosdetails=function(val)
+    {
+      $scope.slipnos= val;
+       
+    };
+    
+   
+    $scope.getExcelDetails = function (exportlimit) {
+       
+
+        $scope.listData1.exportlimit = exportlimit;
+        $("#excelcolumn").modal({backdrop: 'static',
+            keyboard: false})
+    };
+      $scope.checkall = false;
+            $scope.toggleAll = function () {
+              //  alert("ddddd");
+                $scope.checkall = !$scope.checkall;
+
+                for (var key in $scope.listData2) {
+                    $scope.listData2[key] = $scope.checkall;
+                }
+            };
+    $scope.transferShiptracking = function () {
+
+
+         $http({ url: "Shipment/getexceldatatracking",
+                    method: "POST",
+                    data: {slip_nos: $scope.slipnos,listData2: $scope.listData2,},
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+
+                }).then(function (response) {
+            console.log(response);
+            var $a = $("<a>");
+            $a.attr("href", response.data.file);
+            $("body").append($a);
+            $a.attr("download", response.data.file_name);
+            $a[0].click();
+            $a.remove();
+
+
+
+        });
+        $('#excelcolumn').modal('hide');
+    };
+     
+        })
         .controller('deliveryManifest', function ($scope, $http, $window, Excel, $timeout) {
             $scope.AssignData = {};
             $scope.filterData = {};
@@ -2160,6 +2258,7 @@ var app = angular.module('fulfill', [])
                 $scope.filterData.status = 1;
                 if (reset == 1)
                 {
+                    $scope.count=1;
                     $scope.shipData = [];
                     $scope.Items = [];
                 }

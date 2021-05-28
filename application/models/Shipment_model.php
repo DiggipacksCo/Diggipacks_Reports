@@ -3399,6 +3399,104 @@ class Shipment_model extends CI_Model {
     }
 
 
+    public function trackinglistexcelData($data = array(),$slipArr=array()) {
+
+        $this->load->dbutil();
+        $this->load->helper('file');
+        //$this->load->helper('download');
+
+
+         $slip_no = explode(",", $slipArr);
+        
+        $fulfillment = 'Y';
+        $deleted = 'N';
+        $this->db->where('shipment_fm.fulfillment', $fulfillment);
+        $this->db->where('shipment_fm.super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->where('shipment_fm.deleted', $deleted);
+
+        $this->db->where('shipment_fm.backorder', 0);
+
+        $selectQry = "";
+
+        if ($data['slip_no'] == 1)
+            $selectQry .= " shipment_fm.slip_no as AWB_NO, ";
+
+        if ($data['entrydate'] == 1)
+            $selectQry .= " date(shipment_fm.entrydate) AS ENTRY_DATE,time(shipment_fm.entrydate) AS entry_TIME,";
+        if ($data['booking_id'] == 1)
+            $selectQry .= " shipment_fm.booking_id AS REFRENCE No,";
+        if ($data['shippers_ref_no'] == 1)
+            $selectQry .= " shipment_fm.shippers_ref_no AS SHIPPER REF No,";
+
+        if ($data['origin'] == 1) {
+            $selectQry .= " (select city from country where country.id=shipment_fm.origin) AS ORIGIN ,";
+            //$selectQry.=" country.city AS ORIGIN,";
+            //$this->db->join('country','country.id=shipment_fm.origin');
+        }
+        if ($data['destination'] == 1) {
+            $selectQry .= " (select city from country where country.id=shipment_fm.destination) AS DESTINATION ,";
+            //$this->db->join('country','country.id=shipment_fm.destination');    
+        }
+        if ($data['sender_name'] == 1)
+            $selectQry .= " shipment_fm.sender_name AS SENDER NAME,";
+        if ($data['sender_address'] == 1)
+            $selectQry .= " shipment_fm.sender_address AS SENDER ADDRESS,";
+        if ($data['sender_phone'] == 1)
+            $selectQry .= " shipment_fm.sender_phone AS SENDER PHONE,";
+        if ($data['reciever_name'] == 1)
+            $selectQry .= " shipment_fm.reciever_name AS RECEIVER NAME,";
+        if ($data['reciever_address'] == 1)
+            $selectQry .= " shipment_fm.reciever_address AS RECEIVER ADDRESS,";
+        if ($data['reciever_phone'] == 1)
+            $selectQry .= " shipment_fm.reciever_phone AS RECEIVER PHONE,";
+        if ($data['mode'] == 1)
+            $selectQry .= " shipment_fm.mode AS RECEIVER MODE,";
+        if ($data['delivered'] == 1) {
+            $selectQry .= " (select main_status from status_main_cat_fm where status_main_cat_fm.id=shipment_fm.delivered) AS STATUS ,";
+            //$this->db->join('status_main_cat','status_main_cat.id=shipment_fm.delivery');    
+        }
+        if ($data['total_cod_amt'] == 1)
+            $selectQry .= " shipment_fm.total_cod_amt AS COD AMOUNT,";
+
+
+        if ($data['cust_id'] == 1) {
+            $selectQry .= " (select uniqueid from customer where customer.id=shipment_fm.cust_id) AS UNIQUE_ID ,";
+            //$this->db->join('country','country.id=shipment_fm.destination');    
+        }
+        if ($data['pieces'] == 1)
+            $selectQry .= " shipment_fm.pieces AS ON PIECES,";
+        if ($data['weight'] == 1)
+            $selectQry .= " shipment_fm.weight AS ON WEIGHT,";
+        if ($data['status_describtion'] == 1)
+            $selectQry .= " shipment_fm.status_describtion AS DESCRIPTION,";
+
+        if ($data['frwd_awb_no'] == 1)
+            $selectQry .= " shipment_fm.frwd_company_awb AS FORWARD AWB No,";
+        if ($data['close_date'] == 1)
+            $selectQry .= " shipment_fm.close_date AS CLOSE DATE,";
+
+
+        $selectQry = rtrim($selectQry, ',');
+        $this->db->select($selectQry);
+
+        $this->db->from('shipment_fm');
+        $this->db->where('shipment_fm.status', 'Y');
+      //  $this->db->where('shipment_fm.deleted', 'N');
+        //$this->db->where('diamention_fm.deleted', 'N');
+         $this->db->where_in('shipment_fm.slip_no', $slip_no);
+        $this->db->order_by('shipment_fm.id', 'desc');
+        
+
+        $query = $this->db->get();
+        //echo $this->db->last_query(); die;
+        $delimiter = ",";
+        $newline = "\r\n";
+
+
+
+
+        return $data = chr(239) . chr(187) . chr(191) . $this->dbutil->csv_from_result($query, $delimiter, $newline);
+    }
 
 
 
