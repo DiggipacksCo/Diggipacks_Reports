@@ -3078,15 +3078,15 @@ array_push($itemArray,$peiceArray);
         return $responsedata;
     }
 
-    public function fastcooArray(array $ShipArr, array $counrierArr, $complete_sku = null, $Auth_token = null, $c_id = null,$box_pieces1 = null,$super_id) {
-        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city',$super_id);
-        $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'city',$super_id);
+    public function fastcooArray(array $ShipArr, array $counrierArr, $complete_sku = null, $Auth_token = null, $c_id = null,$box_pieces1 = null,$super_id=null) {
+       $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city',$super_id);
+       $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'city',$super_id); 
         $entry_date = date('Y-m-d H:i:s');
         $pickup_date = date("Y-m-d", strtotime($entry_date));
    
-        $url =  $counrierArr['api_url'];
-        $secKey = $counrierArr['auth_token'];
-        $customerId =$counrierArr['courier_account_no'];
+        $url =  $counrierArr['api_url']; 
+     $secKey = $counrierArr['auth_token']; 
+      $customerId =$counrierArr['courier_account_no']; 
         $formate    = "json";
         $method     = "createOrder";
         $signMethod = "md5";
@@ -3159,7 +3159,7 @@ array_push($itemArray,$peiceArray);
                   "customerId" => $customerId,
                  );
          
-            $dataJson = json_encode($data_array);
+            $dataJson = json_encode($data_array); 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
@@ -3170,11 +3170,24 @@ array_push($itemArray,$peiceArray);
                 "Content-Type: application/json",
                 "Accept: application/json"
             ));
-            $response = curl_exec($ch);
+            $responsedata = curl_exec($ch);
     
             curl_close($ch);
        
-            return $response;
+
+            $response = json_decode($responsedata,TRUE); 
+        $successres = $response['status'];
+     
+        if($successres ==200) 
+        {
+            $successstatus  = "Success";
+        }else {
+            $successstatus  = "Fail";
+        }
+
+        $log = $this->shipmentLog($c_id, $responsedata,$successstatus, $ShipArr['slip_no']);
+        
+        return $responsedata;
         }
     }
     

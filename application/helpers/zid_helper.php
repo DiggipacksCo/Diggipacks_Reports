@@ -33,7 +33,7 @@ function AddSKUfromZid($data = null) {
     $ci = & get_instance();
     $ci->load->database();
     $ci->db->insert('items_m', $data);
-  // echo $ci->db->last_query();exit;
+ // echo $ci->db->last_query();exit;
 }
 
 function exist_zidsku_id($sku, $super_id) {
@@ -43,6 +43,7 @@ function exist_zidsku_id($sku, $super_id) {
     $query = $ci->db->query($sql);
     $countdata = $query->num_rows();
     $row = $query->row_array();
+    //echo $ci->db->last_query();exit;
     if ($countdata > 0)
         return $row['id'];
     else

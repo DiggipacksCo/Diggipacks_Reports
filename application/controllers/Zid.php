@@ -126,22 +126,12 @@ class Zid extends CI_Controller {
                     $result1 = Zid_Order_Details($booking_id, $manager_token, $user_agent); 
 
                     
-                    // if($booking_id == 7176231 )
-                    // {
-                    //     echo '<pre>';
-                    //     echo '<br>'.$result1['order']['order_status']['code'];
-                    //     echo '<br>'.print_r($result1['order']['shipping']['method']['name']);
-                    //     echo '<br>'. trim($deliveryOption);
-                    //     echo '<br>'.$customers['zid_status'];
-                    //     print_r( $result1);  
-                    //     die();
-                    // }
+                    
                    
                  
                     if ($result1['order']['order_status']['code'] == $customers['zid_status'] &&  trim($result1['order']['shipping']['method']['name']) ==  trim($deliveryOption) ) 
                     {
                    
-                    
                         $weight = 0;
                         foreach ($result1['order']['products'] as $ITEMs) {
                             $weight = $weight + $ITEMs['weight']['value'];
@@ -211,15 +201,26 @@ class Zid extends CI_Controller {
                         $dataJson = json_encode($data_array);
                     //   echo "dataJson =  ".$dataJson;
                     //   echo "<br><br>"; 
-                    //   echo $customers['zid_access'];
+                    //    echo $customers['zid_access'];
+                    // if($booking_id == 7275499 )
+                    //     {
+                    //         echo '<pre>';
+                    //         echo '<br>'.$result1['order']['order_status']['code'];
+                    //         echo '<br>'.print_r($result1['order']['shipping']['method']['name']);
+                    //         echo '<br>'. trim($deliveryOption);
+                    //         echo '<br>'.$customers['zid_status'];
+                    //         print_r( $customers);  
+                           
+                    //         echo $customers['zid_access'];
+                    //         die();
+                    //     }
                       
                         if ($customers['zid_access'] == 'FM') {
-                            if ($_SERVER['HTTP_HOST'] == "dev-fm.fastcoo.net") 
-                            {
-                               echo  $url = "https://api.diggipacks.com/API/createOrder";
-                            } else {
+
+                        
+                           
                                 echo $url = "https://api.diggipacks.com/API/createOrder";
-                            }
+                        
 
                             //$url = "http://apilm.com/API/createOrder";
                             $resps = $this->sendRequest($url, $dataJson);

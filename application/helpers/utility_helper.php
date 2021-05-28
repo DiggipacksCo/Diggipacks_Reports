@@ -196,7 +196,7 @@ if (!function_exists('GetcheckSlipNo3plButton_bulpage')) {
     function GetcheckSlipNo3plButton_bulpage() {
         $ci = & get_instance();
         $ci->load->database();
-        $listingQry = "select shipment_fm.frwd_company_id,shipment_fm.cust_id,courier_company.company from shipment_fm LEFT JOIN  courier_company ON shipment_fm.frwd_company_id=courier_company.id where shipment_fm.deleted='N'  and shipment_fm.frwd_company_id>0 and shipment_fm.super_id='" . $ci->session->userdata('user_details')['super_id'] . "' group by shipment_fm.frwd_company_id  ORDER  BY shipment_fm.frwd_company_id asc";
+        $listingQry = "select shipment_fm.frwd_company_id,shipment_fm.cust_id,courier_company.cc_id,courier_company.company from shipment_fm LEFT JOIN  courier_company ON shipment_fm.frwd_company_id=courier_company.id where shipment_fm.deleted='N'  and shipment_fm.frwd_company_id>0 and shipment_fm.super_id='" . $ci->session->userdata('user_details')['super_id'] . "' group by shipment_fm.frwd_company_id  ORDER  BY shipment_fm.frwd_company_id asc";
         $query = $ci->db->query($listingQry);
         $status_update_data = $query->result_array();
         return $status_update_data;
@@ -383,7 +383,7 @@ if (!function_exists('GetCourCompanynameId')) {
     function GetCourCompanynameId($id = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM courier_company where cc_id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT $field FROM courier_company where cc_id='$id' and super_id='".$ci->session->userdata('user_details')['super_id'] . "'";
         $query = $ci->db->query($sql);
         // echo   $ci->db->last_query();
         // die; 
@@ -404,6 +404,7 @@ if (!function_exists('GetCourCompanynameIdbulkprint')) {
         return $result[$field];
     }
 }
+
 if (!function_exists('GetCourierCompanyStausActive')) {
     function GetCourierCompanyStausActive($name = null) {
         $ci = & get_instance();
@@ -441,6 +442,7 @@ if (!function_exists('getdestinationfieldshow_auto_array')) {
         if (!empty($id)) {
             $sql = "SELECT $field FROM country where id IN ($id) and super_id='".$super_id."'";
             $query = $ci->db->query($sql);
+             // echo $ci->db->last_query();
             $result = $query->row_array();
             return  $result[$field];
            
@@ -1174,6 +1176,9 @@ if (!function_exists('PrintPiclist3PL_bulk')) {
                 $pdf = new FPDI('P', 'mm', array(250, 175));
             }  else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Beez'){
                 $pdf = new FPDI('P', 'mm', array(170, 130));
+            }
+            else if (GetCourCompanynameId($frwd_company_id, 'company') == 'SLS'){
+                $pdf = new FPDI('P', 'mm', array(200, 275));
             }
             else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Barqfleet' || GetCourCompanynameId($frwd_company_id, 'company') == 'GLT' ) {
                 $pdf = new FPDI('P', 'mm', array(110, 160));
