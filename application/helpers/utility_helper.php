@@ -404,7 +404,6 @@ if (!function_exists('GetCourCompanynameIdbulkprint')) {
         return $result[$field];
     }
 }
-
 if (!function_exists('GetCourierCompanyStausActive')) {
     function GetCourierCompanyStausActive($name = null) {
         $ci = & get_instance();
@@ -442,7 +441,6 @@ if (!function_exists('getdestinationfieldshow_auto_array')) {
         if (!empty($id)) {
             $sql = "SELECT $field FROM country where id IN ($id) and super_id='".$super_id."'";
             $query = $ci->db->query($sql);
-             // echo $ci->db->last_query();
             $result = $query->row_array();
             return  $result[$field];
            
@@ -1428,13 +1426,13 @@ if (!function_exists('GetdiaMationTableDataFind')) {
 
 if (!function_exists('getallsellerdatabyID')) {
 
-    function getallsellerdatabyID($id = null, $field = null) {
+    function getallsellerdatabyID($id = null, $field = null,$super_id =null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM customer where id='$id' and access_fm='Y' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        //$sql = "SELECT $field FROM customer where id='$id' and access_fm='Y' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT $field FROM customer where id='$id' and access_fm='Y' and super_id='" . $super_id . "'";
         
         $query = $ci->db->query($sql);
-       // echo  $ci->db->last_query; die();     
         $result = $query->row_array();
         return $result[$field];
     }
@@ -1613,10 +1611,11 @@ if(!function_exists('GetalldashboardClientField')){
 
 if (!function_exists('GetSinglesellerdata')) {
 
-    function GetSinglesellerdata($id = null) {
+    function GetSinglesellerdata($id = null,$super_id) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT * FROM customer where  super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and id='$id' and access_fm='Y'";
+        //$sql = "SELECT * FROM customer where  super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and id='$id' and access_fm='Y'";
+        $sql = "SELECT * FROM customer where  super_id='" . $super_id . "' and id='$id' and access_fm='Y'";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result;
@@ -1626,11 +1625,12 @@ if (!function_exists('GetSinglesellerdata')) {
 
 if (!function_exists('Getselletdetails')) {
 
-    function Getselletdetails() {
+    function Getselletdetails($super_id) {
         
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT * FROM user where id ='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        //$sql = "SELECT * FROM user where id ='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT * FROM user where id ='" . $super_id . "'";
         $query = $ci->db->query($sql);
         $result = $query->result_array();
      // echo   $ci->db->last_query(); exit; 

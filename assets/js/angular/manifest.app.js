@@ -739,7 +739,7 @@ $scope.data={};
             $scope.Error_msg = {};
             $scope.saveassigntodriver = function ()
             {
-                location.href = 'showpickuplist';
+               // location.href = 'showpickuplist';
                 if ($scope.AssignData.assign_type == 'D')
                 {
                     $scope.AssignData.cc_id = "";
