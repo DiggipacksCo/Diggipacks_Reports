@@ -68,7 +68,7 @@ class Login extends MY_Controller {
                         'user_id' => $return[0]->id,
                         'city' => $return[0]->city,
                         'status' => $return[0]->status,
-                            'is_deleted' => $return[0]->is_deleted,
+                        'is_deleted' => $return[0]->is_deleted,
                         'email' => $return[0]->email,
                         'user_type' => $return[0]->user_type,
                         'profile_pic' => $return[0]->logopath,
