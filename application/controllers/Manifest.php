@@ -409,9 +409,13 @@ class Manifest extends CourierCompany_pickup {
         $assign_type = $dataArray['assign_type'];
         $order_type = $dataArray['order_type'];
         $cc_id = $dataArray['cc_id'];
+       // echo "kjhkhjkhk"; die;
 
         if ($assign_type == 'CC') {
+          
             $request_return = $this->BulkForwardCompanyReady($uniqueid, $cc_id, $order_type,$dataArray);
+
+           // echo "FERETE"; die; 
             if (!empty($request_return['Success_msg'])) {
                 $return = array('status' => "succ",'Success_msg'=>$request_return['Success_msg']);
             } else {
@@ -445,7 +449,8 @@ class Manifest extends CourierCompany_pickup {
         
         $counrierArr_table = $this->Ccompany_model->GetdeliveryCompanyUpdateQry($cc_id,$custid=0,$super_id);
         
-        $c_id = $counrierArr_table['id'];
+        $c_id = $counrierArr_table['cc_id'];
+
         if ($counrierArr_table['type'] == 'test') {
             $user_name = $counrierArr_table['user_name_t'];
             $password = $counrierArr_table['password_t'];
@@ -483,6 +488,8 @@ class Manifest extends CourierCompany_pickup {
         $counrierArr['company_type'] = $company_type;
         $counrierArr['create_order_url'] = $create_order_url;
         $counrierArr['auth_token'] = $auth_token;
+
+       // echo "<br/>";print_r($counrierArr); die; 
         
         if (!empty($dataArray['mid'])) {
             $shipmentLoopArray = $dataArray['mid'];
@@ -536,7 +543,7 @@ class Manifest extends CourierCompany_pickup {
         }
         
         if($company == 'Aymakan') {
-           // print "<pre>"; print_r($ShipArr);die;
+        //   print "<pre>"; print_r($ShipArr); //die;
             $response = $this->Ccompany_model->AymakanArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$complete_sku,$super_id);
             $responseArray = json_decode($response, true);
             //print "<pre>"; print_r($responseArray);die;
@@ -554,7 +561,8 @@ class Manifest extends CourierCompany_pickup {
                 $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
                 array_push($succssArray, $slipNo);
                 $returnArr['Success_msg'][] = $slipNo . ':Successfully Assigned';
-            } else {
+            } 
+            else {
                 $errors = 'Fail: Please check logs.';
                 if(isset($responseArray['errors']['collection_city']) && !empty($responseArray['errors']['collection_city'])){
                     $errors = $responseArray['errors']['collection_city'][0];
@@ -565,7 +573,8 @@ class Manifest extends CourierCompany_pickup {
 
                 $returnArr['Error_msg'][] = $slipNo . ':' . $errors;
             }
-        }else if($company == "Clex"){
+        }
+        else if($company == "Clex"){
             $response = $this->Ccompany_model->ClexArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1, $c_id, $super_id);
 
             if ($response['data'][0]['cn_id']) {
@@ -1647,7 +1656,7 @@ class Manifest extends CourierCompany_pickup {
         $this->load->model('User_model');
         $assignuser = $this->User_model->userDropval(9);
         $courierData = GetCourierCompanyDrop();
-
+        $super_id = $this->session->userdata('user_details')['super_id']; 
 
 
         $_POST = json_decode(file_get_contents('php://input'), true);
@@ -1672,11 +1681,13 @@ class Manifest extends CourierCompany_pickup {
 
             $manifestarray[$ii]['vehicle_type'] = type_of_vehicleFiled($rdata['vehicle_type']);
             if ($rdata['seller_id'] > 0)
-                $manifestarray[$ii]['seller_id'] = getallsellerdatabyID($rdata['seller_id'], 'name');
+                $manifestarray[$ii]['seller_id'] = getallsellerdatabyID($rdata['seller_id'], 'name',$super_id);
             else
                 $manifestarray[$ii]['seller_id'] = 'N/A';
             $ii++;
         }
+        // echo "<pre>"; print_r($manifestarray);
+        // exit();
 
         	
         $sellers = Getallsellerdata($seller_ids);
@@ -1686,14 +1697,15 @@ class Manifest extends CourierCompany_pickup {
         $dataArray['sellers'] = $sellers;
         $dataArray['courierData'] = $courierData;
 
-        //print_r($shipments);
-        //exit();
+       
         echo json_encode($dataArray);
     }
 
     function Getpickuplistshow() {
         $this->load->model('User_model');
+
         $assignuser = $this->User_model->userDropval(9);
+
         $_POST = json_decode(file_get_contents('php://input'), true);
 
         $from = $_POST['from'];
@@ -1706,7 +1718,7 @@ class Manifest extends CourierCompany_pickup {
         //echo json_encode($_POST); die;
         $filterarray = array('seller_id' => $seller_id, 'driverid' => $driverid, 'manifestid' => $manifestid, 'sort_list' => $sort_list);
         $shipments = $this->Manifest_model->getpickuplistdatashow($to, $from, $page_no, $filterarray);
-//echo json_encode($shipments); die;
+        //echo json_encode($shipments); die;
 
         $manifestarray = $shipments['result'];
         $ii = 0;
@@ -1728,7 +1740,7 @@ class Manifest extends CourierCompany_pickup {
                 $manifestarray[$ii]['assign_to'] = 'N/A';
 
             if ($rdata['3pl_name'])
-                $manifestarray[$ii]['company_name'] = $rdata['3pl_name'];
+                $manifestarray[$ii]['company_name'] = GetCourCompanynameId($rdata['3pl_name'],'company');
             else
                 $manifestarray[$ii]['company_name'] = 'N/A';
 
