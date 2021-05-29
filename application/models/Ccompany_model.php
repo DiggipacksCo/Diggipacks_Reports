@@ -128,9 +128,10 @@ class Ccompany_model extends CI_Model {
     }
 
     
-     public function GetMidDetailsQry($mid = null) {
+     public function GetMidDetailsQry($mid = null,$super_id) {
 
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        //$this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->where('super_id', $super_id);
         $this->db->select('*');
         $this->db->from('pickup_request');
         $this->db->where('uniqueid ', $mid);
@@ -190,6 +191,7 @@ class Ccompany_model extends CI_Model {
         $ci = & get_instance();
         $ci->load->database();
         $query = $ci->db->query($sql);
+        //echo $this->db->last_query(); die;
         $result = $query->result_array();    
         return $result;
     }
@@ -283,6 +285,7 @@ class Ccompany_model extends CI_Model {
 
     public function AramexArray(array $ShipArr, array $counrierArr, $complete_sku = null, $pay_mode = null, $CashOnDeliveryAmount = null, $services = null,$box_pieces1= null,$super_id = null ) 
     {
+        
         $sender_city = $this->getdestinationfieldshow_auto_array($ShipArr['origin'], 'aramex_city',$super_id);
         $reciever_city = $this->getdestinationfieldshow_auto_array($ShipArr['destination'], 'aramex_city',$super_id);
         $date = (int) microtime(true) * 1000;
@@ -560,6 +563,7 @@ class Ccompany_model extends CI_Model {
     }
 
     public function SafeArray(array $ShipArr, array $counrierArr, $complete_sku = null, $Auth_token = null, $c_id = null,$box_pieces1=null,$super_id = null) {
+        //print "<pre>"; print_r($ShipArr);die;
         $sender_city_safe = getdestinationfieldshow_auto_array($ShipArr['origin'], 'safe_arrival',$super_id);//"181230058";
         $receiver_city_safe = getdestinationfieldshow_auto_array($ShipArr['destination'], 'safe_arrival',$super_id);//"181230058";
 
@@ -650,6 +654,7 @@ class Ccompany_model extends CI_Model {
         );
 
         $dataJson = json_encode($param);
+        
         $response = send_data_to_safe_curl($dataJson, $Auth_token, $API_URL); 
         $safe_response = json_decode($response,TRUE);
         
@@ -677,6 +682,7 @@ class Ccompany_model extends CI_Model {
         
 
        $API_URL = $counrierArr['api_url'];
+       
         if(empty($box_pieces1))
        { $box_pieces = 1;  }
          else { $box_pieces = $box_pieces1 ; }
@@ -936,7 +942,6 @@ class Ccompany_model extends CI_Model {
         else { 
             $weight = $ShipArr['weight'] ; 
         }
-        
         
         if(!empty($receiver_city ))
         {
@@ -1213,6 +1218,7 @@ class Ccompany_model extends CI_Model {
         );
       
         $dataJson = json_encode($request_data);
+       // echo $dataJson;die;
         
         $headers = array (
             "Content-Type: application/json"
@@ -1722,6 +1728,7 @@ class Ccompany_model extends CI_Model {
         $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'makhdoom',$super_id);
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'makhdoom',$super_id);
         $API_URL = $counrierArr['api_url'];
+        
         $create_order_url = $counrierArr['create_order_url'];
         if(empty($box_pieces1))
         {
@@ -1813,6 +1820,7 @@ class Ccompany_model extends CI_Model {
         );
        
         $dataJson = json_encode($param);
+        //echo $dataJson;die;
         $response = send_data_to_makdoom_curl($dataJson, $Auth_token, $create_order_url);
         
         $logresponse =   json_encode($response);  
@@ -1930,13 +1938,16 @@ class Ccompany_model extends CI_Model {
     public function AymakanArray(array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null,$box_pieces1,$complete_sku=null,$super_id) {
 
         $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'Aymakan',$super_id);
+        
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'Aymakan',$super_id);
 
-        $store = getallsellerdatabyID($ShipArr['cust_id'], 'company');        
+        $store = getallsellerdatabyID($ShipArr['cust_id'], 'company',$super_id);        
+        
         $entry_date = date('Y-m-d H:i:s');
         $pickup_date = date("Y-m-d", strtotime($entry_date));
 
            $API_URL = $counrierArr['api_url']."create";
+        //echo $API_URL;die;
           $api_key = $counrierArr['auth_token'];
 
         $currency = "SAR";  
@@ -2010,6 +2021,7 @@ class Ccompany_model extends CI_Model {
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $all_param_data);
         $response = curl_exec($ch);
+        //echo $response;die;
         curl_close($ch);
         $responseArray = json_decode($response, true);
         $logresponse =   json_encode($response);  
@@ -2752,6 +2764,7 @@ class Ccompany_model extends CI_Model {
 
        // print_r( $ShipArr['sku_data']); exit;
         $api_url = $counrierArr['api_url'];
+        
         $curl = curl_init();
        
         curl_setopt_array($curl, array(
@@ -2775,6 +2788,7 @@ class Ccompany_model extends CI_Model {
         $tokenArray = json_decode($response, true);
         $token=$tokenArray['access_token'];
         
+               
                
         if(empty($box_pieces1))
         {
@@ -2937,7 +2951,6 @@ array_push($itemArray,$peiceArray);
         }
         
         $Reciever_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'emdad_city',$super_id);
-        
         $product_type = 'Parcel'; //beone ka database
         $service = '2'; // beone wali
         $description = $ShipArr['status_describtion'];
@@ -3279,6 +3292,7 @@ array_push($itemArray,$peiceArray);
         }
     
         $Reciever_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'beez_city',$super_id);
+        
         if(empty($Reciever_city)){
             
             $successstatus = "Failed";
@@ -3376,7 +3390,10 @@ array_push($itemArray,$peiceArray);
         $response = curl_exec($ch); 
     
         curl_close($ch);
-    
+        if(empty($response)){
+            $responseArray['Message'] = "Response not found.Please contact with clients.";
+            return $responseArray;
+        }
         $responseArray = json_decode($response,true);
         //print "<pre>"; print_r($responseArray);die;
         $logresponse = json_encode($response);
@@ -3398,7 +3415,6 @@ array_push($itemArray,$peiceArray);
             $API_URL = $counrierArr['api_url'] . "api/create/order";
             $api_key = $counrierArr['auth_token'];
             //print_r($api_key);die; 
-            
             $currency = "SAR";
             
             if (empty($box_pieces1)) {
@@ -3471,6 +3487,7 @@ array_push($itemArray,$peiceArray);
                     'Authorization:'. $api_key),
                     ));
                     $response = curl_exec($curl);
+                    
                     curl_close($curl);
             }
             else {
@@ -3534,7 +3551,6 @@ array_push($itemArray,$peiceArray);
                     $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'Wadha',$super_id);
                     $receiver_city= getdestinationfieldshow_auto_array($ShipArr['destination'], 'Wadha',$super_id);
                     
-                
                 $API_URL = $counrierArr['api_url'] . "v2/customer/order";
                 
                     $currency = "SAR";
@@ -3913,7 +3929,6 @@ array_push($itemArray,$peiceArray);
         $country = getdestinationfieldshow_auto_array($ShipArr['destination'], 'country',$super_id);
         $API_URL = $counrierArr['api_url'];
         $token = $counrierArr['auth_token'];
-        
         $lat = getdestinationfieldshow_auto_array($ShipArr['origin'], 'latitute',$super_id);
         $lang = getdestinationfieldshow_auto_array($ShipArr['origin'], 'longitute',$super_id);
 
@@ -4159,7 +4174,10 @@ array_push($itemArray,$peiceArray);
 
 
         $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
-        return $response;
+        return $responseArray;
+        }else{ 
+            $responseArray = array('data'=> 'Reciver City Empty', 'code'=>1) ;
+            return $responseArray;
         }
     }
     

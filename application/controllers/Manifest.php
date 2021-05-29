@@ -430,10 +430,21 @@ class Manifest extends CourierCompany_pickup {
     
     function BulkForwardCompanyReady($uniqueid = null, $cc_id = null, $order_type = null, $dataArray = null){
         
+        if(!empty($dataArray['super_id']))
+        {
+            $user_details['super_id']=$dataArray['super_id'];
+            $this->session->set_userdata('user_details', $user_details);
+            $super_id = $dataArray['super_id'];
+        }else{
+            $super_id= $this->session->userdata('user_details')['super_id'];
+        }
+        
         $CURRENT_TIME = date('H:i:s');
         $CURRENT_DATE = date('Y-m-d H:i:s');
         $dataArray['mid'] = $uniqueid;
-        $counrierArr_table = $this->Ccompany_model->GetdeliveryCompanyUpdateQry($cc_id,$custid=0);
+        
+        $counrierArr_table = $this->Ccompany_model->GetdeliveryCompanyUpdateQry($cc_id,$custid=0,$super_id);
+        
         $c_id = $counrierArr_table['id'];
         if ($counrierArr_table['type'] == 'test') {
             $user_name = $counrierArr_table['user_name_t'];
@@ -481,10 +492,9 @@ class Manifest extends CourierCompany_pickup {
             $shipmentLoopArray = array_unique($midData);
         }
         
-        $alldetails = $this->Ccompany_model->GetMidDetailsQry(trim($dataArray['mid']));
-        //print "<pre>"; print_r($alldetails);die;
-        $senderdetails = GetSinglesellerdata(trim($alldetails['seller_id']));  //Sender details 
-        $receiverdetails = Getselletdetails(); // Receiver details
+        $alldetails = $this->Ccompany_model->GetMidDetailsQry(trim($dataArray['mid']),$super_id);
+        $senderdetails = GetSinglesellerdata(trim($alldetails['seller_id']),$super_id);  //Sender details 
+        $receiverdetails = Getselletdetails($super_id); // Receiver details
 
         $box_pieces1 = $alldetails['boxes'];
         $slipNo = $alldetails['uniqueid'];
@@ -527,7 +537,7 @@ class Manifest extends CourierCompany_pickup {
         
         if($company == 'Aymakan') {
            // print "<pre>"; print_r($ShipArr);die;
-            $response = $this->Ccompany_model->AymakanArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1);
+            $response = $this->Ccompany_model->AymakanArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$complete_sku,$super_id);
             $responseArray = json_decode($response, true);
             //print "<pre>"; print_r($responseArray);die;
             if (empty($responseArray['errors'])) {
@@ -556,7 +566,7 @@ class Manifest extends CourierCompany_pickup {
                 $returnArr['Error_msg'][] = $slipNo . ':' . $errors;
             }
         }else if($company == "Clex"){
-            $response = $this->Ccompany_model->ClexArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1, $c_id);
+            $response = $this->Ccompany_model->ClexArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1, $c_id, $super_id);
 
             if ($response['data'][0]['cn_id']) {
                 $client_awb = $response['data'][0]['cn_id'];
@@ -586,7 +596,7 @@ class Manifest extends CourierCompany_pickup {
             $esnad_awb_number = Get_esnad_awb($start_awb_sequence, $end_awb_sequence);
             //echo $esnad_awb_number; die;
             $esnad_awb_number = $esnad_awb_number - 1;
-            $response = $this->Ccompany_model->EsnadArray($ShipArr, $counrierArr, $esnad_awb_number, $complete_sku, $Auth_token, $c_id, $box_pieces1);
+            $response = $this->Ccompany_model->EsnadArray($ShipArr, $counrierArr, $esnad_awb_number, $complete_sku, $Auth_token, $c_id, $box_pieces1,$super_id);
 
             $responseArray = json_decode($response, true);
 
@@ -668,7 +678,7 @@ class Manifest extends CourierCompany_pickup {
                     $returnArr['Success_msg'][] = $slipNo . ':Successfully Assigned';
                 }
             }elseif ($company == 'NAQEL') {
-                $awb_array = $this->Ccompany_model->NaqelArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1, $Auth_token, $c_id);
+                $awb_array = $this->Ccompany_model->NaqelArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1, $Auth_token, $c_id, $super_id);
 
                 $HasError = $awb_array['HasError'];
                 $error_message = $awb_array['Message'];
@@ -752,7 +762,7 @@ class Manifest extends CourierCompany_pickup {
                     }
             }
         }elseif ($company == 'Saee') {
-            $response = $this->Ccompany_model->SaeeArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1);
+            $response = $this->Ccompany_model->SaeeArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$super_id);
             $safe_response = $response;
 
             if ($safe_response['success'] == 'true') {
@@ -774,7 +784,7 @@ class Manifest extends CourierCompany_pickup {
                  $returnArr['Error_msg'][] = $slipNo . ':' . $safe_response['error'];
             }
         }else if ($company == 'Aramex') {
-            $params = $this->Ccompany_model->AramexArray($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1);
+            $params = $this->Ccompany_model->AramexArray($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1, $super_id);
             $dataJson = json_encode($params);
             // echo " Datajson ". $dataJson; die;                                        
             $headers = array("Content-type:application/json");
@@ -827,7 +837,7 @@ class Manifest extends CourierCompany_pickup {
             }
         }elseif ($company == 'Ajeek') {
 
-            $response = $this->Ccompany_model->AjeekArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1, $c_id);
+            $response = $this->Ccompany_model->AjeekArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1, $c_id, $super_id);
             if ($response['contents']['order_id']) {
                 $response['contents']['order_id'];
                 $Auth_token = $counrierArr['auth_token'];
@@ -852,7 +862,7 @@ class Manifest extends CourierCompany_pickup {
                 $returnArr['Error_msg'][] = $slipNo . ':' . $response['description'];
             }
         }elseif ($company == 'Barqfleet') {
-            $response_ww = $this->Ccompany_model->BarqfleethArray($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $c_id, $box_pieces1);
+            $response_ww = $this->Ccompany_model->BarqfleethArray($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $c_id, $box_pieces1, $super_id);
             $response_array = json_decode($response_ww, TRUE);
             if ($response_array['code'] != '') {
                 $returnArr['Error_msg'][] = $slipNo . ':' . $response_array['message'];
@@ -888,7 +898,7 @@ class Manifest extends CourierCompany_pickup {
                 $returnArr['Success_msg'][] = $slipNo . ':Successfully Assigned';
             }
         }elseif ($company == 'Labaih') {
-            $response = $this->Ccompany_model->LabaihArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1, $c_id);
+            $response = $this->Ccompany_model->LabaihArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1, $c_id, $super_id);
 
             if ($response['status'] == 200) {
                 $client_awb = $response['consignmentNo'];
@@ -910,9 +920,10 @@ class Manifest extends CourierCompany_pickup {
             $Auth_response = MakdoomArrival_Auth_cURL($counrierArr);
 
             $responseArray = json_decode($Auth_response, true);
+            
             $Auth_token = $responseArray['data']['id_token'];
 
-            $response = $this->Ccompany_model->MakdoonArray($ShipArr, $counrierArr, $complete_sku, $Auth_token, $c_id, $box_pieces1);
+            $response = $this->Ccompany_model->MakdoonArray($ShipArr, $counrierArr, $complete_sku, $Auth_token, $c_id, $box_pieces1, $super_id);
             //print "<pre>"; print_r($response);die;
             $safe_response = json_decode($response, true);
 
@@ -936,7 +947,8 @@ class Manifest extends CourierCompany_pickup {
                 $CURRENT_TIME = date("H:i:s");
 
                 //$Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
-                $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                //$Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
                 array_push($succssArray, $slipNo);
                 $returnArr['Success_msg'][] = $slipNo . ':Successfully Assigned';
             }else{
@@ -949,7 +961,8 @@ class Manifest extends CourierCompany_pickup {
                 
                 $responseArray = json_decode($Auth_response, true);
                 $Auth_token = $responseArray['data']['id_token'];
-                    $response = $this->Ccompany_model->SafeArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1);
+                
+                $response = $this->Ccompany_model->SafeArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1, $super_id);
                // print "<pre>"; print_r($response);die;
                 $safe_response = json_decode($response, true);                     
                //print "<pre>"; print_r($safe_response);die;
@@ -966,7 +979,9 @@ class Manifest extends CourierCompany_pickup {
                     file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
                     $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
                     //****************************safe arrival label print cURL****************************
-                    $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                    //$Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                    $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                    
                     
                     //array_push($succssArray, $slipNo);
 
@@ -978,7 +993,7 @@ class Manifest extends CourierCompany_pickup {
                 }
                 
             }elseif($company == 'Saudi Post'){
-                $response = $this->Ccompany_model->SPArray($ShipArr, $counrierArr, $complete_sku,$Auth_token,$c_id,$box_pieces1);
+                $response = $this->Ccompany_model->SPArray($ShipArr, $counrierArr, $complete_sku,$Auth_token,$c_id,$box_pieces1,$super_id);
                 
                 $response = json_decode($response, true);
                                 
@@ -987,7 +1002,8 @@ class Manifest extends CourierCompany_pickup {
                     
                   
                     $fastcoolabel='SP';
-                    $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                    //$Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                    $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
                     
 
                     header('Content-Type: application/pdf');
@@ -1005,7 +1021,7 @@ class Manifest extends CourierCompany_pickup {
                 }
             }elseif ($company == 'Shipadelivery') {
 
-                $response = $this->Ccompany_model->ShipadeliveryArray($ShipArr, $counrierArr, $Auth_token, $c_id);
+                $response = $this->Ccompany_model->ShipadeliveryArray($ShipArr, $counrierArr, $Auth_token, $c_id,$super_id);
 
                 $response_array = json_decode($response, true);
                 if (empty($response_array)) {
@@ -1047,7 +1063,7 @@ class Manifest extends CourierCompany_pickup {
                 }
         }elseif($company == 'Shipsy'){
                 
-                $response = $this->Ccompany_model->ShipsyArray($ShipArr, $counrierArr, $Auth_token, $box_pieces1,$c_id);
+                $response = $this->Ccompany_model->ShipsyArray($ShipArr, $counrierArr, $Auth_token, $box_pieces1,$c_id,$super_id);
                 
                 $response_array = json_decode($response, true);
                 
@@ -1071,7 +1087,7 @@ class Manifest extends CourierCompany_pickup {
                 }
             }elseif ($company == 'Smsa') {
 
-                $response = $this->Ccompany_model->SMSAArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1, $c_id);
+                $response = $this->Ccompany_model->SMSAArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1, $c_id,$super_id);
                 
                 $xml2 = new SimpleXMLElement($response);
                 $again = $xml2;
@@ -1135,7 +1151,7 @@ class Manifest extends CourierCompany_pickup {
                 $responseArray = json_decode($Auth_response, true);                      
                 $Auth_token = $responseArray['data']['id_token'];
                 
-                $thabit_response = $this->Ccompany_model->ThabitArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id, $box_pieces1);
+                $thabit_response = $this->Ccompany_model->ThabitArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id, $box_pieces1, $super_id);
                 //print "<pre>"; print_r($thabit_response);die;
 
                 if ($thabit_response['status'] == 'success') 
@@ -1154,7 +1170,8 @@ class Manifest extends CourierCompany_pickup {
                         $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
               
                     //**************************** Thabit label print cURL****************************
-                    $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                    							
+                    $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
                     							
                     array_push($succssArray, $slipNo);
                     $returnArr['Success_msg'] = 'Successfully Assigned.';
@@ -1165,7 +1182,7 @@ class Manifest extends CourierCompany_pickup {
                     $returnArr['Error_msg'][] = $slipNo . ':' . $thabit_response['message'];
                 }
             }elseif ($company == 'Zajil') {
-                    $response = $this->Ccompany_model->ZajilArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1);
+                    $response = $this->Ccompany_model->ZajilArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$super_id);
                     //print "<pre>"; print_r($response);die;
                     if (!empty($response['data'])) {
                         $success = $response['data'][0]['success'];
@@ -1176,7 +1193,7 @@ class Manifest extends CourierCompany_pickup {
                             header("Content-type:application/pdf");
                             file_put_contents("assets/all_labels/$slipNo.pdf", $label_response);
                             $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
-                            $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                            $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
                             
                             array_push($succssArray, $slipNo);
                             $returnArr['Success_msg'][] = 'Successfully Assigned.';
@@ -1184,13 +1201,177 @@ class Manifest extends CourierCompany_pickup {
                             $returnArr['Error_msg'][] = $slipNo . ':' . $response['data'][0]['reason'];
                         }
                     } else {
-                        $returnArr['responseError'][] = $slipNo . ':' . "invalid details";
+                        $returnArr['Error_msg'][] = $slipNo . ':' . "invalid details";
                     }
+            }elseif ($company== 'Beez'){
+                            //print "<pre>"; print_r($sku_data);die;
+                            $response = $this->Ccompany_model->BeezArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$sku_data,$super_id);  
+                            if(isset($response['Message']) && !empty($response['Message'])){
+                                $returnArr['Error_msg'][] = $slipNo . ':' . $response['Message'];
+                            }else{
+                                $client_awb = $response;
+                                $url = 'https://login.beezerp.com/label/pdf/?t='.$client_awb;
+                                $generated_pdf = file_get_contents($url); 
+                                file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                                
+                                $beezlabel = base_url() . "assets/all_labels/$slipNo.pdf";
+                                $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $beezlabel, $c_id);
+                                $returnArr['Success_msg'][] = $slipNo.': Successfully Assigned.';
+                                array_push($succssArray, $slipNo);
+                            }
+            }elseif ($company == 'GLT'){
+
+                        $responseArray = $this->Ccompany_model->GLTArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1, $complete_sku,$super_id);
+                        $successres = $responseArray['data']['orders'][0]['status'];
+                        $error_status = $responseArray['data']['orders'][0]['msg'];
+
+                            if (!empty($successres) && $successres == 'success')
+                            {
+
+                                $client_awb = $responseArray['data']['orders'][0]['orderTrackingNumber'];
+                                $innser_status = $responseArray['data']['orders'][0]['status'];
+                                                         
+
+                                $GltLabel = $this->Ccompany_model->GLT_label($client_awb, $counrierArr, $auth_token);
+                                    
+                                 file_put_contents("assets/all_labels/$slipNo.pdf", $GltLabel);                            
+                                 $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+
+
+                                $CURRENT_DATE = date("Y-m-d H:i:s");
+                                $CURRENT_TIME = date("H:i:s");
+
+                                $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                                $returnArr['Success_msg'][] = $slipNo.': Successfully Assigned.';
+                                array_push($succssArray, $slipNo);
+                            }
+                            
+                            else{
+                                $returnArr['Error_msg'][] = $slipNo . ':' .$error_status;
+                            }
+            }elseif($company == 'Tamex'){
+                            $responseArray = $this->Ccompany_model->tamexArray($ShipArr, $counrierArr, $complete_sku, $pay_mode,$c_id,$box_pieces1,$super_id);
+                         
+                            if ($responseArray['code'] != 0 || empty($responseArray)) {
+                                array_push($error_array, $slipNo . ':' . $responseArray['data']);
+                                $returnArr['Error_msg'][] = $slipNo . ':' . $responseArray['data'];
+                            } elseif ($responseArray['code'] == 0) {
+
+                                $client_awb = $responseArray['tmxAWB'];
+                                $API_URL= $counrierArr['api_url'].'print';
+                                
+                                $generated_pdf = Tamex_label($client_awb, $counrierArr['auth_token'],$API_URL);
+                              
+                                file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                                $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+
+                                $CURRENT_DATE = date("Y-m-d H:i:s");
+                                $CURRENT_TIME = date("H:i:s");
+                               
+                                $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                                
+
+
+                                $details = 'Forwarded to ' . $ClientArr['company'];
+                                
+
+                                $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' forwarded to TAMEX';
+
+                                array_push($DataArray, $slipNo);
+                            }
+            }elseif ($company== 'Fetchr'){ 
+                     
+                               $responseData = $this->Ccompany_model->fetchrArray($ShipArr, $counrierArr, $complete_sku, $c_id,$box_pieces1,$super_id);
+                               if($responseData['data'][0]['status'] == 'success')
+                                {
+                                    $client_awb = $responseData['data'][0]['tracking_no'];
+                                    
+                                    $label = "https://s3-eu-west-1.amazonaws.com/cms-dhl-pdf-stage-1/label6x4_".$client_awb.".pdf";
+                                    
+                                  
+                                    $generated_pdf = file_get_contents($label);
+                                    file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf );
+                                    
+                                   $fetchrlabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+
+                                    $CURRENT_DATE = date("Y-m-d H:i:s");
+                                    $CURRENT_TIME = date("H:i:s");
+                                    $comment = $responseData['message'];
+                                   $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fetchrlabel, $c_id);
+                                    $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' forwarded to Fetchr';
+
+                                    $this->session->set_flashdata('msg', $returnArr);
+                                    array_push($succssArray, $slipNo);
+                                 }else{
+
+                                     $returnArr['Error_msg'][] = $slipNo . ':' . $responseData['message'];
+                                 } 
+            }elseif ($company== 'iMile'){
+                            //print "<pre>"; print_r($sku_data);die;
+                            $auth_token = $this->Ccompany_model->iMileToken($counrierArr);
+                            
+                            if(empty($auth_token)){
+                                $returnArr['Error_msg'][] = $slipNo . ': Token not genrated';
+                            }else{
+                                $response = $this->Ccompany_model->iMileArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$auth_token,$super_id);  
+                                if($response['code'] == 200  && $response['message'] == 'success'){
+                                    $client_awb = $response['data']['expressNo'];
+                                    $pdf_encoded_base64 = $response['data']['imileAwb'];
+                                    $pdf_file = base64_decode($pdf_encoded_base64);
+
+                                    file_put_contents("assets/all_labels/".$slipNo.".pdf", $pdf_file);
+                                    $imile_label = base_url() . "assets/all_labels/$slipNo.pdf";
+                                    $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $imile_label, $c_id);
+                                    $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' : forwarded to iMile.';
+                                    array_push($succssArray, $slipNo);
+                                    
+                                }else if($response['code'] == 30001){
+                                    $returnArr['Error_msg'][] = $slipNo . ': Customer order number repeated error code';
+                                }else{
+                                    $returnArr['Error_msg'][] = $slipNo . ':' . $response['message'];
+                                }
+                                                   
+                            }
+            }elseif ($company == 'Wadha'){
+                        $counrierArr['user_name'] = $user_name;
+                        $counrierArr['password'] = $password;
+                        $counrierArr['api_url'] =$api_url;
+                       $Auth_token=$this->Ccompany_model->Wadha_auth($user_name,$password,$api_url); 
+                      
+                        $responseArray = $this->Ccompany_model->WadhaArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1, $super_id);  
+                                            
+                        $successres = $responseArray['status'];                          
+                        
+                         $error_status = $responseArray['message'];
+
+                        if (!empty($successres) && $successres == 'success')
+                        {
+
+                            $client_awb = $responseArray['data']['order_number'];
+                             $WadhaLabel = $this->Ccompany_model->Wadha_label($client_awb, $counrierArr, $Auth_token);
+                              $label= json_decode($WadhaLabel,TRUE);
+                              $media_data = $label['data']['value'];                               
+
+                             $generated_pdf = file_get_contents($media_data);
+                             file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                             $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';                             
+                            $CURRENT_DATE = date("Y-m-d H:i:s");
+                            $CURRENT_TIME = date("H:i:s");                               
+
+                            $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                            $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' : forwarded to Wadha.';
+                            array_push($succssArray, $slipNo);
+                        }                            
+                        else
+                        {
+                            $returnArr['Error_msg'][] = $slipNo . ':' .$error_status;
+                        }
+                    
             }elseif ($company_type == 'F') { // for all fastcoo clients treat as a CC 
             
                 if ($company=='Ejack' ) 
                         {
-                        $response = $this->Ccompany_model->Ejack($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1);
+                        $response = $this->Ccompany_model->Ejack($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$super_id);
                         $response = json_decode($response, true);
                         if($response['error']=='')
                         {
@@ -1212,7 +1393,7 @@ class Manifest extends CourierCompany_pickup {
                 else if ($company=='Emdad' )
                 {  
                     
-                    $response = $this->Ccompany_model->EmdadArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1);
+                    $response = $this->Ccompany_model->EmdadArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1, $super_id);
                     $response = json_decode($response, true);
                     
                     $labelUrl = $response['awb_print_url'];
@@ -1237,7 +1418,7 @@ class Manifest extends CourierCompany_pickup {
                     }
 
                 }else{
-                    $response = $this->Ccompany_model->fastcooArray($ShipArr, $counrierArr, $complete_sku, $Auth_token, $c_id, $box_pieces1);
+                    $response = $this->Ccompany_model->fastcooArray($ShipArr, $counrierArr, $complete_sku, $Auth_token, $c_id, $box_pieces1 ,$super_id);
                     $responseArray = json_decode($response, true);
 
                     if ($responseArray['status'] == 200) {
@@ -1280,6 +1461,7 @@ class Manifest extends CourierCompany_pickup {
 
 
 
+
         $itemArr = $this->ItemInventory_model->filter_damage_check($itemData);
 
         $sendCourier = array('singleArr' => $dataArray, 'itemdata' => $itemArr);
@@ -1314,9 +1496,12 @@ class Manifest extends CourierCompany_pickup {
 
                 //===============================================//
             }
+            
             $result = $this->Manifest_model->Getdriverassignupdate_return($orderCreateArr);
-           $request_return = $this->BulkForwardCompanyReady_Return($uniqueid, $cc_id, $order_type,$dataArray,$itemData);
+           
+            $request_return = $this->BulkForwardCompanyReady_Return($uniqueid, $cc_id, $order_type,$dataArray,$itemData);
 
+            
            if (!empty($request_return['Success_msg'])) 
            {
                 $this->Manifest_model->GetUpdateDamageInventory($damageorderUpdate);
@@ -2671,12 +2856,21 @@ class Manifest extends CourierCompany_pickup {
     
      public function BulkForwardCompanyReady_Return($uniqueid=null, $order_type=null, $cc_id=null, $dataArray=null,$itemData)
     {
+            if(!empty($dataArray['super_id']))
+            {
+                $user_details['super_id']=$dataArray['super_id'];
+                $this->session->set_userdata('user_details', $user_details);
+                $super_id = $dataArray['super_id'];
+            }else{
+                $super_id= $this->session->userdata('user_details')['super_id'];
+            }            
+            
             $CURRENT_TIME = date('H:i:s');
             $CURRENT_DATE = date('Y-m-d H:i:s');
             $ccID = $dataArray['cc_id']; 
             $dataArray['mid'] = $uniqueid;
-            $counrierArr_table = $this->Ccompany_model->GetdeliveryCompanyUpdateQry($ccID);          
-            //print "<pre>"; print_r($counrierArr_table);die;
+            $counrierArr_table = $this->Ccompany_model->GetdeliveryCompanyUpdateQry($ccID,$cust_id,$super_id);          
+            
             $c_id = $counrierArr_table['id'];
                 if ($counrierArr_table['type'] == 'test') {
                     $user_name = $counrierArr_table['user_name_t'];
@@ -2729,7 +2923,7 @@ class Manifest extends CourierCompany_pickup {
           //print "<pre>"; print_r($itemData);die;
           //$alldetails = $this->Manifest_model->GetMidDetailsQry(trim($dataArray['mid']));
             $getSkuData = $this->Ccompany_model->GetSkuData($itemData,$dataArray['sellerid']);
-            //print "<pre>"; print_r($getSkuData);die;
+            
             $sku_all_names = array();
             $sku_total = 0;
             foreach ($getSkuData as $key => $val) {
@@ -2746,8 +2940,10 @@ class Manifest extends CourierCompany_pickup {
                     $complete_sku = $sku_all_names;
             }
           
-          $receiverdetails = GetSinglesellerdata(trim($dataArray['sellerid']));  //Sender details 
-          $senderdetails  = Getselletdetails(); // Receiver details
+          $receiverdetails = GetSinglesellerdata(trim($dataArray['sellerid']),$super_id);  //Sender details 
+          
+          $senderdetails  = Getselletdetails($super_id); // Receiver details
+          
           $box_pieces1 = $dataArray['boxes'];
           $slipNo = $dataArray['mid']; 
           $succssArray = array();
@@ -2775,8 +2971,7 @@ class Manifest extends CourierCompany_pickup {
           
             //print "<pre>"; print_r($ShipArr);die;
             if($company=='Aramex'){
-                $params = $this->Ccompany_model->AramexArray($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1);
-                
+                $params = $this->Ccompany_model->AramexArray($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id);
                 $dataJson = json_encode($params);
                 
                 $headers = array("Content-type:application/json");
@@ -2838,7 +3033,7 @@ class Manifest extends CourierCompany_pickup {
                 
                 $responseArray = json_decode($Auth_response, true);
                 $Auth_token = $responseArray['data']['id_token'];
-                    $response = $this->Ccompany_model->SafeArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1);
+                $response = $this->Ccompany_model->SafeArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1,$super_id);
                // print "<pre>"; print_r($response);die;
                 $safe_response = json_decode($response, true);                     
                //print "<pre>"; print_r($safe_response);die;
@@ -2874,7 +3069,7 @@ class Manifest extends CourierCompany_pickup {
                 $responseArray = json_decode($Auth_response, true);                      
                 $Auth_token = $responseArray['data']['id_token'];
                 
-                $thabit_response = $this->Ccompany_model->ThabitArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id, $box_pieces1);
+                $thabit_response = $this->Ccompany_model->ThabitArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id, $box_pieces1,$super_id);
                 //print "<pre>"; print_r($thabit_response);die;
 
                 if ($thabit_response['status'] == 'success') 
@@ -2909,7 +3104,7 @@ class Manifest extends CourierCompany_pickup {
                 
                 $esnad_awb_number = $esnad_awb_number -1;
                 
-                $response = $this->Ccompany_model->EsnadArray($ShipArr, $counrierArr, $esnad_awb_number, $complete_sku, $Auth_token,$c_id,$box_pieces1);
+                $response = $this->Ccompany_model->EsnadArray($ShipArr, $counrierArr, $esnad_awb_number, $complete_sku, $Auth_token,$c_id,$box_pieces1,$super_id);
                 
                 $responseArray = json_decode($response, true);
                //    print "<pre>"; print_r($responseArray);die;
@@ -3005,7 +3200,7 @@ class Manifest extends CourierCompany_pickup {
                }
             }
             elseif ($company == 'Barqfleet') {
-                    $response_ww = $this->Ccompany_model->BarqfleethArray($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services,$c_id,$box_pieces1);
+                    $response_ww = $this->Ccompany_model->BarqfleethArray($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services,$c_id,$box_pieces1,$super_id);
                     $response_array = json_decode($response_ww, TRUE);                        
                    // print "<pre>"; print_r($response_array);die;
                    if ($response_array['code'] != '') {
@@ -3053,7 +3248,7 @@ class Manifest extends CourierCompany_pickup {
                     $responseArray = json_decode($Auth_response, true);
                     $Auth_token = $responseArray['data']['id_token'];
 
-                    $response =$this->Ccompany_model->MakdoonArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1);
+                    $response =$this->Ccompany_model->MakdoonArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1,$super_id);
                     $safe_response = json_decode($response, true);
 
 
@@ -3085,7 +3280,7 @@ class Manifest extends CourierCompany_pickup {
                     }
             }
             elseif ($company == 'Zajil') {
-                    $response = $this->Ccompany_model->ZajilArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1);
+                    $response = $this->Ccompany_model->ZajilArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$super_id);
                     //print "<pre>"; print_r($response);die;
                     if (!empty($response['data'])) {
                         $success = $response['data'][0]['success'];
@@ -3108,7 +3303,7 @@ class Manifest extends CourierCompany_pickup {
                     }
             }
             elseif ($company == 'NAQEL'){
-                $awb_array = $this->Ccompany_model->NaqelArray($ShipArr,$counrierArr, $complete_sku,$box_pieces1, $Auth_token,$c_id);
+                $awb_array = $this->Ccompany_model->NaqelArray($ShipArr,$counrierArr, $complete_sku,$box_pieces1, $Auth_token,$c_id, $super_id);
                  
                  $HasError = $awb_array['HasError'];
                 $error_message = $awb_array['Message'];
@@ -3198,7 +3393,7 @@ class Manifest extends CourierCompany_pickup {
                 }
             }
             elseif ($company == 'Saee'){
-                    $response = $this->Ccompany_model->SaeeArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1);
+                    $response = $this->Ccompany_model->SaeeArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1, $super_id);
                     $safe_response =  $response; 
 
                     if ($safe_response['success'] == 'true') 
@@ -3222,7 +3417,7 @@ class Manifest extends CourierCompany_pickup {
             } 
             elseif ($company == 'Smsa'){
                
-                    $response = $this->Ccompany_model->SMSAArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id);
+                    $response = $this->Ccompany_model->SMSAArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id, $super_id);
                     
                     $xml2 = new SimpleXMLElement($response);
                     $again = $xml2;
@@ -3285,7 +3480,7 @@ class Manifest extends CourierCompany_pickup {
             }                                         
             elseif ($company == 'Labaih')
             {       
-                    $response = $this->Ccompany_model->LabaihArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id);
+                    $response = $this->Ccompany_model->LabaihArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id, $super_id);
                    
                     if ($response['status'] == 200) {
                         $client_awb = $response['consignmentNo'];
@@ -3306,7 +3501,7 @@ class Manifest extends CourierCompany_pickup {
             } 
             elseif ($company == 'Clex'){
                     
-                    $response = $this->Ccompany_model->ClexArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id);
+                    $response = $this->Ccompany_model->ClexArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id, $super_id );
                     
                     if ($response['data'][0]['cn_id']) {
                         $client_awb = $response['data'][0]['cn_id'];
@@ -3337,7 +3532,7 @@ class Manifest extends CourierCompany_pickup {
                     }
             }
             elseif ($company=='Emdad') {
-                    $response = $this->Ccompany_model->EmdadArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1);
+                    $response = $this->Ccompany_model->EmdadArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1, $super_id);
                     $response = json_decode($response, true);
                     
                     if($response['error']=='' && !empty($response['awb_print_url']))
@@ -3359,7 +3554,7 @@ class Manifest extends CourierCompany_pickup {
             }
             elseif ($company == 'Ajeek'){
                     
-                    $response = $this->Ccompany_model->AjeekArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id);
+                    $response = $this->Ccompany_model->AjeekArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,  $super_id);
                     if ($response['contents']['order_id']) {
                          $response['contents']['order_id'];
                          $Auth_token = $counrierArr['auth_token'];
@@ -3387,7 +3582,7 @@ class Manifest extends CourierCompany_pickup {
                     }
             }
             elseif ($company == 'Aymakan'){
-                    $response = $this->Ccompany_model->AymakanArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1);
+                    $response = $this->Ccompany_model->AymakanArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1, $super_id);
                     $responseArray = json_decode($response, true);
                
                     if (empty($responseArray['errors'])) 
@@ -3414,7 +3609,7 @@ class Manifest extends CourierCompany_pickup {
             } 
             elseif($company == 'Shipsy'){
                 
-                $response = $this->Ccompany_model->ShipsyArray($ShipArr, $counrierArr, $Auth_token, $box_pieces1,$c_id);
+                $response = $this->Ccompany_model->ShipsyArray($ShipArr, $counrierArr, $Auth_token, $box_pieces1,$c_id, $super_id);
                 
                 $response_array = json_decode($response, true);
                 
@@ -3439,7 +3634,7 @@ class Manifest extends CourierCompany_pickup {
             }
             elseif($company == 'Shipadelivery'){
                 
-               $response = $this->Ccompany_model->ShipadeliveryArray($ShipArr, $counrierArr, $Auth_token,$c_id);
+               $response = $this->Ccompany_model->ShipadeliveryArray($ShipArr, $counrierArr, $Auth_token,$c_id, $super_id);
             
                 $response_array = json_decode($response,true);    
                 if(empty($response_array)){
@@ -3482,7 +3677,7 @@ class Manifest extends CourierCompany_pickup {
                         
             }
             elseif($company == 'Saudi Post'){
-                $response = $this->Ccompany_model->SPArray($ShipArr, $counrierArr, $complete_sku,$Auth_token,$c_id,$box_pieces1);
+                $response = $this->Ccompany_model->SPArray($ShipArr, $counrierArr, $complete_sku,$Auth_token,$c_id,$box_pieces1,  $super_id);
                 
                 $response = json_decode($response, true);
                                 
@@ -3507,10 +3702,171 @@ class Manifest extends CourierCompany_pickup {
                     }
                     $returnArr['responseError'][] = $slipNo . ':' . $errre_response;
                 }
-            }
-            elseif ($company_type== 'F'){ // for all fastcoo clients treat as a CC 
+            }elseif ($company== 'Beez'){
+                            //print "<pre>"; print_r($sku_data);die;
+                            $response = $this->Ccompany_model->BeezArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$getSkuData,$super_id);  
+                            if(isset($response['Message']) && !empty($response['Message'])){
+                                $returnArr['responseError'][] = $slipNo . ':' . $response['Message'];
+                            }else{
+                                $client_awb = $response;
+                                $url = 'https://login.beezerp.com/label/pdf/?t='.$client_awb;
+                                $generated_pdf = file_get_contents($url); 
+                                file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                                
+                                $beezlabel = base_url() . "assets/all_labels/$slipNo.pdf";
+                                $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $beezlabel,$c_id,$dataArray,$ShipArr,$itemData);
+                                $returnArr['Success_msg'][] = $slipNo.': Data updated successfully.';
+                                array_push($succssArray, $slipNo);
+                            }
+            }elseif ($company == 'GLT'){
+
+                        $responseArray = $this->Ccompany_model->GLTArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1, $complete_sku,$super_id);
+                        $successres = $responseArray['data']['orders'][0]['status'];
+                        $error_status = $responseArray['data']['orders'][0]['msg'];
+
+                            if (!empty($successres) && $successres == 'success')
+                            {
+
+                                $client_awb = $responseArray['data']['orders'][0]['orderTrackingNumber'];
+                                $innser_status = $responseArray['data']['orders'][0]['status'];
+                                                         
+
+                                $GltLabel = $this->Ccompany_model->GLT_label($client_awb, $counrierArr, $auth_token);
+                                    
+                                 file_put_contents("assets/all_labels/$slipNo.pdf", $GltLabel);                            
+                                 $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+
+
+                                $CURRENT_DATE = date("Y-m-d H:i:s");
+                                $CURRENT_TIME = date("H:i:s");
+
+                                $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                                $returnArr['Success_msg'][] = $slipNo.': Data updated successfully.';
+                                array_push($succssArray, $slipNo);
+                            }
+                            
+                            else{
+                                $returnArr['responseError'][] = $slipNo . ':' .$error_status;
+                            }
+            }elseif($company == 'Tamex'){
+                            $responseArray = $this->Ccompany_model->tamexArray($ShipArr, $counrierArr, $complete_sku, $pay_mode,$c_id,$box_pieces1,$super_id);
+                         
+                            if ($responseArray['code'] != 0 || empty($responseArray)) {
+                                array_push($error_array, $slipNo . ':' . $responseArray['data']);
+                                $returnArr['responseError'][] = $slipNo . ':' . $responseArray['data'];
+                            } elseif ($responseArray['code'] == 0) {
+
+                                $client_awb = $responseArray['tmxAWB'];
+                                $API_URL= $counrierArr['api_url'].'print';
+                                
+                                $generated_pdf = Tamex_label($client_awb, $counrierArr['auth_token'],$API_URL);
+                              
+                                file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                                $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+
+                                $CURRENT_DATE = date("Y-m-d H:i:s");
+                                $CURRENT_TIME = date("H:i:s");
+                               
+                                $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                                
+                                $details = 'Forwarded to ' . $ClientArr['company'];
+                                
+
+                                $returnArr['Success_msg'][] = $slipNo . ': Data updated successfully.';
+
+                                array_push($DataArray, $slipNo);
+                            }
+            }elseif ($company== 'Fetchr'){
+                     
+                               $responseData = $this->Ccompany_model->fetchrArray($ShipArr, $counrierArr, $complete_sku, $c_id,$box_pieces1,$super_id);
+                               if($responseData['data'][0]['status'] == 'success')
+                                {
+                                    $client_awb = $responseData['data'][0]['tracking_no'];
+                                    
+                                    $label = "https://s3-eu-west-1.amazonaws.com/cms-dhl-pdf-stage-1/label6x4_".$client_awb.".pdf";
+                                    
+                                  
+                                    $generated_pdf = file_get_contents($label);
+                                    file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf );
+                                    
+                                   $fetchrlabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+
+                                    $CURRENT_DATE = date("Y-m-d H:i:s");
+                                    $CURRENT_TIME = date("H:i:s");
+                                    $comment = $responseData['message'];
+                                    $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fetchrlabel,$c_id,$dataArray,$ShipArr,$itemData);
+                                    $returnArr['Success_msg'][] = $slipNo . ' Data updated successfully.';
+
+                                    $this->session->set_flashdata('msg', $returnArr);
+                                    array_push($succssArray, $slipNo);
+                                 }else{
+
+                                     $returnArr['responseError'][] = $slipNo . ':' . $responseData['message'];
+                                 } 
+            }elseif ($company== 'iMile'){
+                            //print "<pre>"; print_r($sku_data);die;
+                            $auth_token = $this->Ccompany_model->iMileToken($counrierArr);
+                            
+                            if(empty($auth_token)){
+                                $returnArr['responseError'][] = $slipNo . ': Token not genrated';
+                            }else{
+                                $response = $this->Ccompany_model->iMileArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$auth_token,$super_id);  
+                                if($response['code'] == 200  && $response['message'] == 'success'){
+                                    $client_awb = $response['data']['expressNo'];
+                                    $pdf_encoded_base64 = $response['data']['imileAwb'];
+                                    $pdf_file = base64_decode($pdf_encoded_base64);
+
+                                    file_put_contents("assets/all_labels/".$slipNo.".pdf", $pdf_file);
+                                    $imile_label = base_url() . "assets/all_labels/$slipNo.pdf";
+                                    $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $imile_label,$c_id,$dataArray,$ShipArr,$itemData);
+                                    $returnArr['Success_msg'][] = $slipNo . ' Data updated successfully.';
+                                    array_push($succssArray, $slipNo);
+                                    
+                                }else if($response['code'] == 30001){
+                                    $returnArr['responseError'][] = $slipNo . ': Customer order number repeated error code';
+                                }else{
+                                    $returnArr['responseError'][] = $slipNo . ':' . $response['message'];
+                                }
+                                                   
+                            }
+            }elseif ($company == 'Wadha'){
+                        $counrierArr['user_name'] = $user_name;
+                        $counrierArr['password'] = $password;
+                        $counrierArr['api_url'] =$api_url;
+                       $Auth_token=$this->Ccompany_model->Wadha_auth($user_name,$password,$api_url); 
                       
-                $response = $this->Ccompany_model->fastcooArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1);
+                        $responseArray = $this->Ccompany_model->WadhaArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1, $super_id);  
+                                            
+                        $successres = $responseArray['status'];                          
+                        
+                         $error_status = $responseArray['message'];
+
+                        if (!empty($successres) && $successres == 'success')
+                        {
+
+                            $client_awb = $responseArray['data']['order_number'];
+                             $WadhaLabel = $this->Ccompany_model->Wadha_label($client_awb, $counrierArr, $Auth_token);
+                              $label= json_decode($WadhaLabel,TRUE);
+                              $media_data = $label['data']['value'];                               
+
+                             $generated_pdf = file_get_contents($media_data);
+                             file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                             $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';                             
+                            $CURRENT_DATE = date("Y-m-d H:i:s");
+                            $CURRENT_TIME = date("H:i:s");                               
+
+                            $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                            $returnArr['Success_msg'][] = $slipNo . ' Data updated successfully.';
+                            array_push($succssArray, $slipNo);
+                        }                            
+                        else
+                        {
+                            $returnArr['responseError'][] = $slipNo . ':' .$error_status;
+                        }
+                    
+            }elseif ($company_type== 'F'){ // for all fastcoo clients treat as a CC 
+                      
+                $response = $this->Ccompany_model->fastcooArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1, $super_id);
                 $responseArray = json_decode($response, true);                    
                
                 if ($responseArray['status']==200) 
