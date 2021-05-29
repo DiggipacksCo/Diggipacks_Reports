@@ -400,7 +400,7 @@ class ItemInventory extends MY_Controller {
                      $pid = $zidReqArr['zid_pid'];
                      $token = $token;
                      $storeID = $zid_store_id;
-                    $reszid = update_zid_product($quantity, $pid, $token, $storeID);
+                    $reszid = update_zid_product($quantity, $pid, $token, $storeID, $extra1, $extra1);
                 //=========================================//
                       
          }
@@ -906,8 +906,8 @@ class ItemInventory extends MY_Controller {
             $locationLimit1 = $quantity / $sku_size;
             $locationLimit = ceil($locationLimit1);
         }
-
-        $result = $this->ItemInventory_model->Getallstocklocationdata($seller_id, $locationLimit);
+        $data = array(); 
+        $result = $this->ItemInventory_model->Getallstocklocationdata($seller_id, $locationLimit, $data);
 
         $returnarray['result'] = $result;
         $totallocation=count($result);
