@@ -96,7 +96,7 @@ class Item_model extends CI_Model {
             $this->db->where('items_m.sku', $data['sku']);
         if (!empty($data['sku_size']))
             $this->db->where('items_m.sku_size', $data['sku_size']);
-        $this->db->select('items_m.`id`, items_m.`sku`, items_m.`name`, items_m.`description`,items_m.`type`,items_m.`wh_id`,  items_m.`sku_size`,items_m.`item_path`,items_m.`less_qty`,items_m.`alert_day`,items_m.`color`,items_m.`length`,items_m.`width`,items_m.`height`,items_m.`expire_block`,storage_id,entry_date');
+        $this->db->select('items_m.`id`, items_m.`sku`, items_m.`name`, items_m.`description`,items_m.`type`,items_m.`wh_id`,  items_m.`sku_size`,items_m.`item_path`,items_m.`less_qty`,items_m.`alert_day`,items_m.`color`,items_m.`length`,items_m.`width`,items_m.`height`,items_m.`weight`,items_m.`expire_block`,storage_id,entry_date');
         $this->db->from('items_m');
       //  $this->db->join('storage_table', 'items_m.storage_id = storage_table.id');
         $this->db->order_by('items_m.id', 'DESC');

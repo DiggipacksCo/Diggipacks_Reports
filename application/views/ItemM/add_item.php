@@ -143,6 +143,12 @@
                                    
                                 </div>
 
+                                <div class="form-group">
+                                    <label for="alert_day"><strong>Weight:</strong></label>
+                                    <input type="float" class="form-control" name='weight' id="weight" placeholder="Weight" ng-model="item.weight" >
+                                   
+                                </div>
+
                                     <div class="form-group">
                                         <label for="description"><strong>Description:</strong></label>
                                         <textarea rows="5" id="description" name="description" class="form-control" placeholder="Description" ng-model="item.description" required></textarea><span class="error" ng-show="itmfrm.description.$error.required"> Please Enter Description </span>
