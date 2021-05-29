@@ -1937,9 +1937,9 @@ class Ccompany_model extends CI_Model {
     }
     public function AymakanArray(array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null,$box_pieces1,$complete_sku=null,$super_id) {
 
-        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'Aymakan',$super_id);
+         $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'Aymakan',$super_id);
         
-        $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'Aymakan',$super_id);
+         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'Aymakan',$super_id);
 
         $store = getallsellerdatabyID($ShipArr['cust_id'], 'company',$super_id);        
         
@@ -2007,6 +2007,10 @@ class Ccompany_model extends CI_Model {
             "weight" => $weight,
             "pieces" => $box_pieces
         );  
+
+        //echo "<pre>"; print_r($ShipArr)."<br/>";
+        //echo $super_id."<pre>"; print_r($all_param_data);
+       // die; 
 
         $json_final_date = json_encode($all_param_data);  
 

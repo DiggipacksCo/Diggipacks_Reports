@@ -279,9 +279,11 @@ class Users extends MY_Controller {
                 'system_access_fm' => 'Y',
                 'super_id' => $this->session->userdata('user_details')['super_id']
             );
+            
 
-
-            $seller_id = $this->User_model->add($data);
+           $seller_id = $this->User_model->add($data);
+            
+            
             if ($seller_id > 0) {
 
                 if ($this->input->post('usertype')) {

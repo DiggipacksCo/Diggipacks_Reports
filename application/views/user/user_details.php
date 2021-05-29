@@ -97,8 +97,8 @@
                                  
                                  foreach(getAllDestination() as $citydata)
                                  {
-                                     if($citydata['id']==$editdata['branch_location'])
-                                  echo' <option value="'.$citydata['id'].'" selected>'.$citydata['city'].'</option>';  
+                                     if($citydata['id']== $editdata['branch_location'])
+                                     echo' <option value="'.$citydata['id'].'" selected>'.$citydata['city'].'</option>';  
                                      else
                                           echo' <option value="'.$citydata['id'].'">'.$citydata['city'].'</option>';  
                                  }
