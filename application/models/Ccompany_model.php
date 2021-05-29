@@ -2008,9 +2008,9 @@ class Ccompany_model extends CI_Model {
             "pieces" => $box_pieces
         );  
 
-        //echo "<pre>"; print_r($ShipArr)."<br/>";
-        //echo $super_id."<pre>"; print_r($all_param_data);
-       // die; 
+    //     echo "<pre>"; print_r($ShipArr)."<br/>";
+    //     echo $super_id."<pre>"; print_r($all_param_data);
+    //    die; 
 
         $json_final_date = json_encode($all_param_data);  
 

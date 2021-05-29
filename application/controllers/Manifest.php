@@ -543,7 +543,7 @@ class Manifest extends CourierCompany_pickup {
         }
         
         if($company == 'Aymakan') {
-        //   print "<pre>"; print_r($ShipArr); //die;
+          // print "<pre>"; print_r($ShipArr); die;
             $response = $this->Ccompany_model->AymakanArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$complete_sku,$super_id);
             $responseArray = json_decode($response, true);
             //print "<pre>"; print_r($responseArray);die;

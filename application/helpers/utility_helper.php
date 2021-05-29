@@ -262,10 +262,14 @@ if (!function_exists('GetSellerTableField')) {
 
 if (!function_exists('Getselletdetails')) {
     function Getselletdetails() {
-        
+
+    
+
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT * FROM user where id ='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $user_id = $ci->session->userdata('user_details')['user_id']; 
+        //echo "<pre>";   print_r($ci->session->userdata()); 
+         $sql = "SELECT * FROM user where id =" . $user_id;
         $query = $ci->db->query($sql);
         $result = $query->result_array();
      
