@@ -306,6 +306,7 @@ class Excel_export extends MY_Controller {
             "Width",
             "Height",
             "Image",
+            "Weight",
         );
 
         $column = 0;
@@ -895,8 +896,9 @@ class Excel_export extends MY_Controller {
                     $color = trim($worksheet->getCellByColumnAndRow(9, $row)->getValue());
                     $length = trim($worksheet->getCellByColumnAndRow(10, $row)->getValue());
                     $width = trim($worksheet->getCellByColumnAndRow(11, $row)->getValue());
-                    $height = trim($worksheet->getCellByColumnAndRow(12, $row)->getValue());
+                    $height = trim($worksheet->getCellByColumnAndRow(12, $row)->getValue());                  
                     $item_path = trim($worksheet->getCellByColumnAndRow(13, $row)->getValue());
+                    $weight = trim($worksheet->getCellByColumnAndRow(14, $row)->getValue());
 
                     if ($expire_block == 'Yes')
                         $expire_block = "Y";
@@ -954,6 +956,7 @@ class Excel_export extends MY_Controller {
                                         'length' => $length,
                                         'width' => $width,
                                         'height' => $height,
+                                        'weight' => $weight,
                                         'entry_date' => date('Y-m-d H:i:s'),
                                         'item_path' => $item_path1,
                                         'super_id' => $this->session->userdata('user_details')['super_id']
@@ -983,7 +986,7 @@ class Excel_export extends MY_Controller {
 
             unlink($small_img);
             $Status = $this->Item_model->add_bulk($data);
-            if ($status == true) {
+            if ($Status == true) {
 
                 //$this->session->set_flashdata('msg','Bulk has been added successfully');  
                 $this->session->set_flashdata('errorA', $alertArray);
@@ -996,6 +999,83 @@ class Excel_export extends MY_Controller {
         } else {
             $this->session->set_flashdata('error', 'file error Bulk add failed');
             redirect('Item');
+        }
+    }
+
+
+    function add_item_weight_bulk() {
+        if (isset($_FILES["file"]["name"])) {
+            $path = $_FILES["file"]["tmp_name"];
+            $this->load->library("excel");
+         
+             $object = PHPExcel_IOFactory::load($path);
+            foreach ($object->getWorksheetIterator() as $worksheet) {
+                $highestRow = $worksheet->getHighestRow();
+                $highestColumn = $worksheet->getHighestColumn();
+                $Skucheck = array();
+                $skuData = array();
+                $alertArray = array();
+                for ($row = 2; $row <= $highestRow; $row++) {
+                   
+
+                    $sku = trim($worksheet->getCellByColumnAndRow(0, $row)->getValue());                   
+                    $weight = trim($worksheet->getCellByColumnAndRow(1, $row)->getValue());
+
+                    $skuArray = $this->Item_model->GetchekskuDuplicate($sku);
+                    
+                    //  echo "<pre><br>";print_r($skuArray); 
+                    //  die; 
+                   
+                    if ( !empty($sku) && !empty($weight)) {
+                
+                        $skuArray = $this->Item_model->GetchekskuDuplicate($sku);
+                            if (!empty($skuArray)) {
+
+                               
+                                $weight = $weight;
+                                $sku=  $skuArray['sku'];
+                                $skuId=  $skuArray['id'];
+                            
+                                   
+                                    $data[] = array(
+                                        'id' => $skuId,
+                                        'sku' => $sku,                                        
+                                        'weight' => $weight,
+                                        'entry_date' => date('Y-m-d H:i:s'),                                       
+                                        'super_id' => $this->session->userdata('user_details')['super_id']
+                                    );
+                                
+
+                                // print_r($skuArray);
+                            } else {
+                                $alertArray['invalid'] = $row;
+                            }
+                       
+                    } else {
+                        
+                        if (empty($sku))
+                            $alertArray['emptysku'][] = $row;
+                        if (empty($weight))
+                            $alertArray['emptyweight'][] = $row;
+                        
+                    }
+                }
+            }
+            $Status = $this->Item_model->update_bulk($data);
+            
+            if ($Status == true) {
+
+                $this->session->set_flashdata('msg','Bulk has been added successfully');  
+                
+                redirect('Item');
+            } else {
+                 $this->session->set_flashdata('error','data error Bulk add failed (duplicate or empty fields)'); 
+     
+                    redirect('Item');
+            }
+        } else {
+            $this->session->set_flashdata('error', 'file error Bulk add failed');
+                 redirect('Item');
         }
     }
 

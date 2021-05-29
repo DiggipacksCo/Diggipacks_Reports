@@ -79,7 +79,9 @@
                       <tr> 
                     
                     <td>(13) Height <span style="color:#F00"><strong>*</strong></span></td>
+                  
                     <td>(14) Image (ex. product.png)</td>
+                    <td>(15) Weight <span style="color:#F00"><strong>*</strong></span></td>
                     
                     </tr>
                     

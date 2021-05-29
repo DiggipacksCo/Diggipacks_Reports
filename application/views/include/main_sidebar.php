@@ -155,6 +155,10 @@
                                     <li class="navigation-divider"></li>
                                     <li><a href="<?= base_url('Item/add_bulk_view'); ?>"><?= lang('lang_Import_Items'); ?><span class="label bg-warning-400"><?= lang('lang_Add'); ?> </span></a></li>
                                 <?php } ?>
+                                <?php if (menuIdExitsInPrivilageArray(43) == 'Y') { ?>
+                                    <li class="navigation-divider"></li>
+                                    <li><a href="<?= base_url('Item/add_bulk_weight_view'); ?>">Import bulk weight <span class="label bg-warning-400"> NEW </span></a></li>
+                                <?php } ?>
                             </ul>
                         </li>
                     <?php } ?>

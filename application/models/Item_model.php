@@ -38,6 +38,18 @@ class Item_model extends CI_Model {
         }
     }
 
+    public function update_bulk($data) {
+
+        $upd = $this->db->update_batch('items_m', $data, 'id');
+
+        if ($upd > 0 )
+        {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function add_bulk($data) {
 
         if ($this->db->insert_batch('items_m', $data)) {
@@ -224,7 +236,7 @@ class Item_model extends CI_Model {
 
     public function GetchekskuDuplicate($sku = null) {
         $this->db->where('sku', $sku);
-        $this->db->select('sku');
+        $this->db->select('sku,weight,id');
          $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $query = $this->db->get('items_m');
         if ($query->num_rows() > 0) {

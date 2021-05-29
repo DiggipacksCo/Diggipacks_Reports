@@ -108,6 +108,9 @@ class Item extends MY_Controller {
     public function add_bulk_view() {
         $this->load->view('ItemM/add_bulk');
     }
+    public function add_bulk_weight_view() {
+        $this->load->view('ItemM/add_weight');
+    }
     function sku_validation($str)
     {
        $field_value = $str; //this is redundant, but it's to show you how
