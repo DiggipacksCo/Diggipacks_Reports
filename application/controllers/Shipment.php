@@ -3200,6 +3200,8 @@ class Shipment extends MY_Controller {
               //  print_r($data['skuData']); die;
                 if(!empty($data['skuData']))
                 {
+                    $totalweight= 0 ;
+                    
                 foreach ($data['skuData'] as $new_key => $skuDetails) {
                     //      echo"<br><pre>"; 
                     //   print_r($data);
@@ -3207,18 +3209,24 @@ class Shipment extends MY_Controller {
 
                     $stock_check = CheckStockBackorder_ordergen($data['cust_id'], $skuDetails['sku'], $skuDetails['piece'], $data['slip_no']);
 
-
-                     // echo '<pre>'.  print_r($stock_check); 
                     if ($stock_check['succ'] == 1) {
                         //array_push($ReturnstockArray,$stock_check['stArray']);
                         $ReturnstockArray[] = $stock_check['stArray'];
+                   
                         $newStocklocation[] = $stock_check['StockLocation'];
-                
-                        //==========update zid stock===============//
+                        //echo $ReturnstockArray[0][0]['weight'] ;
+                            $weightcount = $stock_check['stArray'][0]['weight'];
+                         $totalweight  =$totalweight +  ($weightcount * $skuDetails['piece']);
+                         $data['weight'] = $totalweight;  
+
                      
+                         //die; 
+
+                        //==========update zid stock===============//                     
                         if (!empty($token)) 
                         {
                             $zidReqArr = GetAllQtyforSeller($skuDetails['sku'], $custmoerID);
+                          
                             $quantity = $zidReqArr['quantity'] - $skuDetails['piece'];
                             $pid = $zidReqArr['zid_pid'];
                             $token = $token;
@@ -3226,8 +3234,7 @@ class Shipment extends MY_Controller {
                             update_zid_product($quantity, $pid, $token, $storeID,$custmoerID,$zidReqArr['sku']);
                         }
         
-                        //==========update salla quantity===============//
-                        
+                        //==========update salla quantity===============//                        
                         if (!empty($salatoken)) 
                         {
                             $sallaReqArr = GetAllQtyforSeller($skuDetails['sku'], $custmoerID);
@@ -3240,11 +3247,6 @@ class Shipment extends MY_Controller {
                         
                         }
                         //=========================================//
-
-
-
-
-
                     } else {
                         // $newStocklocation=array();
 
@@ -3256,34 +3258,37 @@ class Shipment extends MY_Controller {
 
                 }
 
+                // echo "<pre>"; print_r($data);
+                // die; 
+
                 if (empty($stockarray)) {
 
-                    $statusvalue[$key]['user_type'] = 'fulfillment';
-                    $StatusArray[$key]['slip_no'] = $data['slip_no'];
-                    $StatusArray[$key]['new_status'] = 1;
-                    $StatusArray[$key]['pickup_time'] = $time;
-                    $StatusArray[$key]['pickup_date'] = $entrydate;
-                    $StatusArray[$key]['Details'] = "Order Created";
-                    $StatusArray[$key]['Activites'] = "Order Created";
-                    $StatusArray[$key]['entry_date'] = $entrydate;
-                    $StatusArray[$key]['user_id'] = $this->session->userdata('user_details')['user_id'];
-                    $StatusArray[$key]['user_type'] = 'fulfillment';
-                    $StatusArray[$key]['code'] = 'OC';
-                    $StatusArray[$key]['super_id'] = $this->session->userdata('user_details')['super_id'];
+                        $statusvalue[$key]['user_type'] = 'fulfillment';
+                        $StatusArray[$key]['slip_no'] = $data['slip_no'];
+                        $StatusArray[$key]['new_status'] = 1;
+                        $StatusArray[$key]['pickup_time'] = $time;
+                        $StatusArray[$key]['pickup_date'] = $entrydate;
+                        $StatusArray[$key]['Details'] = "Order Created";
+                        $StatusArray[$key]['Activites'] = "Order Created";
+                        $StatusArray[$key]['entry_date'] = $entrydate;
+                        $StatusArray[$key]['user_id'] = $this->session->userdata('user_details')['user_id'];
+                        $StatusArray[$key]['user_type'] = 'fulfillment';
+                        $StatusArray[$key]['code'] = 'OC';
+                        $StatusArray[$key]['super_id'] = $this->session->userdata('user_details')['super_id'];
 
-                    $shipArray[$key]['slip_no'] = $data['slip_no'];
-                    $shipArray[$key]['backorder'] = 0;
-                    $shipArray[$key]['delivered'] = 1;
-                    $shipArray[$key]['code'] = 'OC';
+                        $shipArray[$key]['slip_no'] = $data['slip_no'];
+                        $shipArray[$key]['backorder'] = 0;
+                        $shipArray[$key]['delivered'] = 1;
+                        $shipArray[$key]['code'] = 'OC';
+                        $shipArray[$key]['weight'] = $data['weight'];
 
-                    UpdateStockBackorder_orderGen($ReturnstockArray, $newStocklocation);
-                }
+                        UpdateStockBackorder_orderGen($ReturnstockArray, $newStocklocation);
+                    }
                 }
                 else
                 {
                   //  echo $key;
-                        $invalidSkuArr=$this->Shipment_model->GetinVliadSkulist($data['slip_no']);
-                        
+                        $invalidSkuArr=$this->Shipment_model->GetinVliadSkulist($data['slip_no']);                        
                        // print_r($invalidSkuArr);
                         $errorReturnArray = array("slip_no" => $data['slip_no'], "sku_invalid" => implode(',',$invalidSkuArr));
                         array_push($stockarray, $errorReturnArray);

@@ -1094,7 +1094,7 @@ class ItemInventory_model extends CI_Model {
         return $this->db->last_query();
     }
 
-    public function Getallstocklocationdata($seller_id, $locationLimit, array $data) {
+    public function Getallstocklocationdata($seller_id=null, $locationLimit=null, array $data) {
         //print_r($data);
         // echo $locationLimit;
         //$this->db->distinct();

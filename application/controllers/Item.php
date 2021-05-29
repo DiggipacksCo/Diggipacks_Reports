@@ -108,6 +108,9 @@ class Item extends MY_Controller {
     public function add_bulk_view() {
         $this->load->view('ItemM/add_bulk');
     }
+    public function add_bulk_weight_view() {
+        $this->load->view('ItemM/add_weight');
+    }
     function sku_validation($str)
     {
        $field_value = $str; //this is redundant, but it's to show you how
@@ -209,6 +212,7 @@ class Item extends MY_Controller {
                 'length' => $this->input->post('length'),
                 'width' => $this->input->post('width'),
                 'height' => $this->input->post('height'),
+                'weight' => $this->input->post('weight'),
                 'wh_id' => $this->input->post('wh_id'),
                 'item_path' => $small_img,
                 'entry_date'=>date('Y-m-d H:i:s'),
@@ -216,6 +220,8 @@ class Item extends MY_Controller {
                     //'item_subcategory'=>$sub_category,
                     //'attributes_values'=>$attributes_values,
             );
+            // echo "<pre>"; print_r($data2);
+            // die;
 
             $item_id = $this->Item_model->add($data2);
             $this->session->set_flashdata('msg', $this->input->post('name') . '   has been added successfully');
@@ -296,6 +302,7 @@ class Item extends MY_Controller {
                 'length' => $this->input->post('length'),
                 'width' => $this->input->post('width'),
                 'height' => $this->input->post('height'),
+                'weight' => $this->input->post('weight'),
                  'item_path' => $small_img,
                 'wh_id' => $this->input->post('wh_id')
             );

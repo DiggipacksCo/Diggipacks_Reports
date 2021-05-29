@@ -161,6 +161,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                    
                                 </div>
 
+                                <div class="form-group">
+                                    <label for="alert_day"><strong>Weight:</strong></label>
+                                    <input type="float" class="form-control" name='weight' id="weight" placeholder="Weight" value="<?=$item->weight;?>">
+                                   
+                                </div>
+
+
                                     <div class="form-group">
                                         <label for="exampleInputEmail1"><strong>Description:</strong></label>
                                         <textarea rows="5" id="description" name="description" class="form-control" placeholder="Description" required><?= $item->description; ?></textarea>

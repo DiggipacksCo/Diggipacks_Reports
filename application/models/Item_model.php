@@ -38,6 +38,18 @@ class Item_model extends CI_Model {
         }
     }
 
+    public function update_bulk($data) {
+
+        $upd = $this->db->update_batch('items_m', $data, 'id');
+
+        if ($upd > 0 )
+        {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function add_bulk($data) {
 
         if ($this->db->insert_batch('items_m', $data)) {
@@ -96,7 +108,7 @@ class Item_model extends CI_Model {
             $this->db->where('items_m.sku', $data['sku']);
         if (!empty($data['sku_size']))
             $this->db->where('items_m.sku_size', $data['sku_size']);
-        $this->db->select('items_m.`id`, items_m.`sku`, items_m.`name`, items_m.`description`,items_m.`type`,items_m.`wh_id`,  items_m.`sku_size`,items_m.`item_path`,items_m.`less_qty`,items_m.`alert_day`,items_m.`color`,items_m.`length`,items_m.`width`,items_m.`height`,items_m.`expire_block`,storage_id,entry_date');
+        $this->db->select('items_m.`id`, items_m.`sku`, items_m.`name`, items_m.`description`,items_m.`type`,items_m.`wh_id`,  items_m.`sku_size`,items_m.`item_path`,items_m.`less_qty`,items_m.`alert_day`,items_m.`color`,items_m.`length`,items_m.`width`,items_m.`height`,items_m.`weight`,items_m.`expire_block`,storage_id,entry_date');
         $this->db->from('items_m');
       //  $this->db->join('storage_table', 'items_m.storage_id = storage_table.id');
         $this->db->order_by('items_m.id', 'DESC');
@@ -224,7 +236,7 @@ class Item_model extends CI_Model {
 
     public function GetchekskuDuplicate($sku = null) {
         $this->db->where('sku', $sku);
-        $this->db->select('sku');
+        $this->db->select('sku,weight,id');
          $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $query = $this->db->get('items_m');
         if ($query->num_rows() > 0) {

@@ -184,6 +184,7 @@ $warehouseArr = Getwarehouse_Dropdata();
                                                 <th>Length</th>
                                                 <th>Width</th>
                                                 <th>Height</th>
+                                                <th>Weight (KG)</th>
 
 
                                                 <th>Description</th>
@@ -220,6 +221,7 @@ $warehouseArr = Getwarehouse_Dropdata();
                                                 <td>{{data.length}}</td>
                                                 <td>{{data.width}}</td>
                                                 <td>{{data.height}}</td>
+                                                <td>{{data.weight}} </td>
 
                                                 <td>{{data.description}}</td>
 
