@@ -56,7 +56,7 @@ class Manifest_model extends CI_Model {
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         if ($this->session->userdata('user_details')['user_type'] == 9)
             $this->db->where('assign_to', $this->session->userdata('user_details')['user_id']);
-        if ($this->session->userdata('user_details')['user_type'] != 1) {
+        if ($this->session->userdata('user_details')['user_type'] != 1 && $this->session->userdata('user_details')['user_type'] != 3 ) {
             $this->db->where('staff_id', $this->session->userdata('user_details')['user_id']);
         }
         if ($filterarray['seller_id'])

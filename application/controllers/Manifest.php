@@ -57,6 +57,7 @@ class Manifest extends CourierCompany_pickup {
         $this->load->model('User_model');
         $assignuser = $this->User_model->userDropval(9);
         $_POST = json_decode(file_get_contents('php://input'), true);
+        $super_id = $this->session->userdata('user_details')['super_id'];
 
         $page_no = $_POST['page_no'];
         $seller_id = $_POST['seller_id'];
@@ -98,10 +99,13 @@ class Manifest extends CourierCompany_pickup {
                 $seller_ids .= ',' . $rdata['seller_id'];
 
             $manifestarray[$ii]['pstatus'] = GetpickupStatus($rdata['pstatus']);
+
             if ($rdata['seller_id'] > 0)
-                $manifestarray[$ii]['seller_id'] = getallsellerdatabyID($rdata['seller_id'], 'name');
+           
+                $manifestarray[$ii]['seller_id'] =  getallsellerdatabyID($rdata['seller_id'], 'name',$super_id);
             else
                 $manifestarray[$ii]['seller_id'] = 'N/A';
+                
             if ($rdata['assign_to'] > 0)
                 $manifestarray[$ii]['assign_to'] = getUserNameById($rdata['assign_to']);
             else
@@ -148,6 +152,8 @@ class Manifest extends CourierCompany_pickup {
         //exit();
         echo json_encode($dataArray);
     }
+
+    
     public function filter_return() {
         $this->load->model('User_model');
         $assignuser = $this->User_model->userDropval(9);
@@ -1707,6 +1713,7 @@ class Manifest extends CourierCompany_pickup {
         $assignuser = $this->User_model->userDropval(9);
 
         $_POST = json_decode(file_get_contents('php://input'), true);
+        $super_id = $this->session->userdata('user_details')['super_id'];
 
         $from = $_POST['from'];
         $to = $_POST['to'];
@@ -1731,7 +1738,7 @@ class Manifest extends CourierCompany_pickup {
                 $seller_ids .= ',' . $rdata['seller_id'];
             $manifestarray[$ii]['pstatus'] = GetpickupStatus($rdata['pstatus']);
             if ($rdata['seller_id'] > 0)
-                $manifestarray[$ii]['seller_id'] = getallsellerdatabyID($rdata['seller_id'], 'name');
+                $manifestarray[$ii]['seller_id'] = getallsellerdatabyID($rdata['seller_id'], 'name',$super_id);
             else
                 $manifestarray[$ii]['seller_id'] = 'N/A';
             if ($rdata['assign_to'] > 0)
