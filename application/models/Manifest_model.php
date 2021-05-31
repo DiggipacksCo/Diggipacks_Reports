@@ -696,6 +696,7 @@ class Manifest_model extends CI_Model {
 
     public function GetallskuDetailsByOneGroupQry($mid = null) {
         $this->db->where('pickup_request.super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->where('items_m.super_id', $this->session->userdata('user_details')['super_id']);
 
         $this->db->select('count(pickup_request.id) as qty ,pickup_request.sku,items_m.item_path');
         $this->db->from('pickup_request');
