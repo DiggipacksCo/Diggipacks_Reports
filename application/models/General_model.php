@@ -143,6 +143,7 @@ class General_model extends CI_Model {
     }
 
     public function Getupdatecompnaydata($data = array()) {
+        
         return $this->db->update('site_config', $data, array('super_id' => $this->session->userdata('user_details')['super_id']));
         echo $this->db->last_query();
         die;

@@ -263,8 +263,6 @@ if (!function_exists('GetSellerTableField')) {
 if (!function_exists('Getselletdetails')) {
     function Getselletdetails() {
 
-    
-
         $ci = & get_instance();
         $ci->load->database();
         $user_id = $ci->session->userdata('user_details')['user_id']; 
@@ -387,7 +385,7 @@ if (!function_exists('GetCourCompanynameId')) {
     function GetCourCompanynameId($id = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM courier_company where cc_id='$id' and super_id='".$ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT $field FROM courier_company where id='$id' and super_id='".$ci->session->userdata('user_details')['super_id'] . "'";
         $query = $ci->db->query($sql);
         // echo   $ci->db->last_query();
         // die; 
@@ -932,9 +930,9 @@ if (!function_exists('site_configTable')) {
     function site_configTable($field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "select $field from site_config where super_id='" . $ci->session->userdata('super_id'). "'";
+        $sql = "select $field from site_config where super_id='" . $ci->session->userdata('user_details')['super_id']. "'";
         $query = $ci->db->query($sql);
-    //  echo $ci->db->last_query();exit;
+        //echo $ci->db->last_query();exit;
         $result = $query->row_array();
         return $result[$field];
     }
@@ -1814,10 +1812,7 @@ if (!function_exists('CheckStockBackorder_ordergen')) {
                     $palletArrayCeck = array();
                     $shelveno = "";
                     $pCount = sizeof($finalLoopArray) - 1;
-                  
                     foreach ($finalLoopArray as $rdata) {
-
-                      
 
                         array_push($palletArrayCeck, $rdata['shelve_no']);
                         if ($pCount == $ii)

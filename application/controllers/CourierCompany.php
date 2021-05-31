@@ -1211,6 +1211,7 @@ class CourierCompany extends MY_Controller  {
                                 $imile_label = base_url() . "assets/all_labels/$slipNo.pdf";
                                 $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $imile_label,$c_id);
                                 $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
+                                $returnArr['successAbw'][] = 'AWB No.' . $slipNo . ' forwarded to iMile';
                                 array_push($succssArray, $slipNo);
                                 
                             }else if($response['code'] == 30001){
@@ -1250,9 +1251,39 @@ class CourierCompany extends MY_Controller  {
 
                             $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
                             $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
-
+                            $returnArr['successAbw'][] = 'AWB No.' . $slipNo . ' forwarded to Wadha';
                             array_push($succssArray, $slipNo);
                         }                            
+                        else
+                        {
+                            $returnArr['responseError'][] = $slipNo . ':' .$error_status;
+                        }
+
+                    }elseif ($company == 'SLS')
+                    {
+
+                        $responseArray = $this->Ccompany_model->SLSArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1,$c_id,$super_id);
+                       //  echo "<pre>" ; print_r($responseArray); //die;
+                        $successres = $responseArray['status'];
+                        $error_status = json_encode($responseArray);
+
+                            if (!empty($successres) && $successres == 1)
+                            {
+                                $client_awb = $responseArray['tracking_number'];
+                                $SLSLabel = $this->Ccompany_model->SLS_label($client_awb, $counrierArr);
+                                   
+                                file_put_contents("assets/all_labels/$slipNo.pdf", $SLSLabel);                            
+                                $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+
+                                $CURRENT_DATE = date("Y-m-d H:i:s");
+                                $CURRENT_TIME = date("H:i:s");
+
+                                $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                                $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
+                                $returnArr['successAbw'][] = 'AWB No.' . $slipNo . ' forwarded to SLS';
+                            array_push($succssArray, $slipNo);
+                        }                            
+                            
                         else
                         {
                             $returnArr['responseError'][] = $slipNo . ':' .$error_status;

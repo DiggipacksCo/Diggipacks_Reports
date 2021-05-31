@@ -205,7 +205,7 @@ class Ccompany_model extends CI_Model {
     }
     
     
-    public function Update_Manifest_Return_Status($slipNo = null, $client_awb = null, $CURRENT_TIME = null, $CURRENT_DATE = null, $company = null, $comment = null, $fastcoolabel = null, $c_id = null,$dataArray,$shiparray,$itemData){
+    public function Update_Manifest_Return_Status($slipNo = null, $client_awb = null, $CURRENT_TIME = null, $CURRENT_DATE = null, $company = null, $comment = null, $fastcoolabel = null, $c_id = null,$dataArray,$shiparray,$itemData, $super_id){
         
         switch($company){
             case 'Esnad': $label_type = 1; break;
@@ -245,7 +245,7 @@ class Ccompany_model extends CI_Model {
                     $this->db->insert('pickup_request', $updateArr);
                     //echo $this->db->last_query();die;
                     $data = array('return_update'=>'Y');
-                    $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+                    $this->db->where('super_id',$super_id);
                     $this->db->update('inventory_damage', $data, array('id' => $itemid));
                 }
             }
@@ -831,6 +831,8 @@ class Ccompany_model extends CI_Model {
             $weight = $ShipArr['weight'] ; 
         }
 
+        $currency = site_configTable("default_currency");    
+        
         $pckglist =  array();
 
         for($i=0;$i<$box_pieces; $i++)
@@ -848,7 +850,7 @@ class Ccompany_model extends CI_Model {
     
         $param = array(
                 "codAmount"=>"$cod_amount",
-                "currency"=>"SAR",
+                "currency"=>$currency,
                 "customerCode"=> $counrierArr['user_name'], //customer code requirement Kedan
                 "customerNo"=> $ShipArr['slip_no'],
                 "trackingNo"=> $ShipArr['slip_no'],
@@ -1950,7 +1952,7 @@ class Ccompany_model extends CI_Model {
         //echo $API_URL;die;
           $api_key = $counrierArr['auth_token'];
 
-        $currency = "SAR";  
+        $currency = site_configTable("default_currency");//"SAR";  
 
          if(empty($box_pieces1))
          {
@@ -2007,10 +2009,6 @@ class Ccompany_model extends CI_Model {
             "weight" => $weight,
             "pieces" => $box_pieces
         );  
-
-    //     echo "<pre>"; print_r($ShipArr)."<br/>";
-    //     echo $super_id."<pre>"; print_r($all_param_data);
-    //    die; 
 
         $json_final_date = json_encode($all_param_data);  
 
@@ -3419,7 +3417,7 @@ array_push($itemArray,$peiceArray);
             $API_URL = $counrierArr['api_url'] . "api/create/order";
             $api_key = $counrierArr['auth_token'];
             //print_r($api_key);die; 
-            $currency = "SAR";
+            $currency = site_configTable("default_currency");//"SAR";
             
             if (empty($box_pieces1)) {
             $box_pieces = 1;
@@ -3557,7 +3555,7 @@ array_push($itemArray,$peiceArray);
                     
                 $API_URL = $counrierArr['api_url'] . "v2/customer/order";
                 
-                    $currency = "SAR";
+                    $currency = site_configTable("default_currency");//"SAR";
                     
                     if (empty($box_pieces1)) {
                     $box_pieces = 1;
@@ -4108,7 +4106,7 @@ array_push($itemArray,$peiceArray);
             else { 
                 $weight = $ShipArr['weight'] ; 
             }
-
+        $currency = site_configTable("default_currency");    
         $param = array(
             "apikey" => $counrierArr['auth_token'],          
             "pack_type" => 1,
@@ -4123,7 +4121,7 @@ array_push($itemArray,$peiceArray);
             "pack_num_pcs" => $box_pieces,
             "pack_weight" => $weight,
             "pack_cod_amount" => $codValue,
-            "pack_currency_code" => "SAR",
+            "pack_currency_code" => $currency,
             "pack_extra_note" => "OK",
             "pack_live_time" => "4",
             "pack_sender_name" => "Rashof",
@@ -4185,6 +4183,146 @@ array_push($itemArray,$peiceArray);
         }
     }
     
+    public function SLSArray(array $ShipArr, array $counrierArr, $complete_sku = null,$box_pieces1 = null,$c_id=null,$super_id=null) 
+    {
+        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'sls',$super_id);
+        $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'sls',$super_id);
+        $lat = $this->getdestinationfieldshow_auto_array($ShipArr['origin'], 'latitute',$super_id);
+        $lang = $this->getdestinationfieldshow_auto_array($ShipArr['origin'], 'longitute',$super_id);
+        $api_url = trim($counrierArr['api_url'])."create";
+        $api_key = $counrierArr['auth_token'];
+        $sender_city = $receiver_city = 'Riyadh';
+            
+            if (empty($box_pieces1)) {
+                $box_pieces = 1;
+            } else {
+                $box_pieces = $box_pieces1;
+            }
+            
+            if ($ShipArr['weight'] == 0) {
+                $weight = 1;
+            } else {
+                $weight = $ShipArr['weight'];
+            }
+            
+            if ($ShipArr['mode'] == 'COD') {
+                $cod_amount = $ShipArr['total_cod_amt'];
+            } elseif ($ShipArr['mode'] == 'CC') {
+                $cod_amount = 0;
+            }
+            
+           
+            $details = array(
+                'account_number'=>$counrierArr['courier_account_no'],
+                'requested_by'=> $ShipArr['sender_name'],
+                'collection_name'=> $ShipArr['sender_name'],
+                'collection_contact'=>'Majd',
+                'collection_street1'=> $ShipArr['sender_address'],
+                'collection_street2'=> $ShipArr['sender_address'],
+                'collection_city'=>$sender_city,
+                'collection_country'=> 'Saudi Arabia',
+                'collection_phone'=> $ShipArr['sender_phone'],
+                'collection_email'=>$ShipArr['sender_email'],
+                'api_token'=>$api_key,
+                'price_set_name'=>$ShipArr['mode'],
+                'description'=>'and',
+                'comments'=>'',
+                'quantity'=>$box_pieces,
+                'declared_value'=>$cod_amount,
+                'weight'=>$weight,
+                'delivery_name'=>$ShipArr['reciever_name'],
+                'delivery_contact'=>$ShipArr['reciever_name'],
+                'delivery_street1'=>$ShipArr['reciever_address'],
+                'delivery_street2'=>$ShipArr['reciever_address'],
+                'delivery_city'=>$receiver_city,
+                'delivery_postal_code'=>'0',
+                'delivery_country'=>'SA',
+                'delivery_phone'=>$Receiver_phone = $ShipArr['reciever_phone'],
+                'delivery_email'=>$ShipArr['reciever_email'],
+                'delivery_location_w3w'=>'bikers.exam.boots',
+                'delivery_location_lat'=>$lat,
+                'delivery_location_lng'=>$lang,
+                'cod_amount'=>$cod_amount,
+                'order_id'=>$ShipArr['slip_no'],
+                'order_type'=>'forward',
+                'reference_number'=>$ShipArr['slip_no']
+
+                );
+                $json_final_data = json_encode($details);
+            
+        if(!empty($receiver_city)){
+              $curl = curl_init();
+
+              curl_setopt_array($curl, array(
+              CURLOPT_URL => $api_url,
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => '',
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 0,
+              CURLOPT_FOLLOWLOCATION => true,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => 'POST',
+              CURLOPT_POSTFIELDS => $json_final_data,
+              CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json',
+                'Cookie: XSRF-TOKEN=eyJpdiI6InZraHl5QmJqZ1dFY1lzVis0S2hBVmc9PSIsInZhbHVlIjoiXC90UzlpdGxMdk16NjR6V0dqT2lcL2JBdHphb01Vbm55Z3ZtRFBJWjVjY1wvS0FhWmhGQXZaeDBmZWtwUkxpUTJpTnBPYkpzeW52ZjRNU0YweU9VMGFhanc9PSIsIm1hYyI6ImJhZjY4ZThiZmEyMjNkMWQzYjE0NTA4NDExZTZlODg1ODYwMDUwMGE5NzA4MzQyM2NlNjNiY2Q4MjZiYWZlNmQifQ%3D%3D; laravel_session=4a8d823e4c952a4c3e4a95e0ca2c9b5e4a1b2fd9'
+            ),));
+
+            $response = curl_exec($curl);
+            curl_close($curl);
+        }
+        else 
+        {
+            $response = array('message'=> 
+                             array('0' => 'The collection city field is required.')
+                        ); 
+            $response = json_encode($response);  
+        }                            
+            // echo "response ". $response; 
+        $responseArray = json_decode($response, true); 
+        $logresponse = json_encode($response);
+        $successres = $responseArray['status'];
+         
+        if ($successres == 1) 
+        {
+            $successstatus = "Success";
+        } else {
+            $successstatus = "Fail";
+        }
+        $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no']);
+        return $responseArray;
+    }
+
+    public function SLS_label($client_awb = null,$counrierArr= null) {
+        $api_url=$counrierArr['api_url']."waybill?api_token=".$counrierArr['auth_token'];
+        $param= array( 'api_token'=>  $counrierArr['auth_token'],
+                     'tracking_number'=>$client_awb,
+                    );
+        $dataJson =json_encode($param);
+
+        $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL =>$api_url,
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => '',
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 0,
+              CURLOPT_FOLLOWLOCATION => true,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => 'GET',
+              CURLOPT_POSTFIELDS =>$dataJson,
+                 CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json',
+                'Cookie: XSRF-TOKEN=eyJpdiI6InZraHl5QmJqZ1dFY1lzVis0S2hBVmc9PSIsInZhbHVlIjoiXC90UzlpdGxMdk16NjR6V0dqT2lcL2JBdHphb01Vbm55Z3ZtRFBJWjVjY1wvS0FhWmhGQXZaeDBmZWtwUkxpUTJpTnBPYkpzeW52ZjRNU0YweU9VMGFhanc9PSIsIm1hYyI6ImJhZjY4ZThiZmEyMjNkMWQzYjE0NTA4NDExZTZlODg1ODYwMDUwMGE5NzA4MzQyM2NlNjNiY2Q4MjZiYWZlNmQifQ%3D%3D; laravel_session=4a8d823e4c952a4c3e4a95e0ca2c9b5e4a1b2fd9'
+            ),));
+
+            $label_response = curl_exec($curl);
+            
+            curl_close($curl);
+            return  $label_response;
+    }
+
 
 
 }
