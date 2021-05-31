@@ -98,10 +98,13 @@ class Manifest extends CourierCompany_pickup {
                 $seller_ids .= ',' . $rdata['seller_id'];
 
             $manifestarray[$ii]['pstatus'] = GetpickupStatus($rdata['pstatus']);
+
             if ($rdata['seller_id'] > 0)
-                $manifestarray[$ii]['seller_id'] = getallsellerdatabyID($rdata['seller_id'], 'name');
+           
+                $manifestarray[$ii]['seller_id'] =  getallsellerdatabyID($rdata['seller_id'], 'name',$super_id);
             else
                 $manifestarray[$ii]['seller_id'] = 'N/A';
+                
             if ($rdata['assign_to'] > 0)
                 $manifestarray[$ii]['assign_to'] = getUserNameById($rdata['assign_to']);
             else
@@ -148,6 +151,8 @@ class Manifest extends CourierCompany_pickup {
         //exit();
         echo json_encode($dataArray);
     }
+
+    
     public function filter_return() {
         $this->load->model('User_model');
         $assignuser = $this->User_model->userDropval(9);
