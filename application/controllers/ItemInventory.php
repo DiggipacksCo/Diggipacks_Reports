@@ -315,6 +315,11 @@ class ItemInventory extends MY_Controller {
                         $this->ItemInventory_model->updateInventory(array('quantity' => $sku_size, 'id' => $val->id));
                         $qty = $qty - $diff;
                     }
+                    
+                    /*SALLA QTY UPDATE*/
+                    if($this->session->userdata('user_details')['user_id'] == 256){
+                        sendQuantityupdatetosalla($this->input->post('seller'), $this->input->post('sku'), $this->session->userdata('user_details')['user_id']);
+                    }
                 }
 
                 // echo $val['item_sku'];  
