@@ -3334,3 +3334,76 @@ if (!function_exists('spPrintDetails')) {
     }
 
 }
+
+
+
+if(!function_exists('Salla_StatusUpdate')){
+        function Salla_StatusUpdate($shippers_ref_no, $status,$note,$tracking_number,$tracking_url) {
+
+
+            $data = array(
+                'auth-token' => '$2y$04$rncDoc3yqrue9Fc6Ey29JOs1Qws4J6yVr9UbF2kDMKWv//xAhJ72y',
+                'status' => $status,
+                'note' => $note,
+                'tracking_url' => $tracking_url,
+                'tracking_number' => $tracking_number
+            );
+
+
+            $url = 'https://s.salla.sa/webhook/track/order/'.$shippers_ref_no;
+
+            $dataJson = json_encode($data);
+            $headers = array(
+                "Content-type: application/json",
+            );
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $dataJson);
+
+            $response = curl_exec($ch);
+
+            echo '<pre>';
+            echo ($response);
+        }
+    }
+    
+    if (!function_exists('sendQuantityupdatetosalla')) {
+
+    function sendQuantityupdatetosalla($seller_id = null, $sku = null, $customer_id = null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        $customer_id = GetuniqIDbySellerId($seller_id);
+        $quantity = Getquantitybyskuname($seller_id, $sku);
+        $auth_token = '$2y$04$rncDoc3yqrue9Fc6Ey29JOs1Qws4J6yVr9UbF2kDMKWv//xAhJ72';
+        $request_array = array('auth-token' => $auth_token,
+            'customerId' => $customer_id,
+            'quantity' => $quantity);
+        $url = "https://s.salla.sa/webhook/track/product/" . $sku;
+        $json_data = json_encode($request_array);
+        $header = array("Content-type:application/json");
+        $curl_req = curl_init($url);
+        curl_setopt($curl_req, CURLOPT_POSTFIELDS, $json_data);
+        $curl_options = array(
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_CONNECTTIMEOUT => 120,
+            CURLOPT_TIMEOUT => 120,
+            CURLOPT_HTTPHEADER => $header,
+            CURLOPT_FOLLOWLOCATION => true
+        );
+// exit("sadf");
+// print_r($json_data);exit;
+        curl_setopt_array($curl_req, $curl_options);
+        $response = curl_exec($curl_req);
+        //print_r($response);exit;
+        curl_close($curl_req);
+        return $response;
+    }
+
+}

@@ -733,7 +733,15 @@ class PickUp extends MY_Controller {
                 $token = GetallCutomerBysellerId($seller_id, 'manager_token');
                 $salatoken = GetallCutomerBysellerId($seller_id, 'salla_athentication');
 
-                if (!empty($salatoken)) {
+                if($this->session->userdata('user_details')['super_id'] == 256){
+                    $Salla_tracking_url = $data['frwd_company_label'];       
+                    $Salla_status = 8;
+                    $Salla_note = "delivering";
+                    $sallaStatus = Salla_StatusUpdate($data['booking_id'], $Salla_status, $Salla_note, $data['slip_no'], $Salla_tracking_url);
+
+                }
+                
+                if (!empty($salatoken) && $this->session->userdata('user_details')['super_id'] != 256) {
                     update_status_salla($sallaStatus , $note, $salatoken,$data['shippers_ref_no'],$seller_id,$data['slip_no'] ); 
                 }
 
@@ -1076,8 +1084,16 @@ class PickUp extends MY_Controller {
 
                             $activitiesArr[] = array('exp_date' => $rdata['expity_date'], 'st_location' => $fArray['stock_location'], 'item_sku' => $fArray['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $check_slipNo['cust_id'], 'qty' => $fArray['qty'], 'p_qty' => 0, 'qty_used' => $fArray['qty'], 'type' => 'Add', 'entrydate' => date("Y-m-d h:i:s"), 'awb_no' => $slip_no, 'super_id' => $this->session->userdata('user_details')['super_id'], 'shelve_no' => $fArray['shelve_no']);
                         }
+                        
+                        if($this->session->userdata('user_details')['super_id'] == 256){
+                                $Salla_tracking_url = $check_slipNo['frwd_company_label'];                              
+                                $Salla_status = 9;
+                                $Salla_note = "delivered";
+                                $sallaStatus = Salla_StatusUpdate($check_slipNo['booking_id'], $Salla_status, $Salla_note, $check_slipNo['slip_no'], $Salla_tracking_url);
+                                
+                        }
 
-                        if (!empty($salatoken)) {
+                        if (!empty($salatoken) && $this->session->userdata('user_details')['super_id'] != 256) {
                             $sallaStatus = 525144736; 
                             $note = "ملغي";
                             update_status_salla($sallaStatus , $note, $salatoken,$check_slipNo['shippers_ref_no'],$check_slipNo['cust_id'],$check_slipNo['slip_no'] );
