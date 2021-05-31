@@ -526,7 +526,7 @@ class Manifest extends CourierCompany_pickup {
         if ($pay_mode == 'COD') {
                 $pay_mode = 'P';
                 $CashOnDeliveryAmount = array("Value" => $cod_amount,
-                        "CurrencyCode" => "SAR");
+                        "CurrencyCode" => site_configTable("default_currency"));
                 $services = 'CODS';
         } elseif ($pay_mode == 'CC') {
                 $pay_mode = 'P';

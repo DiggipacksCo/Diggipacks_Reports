@@ -161,7 +161,7 @@ Address:- {{sellerArr.address}},{{sellerArr.city}} , Saudi Arabia - <br>
 Bank Account Number:-{{sellerArr.account_number}} - <br>
 Account Manager:-{{sellerArr.account_manager}}<br>
 Vat Id No.:- {{sellerArr.vat_no}}- <br>
-Currency:-SAR
+Currency:-<?= site_configTable("default_currency");?>
         </th>
         <th colspan="4" align="center" style="text-align:center;"><img src="<?=SUPERPATH.Getsite_configData_field('logo');?>" width="200" style="vertical-align:middle;"></th>
         <th colspan="5">Address &ndash; <?=Getsite_configData_field('company_address');?><br>
