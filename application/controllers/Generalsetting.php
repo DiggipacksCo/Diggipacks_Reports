@@ -130,7 +130,6 @@ class Generalsetting extends MY_Controller {
 
     public function CompanyDetails() {
 
-
         if ($this->session->userdata('user_details')) {
 
             $data['EditData'] = $this->General_model->GetallcompanyDetails();
@@ -143,22 +142,6 @@ class Generalsetting extends MY_Controller {
     }
 
     public function updateform() {
-        $company_name = $this->input->post('company_name');
-        $company_address = $this->input->post('company_address');
-        $dropoff_option = $this->input->post('dropoff_option');
-        $phone = $this->input->post('phone');
-        $fax = $this->input->post('fax');
-        $email = $this->input->post('email');
-        $support_email = $this->input->post('support_email');
-        $webmaster_email = $this->input->post('webmaster_email');
-        $auto_assign_picker = $this->input->post('auto_assign_picker');
-        $default_awb_char_fm = $this->input->post('default_awb_char_fm');
-        $e_city = implode(',', $this->input->post('e_city'));
-        $theme_color_fm = $this->input->post('theme_color_fm');
-        $tollfree_fm = $this->input->post('tollfree_fm');
-        $font_color = $this->input->post('font_color');
-        $vat = $this->input->post('vat');
-
 //        if (!empty($_FILES['logo']['name'])) {
 //            $config['upload_path'] = 'assets/logo/';
 //            $config['overwrite'] = TRUE;
@@ -178,13 +161,30 @@ class Generalsetting extends MY_Controller {
 //        } else
 //            $small_img = $this->input->post('logo_old');
 
+        $updatearray = array(
+                    "company_name" => $this->input->post('company_name'),
+                    'company_address' => $this->input->post('company_address'),
+                    'phone' => $this->input->post('phone'),
+                    'fax' => $this->input->post('fax'),
+                    'email' => $this->input->post('email'),
+                    'support_email' => $this->input->post('support_email'),
+                    'webmaster_email' => $this->input->post('webmaster_email'),
+                    'default_awb_char_fm' => $this->input->post('default_awb_char_fm'), 
+                    'e_city' => implode(',', $this->input->post('e_city')), 
+                    'tollfree_fm' => $this->input->post('tollfree_fm'), 
+                    'theme_color_fm' => $this->input->post('theme_color_fm'), 
+                    'auto_assign_picker' => $this->input->post('auto_assign_picker'),
+                    'font_color'=>$this->input->post('font_color'),
+                    'vat'=>$this->input->post('vat'),
+                    //'dropoff_option'=>$this->input->post('dropoff_option'),
+                    'default_currency'=>$this->input->post('default_currency')
+                );
 
-        $updatearray = array("company_name" => $company_name, 'company_address' => $company_address, 'phone' => $phone, 'fax' => $fax, 'email' => $email, 'support_email' => $support_email, 'webmaster_email' => $webmaster_email, 'default_awb_char_fm' => $default_awb_char_fm, 'e_city' => $e_city, 'tollfree_fm' => $tollfree_fm, 'theme_color_fm' => $theme_color_fm, 'auto_assign_picker' => $auto_assign_picker,'font_color'=>$font_color,'vat'=>$vat,'dropoff_option'=>$dropoff_option);
 
-
+        //print "<pre>"; print_r($updatearray);die;
         $res = $this->General_model->Getupdatecompnaydata($updatearray);
         if ($res == true)
-            $this->session->set_flashdata('msg', 'has been updated successfully');
+            $this->session->set_flashdata('msg', 'Data has been updated successfully');
         else
             $this->session->set_flashdata('err_msg', 'Try again');
 
