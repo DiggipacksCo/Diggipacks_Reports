@@ -103,7 +103,7 @@ var app = angular.module('updateManifest', [])
                             $scope.TotalCountSameTime = response.data.result.length
 
                             $scope.warning = null;
-                            $('#scan_shelve_id').focus();
+                            $('#scan_stocklocation_id').focus();
                             $scope.Message = "Sku Scan";
                             //  alert($scope.warning);
 
@@ -153,10 +153,30 @@ var app = angular.module('updateManifest', [])
 
             // $scope.CheckCustomerInventory();
         }
+        $scope.openStockLocation = function (id) {
+
+           console.log(id);
+          // $scope.Menidata[ $scope.oldlocationIndex].stockLocation =null; 
+           $scope.Menidata[id].l_status = "pending";
+           $scope.Menidata[id].s_status = "pending";
+
+           $scope.AlltotalCount = parseInt($scope.AlltotalCount) - 1;
+           $scope.skuMainArrayIndex = $scope.newCompeleteArr.findIndex(record => (record.sku === $scope.scan.sku));
+           $scope.newCompeleteArr.splice($scope.skuMainArrayIndex, 1);
+           $scope.oldlocationIndex = $scope.oldStockLocationArr.findIndex(record => (record.sku === $scope.scan.sku && record.stockLocation.toUpperCase() ===  $scope.Menidata[id].stockLocation.toUpperCase()));
+           $scope.oldStockLocationArr.splice($scope.oldlocationIndex, 1);
+           console.log(  $scope.AlltotalCount);
+            $scope.location_nameBtn = false;
+            $scope.shelve_nameBtn = false;
+            $scope.ExportBtnShow = false;
+        $scope.AddInventoryBtn = false;
+        }
+        
         $scope.oldStockLocationArr = [];
         $scope.oldshelveArr = [];
         $scope.GetcheckStockLocation = function () {
-
+           console.log('xxxx');
+           
             $scope.arrayIndexnew1 = $scope.Menidata.findIndex(record => (record.sku === $scope.scan.sku && record.stockLocation.toUpperCase() === $scope.scan.stock_location.toUpperCase()));
             if($scope.arrayIndexnew1 ==-1)
             {
@@ -195,17 +215,18 @@ var app = angular.module('updateManifest', [])
                         $scope.Menidata[$scope.arrayIndexnew1].l_status = "completed"
                         $scope.Menidata[$scope.arrayIndexnew1].stockLocation = $scope.scan.stock_location.toUpperCase();
                         //$scope.scan.stock_location = null;
-                        // $('#scan_shelve_id').focus();
+                       
                         $scope.cust_nameBtn = true;
                         $scope.location_nameBtn = true;
                         $scope.shelve_nameBtn = false;
                         $scope.nextBtnShow = true;
                         $scope.sku_nameBtn = true;
+                         $('#scan_shelve_id').focus();
 
                         if (parseInt($scope.AlltotalCount) == $scope.Menidata.length) {
                             console.log(5);
 
-                            $('#scan_shelve_id').focus();
+                           
 
 
                             $scope.Message = null;
@@ -239,6 +260,7 @@ var app = angular.module('updateManifest', [])
 
             }
 
+          
         }
 
 
