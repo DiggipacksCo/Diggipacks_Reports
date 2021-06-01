@@ -87,11 +87,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="default_currency"><strong>Default Currency:</strong></label>
-                                        <select  id="default_currency" name="default_currency"  multiple data-show-subtext="false" data-live-search="true" class="selectpicker" data-width="100%" >
-                                            <option value="">Select Currency</option>
-                                            <option value="SAR">SAR</option>
-                                            
-                                        </select>
+                                        <input type="text" class="form-control" maxlength="10" name='default_currency' id="default_currency" placeholder="Default Currency" value="<?= $EditData['default_currency'] ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="dropoff_option"><strong>Drop Off Details</strong></label>
