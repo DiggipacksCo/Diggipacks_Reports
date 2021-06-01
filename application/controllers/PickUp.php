@@ -733,17 +733,18 @@ class PickUp extends MY_Controller {
                 $token = GetallCutomerBysellerId($seller_id, 'manager_token');
                 $salatoken = GetallCutomerBysellerId($seller_id, 'salla_athentication');
 
-               // if($this->session->userdata('user_details')['super_id'] == 256){
-                    $Salla_tracking_url = $data['frwd_company_label'];       
-                    $Salla_status = 8;
-                    $Salla_note = "delivering";
-                    $sallaStatus = Salla_StatusUpdate($data['booking_id'], $Salla_status, $Salla_note, $data['slip_no'], $Salla_tracking_url);
-
-               // }
                 
-                if (!empty($salatoken) && $this->session->userdata('user_details')['super_id'] != 256) {
-                    update_status_salla($sallaStatus , $note, $salatoken,$data['shippers_ref_no'],$seller_id,$data['slip_no'] ); 
-                }
+                $Salla_tracking_url = $data['frwd_company_label'];  
+                $frwd_company_awb = ($data['frwd_company_awb'] != '')? $data['frwd_company_awb'] : '';
+                $Salla_status = "DL";
+                $Salla_note = "delivering";
+                $sallaStatus = Salla_StatusUpdate($data['booking_id'], $Salla_status, $Salla_note, $frwd_company_awb, $Salla_tracking_url);
+
+                
+                
+                
+                //update_status_salla($sallaStatus , $note, $salatoken,$data['shippers_ref_no'],$seller_id,$data['slip_no'] ); 
+                
 
                 if (!empty($token)) {
                     $slip_no = $data['slip_no'];

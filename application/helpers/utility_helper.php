@@ -3342,7 +3342,7 @@ if(!function_exists('Salla_StatusUpdate')){
 
 
             $data = array(
-                'auth-token' => '$2y$04$rncDoc3yqrue9Fc6Ey29JOs1Qws4J6yVr9UbF2kDMKWv//xAhJ72y',
+                'auth-token' => '$2y$04$rncDoc3yqrue9Fc6Ey29JOs1Qws4J6yVr9UbF2kDMKWv//xAhJ72y',  
                 'status' => $status,
                 'note' => $note,
                 'tracking_url' => $tracking_url,
@@ -3350,9 +3350,10 @@ if(!function_exists('Salla_StatusUpdate')){
             );
 
 
-            $url = 'https://s.salla.sa/webhook/track/order/'.$shippers_ref_no;
+            $url = 'https://s.salla.sa/webhook/diggipacks/order/'.$shippers_ref_no;
 
             $dataJson = json_encode($data);
+      
             $headers = array(
                 "Content-type: application/json",
             );
@@ -3365,10 +3366,14 @@ if(!function_exists('Salla_StatusUpdate')){
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $dataJson);
 
-            $response = curl_exec($ch);
-
-            echo '<pre>';
-            echo ($response);
+            $response = curl_exec($ch);  
+           $response = json_decode($response);
+            if($response->status ==1){
+                echo $response->message;
+            }
+           else{
+               print_r($response);
+           }
         }
     }
     
