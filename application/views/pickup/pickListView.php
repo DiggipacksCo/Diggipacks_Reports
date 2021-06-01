@@ -201,7 +201,7 @@
                                                                             <tr>
                                                                                 <th>SKU</th>
                                                                                 <th>Qty</th>
-                                                                                <th>COD (SAR)</th>
+                                                                                <th>COD (<?= site_configTable("default_currency"); ?>)</th>
 
                                                                             </tr>
                                                                         </thead></table></th>

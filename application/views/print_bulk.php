@@ -196,7 +196,7 @@ echo'<!doctype html>
                     } else {
                        echo '<tr>
 											<td class=" "colspan="2" align="center">
-												<strong> COD </strong>: ' . $Total_amount . ' SAR
+												<strong> COD </strong>: ' . $Total_amount . ' '.site_configTable("default_currency").'
 											</td>  
 										</tr>';
                     }

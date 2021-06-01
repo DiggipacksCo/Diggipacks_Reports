@@ -227,7 +227,7 @@ foreach ($status_update_data as $key => $val) {
             } else {
                 $html .= '<tr>
     <td class=" "colspan="2" align="center">
-            <strong> ' . $status_update_data[$key]['mode'] . ' </strong>: ' . $Total_amount . ' SAR
+            <strong> ' . $status_update_data[$key]['mode'] . ' </strong>: ' . $Total_amount . ' '.site_configTable("default_currency").'
     </td>  
     </tr>';
             }

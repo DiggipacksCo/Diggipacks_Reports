@@ -2750,7 +2750,7 @@ else
                             $html .= '<tr>
 															<td class=" "colspan="2" align="center">
 															<div class="col-md-3">
-													<div class="cod_box">	<strong> COD </strong>: ' . $Total_amount . ' SAR</div></div>
+													<div class="cod_box">	<strong> COD </strong>: ' . $Total_amount . ' '.site_configTable("default_currency").'</div></div>
 															</td>  
 														</tr>';
                         }
