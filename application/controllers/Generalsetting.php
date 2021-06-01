@@ -129,10 +129,12 @@ class Generalsetting extends MY_Controller {
     }
 
     public function CompanyDetails() {
-
+        
+        //print "<pre>"; print_r($data );die;
         if ($this->session->userdata('user_details')) {
 
             $data['EditData'] = $this->General_model->GetallcompanyDetails();
+            $data['TimeZone'] = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
             $this->load->view('generalsetting/companydetails', $data);
 
             //$this->load->view('home');
@@ -177,7 +179,9 @@ class Generalsetting extends MY_Controller {
                     'font_color'=>$this->input->post('font_color'),
                     'vat'=>$this->input->post('vat'),
                     //'dropoff_option'=>$this->input->post('dropoff_option'),
-                    'default_currency'=>$this->input->post('default_currency')
+                    'default_currency'=>$this->input->post('default_currency'),
+                    'default_time_zone'=>$this->input->post('default_time_zone'),
+                    'country_code'=>$this->input->post('country_code'),
                 );
 
 
