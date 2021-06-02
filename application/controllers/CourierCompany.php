@@ -384,7 +384,9 @@ class CourierCompany extends MY_Controller  {
                     $sku_data = $this->Ccompany_model->Getskudetails_forward($slipNo);
                     $sku_all_names = array();
                     $sku_total = 0;
+                    $totalcustomerAmt=0;
                     foreach ($sku_data as $key => $val) {
+                            $totalcustomerAmt+=$sku_data[$key]['cod'];
                             $skunames_quantity = $sku_data[$key]['name'] . "/ Qty:" . $sku_data[$key]['piece'];
                             $sku_total = $sku_total + $sku_data[$key]['piece'];
                             array_push($sku_all_names, $skunames_quantity);
@@ -408,7 +410,8 @@ class CourierCompany extends MY_Controller  {
                             $services = '';
                     }
                     
-                    if($company=='Aramex'){
+                    
+                    /*if($company=='Aramex'){
                             $params = $this->Ccompany_model->AramexArray($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id);
 
                             $dataJson = json_encode($params);
@@ -458,6 +461,60 @@ class CourierCompany extends MY_Controller  {
                                         array_push($succssArray, $slipNo);
                                 }
                             }
+                    }else*/
+                    if($company=='Aramex International'){
+                            //print "<pre>"; print_r($ShipArr);die;
+                            $params = $this->Ccompany_model->AramexArrayAdvance($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id,$totalcustomerAmt);
+                            $dataJson = json_encode($params);
+                            //echo $dataJson;die;
+                            $headers = array("Content-type:application/json");
+                            $url = $api_url;
+                            $awb_array = $this->Ccompany_model->AxamexCurl($url, $headers, $dataJson,$c_id,$ShipArr);
+                            //print "<pre>"; print_r($awb_array);die;
+                            $check_error = $awb_array['HasErrors'];
+                            if ($check_error == 'true') {
+
+                                    if (empty($awb_array['Shipments'])) {
+                                            $error_response = $awb_array['Notifications']['Notification'];
+                                            $error_response = json_encode($error_response);
+                                            array_push($error_array, $slipNo . ':' . $error_response);
+                                            $returnArr['responseError'][] = $slipNo . ':' . $error_response;
+                                    } else {
+                                            if ($awb_array['Shipments']['ProcessedShipment']['Notifications']['Notification']['Message'] == '') {
+                                                    foreach ($awb_array['Shipments']['ProcessedShipment']['Notifications']['Notification'] as $error_response) {
+                                                            array_push($error_array, $slipNo . ':' . $error_response['Message']);
+                                                            $returnArr['responseError'][] = $slipNo . ':' . $error_response['Message'];
+                                                    }
+                                            } else {
+                                                    $error_response = $awb_array['Shipments']['ProcessedShipment']['Notifications']['Notification']['Message'];
+                                                    $error_response = json_encode($error_response);
+                                                    array_push($error_array, $slipNo . ':' . $error_response);
+                                                    $returnArr['responseError'][] = $slipNo . ':' . $error_response;
+                                            }
+                                    }
+                                    array_push($error_msg, $returnArr);
+                            } else {
+                                $main_result = $awb_array['Shipments']['ProcessedShipment'];
+
+                                $Check_inner_error = $main_result['HasErrors'];
+                                if ($Check_inner_error == 'false') {
+                                        $client_awb = $main_result['ID'];
+                                        $awb_label = $main_result['ShipmentLabel']['LabelURL'];
+
+                                        $generated_pdf = file_get_contents($awb_label);
+                                        $encoded = base64_decode($generated_pdf);
+                                        header('Content-Type: application/pdf');
+                                        file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+
+                                        $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+
+                                        $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                        $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
+
+                                        array_push($succssArray, $slipNo);
+                                }
+                            }
+                        
                     }elseif($company=='Safearrival'){
                         
                             $charge_items=array();
