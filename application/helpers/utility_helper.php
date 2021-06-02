@@ -3407,3 +3407,61 @@ if(!function_exists('Salla_StatusUpdate')){
     }
 
 }
+
+function digiQtyUpdate($sku,$qty) {
+    $apurl = "https://justwork.in//wp-json/wc/v3/products"; 
+    $url =  $apurl.'?sku=' . $sku;
+    
+    $username = "ck_abdfcda3fd2a45ac0e16aee1d48d0acc85024176";
+    $password = "cs_39be11db88120452cfcf769150795152e354a12c";
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_FOLLOWLOCATION => TRUE,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_CUSTOMREQUEST => "GET",
+        CURLOPT_HTTPHEADER => array(
+            'Authorization: Basic ' . base64_encode("$username:$password"),
+            "cache-control: no-cache",
+        ),
+    ));
+
+    $response = curl_exec($curl);
+    $response = json_decode($response);
+ 
+    curl_close($curl);
+
+    if ($response) {
+        //update qty
+        $update_url = $apurl . '/' . $response[0]->id;
+
+        $data = array('stock_quantity' => $qty,'manage_stock'=>1);
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $update_url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_FOLLOWLOCATION => TRUE,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_CUSTOMREQUEST => "PUT",
+            CURLOPT_POSTFIELDS => json_encode($data),
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: Basic ' . base64_encode("$username:$password"),
+                "cache-control: no-cache",
+                "Content-Type: application/json"
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        $result = json_decode($response);
+        curl_close($curl);
+    }
+}
