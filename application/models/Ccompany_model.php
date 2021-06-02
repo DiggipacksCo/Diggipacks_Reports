@@ -419,7 +419,7 @@ class Ccompany_model extends CI_Model {
                                                     'Line1' => $ShipArr['reciever_address'],
                                                     'Line2' => '',
                                                     'Line3' => '',
-                                                    'City' => "Riyadh",//$reciever_city,
+                                                    'City' => $reciever_city,
                                                     'StateOrProvinceCode' => '',
                                                     'PostCode' => '0000',
                                                     'CountryCode' => $reciever_country,
