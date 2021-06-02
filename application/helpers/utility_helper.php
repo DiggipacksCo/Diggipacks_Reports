@@ -385,7 +385,7 @@ if (!function_exists('GetCourCompanynameId')) {
     function GetCourCompanynameId($id = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM courier_company where id='$id' and super_id='".$ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT $field FROM courier_company where cc_id='$id' and super_id='".$ci->session->userdata('user_details')['super_id'] . "'";
         $query = $ci->db->query($sql);
         // echo   $ci->db->last_query();
         // die; 
@@ -393,7 +393,6 @@ if (!function_exists('GetCourCompanynameId')) {
         return $result[$field];
     }
 }
-
 if (!function_exists('GetCourCompanynameIdbulkprint')) {
     function GetCourCompanynameIdbulkprint($id = null, $field = null) {
         $ci = & get_instance();
