@@ -291,6 +291,7 @@ class Ccompany_model extends CI_Model {
         $ic_no = getdestinationfieldshow_auto_array($ShipArr['destination'], 'ic_no',$super_id);
         
         $date = (int) microtime(true) * 1000;
+        $currency = site_configTable("default_currency");
         
         if ($pay_mode == 'COD') {
             $cod_amount=$cod_amount;
@@ -311,7 +312,7 @@ class Ccompany_model extends CI_Model {
         if ($C_code != 'SA' && $C_code != '') {
             $reciever_country = $C_code;
             $ProductGroup = 'EXP';
-              $currency =getdestinationfieldshow_auto_array($ShipArr['destination'], 'currency');//"USD";// getdestinationfieldshow($shipmentData[0]['destination'], 'currency');
+              //$currency =getdestinationfieldshow_auto_array($ShipArr['destination'], 'currency');//"USD";// getdestinationfieldshow($shipmentData[0]['destination'], 'currency');
               if($currency=='BHD' || $currency=='QAR' || $currency=='EGP')
               {
                   $currency='USD';
@@ -333,7 +334,7 @@ class Ccompany_model extends CI_Model {
         } else {
             $reciever_country = 'SA';
             $ProductGroup = 'DOM';
-            $currency ="SAR";// getdestinationfieldshow($shipmentData[0]['destination'], 'currency');
+            $currency = site_configTable("default_currency");
             $ProductType = 'OND';
             $CustomsValueAmount = array("Value" => 0,
                 "CurrencyCode" =>'SAR');
