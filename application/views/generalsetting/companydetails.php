@@ -97,16 +97,14 @@
                                         <label for="default_time_zone"><strong>Default Time Zone: </strong></label>
                                         <select  id="default_time_zone" name="default_time_zone"  data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%" >
                                             <option value="">Select Time Zone</option>el>
-                                            <?php 
-                                                if(!empty($TimeZone) && count($TimeZone)>0){
-                                                    
-                                                    
+                                            <?php
+                                                if(!empty($TimeZone)){
                                                     foreach($TimeZone as $zone){ 
                                                         $select = "";
-                                                        if($zone == $EditData['default_time_zone']) { $select = "selected"; }
+                                                        if($zone['value'] == $EditData['default_time_zone']) {$select = "selected";}
                                                         ?>
-                                                          <option value="<?= $zone;?>"  <?= $select; ?> ><?= $zone;?></option>
-                                            <?php   }
+                                                            <option value="<?= $zone['value']; ?>"  <?= $select; ?> ><?= $zone['name']; ?>  </option>el>
+                                             <?php       }
                                                 }
                                             ?>
                                         </select>
