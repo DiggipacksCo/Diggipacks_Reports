@@ -312,7 +312,7 @@ $scope.modelClose=function (id)
 
 
    $scope.getPayableCODlist = function (page_no,reset) {
-  $scope.filterData.page_no=page_no;
+  $scope.SearArr.page_no=page_no;
     if(reset==1)
     {
     $scope.payableinvoicelistArray=[];
@@ -321,7 +321,7 @@ $scope.modelClose=function (id)
      $http({
       url: "LastmileInvoice/showPayableInvoiceData",
       method: "POST",
-      data:$scope.filterData, 
+      data:$scope.SearArr, 
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}        
     }).then(function (results) {
        $scope.totalCount=results.data.count;      

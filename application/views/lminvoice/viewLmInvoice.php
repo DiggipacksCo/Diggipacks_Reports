@@ -109,7 +109,9 @@
 												<th width="10px"> Payment Date <br>
 												  From Date  :
 												  <input type="date" name="p_date1" ng-model="SearArr.p_date1" id="datepicker3" class="form-control" placeholder="dd-mm-yy" >
-												  <br>
+</th>
+<th>
+
 												 To date  :
 												  <input type="date" name="p_date2" ng-model="SearArr.p_date2" id="datepicker4" class="form-control" placeholder="dd-mm-yy" >
 												</th>
