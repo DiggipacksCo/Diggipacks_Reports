@@ -85,17 +85,18 @@
                                                     <div class="col-md-2">
                                                         <div class="form-group">
 
-                                                            <input type="text" id="scan_stocklocation_id" my-enter="GetcheckStockLocation();"  ng-model="scan.stock_location" class="form-control" ng-disabled="location_nameBtn"  placeHolder='Stock Location' />
+                                                            <input type="text" id="scan_stocklocation_id" my-enter="GetcheckStockLocation();"  ng-model="scan.stock_location" class="form-control"  placeHolder='Stock Location' /> 
                                                         </div>
                                                     </div>
+                                                   
 
                                                     <div class="col-md-3">
                                                         <div class="form-group">
 
-                                                            <input type="text" id="scan_shelve_id" my-enter="GetCheckShelveNoScan()" ng-model="scan.shelve" class="form-control" ng-disabled="shelve_nameBtn" placeHolder='Shelve'/>
+                                                            <input type="text" id="scan_shelve_id" my-enter="GetCheckShelveNoScan()" ng-model="scan.shelve" class="form-control"  placeHolder='Shelve'/>
                                                         </div>
                                                     </div>
-
+                                                    
                                                     <div class="col-md-4">
 
 
@@ -158,7 +159,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr   ng-repeat="data in Menidata|reverse ">
+                                                        <tr   ng-repeat="data in Menidata"> <!--|reverse -->
                                                             <td>{{$index + 1}}</td>
                                                             <td><span class="label label-primary">{{data.sku}}</span></td>
 
@@ -170,6 +171,10 @@
 
                                                             <td><span ng-if="data.s_status == 'pending'"  class="label label-danger">{{data.shelveNo}}</span>
                                                                 <span ng-if="data.s_status == 'completed'"  class="label label-success">{{data.shelveNo}}</span>
+                                                    
+                                                        <i class="fa fa-undo" ng-if="data.l_status=='completed'" ng-click="openStockLocation($index)" style="margin-top: 13px;" ></i> 
+                                                      
+                                                      </div>  
                                                             </td>
 
 

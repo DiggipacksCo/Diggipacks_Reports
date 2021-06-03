@@ -212,7 +212,7 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('something').
       <tr>
         <th>SKU</th>
         <th>Qty</th>
-        <th>COD (SAR)</th>
+        <th>COD (<?= site_configTable("default_currency"); ?>)</th>
       </tr>
     </thead></table></th>
    <!-- <th>Expire Details   <table class="table"><thead>
@@ -316,7 +316,7 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('something').
       <tr>
         <th>SKU</th>
         <th>Qty</th>
-        <th>COD (SAR)</th>
+        <th>COD (<?= site_configTable("default_currency"); ?>)</th>
       </tr>
     </thead></table></th>
    <!-- <th>Expire Details   <table class="table"><thead>

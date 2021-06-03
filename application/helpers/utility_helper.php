@@ -263,8 +263,6 @@ if (!function_exists('GetSellerTableField')) {
 if (!function_exists('Getselletdetails')) {
     function Getselletdetails() {
 
-    
-
         $ci = & get_instance();
         $ci->load->database();
         $user_id = $ci->session->userdata('user_details')['user_id']; 
@@ -395,7 +393,6 @@ if (!function_exists('GetCourCompanynameId')) {
         return $result[$field];
     }
 }
-
 if (!function_exists('GetCourCompanynameIdbulkprint')) {
     function GetCourCompanynameIdbulkprint($id = null, $field = null) {
         $ci = & get_instance();
@@ -1016,9 +1013,9 @@ if (!function_exists('site_configTable')) {
     function site_configTable($field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "select $field from site_config where super_id='" . $ci->session->userdata('super_id'). "'";
+        $sql = "select $field from site_config where super_id='" . $ci->session->userdata('user_details')['super_id']. "'";
         $query = $ci->db->query($sql);
-    //  echo $ci->db->last_query();exit;
+        //echo $ci->db->last_query();exit;
         $result = $query->row_array();
         return $result[$field];
     }
@@ -1898,10 +1895,7 @@ if (!function_exists('CheckStockBackorder_ordergen')) {
                     $palletArrayCeck = array();
                     $shelveno = "";
                     $pCount = sizeof($finalLoopArray) - 1;
-                  
                     foreach ($finalLoopArray as $rdata) {
-
-                      
 
                         array_push($palletArrayCeck, $rdata['shelve_no']);
                         if ($pCount == $ii)
@@ -3417,4 +3411,140 @@ if (!function_exists('spPrintDetails')) {
             return 0;
     }
 
+}
+
+
+
+if(!function_exists('Salla_StatusUpdate')){
+        function Salla_StatusUpdate($shippers_ref_no, $status,$note,$tracking_number,$tracking_url) {
+
+
+            $data = array(
+                'auth-token' => '$2y$04$rncDoc3yqrue9Fc6Ey29JOs1Qws4J6yVr9UbF2kDMKWv//xAhJ72y',  
+                'status' => $status,
+                'note' => $note,
+                'tracking_url' => $tracking_url,
+                'tracking_number' => $tracking_number
+            );
+
+
+            $url = 'https://s.salla.sa/webhook/diggipacks/order/'.$shippers_ref_no;
+
+            $dataJson = json_encode($data);
+      
+            $headers = array(
+                "Content-type: application/json",
+            );
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $dataJson);
+
+            $response = curl_exec($ch);  
+           $response = json_decode($response);
+            if($response->status ==1){
+                echo $response->message;
+            }
+           else{
+               print_r($response);
+           }
+        }
+    }
+    
+    if (!function_exists('sendQuantityupdatetosalla')) {
+
+    function sendQuantityupdatetosalla($seller_id = null, $sku = null, $customer_id = null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        $customer_id = GetuniqIDbySellerId($seller_id);
+        $quantity = Getquantitybyskuname($seller_id, $sku);
+        $auth_token = '$2y$04$rncDoc3yqrue9Fc6Ey29JOs1Qws4J6yVr9UbF2kDMKWv//xAhJ72';
+        $request_array = array('auth-token' => $auth_token,
+            'customerId' => $customer_id,
+            'quantity' => $quantity);
+        $url = "https://s.salla.sa/webhook/track/product/" . $sku;
+        $json_data = json_encode($request_array);
+        $header = array("Content-type:application/json");
+        $curl_req = curl_init($url);
+        curl_setopt($curl_req, CURLOPT_POSTFIELDS, $json_data);
+        $curl_options = array(
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_CONNECTTIMEOUT => 120,
+            CURLOPT_TIMEOUT => 120,
+            CURLOPT_HTTPHEADER => $header,
+            CURLOPT_FOLLOWLOCATION => true
+        );
+// exit("sadf");
+// print_r($json_data);exit;
+        curl_setopt_array($curl_req, $curl_options);
+        $response = curl_exec($curl_req);
+        //print_r($response);exit;
+        curl_close($curl_req);
+        return $response;
+    }
+
+}
+
+function digiQtyUpdate($sku,$qty) {
+    $apurl = "https://justwork.in//wp-json/wc/v3/products"; 
+    $url =  $apurl.'?sku=' . $sku;
+    
+    $username = "ck_abdfcda3fd2a45ac0e16aee1d48d0acc85024176";
+    $password = "cs_39be11db88120452cfcf769150795152e354a12c";
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_FOLLOWLOCATION => TRUE,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_CUSTOMREQUEST => "GET",
+        CURLOPT_HTTPHEADER => array(
+            'Authorization: Basic ' . base64_encode("$username:$password"),
+            "cache-control: no-cache",
+        ),
+    ));
+
+    $response = curl_exec($curl);
+    $response = json_decode($response);
+ 
+    curl_close($curl);
+
+    if ($response) {
+        //update qty
+        $update_url = $apurl . '/' . $response[0]->id;
+
+        $data = array('stock_quantity' => $qty,'manage_stock'=>1);
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $update_url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_FOLLOWLOCATION => TRUE,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_CUSTOMREQUEST => "PUT",
+            CURLOPT_POSTFIELDS => json_encode($data),
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: Basic ' . base64_encode("$username:$password"),
+                "cache-control: no-cache",
+                "Content-Type: application/json"
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        $result = json_decode($response);
+        curl_close($curl);
+    }
 }

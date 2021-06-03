@@ -129,11 +129,14 @@ class Generalsetting extends MY_Controller {
     }
 
     public function CompanyDetails() {
-
-
+        
+       
         if ($this->session->userdata('user_details')) {
-
+            
+            $zonelist = $this->zoneList();
+            //print "<pre>"; print_r($list);die;
             $data['EditData'] = $this->General_model->GetallcompanyDetails();
+            $data['TimeZone'] = $zonelist;
             $this->load->view('generalsetting/companydetails', $data);
 
             //$this->load->view('home');
@@ -141,24 +144,54 @@ class Generalsetting extends MY_Controller {
             redirect(base_url() . 'Login');
         }
     }
-
+    
+    function zoneList(){
+       $listArray = array( 
+        array("value"=>"-12","name"=>"[UTC - 12] Baker Island Time"),
+        array("value"=>"-11","name"=>"[UTC - 11] Niue Time, Samoa Standard Time"),
+        array("value"=>"-10","name"=>"[UTC - 10] Hawaii-Aleutian Standard Time, Cook Island Time"),
+        array("value"=>"-9.5","name"=>"[UTC - 9:30] Marquesas Islands Time"),
+        array("value"=>"-9","name"=>"[UTC - 9] Alaska Standard Time, Gambier Island Time"),
+        array("value"=>"-8","name"=>"[UTC - 8] Pacific Standard Time"),
+        array("value"=>"-7","name"=>"[UTC - 7] Mountain Standard Time"),
+        array("value"=>"-6","name"=>"[UTC - 6] Central Standard Time"),
+        array("value"=>"-5","name"=>"[UTC - 5] Eastern Standard Time"),
+        array("value"=>"-4.5","name"=>"[UTC - 4:30] Venezuelan Standard Time"),
+        array("value"=>"-4","name"=>"[UTC - 4] Atlantic Standard Time"),
+        array("value"=>"-3.5","name"=>"[UTC - 3:30] Newfoundland Standard Time"),
+        array("value"=>"-3","name"=>"[UTC - 3] Amazon Standard Time, Central Greenland Time"),
+        array("value"=>"-2","name"=>"[UTC - 2] Fernando de Noronha Time, South Georgia &amp; the South Sandwich Islands Time"),
+        array("value"=>"-1","name"=>"[UTC - 1] Azores Standard Time, Cape Verde Time, Eastern Greenland Time"),
+        array("value"=>"0" ,"name"=>"[UTC] Western European Time, Greenwich Mean Time"),
+        array("value"=>"1","name"=>"[UTC + 1] Central European Time, West African Time"),
+        array("value"=>"2","name"=>"[UTC + 2] Eastern European Time, Central African Time"),
+        array("value"=>"3","name"=>"[UTC + 3] Moscow Standard Time, Eastern African Time"),
+        array("value"=>"3.5","name"=>"[UTC + 3:30] Iran Standard Time"),
+        array("value"=>"4","name"=>"[UTC + 4] Gulf Standard Time, Samara Standard Time"),
+        array("value"=>"4.5","name"=>"[UTC + 4:30] Afghanistan Time"),
+        array("value"=>"5","name"=>"[UTC + 5] Pakistan Standard Time, Yekaterinburg Standard Time"),
+        array("value"=>"5.5","name"=>"[UTC + 5:30] Indian Standard Time, Sri Lanka Time"),
+        array("value"=>"5.75","name"=>"[UTC + 5:45] Nepal Time"),
+        array("value"=>"6","name"=>"[UTC + 6] Bangladesh Time, Bhutan Time, Novosibirsk Standard Time"),
+        array("value"=>"6.5","name"=>"[UTC + 6:30] Cocos Islands Time, Myanmar Time"),
+        array("value"=>"7","name"=>"[UTC + 7] Indochina Time, Krasnoyarsk Standard Time"),
+        array("value"=>"8","name"=>"[UTC + 8] Chinese Standard Time, Australian Western Standard Time, Irkutsk Standard Time"),
+        array("value"=>"8.75","name"=>"[UTC + 8:45] Southeastern Western Australia Standard Time"),
+        array("value"=>"9","name"=>"[UTC + 9] Japan Standard Time, Korea Standard Time, Chita Standard Time"),
+        array("value"=>"9.5","name"=>"[UTC + 9:30] Australian Central Standard Time"),
+        array("value"=>"10","name"=>"[UTC + 10] Australian Eastern Standard Time, Vladivostok Standard Time"),
+        array("value"=>"10.5","name"=>"[UTC + 10:30] Lord Howe Standard Time"),
+        array("value"=>"11","name"=>"[UTC + 11] Solomon Island Time, Magadan Standard Time"),
+        array("value"=>"11.5","name"=>"[UTC + 11:30] Norfolk Island Time"),
+        array("value"=>"12","name"=>"[UTC + 12] New Zealand Time, Fiji Time, Kamchatka Standard Time"),
+        array("value"=>"12.75","name"=>"[UTC + 12:45] Chatham Islands Time"),
+        array("value"=>"13","name"=>"[UTC + 13] Tonga Time, Phoenix Islands Time"),
+        array("value"=>"14","name"=>"[UTC + 14] Line Island Time")
+       );
+       return $listArray;
+    }
+    
     public function updateform() {
-        $company_name = $this->input->post('company_name');
-        $company_address = $this->input->post('company_address');
-        $dropoff_option = $this->input->post('dropoff_option');
-        $phone = $this->input->post('phone');
-        $fax = $this->input->post('fax');
-        $email = $this->input->post('email');
-        $support_email = $this->input->post('support_email');
-        $webmaster_email = $this->input->post('webmaster_email');
-        $auto_assign_picker = $this->input->post('auto_assign_picker');
-        $default_awb_char_fm = $this->input->post('default_awb_char_fm');
-        $e_city = implode(',', $this->input->post('e_city'));
-        $theme_color_fm = $this->input->post('theme_color_fm');
-        $tollfree_fm = $this->input->post('tollfree_fm');
-        $font_color = $this->input->post('font_color');
-        $vat = $this->input->post('vat');
-
 //        if (!empty($_FILES['logo']['name'])) {
 //            $config['upload_path'] = 'assets/logo/';
 //            $config['overwrite'] = TRUE;
@@ -178,13 +211,32 @@ class Generalsetting extends MY_Controller {
 //        } else
 //            $small_img = $this->input->post('logo_old');
 
+        $updatearray = array(
+                    "company_name" => $this->input->post('company_name'),
+                    'company_address' => $this->input->post('company_address'),
+                    'phone' => $this->input->post('phone'),
+                    'fax' => $this->input->post('fax'),
+                    'email' => $this->input->post('email'),
+                    'support_email' => $this->input->post('support_email'),
+                    'webmaster_email' => $this->input->post('webmaster_email'),
+                    'default_awb_char_fm' => $this->input->post('default_awb_char_fm'), 
+                    'e_city' => implode(',', $this->input->post('e_city')), 
+                    'tollfree_fm' => $this->input->post('tollfree_fm'), 
+                    'theme_color_fm' => $this->input->post('theme_color_fm'), 
+                    'auto_assign_picker' => $this->input->post('auto_assign_picker'),
+                    'font_color'=>$this->input->post('font_color'),
+                    'vat'=>$this->input->post('vat'),
+                    //'dropoff_option'=>$this->input->post('dropoff_option'),
+                    'default_currency'=>$this->input->post('default_currency'),
+                    'default_time_zone'=>$this->input->post('default_time_zone'),
+                    'country_code'=>$this->input->post('country_code'),
+                );
 
-        $updatearray = array("company_name" => $company_name, 'company_address' => $company_address, 'phone' => $phone, 'fax' => $fax, 'email' => $email, 'support_email' => $support_email, 'webmaster_email' => $webmaster_email, 'default_awb_char_fm' => $default_awb_char_fm, 'e_city' => $e_city, 'tollfree_fm' => $tollfree_fm, 'theme_color_fm' => $theme_color_fm, 'auto_assign_picker' => $auto_assign_picker,'font_color'=>$font_color,'vat'=>$vat,'dropoff_option'=>$dropoff_option);
 
-
+        //print "<pre>"; print_r($updatearray);die;
         $res = $this->General_model->Getupdatecompnaydata($updatearray);
         if ($res == true)
-            $this->session->set_flashdata('msg', 'has been updated successfully');
+            $this->session->set_flashdata('msg', 'Data has been updated successfully');
         else
             $this->session->set_flashdata('err_msg', 'Try again');
 

@@ -8,6 +8,7 @@
 		<div class="contenttitle2">
 			<h3>
 		    Invoice detail( <?=$invoiceData[0]['invoice_no'];?>)
+                    <?php  $currency = site_configTable("default_currency"); // get default currency    ?>
   
       </h3>
 			<br /> </div>
@@ -48,7 +49,7 @@
 			<table id="print" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;"width: 100%;>
 				<tr>
 					<!-- <td colspan="5"></td> -->
-					<td colspan="15" style="text-align:center;"><strong>Tax Invoice - فاتورة ضريبية</strong></td>
+					<td colspan="15" style="text-align:center;"><strong>Tax Invoice - �?اتورة ضريبية</strong></td>
 				<!-- 	<td colspan="9"></td> -->
 				</tr>
 				<tr>
@@ -61,7 +62,7 @@
 						<br/> <b>Account Manager:-<?=GetalldashboardClientField($invoiceData[0]['cust_id'], 'account_manager');?></b>
 							<br/> <b>Vat Id No.:-&nbsp;<?=GetalldashboardClientField($invoiceData[0]['cust_id'], 'vat_no');?>- الرقم الضريبي </b>
 
-						<br/> <b>Currency:-SAR</b> 
+						<br/> <b>Currency:-<?= $currency; ?></b> 
 					</td>
 
 					<td colspan="3" align="center"> 
@@ -73,8 +74,8 @@
 						
 						<br/> <b>Vat Id No.:-&nbsp;<?= Getsite_configData_field('vat'); ?>- الرقم الضريبي </b>
 						<br/> <b>IBAN #:-&nbsp;<?=GetalldashboardClientField($invoiceData[0]['cust_id'], 'iban_number');?> </b>
-						<br/> <b>Invoice No:-&nbsp;<?=$invoiceData[0]['invoice_no'];?> - رقم الفاتورة</b>
-						<br/> <b>Invoice Date:-&nbsp;<?=$invoiceData[0]['invoice_date'];?> - تاريخ الفاتورة</b>
+						<br/> <b>Invoice No:-&nbsp;<?=$invoiceData[0]['invoice_no'];?> - رقم ال�?اتورة</b>
+						<br/> <b>Invoice Date:-&nbsp;<?=$invoiceData[0]['invoice_date'];?> - تاريخ ال�?اتورة</b>
 						<br/><b>Toll Free no :-<?=Getsite_configData_field( 'tollfree_fm');?></b>
 						
 					</td>
@@ -191,25 +192,25 @@
 						</tr>
 						<tr>
 							<td align="justify"> Total Pickup Charges</td>
-							<td align="center">SAR
+							<td align="center"><?= $currency; ?>
 								<?=$totalValue['pickup_charge'];?>
 							</td>
 						</tr>
 						<tr>
 							<td align="justify"> Total Packing Charges</td>
-							<td align="center">SAR
+							<td align="center"><?= $currency; ?>
 								<?=$totalValue['packing_charge'];?>
 							</td>
 						</tr>
 						<tr>
 							<td align="justify"> Total Picking Charges</td>
-							<td align="center">SAR
+							<td align="center"><?= $currency; ?>
 								<?=$totalValue['picking_charge'];?>
 							</td>
 						</tr>
 						<tr>
 							<td align="justify"> Total Special Packing Charges</td>
-							<td align="center">SAR
+							<td align="center"><?= $currency; ?>
 								<?=$totalValue['special_packing'] ;?> 
 								
 							</td>
@@ -217,93 +218,93 @@
 						
 						<tr>
 							<td align="justify"> Total Return Charges</td>
-							<td align="center">SAR
+							<td align="center"><?= $currency; ?>
 								<?=$totalValue['return_charge'];?>
 							</td>
 						</tr>
 
 						<tr>
 							<td align="justify"> Total Inbound Charges</td>
-							<td align="center">SAR
+							<td align="center"><?= $currency; ?>
 								<?=$totalValue['inbound_charge'];?>
 							</td>
 						</tr>
 
 						<tr>
 							<td align="justify"> Total Outbound Charges</td>
-							<td align="center">SAR
+							<td align="center"><?= $currency; ?>
 								<?=$totalValue['outbound_charge'];?>
 							</td>
 						</tr>
 						<tr>
 							<td align="justify"> Total Shipping Charges</td>
-							<td align="center">SAR
+							<td align="center"><?= $currency; ?>
 								<?=$totalValue['shipping_charge'];?>
 							</td>
 						</tr>
 						<tr>
 							<td align="justify"> Total Inventory Charges</td>
-							<td align="center">SAR
+							<td align="center"><?= $currency; ?>
 								<?=$totalValue['inventory_charge'];?>
 							</td>
 						</tr>
 							<tr>
 							<td align="justify"> Total Portal Charges</td>
-							<td align="center">SAR
+							<td align="center"><?= $currency; ?>
 								<?=$totalValue['portal_charge'];?>
 							</td>
 						</tr>
 						<tr>
 							<td align="justify"> Total Sku Barcode Print</td>
-							<td align="center">SAR
+							<td align="center"><?= $currency; ?>
 								<?=$totalValue['sku_barcode_print'];?>
 							</td>
 						</tr>
 						<tr>
 							<td align="justify"> Total Box Charges</td>
-							<td align="center">SAR
+							<td align="center"><?= $currency; ?>
 								<?=$totalValue['box_charge'];?>
 							</td>
 						</tr>
 							<tr>
 							<td align="justify"> Total Onhold Charges</td>
-							<td align="center">SAR
+							<td align="center"><?= $currency; ?>
 								<?=$totalValue['onhold_charges'];?>
 							</td>
 						</tr>
 						<tr>
 							<td align="justify"> Total Storage Charges</td>
-							<td align="center">SAR
+							<td align="center"><?= $currency; ?>
 								<?=$totalValue['storage_charge'];?>
 							</td>
 						</tr>
 						<tr>
 							<tr>
-							<td align="justify">Total Fees before VAT 15%  - إجمالي الرسوم قبل ضريبة القيمة المضافة </td>
-							<td align="center">SAR
+							<td align="justify">Total Fees before VAT 15%  - إجمالي الرسوم قبل ضريبة القيمة المضا�?ة </td>
+							<td align="center"><?= $currency; ?>
 								<?=$TOTAL;?>
 							</td>
 						</tr>
 						<tr>
 							<tr>
 							<td align="justify">Total Vat Fees </td>
-							<td align="center">SAR
+							<td align="center"><?= $currency; ?>
 								<?=$TOTALvat;?>
 							</td>
 						</tr>
 							<tr>
-								<td>Total Fees After VAT <?=$invoiceData[0][0]['vat_percent'];?>% -  إجمالي الرسوم بعد ضريبة القيمة المضافة</td>
-								<td align="center">SAR
+								<td>Total Fees After VAT <?=$invoiceData[0][0]['vat_percent'];?>% -  إجمالي الرسوم بعد ضريبة القيمة المضا�?ة</td>
+								<td align="center"><?= $currency; ?>
 									<?=$TOTAL_with_vat;?>
 								</td>
 							</tr>
 							<tr>
 							<td align="justify">Transfer Fees </td>
-							<td align="center">SAR 	<?=$bank_fees;?></td>
+							<td align="center"><?= $currency; ?> 	<?=$bank_fees;?></td>
 						</tr>
 							<tr>
 								<th align="justify">Grand Total </th>
-								<th> SAR
+								<th> <?= $currency; ?>
 									<?=$bank_fees + $TOTAL_with_vat;?>
 								</th>
 							</tr>

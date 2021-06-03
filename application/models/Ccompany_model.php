@@ -205,7 +205,7 @@ class Ccompany_model extends CI_Model {
     }
     
     
-    public function Update_Manifest_Return_Status($slipNo = null, $client_awb = null, $CURRENT_TIME = null, $CURRENT_DATE = null, $company = null, $comment = null, $fastcoolabel = null, $c_id = null,$dataArray,$shiparray,$itemData){
+    public function Update_Manifest_Return_Status($slipNo = null, $client_awb = null, $CURRENT_TIME = null, $CURRENT_DATE = null, $company = null, $comment = null, $fastcoolabel = null, $c_id = null,$dataArray,$shiparray,$itemData, $super_id){
         
         switch($company){
             case 'Esnad': $label_type = 1; break;
@@ -245,7 +245,7 @@ class Ccompany_model extends CI_Model {
                     $this->db->insert('pickup_request', $updateArr);
                     //echo $this->db->last_query();die;
                     $data = array('return_update'=>'Y');
-                    $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+                    $this->db->where('super_id',$super_id);
                     $this->db->update('inventory_damage', $data, array('id' => $itemid));
                 }
             }
@@ -281,6 +281,261 @@ class Ccompany_model extends CI_Model {
 
         $this->db->insert('status_fm', $data);
         //echo $this->db->last_query();
+    }
+    
+    public function AramexArrayAdvance(array $ShipArr, array $counrierArr, $complete_sku = null, $pay_mode = null, $CashOnDeliveryAmount = null, $services = null,$box_pieces1= null,$super_id = null, $totalcustomerAmt=null )
+    {    
+        $reciever_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'aramex_city',$super_id);
+        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'aramex_city',$super_id);
+        $C_code = getdestinationfieldshow_auto_array($ShipArr['destination'], 'aramex_country_code',$super_id);
+        $ic_no = getdestinationfieldshow_auto_array($ShipArr['destination'], 'ic_no',$super_id);
+        
+        $date = (int) microtime(true) * 1000;
+        $currency = site_configTable("default_currency");
+        
+        if ($pay_mode == 'COD') {
+            $cod_amount=$cod_amount;
+            $shipment_value = $ShipArr['total_cod_amt'];
+            $pay_mode = 'P';
+            $CashOnDeliveryAmount = array("Value" => $cod_amount,
+                "CurrencyCode" => $currency);
+            $services = 'CODS';
+        } elseif ($pay_mode == 'CC') {
+            $cod_amount=0;
+
+            $pay_mode = 'P';
+            $CashOnDeliveryAmount = NULL;
+            $services = '';
+            $shipment_value = $ShipArr['shipment_value'];  
+        }
+        
+        if ($C_code != 'SA' && $C_code != '') {
+            $reciever_country = $C_code;
+            $ProductGroup = 'EXP';
+              //$currency =getdestinationfieldshow_auto_array($ShipArr['destination'], 'currency');//"USD";// getdestinationfieldshow($shipmentData[0]['destination'], 'currency');
+              if($currency=='BHD' || $currency=='QAR' || $currency=='EGP')
+              {
+                  $currency='USD';
+              }
+             // echo $currency; die;  
+            $ProductType = 'EPX';
+            if(!empty($shipment_value))
+            {
+                 $CustomsValueAmount = array("Value" => $shipment_value,
+                "CurrencyCode" => $currency); 
+            }
+            else
+            {
+                 $CustomsValueAmount = array("Value" => $totalcustomerAmt,
+                "CurrencyCode" => $currency); 
+            }
+          //  echo $currency; die;
+
+        } else {
+            $reciever_country = 'SA';
+            $ProductGroup = 'DOM';
+            $currency = site_configTable("default_currency");
+            $ProductType = 'OND';
+            $CustomsValueAmount = array("Value" => 0,
+                "CurrencyCode" =>'SAR');
+        }
+        
+        if(empty($box_pieces1)){
+            $box_pieces = 1;
+        }
+        else { 
+             $box_pieces = $box_pieces1 ; }
+
+        if($ShipArr['weight']==0)
+        {  $weight= 1;
+        }
+        else { $weight = $ShipArr['weight'] ; }
+        
+        $params = array(
+                                    'ClientInfo' =>
+                                    array(
+                                        'UserName' => $counrierArr['user_name'],
+                                        'Password' => $counrierArr['password'],
+                                        'Version' => 'v1',
+                                        'AccountNumber' => $counrierArr['courier_account_no'],
+                                        'AccountPin' => $counrierArr['courier_pin_no'],
+                                        'AccountEntity' => 'RUH',
+                                        'AccountCountryCode' => 'SA'
+                                    ),
+                                    'LabelInfo' => array("ReportID" => 9729, "ReportType" => "URL"),
+                                    'Shipments' =>
+                                    array(
+                                        0 =>
+                                        array(
+                                            'Reference1' => '',
+                                            'Reference2' => '',
+                                            'Reference3' => '',
+                                            'Shipper' =>
+                                            array(
+                                                'Reference1' => $ShipArr['slip_no'],
+                                                'Reference2' => '',
+                                                'AccountNumber' => $counrierArr['courier_account_no'],
+                                                'PartyAddress' =>
+                                                array(
+                                                    'Line1' => $ShipArr['sender_address'],
+                                                    'Line2' => '',
+                                                    'Line3' => '',
+                                                    'City' => $sender_city,
+                                                    'StateOrProvinceCode' => '',
+                                                    'PostCode' => '0000',
+                                                    'CountryCode' => 'SA',
+                                                    'Longitude' => 0,
+                                                    'Latitude' => 0,
+                                                    'BuildingNumber' => NULL,
+                                                    'BuildingName' => NULL,
+                                                    'Floor' => NULL,
+                                                    'Apartment' => NULL,
+                                                    'POBox' => NULL,
+                                                    'Description' => NULL,
+                                                ),
+                                                'Contact' =>
+                                                array(
+                                                    'Department' => '',
+                                                    'PersonName' => $ShipArr['sender_name'],
+                                                    'Title' => '',
+                                                    'CompanyName' => $ShipArr['sender_name'],
+                                                    'PhoneNumber1' => $ShipArr['sender_phone'],
+                                                    'PhoneNumber1Ext' => '',
+                                                    'PhoneNumber2' => '',
+                                                    'PhoneNumber2Ext' => '',
+                                                    'FaxNumber' => '',
+                                                    'CellPhone' => $ShipArr['sender_phone'],
+                                                    'EmailAddress' => 'support@rashof.com',
+                                                    'Type' => '',
+                                                ),
+                                            ),
+                                            'Consignee' =>
+                                            array(
+                                                'Reference1' => '',
+                                                'Reference2' => '',
+                                                'AccountNumber' => '',
+                                                'PartyAddress' =>
+                                                array(
+                                                    'Line1' => $ShipArr['reciever_address'],
+                                                    'Line2' => '',
+                                                    'Line3' => '',
+                                                    'City' => $reciever_city,
+                                                    'StateOrProvinceCode' => '',
+                                                    'PostCode' => '0000',
+                                                    'CountryCode' => $reciever_country,
+                                                    'Longitude' => 0,
+                                                    'Latitude' => 0,
+                                                    'BuildingNumber' => '',
+                                                    'BuildingName' => '',
+                                                    'Floor' => '',
+                                                    'Apartment' => '',
+                                                    'POBox' => NULL,
+                                                    'Description' => '',
+                                                ),
+                                                'Contact' =>
+                                                array(
+                                                    'Department' => '',
+                                                    'PersonName' => $ShipArr['reciever_name'],
+                                                    'Title' => '',
+                                                    'CompanyName' => $ShipArr['reciever_name'],
+                                                    'PhoneNumber1' => $ShipArr['reciever_phone'],
+                                                    'PhoneNumber1Ext' => '',
+                                                    'PhoneNumber2' => '',
+                                                    'PhoneNumber2Ext' => '',
+                                                    'FaxNumber' => '',
+                                                    'CellPhone' => $ShipArr['reciever_phone'],
+                                                    'EmailAddress' => 'support@rashof.com',
+                                                    'Type' => '',
+                                                ),
+                                            ),
+                                           'ThirdParty' => array(
+                                                        'Reference1' => '',
+                                                        'Reference2' => '',
+                                                        'AccountNumber' => '',
+                                                        'PartyAddress' => array(
+                                                            'Line1' => '',
+                                                            'Line2' => '',
+                                                            'Line3' => '',
+                                                            'City' => '',
+                                                            'StateOrProvinceCode' => '',
+                                                            'PostCode' => '',
+                                                            'CountryCode' => '',
+                                                            'Longitude' => 0,
+                                                            'Latitude' => 0,
+                                                            'BuildingNumber' => null,
+                                                            'BuildingName' => null,
+                                                            'Floor' => null,
+                                                            'Apartment' => null,
+                                                            'POBox' => null,
+                                                            'Description' => null,
+                                                        ),
+                                                        'Contact' => array(
+                                                            'Department' => '',
+                                                            'PersonName' => '',
+                                                            'Title' => '',
+                                                            'CompanyName' => '',
+                                                            'PhoneNumber1' => '',
+                                                            'PhoneNumber1Ext' => '',
+                                                            'PhoneNumber2' => '',
+                                                            'PhoneNumber2Ext' => '',
+                                                            'FaxNumber' => '',
+                                                            'CellPhone' => '',
+                                                            'EmailAddress' => '',
+                                                            'Type' => '',
+                                                        ),
+                                            ),
+                                            'ShippingDateTime' => "/Date(" . $date . ")/",
+                                            'DueDate' => "/Date(" . $date . ")/",
+                                            'Comments' => '',
+                                            'PickupLocation' => 'Riyadh',
+                                            'OperationsInstructions' => '',
+                                            'AccountingInstrcutions' => '',
+                                            'Details' =>
+                                            array(
+                                                'Dimensions' => NULL,
+                                                'ActualWeight' =>
+                                                array(
+                                                    'Unit' => 'KG',
+                                                    'Value' => $weight,
+                                                ),
+                                                'ChargeableWeight' => NULL,
+                                                'DescriptionOfGoods' => $complete_sku,
+                                                'GoodsOriginCountry' => 'SA',
+                                                'NumberOfPieces' => $box_pieces,
+                                                'ProductGroup' => $ProductGroup,
+                                                'ProductType' => $ProductType,
+                                                'PaymentType' => $pay_mode,
+                                                'PaymentOptions' => "",
+                                                'CustomsValueAmount' => $CustomsValueAmount,
+                                                'CashOnDeliveryAmount' => $CashOnDeliveryAmount,
+                                                'InsuranceAmount' => NULL,
+                                                'CashAdditionalAmount' => NULL,
+                                                'CashAdditionalAmountDescription' => '',
+                                                'CollectAmount' => NULL,
+                                                'Services' => $services,
+                                                'Items' =>
+                                                array(
+                                                ),
+                                            ),
+                                            'Attachments' =>
+                                            array(),
+                                            'ForeignHAWB' => $ShipArr['slip_no'],
+                                            'TransportType ' => 0,
+                                            'PickupGUID' => '',
+                                            'Number' => NULL,
+                                            'ScheduledDelivery' => NULL,
+                                        ),
+                                    ),
+                                    'Transaction' =>
+                                    array(
+                                        'Reference1' => '',
+                                        'Reference2' => '',
+                                        'Reference3' => '',
+                                        'Reference4' => '',
+                                        'Reference5' => '',
+                                    )
+                                );
+        return $params;
     }
 
     public function AramexArray(array $ShipArr, array $counrierArr, $complete_sku = null, $pay_mode = null, $CashOnDeliveryAmount = null, $services = null,$box_pieces1= null,$super_id = null ) 
@@ -831,6 +1086,8 @@ class Ccompany_model extends CI_Model {
             $weight = $ShipArr['weight'] ; 
         }
 
+        $currency = site_configTable("default_currency");    
+        
         $pckglist =  array();
 
         for($i=0;$i<$box_pieces; $i++)
@@ -848,7 +1105,7 @@ class Ccompany_model extends CI_Model {
     
         $param = array(
                 "codAmount"=>"$cod_amount",
-                "currency"=>"SAR",
+                "currency"=>$currency,
                 "customerCode"=> $counrierArr['user_name'], //customer code requirement Kedan
                 "customerNo"=> $ShipArr['slip_no'],
                 "trackingNo"=> $ShipArr['slip_no'],
@@ -1950,7 +2207,7 @@ class Ccompany_model extends CI_Model {
         //echo $API_URL;die;
           $api_key = $counrierArr['auth_token'];
 
-        $currency = "SAR";  
+        $currency = site_configTable("default_currency");//"SAR";  
 
          if(empty($box_pieces1))
          {
@@ -2007,10 +2264,6 @@ class Ccompany_model extends CI_Model {
             "weight" => $weight,
             "pieces" => $box_pieces
         );  
-
-    //     echo "<pre>"; print_r($ShipArr)."<br/>";
-    //     echo $super_id."<pre>"; print_r($all_param_data);
-    //    die; 
 
         $json_final_date = json_encode($all_param_data);  
 
@@ -3419,7 +3672,7 @@ array_push($itemArray,$peiceArray);
             $API_URL = $counrierArr['api_url'] . "api/create/order";
             $api_key = $counrierArr['auth_token'];
             //print_r($api_key);die; 
-            $currency = "SAR";
+            $currency = site_configTable("default_currency");//"SAR";
             
             if (empty($box_pieces1)) {
             $box_pieces = 1;
@@ -3557,7 +3810,7 @@ array_push($itemArray,$peiceArray);
                     
                 $API_URL = $counrierArr['api_url'] . "v2/customer/order";
                 
-                    $currency = "SAR";
+                    $currency = site_configTable("default_currency");//"SAR";
                     
                     if (empty($box_pieces1)) {
                     $box_pieces = 1;
@@ -4108,7 +4361,7 @@ array_push($itemArray,$peiceArray);
             else { 
                 $weight = $ShipArr['weight'] ; 
             }
-
+        $currency = site_configTable("default_currency");    
         $param = array(
             "apikey" => $counrierArr['auth_token'],          
             "pack_type" => 1,
@@ -4123,7 +4376,7 @@ array_push($itemArray,$peiceArray);
             "pack_num_pcs" => $box_pieces,
             "pack_weight" => $weight,
             "pack_cod_amount" => $codValue,
-            "pack_currency_code" => "SAR",
+            "pack_currency_code" => $currency,
             "pack_extra_note" => "OK",
             "pack_live_time" => "4",
             "pack_sender_name" => "Rashof",
@@ -4185,6 +4438,146 @@ array_push($itemArray,$peiceArray);
         }
     }
     
+    public function SLSArray(array $ShipArr, array $counrierArr, $complete_sku = null,$box_pieces1 = null,$c_id=null,$super_id=null) 
+    {
+        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'sls',$super_id);
+        $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'sls',$super_id);
+        $lat = $this->getdestinationfieldshow_auto_array($ShipArr['origin'], 'latitute',$super_id);
+        $lang = $this->getdestinationfieldshow_auto_array($ShipArr['origin'], 'longitute',$super_id);
+        $api_url = trim($counrierArr['api_url'])."create";
+        $api_key = $counrierArr['auth_token'];
+        $sender_city = $receiver_city = 'Riyadh';
+            
+            if (empty($box_pieces1)) {
+                $box_pieces = 1;
+            } else {
+                $box_pieces = $box_pieces1;
+            }
+            
+            if ($ShipArr['weight'] == 0) {
+                $weight = 1;
+            } else {
+                $weight = $ShipArr['weight'];
+            }
+            
+            if ($ShipArr['mode'] == 'COD') {
+                $cod_amount = $ShipArr['total_cod_amt'];
+            } elseif ($ShipArr['mode'] == 'CC') {
+                $cod_amount = 0;
+            }
+            
+           
+            $details = array(
+                'account_number'=>$counrierArr['courier_account_no'],
+                'requested_by'=> $ShipArr['sender_name'],
+                'collection_name'=> $ShipArr['sender_name'],
+                'collection_contact'=>'Majd',
+                'collection_street1'=> $ShipArr['sender_address'],
+                'collection_street2'=> $ShipArr['sender_address'],
+                'collection_city'=>$sender_city,
+                'collection_country'=> 'Saudi Arabia',
+                'collection_phone'=> $ShipArr['sender_phone'],
+                'collection_email'=>$ShipArr['sender_email'],
+                'api_token'=>$api_key,
+                'price_set_name'=>$ShipArr['mode'],
+                'description'=>'and',
+                'comments'=>'',
+                'quantity'=>$box_pieces,
+                'declared_value'=>$cod_amount,
+                'weight'=>$weight,
+                'delivery_name'=>$ShipArr['reciever_name'],
+                'delivery_contact'=>$ShipArr['reciever_name'],
+                'delivery_street1'=>$ShipArr['reciever_address'],
+                'delivery_street2'=>$ShipArr['reciever_address'],
+                'delivery_city'=>$receiver_city,
+                'delivery_postal_code'=>'0',
+                'delivery_country'=>'SA',
+                'delivery_phone'=>$Receiver_phone = $ShipArr['reciever_phone'],
+                'delivery_email'=>$ShipArr['reciever_email'],
+                'delivery_location_w3w'=>'bikers.exam.boots',
+                'delivery_location_lat'=>$lat,
+                'delivery_location_lng'=>$lang,
+                'cod_amount'=>$cod_amount,
+                'order_id'=>$ShipArr['slip_no'],
+                'order_type'=>'forward',
+                'reference_number'=>$ShipArr['slip_no']
+
+                );
+                $json_final_data = json_encode($details);
+            
+        if(!empty($receiver_city)){
+              $curl = curl_init();
+
+              curl_setopt_array($curl, array(
+              CURLOPT_URL => $api_url,
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => '',
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 0,
+              CURLOPT_FOLLOWLOCATION => true,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => 'POST',
+              CURLOPT_POSTFIELDS => $json_final_data,
+              CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json',
+                'Cookie: XSRF-TOKEN=eyJpdiI6InZraHl5QmJqZ1dFY1lzVis0S2hBVmc9PSIsInZhbHVlIjoiXC90UzlpdGxMdk16NjR6V0dqT2lcL2JBdHphb01Vbm55Z3ZtRFBJWjVjY1wvS0FhWmhGQXZaeDBmZWtwUkxpUTJpTnBPYkpzeW52ZjRNU0YweU9VMGFhanc9PSIsIm1hYyI6ImJhZjY4ZThiZmEyMjNkMWQzYjE0NTA4NDExZTZlODg1ODYwMDUwMGE5NzA4MzQyM2NlNjNiY2Q4MjZiYWZlNmQifQ%3D%3D; laravel_session=4a8d823e4c952a4c3e4a95e0ca2c9b5e4a1b2fd9'
+            ),));
+
+            $response = curl_exec($curl);
+            curl_close($curl);
+        }
+        else 
+        {
+            $response = array('message'=> 
+                             array('0' => 'The collection city field is required.')
+                        ); 
+            $response = json_encode($response);  
+        }                            
+            // echo "response ". $response; 
+        $responseArray = json_decode($response, true); 
+        $logresponse = json_encode($response);
+        $successres = $responseArray['status'];
+         
+        if ($successres == 1) 
+        {
+            $successstatus = "Success";
+        } else {
+            $successstatus = "Fail";
+        }
+        $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no']);
+        return $responseArray;
+    }
+
+    public function SLS_label($client_awb = null,$counrierArr= null) {
+        $api_url=$counrierArr['api_url']."waybill?api_token=".$counrierArr['auth_token'];
+        $param= array( 'api_token'=>  $counrierArr['auth_token'],
+                     'tracking_number'=>$client_awb,
+                    );
+        $dataJson =json_encode($param);
+
+        $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL =>$api_url,
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => '',
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 0,
+              CURLOPT_FOLLOWLOCATION => true,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => 'GET',
+              CURLOPT_POSTFIELDS =>$dataJson,
+                 CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json',
+                'Cookie: XSRF-TOKEN=eyJpdiI6InZraHl5QmJqZ1dFY1lzVis0S2hBVmc9PSIsInZhbHVlIjoiXC90UzlpdGxMdk16NjR6V0dqT2lcL2JBdHphb01Vbm55Z3ZtRFBJWjVjY1wvS0FhWmhGQXZaeDBmZWtwUkxpUTJpTnBPYkpzeW52ZjRNU0YweU9VMGFhanc9PSIsIm1hYyI6ImJhZjY4ZThiZmEyMjNkMWQzYjE0NTA4NDExZTZlODg1ODYwMDUwMGE5NzA4MzQyM2NlNjNiY2Q4MjZiYWZlNmQifQ%3D%3D; laravel_session=4a8d823e4c952a4c3e4a95e0ca2c9b5e4a1b2fd9'
+            ),));
+
+            $label_response = curl_exec($curl);
+            
+            curl_close($curl);
+            return  $label_response;
+    }
+
 
 
 }

@@ -99,49 +99,24 @@
                                                             
                                                              <td>
                                                                 <div class="form-group mt-10" >
-                                                        <select class="form-control"  ng-model="filterData.sort_list" ng-change="loadMore(1, 1);">
-
-                                                            <option value=""><?=lang('lang_Short_List');?></option>
-
-
-                                                            <option value="NO"><?=lang('lang_Newest_Order');?></option>
-                                                            <option value="OLD"><?=lang('lang_Oldest_Order');?></option>
-                                                          
-                                                            
-
-                                                        </select>
-
-                                                   </div>
+                                                                    <select class="form-control"  ng-model="filterData.sort_list" ng-change="loadMore(1, 1);">
+                                                                        <option value=""><?=lang('lang_Short_List');?></option>
+                                                                        <option value="NO"><?=lang('lang_Newest_Order');?></option>
+                                                                        <option value="OLD"><?=lang('lang_Oldest_Order');?></option>
+                                                                    </select>
+                                                                </div>
                                                             </td>
-
-
-
-
-
                                                             <td><button type="button" class="btn btn-success" style="margin-left: 7%"><?=lang('lang_Total');?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button></td>
                                                             <td><button  class="btn btn-danger" ng-click="loadMore(1, 1);" ><?=lang('lang_Search');?></button></td>
-
-
                                                         </tr>
-
-
                                                     </tbody>
                                                 </table>
                                                 <br>
-
-
-
                                                 <div id="today-revenue"></div>
                                                 <!-- </div> panel-body-->
-
                                                 <!-- /today's revenue -->
-
                                             </div>
-
-
-
                                         </div>
-
                                         <!-- /quick stats boxes -->
                                 </div>
                             </div>

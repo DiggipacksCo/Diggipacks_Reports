@@ -57,6 +57,7 @@ class Manifest extends CourierCompany_pickup {
         $this->load->model('User_model');
         $assignuser = $this->User_model->userDropval(9);
         $_POST = json_decode(file_get_contents('php://input'), true);
+        $super_id = $this->session->userdata('user_details')['super_id'];
 
         $page_no = $_POST['page_no'];
         $seller_id = $_POST['seller_id'];
@@ -98,10 +99,13 @@ class Manifest extends CourierCompany_pickup {
                 $seller_ids .= ',' . $rdata['seller_id'];
 
             $manifestarray[$ii]['pstatus'] = GetpickupStatus($rdata['pstatus']);
+
             if ($rdata['seller_id'] > 0)
-                $manifestarray[$ii]['seller_id'] = getallsellerdatabyID($rdata['seller_id'], 'name');
+           
+                $manifestarray[$ii]['seller_id'] =  getallsellerdatabyID($rdata['seller_id'], 'name',$super_id);
             else
                 $manifestarray[$ii]['seller_id'] = 'N/A';
+                
             if ($rdata['assign_to'] > 0)
                 $manifestarray[$ii]['assign_to'] = getUserNameById($rdata['assign_to']);
             else
@@ -148,6 +152,8 @@ class Manifest extends CourierCompany_pickup {
         //exit();
         echo json_encode($dataArray);
     }
+
+    
     public function filter_return() {
         $this->load->model('User_model');
         $assignuser = $this->User_model->userDropval(9);
@@ -401,7 +407,6 @@ class Manifest extends CourierCompany_pickup {
     }
 
     function getupdateassign() {
-
         $_POST = json_decode(file_get_contents('php://input'), true);
         $dataArray = $_POST;
         $uniqueid = $dataArray['mid'];
@@ -409,13 +414,9 @@ class Manifest extends CourierCompany_pickup {
         $assign_type = $dataArray['assign_type'];
         $order_type = $dataArray['order_type'];
         $cc_id = $dataArray['cc_id'];
-       // echo "kjhkhjkhk"; die;
 
         if ($assign_type == 'CC') {
-          
             $request_return = $this->BulkForwardCompanyReady($uniqueid, $cc_id, $order_type,$dataArray);
-
-           // echo "FERETE"; die; 
             if (!empty($request_return['Success_msg'])) {
                 $return = array('status' => "succ",'Success_msg'=>$request_return['Success_msg']);
             } else {
@@ -449,8 +450,7 @@ class Manifest extends CourierCompany_pickup {
         
         $counrierArr_table = $this->Ccompany_model->GetdeliveryCompanyUpdateQry($cc_id,$custid=0,$super_id);
         
-        $c_id = $counrierArr_table['cc_id'];
-
+        $c_id = $counrierArr_table['id'];
         if ($counrierArr_table['type'] == 'test') {
             $user_name = $counrierArr_table['user_name_t'];
             $password = $counrierArr_table['password_t'];
@@ -489,8 +489,6 @@ class Manifest extends CourierCompany_pickup {
         $counrierArr['create_order_url'] = $create_order_url;
         $counrierArr['auth_token'] = $auth_token;
 
-       // echo "<br/>";print_r($counrierArr); die; 
-        
         if (!empty($dataArray['mid'])) {
             $shipmentLoopArray = $dataArray['mid'];
             $dataArray['cc_id'] = $dataArray['cc_id'];
@@ -534,7 +532,7 @@ class Manifest extends CourierCompany_pickup {
         if ($pay_mode == 'COD') {
                 $pay_mode = 'P';
                 $CashOnDeliveryAmount = array("Value" => $cod_amount,
-                        "CurrencyCode" => "SAR");
+                        "CurrencyCode" => site_configTable("default_currency"));
                 $services = 'CODS';
         } elseif ($pay_mode == 'CC') {
                 $pay_mode = 'P';
@@ -543,7 +541,7 @@ class Manifest extends CourierCompany_pickup {
         }
         
         if($company == 'Aymakan') {
-          // print "<pre>"; print_r($ShipArr); die;
+           // print "<pre>"; print_r($ShipArr);die;
             $response = $this->Ccompany_model->AymakanArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$complete_sku,$super_id);
             $responseArray = json_decode($response, true);
             //print "<pre>"; print_r($responseArray);die;
@@ -561,8 +559,7 @@ class Manifest extends CourierCompany_pickup {
                 $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
                 array_push($succssArray, $slipNo);
                 $returnArr['Success_msg'][] = $slipNo . ':Successfully Assigned';
-            } 
-            else {
+            } else {
                 $errors = 'Fail: Please check logs.';
                 if(isset($responseArray['errors']['collection_city']) && !empty($responseArray['errors']['collection_city'])){
                     $errors = $responseArray['errors']['collection_city'][0];
@@ -573,8 +570,7 @@ class Manifest extends CourierCompany_pickup {
 
                 $returnArr['Error_msg'][] = $slipNo . ':' . $errors;
             }
-        }
-        else if($company == "Clex"){
+        }else if($company == "Clex"){
             $response = $this->Ccompany_model->ClexArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1, $c_id, $super_id);
 
             if ($response['data'][0]['cn_id']) {
@@ -1087,7 +1083,7 @@ class Manifest extends CourierCompany_pickup {
                    
                     file_put_contents("assets/all_labels/$slipNo.pdf", file_get_contents($mediaData));
                      $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
-                    $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                    $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
                     array_push($succssArray, $slipNo);
                     $returnArr['Success_msg'][] = 'Successfully Assigned.';
                 }else{
@@ -1376,6 +1372,33 @@ class Manifest extends CourierCompany_pickup {
                             $returnArr['Error_msg'][] = $slipNo . ':' .$error_status;
                         }
                     
+            }elseif ($company == 'SLS'){   
+                        $responseArray = $this->Ccompany_model->SLSArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1,$c_id, $super_id);
+                       //  echo "<pre>" ; print_r($responseArray); //die;
+                        $successres = $responseArray['status'];
+                        $error_status = json_encode($responseArray);
+
+                            if (!empty($successres) && $successres == 1)
+                            {
+                                $client_awb = $responseArray['tracking_number'];
+                                $SLSLabel = $this->Ccompany_model->SLS_label($client_awb, $counrierArr);
+                                   
+                                file_put_contents("assets/all_labels/$slipNo.pdf", $SLSLabel);                            
+                                $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+
+                                $CURRENT_DATE = date("Y-m-d H:i:s");
+                                $CURRENT_TIME = date("H:i:s");
+
+                                $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                                $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' : forwarded to SLS.';
+                                array_push($succssArray, $slipNo);
+                            }
+                            
+                            else
+                            {
+                                $returnArr['Error_msg'][] = $slipNo . ':' .$error_status;
+                            }
+                        
             }elseif ($company_type == 'F') { // for all fastcoo clients treat as a CC 
             
                 if ($company=='Ejack' ) 
@@ -1659,6 +1682,7 @@ class Manifest extends CourierCompany_pickup {
         $super_id = $this->session->userdata('user_details')['super_id']; 
 
 
+
         $_POST = json_decode(file_get_contents('php://input'), true);
         $from = $_POST['from'];
         $to = $_POST['to'];
@@ -1686,8 +1710,6 @@ class Manifest extends CourierCompany_pickup {
                 $manifestarray[$ii]['seller_id'] = 'N/A';
             $ii++;
         }
-        // echo "<pre>"; print_r($manifestarray);
-        // exit();
 
         	
         $sellers = Getallsellerdata($seller_ids);
@@ -1697,16 +1719,16 @@ class Manifest extends CourierCompany_pickup {
         $dataArray['sellers'] = $sellers;
         $dataArray['courierData'] = $courierData;
 
-       
+        //print_r($shipments);
+        //exit();
         echo json_encode($dataArray);
     }
 
     function Getpickuplistshow() {
         $this->load->model('User_model');
-
         $assignuser = $this->User_model->userDropval(9);
-
         $_POST = json_decode(file_get_contents('php://input'), true);
+        $super_id = $this->session->userdata('user_details')['super_id'];
 
         $from = $_POST['from'];
         $to = $_POST['to'];
@@ -1731,7 +1753,7 @@ class Manifest extends CourierCompany_pickup {
                 $seller_ids .= ',' . $rdata['seller_id'];
             $manifestarray[$ii]['pstatus'] = GetpickupStatus($rdata['pstatus']);
             if ($rdata['seller_id'] > 0)
-                $manifestarray[$ii]['seller_id'] = getallsellerdatabyID($rdata['seller_id'], 'name');
+                $manifestarray[$ii]['seller_id'] = getallsellerdatabyID($rdata['seller_id'], 'name',$super_id);
             else
                 $manifestarray[$ii]['seller_id'] = 'N/A';
             if ($rdata['assign_to'] > 0)
@@ -3031,7 +3053,7 @@ class Manifest extends CourierCompany_pickup {
                         file_put_contents("/var/www/html/fastcoo-tech/demofulfillment/assets/all_labels/$slipNo.pdf", $generated_pdf);
 
                          $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
-                         $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                         $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
                         
                         array_push($succssArray, $slipNo);
                         $returnArr['Success_msg'] = 'Data updated successfully.';
@@ -3062,7 +3084,7 @@ class Manifest extends CourierCompany_pickup {
                     file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
                     $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
                     //****************************safe arrival label print cURL****************************
-                    $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                    $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
                     
                     //array_push($succssArray, $slipNo);
 
@@ -3100,7 +3122,7 @@ class Manifest extends CourierCompany_pickup {
                         $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
               
                     //**************************** Thabit label print cURL****************************
-                    $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                    $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
                     							
                     array_push($succssArray, $slipNo);
                     $returnArr['Success_msg'] = 'Data updated successfully.';
@@ -3168,7 +3190,7 @@ class Manifest extends CourierCompany_pickup {
                     $encoded = base64_decode($generated_pdf);
                     //header('Content-Type: application/pdf');
                     file_put_contents("/var/www/html/fastcoo-tech/fulfillment/assets/all_labels/$slipNo.pdf", $generated_pdf);
-                        $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                        $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
                     
                         array_push($succssArray, $slipNo);
 
@@ -3196,7 +3218,7 @@ class Manifest extends CourierCompany_pickup {
                         $comment = $responseArray['message'];
                     //header('Content-Type: application/pdf');
                         //file_put_contents("/var/www/html/fastcoo-tech/fulfillment/assets/all_labels/$slipNo.pdf", $generated_pdf);
-                        $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $esnadlabel,$c_id,$dataArray,$ShipArr,$itemData);
+                        $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $esnadlabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
                     
                         array_push($succssArray, $slipNo);
 
@@ -3246,7 +3268,7 @@ class Manifest extends CourierCompany_pickup {
 
                         //****************************makdoom label print cURL****************************
 
-                       // $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                       $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $esnadlabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
                        array_push($succssArray, $slipNo);
                        $returnArr['Success_msg'][] = 'Data updated successfully.';
                    }
@@ -3284,7 +3306,7 @@ class Manifest extends CourierCompany_pickup {
                          $CURRENT_TIME = date("H:i:s");
 
                         
-                        $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                        $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
                        array_push($succssArray, $slipNo);
                       $returnArr['Success_msg'] = 'Data updated successfully.';
                     }else{
@@ -3303,7 +3325,7 @@ class Manifest extends CourierCompany_pickup {
                             header("Content-type:application/pdf");
                             file_put_contents("assets/all_labels/$slipNo.pdf", $label_response);
                             $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
-                            $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                            $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
                             
                             array_push($succssArray, $slipNo);
                             $returnArr['Success_msg'][] = 'Data updated successfully.';
@@ -3393,7 +3415,7 @@ class Manifest extends CourierCompany_pickup {
                                     //****************NAQEL label print cURL****************************
                                      $CURRENT_DATE = date("Y-m-d H:i:s");
                                      $CURRENT_TIME = date("H:i:s");
-                                    $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                                    $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
                                    array_push($succssArray, $slipNo);
                                    $returnArr['Success_msg'][] = 'Data updated successfully.';
                                 }
@@ -3421,7 +3443,7 @@ class Manifest extends CourierCompany_pickup {
                          $CURRENT_DATE = date("Y-m-d H:i:s");
                             $CURRENT_TIME = date("H:i:s");
 
-                        $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                        $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
                        array_push($succssArray, $slipNo);
                        $returnArr['Success_msg'][] = 'Data updated successfully.';
                       
@@ -3476,7 +3498,7 @@ class Manifest extends CourierCompany_pickup {
 
                                 $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
 
-                                $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                                $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
 
                                 array_push($succssArray, $slipNo);
                                 $returnArr['Success_msg'][] = 'Data updated successfully.';
@@ -3502,7 +3524,7 @@ class Manifest extends CourierCompany_pickup {
                         file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
 
                         $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
-                        $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                        $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
                         array_push($succssArray, $slipNo);
                         $returnArr['Success_msg'][] = 'Data updated successfully.';
                     } 
@@ -3522,7 +3544,7 @@ class Manifest extends CourierCompany_pickup {
                         file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
 
                         $fastcoolabel = base_url()."assets/all_labels/$slipNo.pdf";
-                        $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                        $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
                         array_push($succssArray, $slipNo);
                         $returnArr['Success_msg'][] = 'Data updated successfully.';
                     } else {
@@ -3555,7 +3577,7 @@ class Manifest extends CourierCompany_pickup {
                         $client_awb = $response['awb'];
 
                         $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
-                        $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                        $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
                         array_push($succssArray, $slipNo);
                         $returnArr['Success_msg'][] = 'Data updated successfully.';
                     } else {
@@ -3583,7 +3605,7 @@ class Manifest extends CourierCompany_pickup {
                          $CURRENT_DATE = date("Y-m-d H:i:s");
                             $CURRENT_TIME = date("H:i:s");
 
-                        $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                        $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
                        array_push($succssArray, $slipNo);
                        $returnArr['Success_msg'][] = 'Data updated successfully.';
 
@@ -3609,7 +3631,7 @@ class Manifest extends CourierCompany_pickup {
                          $CURRENT_DATE = date("Y-m-d H:i:s");
                             $CURRENT_TIME = date("H:i:s");
                                                      
-                        $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                        $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
                        array_push($succssArray, $slipNo); 
                        $returnArr['Success_msg'][] = 'Data updated successfully.';
                     }   
@@ -3636,7 +3658,7 @@ class Manifest extends CourierCompany_pickup {
                    
                     file_put_contents("assets/all_labels/$slipNo.pdf", file_get_contents($mediaData));
                      $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
-                    $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                    $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
                     array_push($succssArray, $slipNo);
                     $returnArr['Success_msg'][] = 'Data updated successfully.';
                 }else{
@@ -3670,7 +3692,7 @@ class Manifest extends CourierCompany_pickup {
 
                                     file_put_contents("assets/all_labels/$slipNo.pdf", $shipaLabel);
                                      $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
-                                    $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                                    $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
                                     array_push($succssArray, $slipNo);
                                     $returnArr['Success_msg'][] = 'Data updated successfully.';
 
@@ -3698,7 +3720,7 @@ class Manifest extends CourierCompany_pickup {
                     
                   
                     $fastcoolabel='SP';
-                    $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                    $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
                     
 
                     header('Content-Type: application/pdf');
@@ -3726,7 +3748,7 @@ class Manifest extends CourierCompany_pickup {
                                 file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
                                 
                                 $beezlabel = base_url() . "assets/all_labels/$slipNo.pdf";
-                                $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $beezlabel,$c_id,$dataArray,$ShipArr,$itemData);
+                                $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $beezlabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
                                 $returnArr['Success_msg'][] = $slipNo.': Data updated successfully.';
                                 array_push($succssArray, $slipNo);
                             }
@@ -3752,7 +3774,7 @@ class Manifest extends CourierCompany_pickup {
                                 $CURRENT_DATE = date("Y-m-d H:i:s");
                                 $CURRENT_TIME = date("H:i:s");
 
-                                $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                                $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
                                 $returnArr['Success_msg'][] = $slipNo.': Data updated successfully.';
                                 array_push($succssArray, $slipNo);
                             }
@@ -3779,7 +3801,7 @@ class Manifest extends CourierCompany_pickup {
                                 $CURRENT_DATE = date("Y-m-d H:i:s");
                                 $CURRENT_TIME = date("H:i:s");
                                
-                                $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                                $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
                                 
                                 $details = 'Forwarded to ' . $ClientArr['company'];
                                 
@@ -3806,7 +3828,7 @@ class Manifest extends CourierCompany_pickup {
                                     $CURRENT_DATE = date("Y-m-d H:i:s");
                                     $CURRENT_TIME = date("H:i:s");
                                     $comment = $responseData['message'];
-                                    $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fetchrlabel,$c_id,$dataArray,$ShipArr,$itemData);
+                                    $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fetchrlabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
                                     $returnArr['Success_msg'][] = $slipNo . ' Data updated successfully.';
 
                                     $this->session->set_flashdata('msg', $returnArr);
@@ -3830,7 +3852,7 @@ class Manifest extends CourierCompany_pickup {
 
                                     file_put_contents("assets/all_labels/".$slipNo.".pdf", $pdf_file);
                                     $imile_label = base_url() . "assets/all_labels/$slipNo.pdf";
-                                    $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $imile_label,$c_id,$dataArray,$ShipArr,$itemData);
+                                    $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $imile_label,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
                                     $returnArr['Success_msg'][] = $slipNo . ' Data updated successfully.';
                                     array_push($succssArray, $slipNo);
                                     
@@ -3867,7 +3889,7 @@ class Manifest extends CourierCompany_pickup {
                             $CURRENT_DATE = date("Y-m-d H:i:s");
                             $CURRENT_TIME = date("H:i:s");                               
 
-                            $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                            $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
                             $returnArr['Success_msg'][] = $slipNo . ' Data updated successfully.';
                             array_push($succssArray, $slipNo);
                         }                            
@@ -3876,6 +3898,33 @@ class Manifest extends CourierCompany_pickup {
                             $returnArr['responseError'][] = $slipNo . ':' .$error_status;
                         }
                     
+            }elseif ($company == 'SLS'){   
+                        $responseArray = $this->Ccompany_model->SLSArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1,$c_id, $super_id);
+                        
+                       //  echo "<pre>" ; print_r($responseArray); //die;
+                        $successres = $responseArray['status'];
+                        $error_status = json_encode($responseArray);
+
+                            if (!empty($successres) && $successres == 1)
+                            {
+                                $client_awb = $responseArray['tracking_number'];
+                                $SLSLabel = $this->Ccompany_model->SLS_label($client_awb, $counrierArr);
+                                   
+                                file_put_contents("assets/all_labels/$slipNo.pdf", $SLSLabel);                            
+                                $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+
+                                $CURRENT_DATE = date("Y-m-d H:i:s");
+                                $CURRENT_TIME = date("H:i:s");
+
+                                $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
+                                $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' : forwarded to SLS.';
+                                array_push($succssArray, $slipNo);
+                            }
+                            
+                            else
+                            {
+                                $returnArr['responseError'][] = $slipNo . ':' .$error_status;
+                            }
             }elseif ($company_type== 'F'){ // for all fastcoo clients treat as a CC 
                       
                 $response = $this->Ccompany_model->fastcooArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1, $super_id);
@@ -3892,7 +3941,7 @@ class Manifest extends CourierCompany_pickup {
                      $CURRENT_DATE = date("Y-m-d H:i:s");
                      $CURRENT_TIME = date("H:i:s");
 
-                    $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData);
+                    $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
                    array_push($succssArray, $slipNo);
                   $returnArr['Success_msg'][] = 'Data updated successfully.';
                 }   

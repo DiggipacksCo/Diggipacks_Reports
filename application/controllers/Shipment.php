@@ -351,7 +351,7 @@ class Shipment extends MY_Controller {
                             $save_sender_origin = $shipmentData[0]['origin'];
                             $save_receiver_destination = $shipmentData[0]['destination'];
                             $sender_city = getdestinationfieldshow($shipmentData[0]['origin'], 'city');
-                            $currency = "SAR";
+                            $currency = site_configTable("default_currency");
                             $pay_mode = $shipmentData[0]['mode'];
                             $cod_amount = $shipmentData[0]['total_cod_amt'];
                             $awb_no = $shipmentData[0]['slip_no'];
@@ -563,7 +563,7 @@ class Shipment extends MY_Controller {
 
                                     $pay_mode = 'P';
                                     $CashOnDeliveryAmount = array("Value" => $cod_amount,
-                                        "CurrencyCode" => "SAR");
+                                        "CurrencyCode" => site_configTable("default_currency"));
                                     $services = 'CODS';
                                 } elseif ($pay_mode == 'CC') {
 
@@ -1086,19 +1086,19 @@ class Shipment extends MY_Controller {
 
 
 
-
+                                $default_currency = site_configTable("default_currency");
                                 if ($receiver_city == 'Riyadh') {
-
+                                    
                                     if ($pay_mode == 'CC') {
-                                        $price_set = "Inside Riyadh - 25 SAR - 10 KG 2 SAR";
+                                        $price_set = "Inside Riyadh - 25 ".$default_currency." - 10 KG 2 ".$default_currency."";
                                     } elseif ($pay_mode == 'COD') {
-                                        $price_set = "Inside Riyadh - 25 SAR - 10 KG 2 SAR - COD 5 SAR";
+                                        $price_set = "Inside Riyadh - 25 ".$default_currency." - 10 KG 2 ".$default_currency." - COD 5 ".$default_currency."";
                                     }
                                 } else {
                                     if ($pay_mode == 'CC') {
-                                        $price_set = "Outside Riyadh - 30 SAR - 10 KG 2 SAR";
+                                        $price_set = "Outside Riyadh - 30 ".$default_currency." - 10 KG 2 ".$default_currency."";
                                     } elseif ($pay_mode == 'COD') {
-                                        $price_set = "Outside Riyadh - 30 SAR - 10 KG 2 SAR - COD 5 SAR";
+                                        $price_set = "Outside Riyadh - 30 ".$default_currency." - 10 KG 2 ".$default_currency." - COD 5 ".$default_currency." ";
                                     }
                                 }
                                 $param = array(

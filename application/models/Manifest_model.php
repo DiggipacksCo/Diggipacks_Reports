@@ -16,6 +16,7 @@ class Manifest_model extends CI_Model {
     public function filterUpdate($page_no, $filterarray = array()) {
 
 
+         $this->db->where('pickup_request.deleted','N');
         $this->db->select('pickup_request.id,pickup_request.uniqueid,pickup_request.sku,pickup_request.qty,items_m.id as item_sku, storage_table.storage_type,items_m.sku_size,items_m.item_path,pickup_request.seller_id');
         $this->db->from('pickup_request');
         $this->db->join('items_m', 'items_m.sku=pickup_request.sku');
@@ -51,12 +52,13 @@ class Manifest_model extends CI_Model {
             $start = ($page_no - 1) * $limit;
         }
 
+        $this->db->where('pickup_request.deleted','N');
         $this->db->select('COUNT(id) as id_count,id,COUNT(qty) as qtyall,id,uniqueid,sku,qty,assign_to,req_date,pstatus,code,seller_id,on_hold,itemupdated,confirmO,pickimg,address,city,3pl_awb,3pl_name,3pl_label,3pl_date,boxes,description,return_type,staff_id,vehicle_type,assign_date');
         $this->db->from('pickup_request');
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         if ($this->session->userdata('user_details')['user_type'] == 9)
             $this->db->where('assign_to', $this->session->userdata('user_details')['user_id']);
-        if ($this->session->userdata('user_details')['user_type'] != 1) {
+        if ($this->session->userdata('user_details')['user_type'] != 1 && $this->session->userdata('user_details')['user_type'] != 3 ) {
             $this->db->where('staff_id', $this->session->userdata('user_details')['user_id']);
         }
         if ($filterarray['seller_id'])
@@ -104,6 +106,7 @@ class Manifest_model extends CI_Model {
             $start = ($page_no - 1) * $limit;
         }
 
+        $this->db->where('pickup_request.deleted','N');
         $this->db->select('qty as qtyall,id,uniqueid,sku,qty,assign_to,req_date,pstatus,code,seller_id,on_hold,itemupdated,confirmO,pickimg,address,city,3pl_awb,3pl_name,3pl_label,3pl_date,r_3pl_awb,r_3pl_name,r_3pl_label,r_3pl_date,boxes,description,return_type');
         $this->db->from('pickup_request');
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
@@ -136,6 +139,7 @@ class Manifest_model extends CI_Model {
     }
 
     public function manifestCount_return($page_no, $filterarray = array()) {
+        $this->db->where('pickup_request.deleted','N');
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('id');
         $this->db->from('pickup_request');
@@ -163,6 +167,7 @@ class Manifest_model extends CI_Model {
     }
 
     public function manifestCount($page_no, $filterarray = array()) {
+        $this->db->where('pickup_request.deleted','N');
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select(' count( DISTINCT(uniqueid) )  AS tcount');
         $this->db->from('pickup_request');
@@ -200,6 +205,7 @@ class Manifest_model extends CI_Model {
         } else {
             $start = ($page_no - 1) * $limit;
         }
+        $this->db->where('pickup_request.deleted','N');
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('COUNT(id) as id_count,COUNT(qty) as qtyall,id,uniqueid,sku,qty,assign_to,req_date,pstatus,code,seller_id,on_hold,itemupdated,address,city,3pl_awb,3pl_name,3pl_label,3pl_date,boxes,description,manifest_type');
         $this->db->from('pickup_request');
@@ -238,6 +244,7 @@ class Manifest_model extends CI_Model {
     }
 
     public function paikuplistcount($to, $from, $page_no, $filterarray = array()) {
+        $this->db->where('pickup_request.deleted','N');
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('id');
         $this->db->from('pickup_request');
@@ -272,6 +279,7 @@ class Manifest_model extends CI_Model {
         } else {
             $start = ($page_no - 1) * $limit;
         }
+        $this->db->where('pickup_request.deleted','N');
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
 
         $this->db->select('COUNT(id) as id_count,COUNT(qty) as qtyall,id,uniqueid,sku,qty,assign_to,req_date,pstatus,code,seller_id,on_hold,itemupdated,schedule_date,vehicle_type');
@@ -308,6 +316,7 @@ class Manifest_model extends CI_Model {
     }
 
     public function newrequestmanifestCount($to, $from, $page_no, $filterarray = array()) {
+        $this->db->where('pickup_request.deleted','N');
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('id');
         $this->db->from('pickup_request');
@@ -340,6 +349,7 @@ class Manifest_model extends CI_Model {
         } else {
             $start = ($data['page_no'] - 1) * $limit;
         }
+        $this->db->where('pickup_request.deleted','N');
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('*');
         $this->db->from('pickup_request');
@@ -383,6 +393,7 @@ class Manifest_model extends CI_Model {
         $this->db->from('pickup_request');
 
 
+        $this->db->where('pickup_request.deleted','N');
         if ($data['sku']) {
             $this->db->where('sku', $data['sku']);
         }
@@ -413,6 +424,7 @@ class Manifest_model extends CI_Model {
     public function ManifestStatusUpdate($data = array(), $id = null, $sku = null) {
 
         ///$this->db->get_compiled_select();
+        $this->db->where('pickup_request.deleted','N');
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('id');
         $this->db->from('pickup_request');
@@ -433,6 +445,7 @@ class Manifest_model extends CI_Model {
     public function getpickedupupdatestatus($data = array(), $id = null) {
 
         ///$this->db->get_compiled_select();
+        $this->db->where('pickup_request.deleted','N');
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('id');
         $this->db->from('pickup_request');
@@ -473,6 +486,7 @@ class Manifest_model extends CI_Model {
     }
 
     public function getManifestReceviedUpdates($updateData = array(), $data = array()) {
+        $this->db->where('pickup_request.deleted','N');
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('id');
         $this->db->from('pickup_request');
@@ -509,6 +523,7 @@ class Manifest_model extends CI_Model {
     }
 
     public function getManifestReceviedUpdatesCount($data = array()) {
+        $this->db->where('pickup_request.deleted','N');
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('id');
         $this->db->from('pickup_request');
@@ -526,6 +541,7 @@ class Manifest_model extends CI_Model {
     }
 
     public function getManifestReceviedUpdatesCountComp($data = array()) {
+        $this->db->where('pickup_request.deleted','N');
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('id');
         $this->db->from('pickup_request');
@@ -543,6 +559,7 @@ class Manifest_model extends CI_Model {
     }
 
     public function GetallpickupRequestData_imtemCheck($uid = null) {
+        $this->db->where('pickup_request.deleted','N');
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('count(id)');
         $this->db->from('pickup_request');
@@ -629,6 +646,7 @@ class Manifest_model extends CI_Model {
     }
 
     public function GetallmanifestskuData($uid = null, $sid = null) {
+        $this->db->where('pickup_request.deleted','N');
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('id,sku,qty,expire_date,code');
         $this->db->from('pickup_request');
@@ -654,6 +672,7 @@ class Manifest_model extends CI_Model {
         // $this->db->select('pickup_request.id,pickup_request.sku,pickup_request.qty,pickup_request.expire_date,pickup_request.code');
 
 
+        $this->db->where('pickup_request.deleted','N');
         $this->db->select('pickup_request.id,pickup_request.uniqueid,pickup_request.sku,pickup_request.qty,items_m.id as item_sku, storage_table.storage_type,items_m.sku_size,items_m.item_path,pickup_request.seller_id,items_m.wh_id,pickup_request.expire_date');
         $this->db->from('pickup_request');
         $this->db->join('items_m', 'items_m.sku=pickup_request.sku');
@@ -675,6 +694,7 @@ class Manifest_model extends CI_Model {
     }
 
     public function GetmissingQtyCHeck($uid = null, $sid = null, $sku = null) {
+        $this->db->where('pickup_request.deleted','N');
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
 
         $this->db->select('id');
@@ -695,7 +715,9 @@ class Manifest_model extends CI_Model {
     }
 
     public function GetallskuDetailsByOneGroupQry($mid = null) {
+        $this->db->where('pickup_request.deleted','N');
         $this->db->where('pickup_request.super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->where('items_m.super_id', $this->session->userdata('user_details')['super_id']);
 
         $this->db->select('count(pickup_request.id) as qty ,pickup_request.sku,items_m.item_path');
         $this->db->from('pickup_request');
@@ -882,6 +904,7 @@ class Manifest_model extends CI_Model {
 
     public function GetMidDetailsQry($mid = null) {
 
+        $this->db->where('pickup_request.deleted','N');
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('*');
         $this->db->from('pickup_request');

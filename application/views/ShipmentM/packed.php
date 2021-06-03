@@ -459,7 +459,7 @@ return !~text.indexOf(val);
                                           <th>Gift Item  </th>
                                         <th>Qty</th>
                                         <th>Deducted Shelve NO</th>
-                                        <th>COD (SAR)</th>
+                                        <th>COD (<?= site_configTable("default_currency"); ?>)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -493,7 +493,7 @@ return !~text.indexOf(val);
                                         <tr>
                                             <th>SKU</th>
                                             <th>Qty</th>
-                                            <th>COD (SAR)</th>
+                                            <th>COD (<?= site_configTable("default_currency"); ?>)</th>
                                         </tr>
                                     </thead></table></th>
                                 <!-- <th>Cartoon Sku#</th> -->

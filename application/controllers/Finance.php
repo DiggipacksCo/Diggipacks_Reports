@@ -59,7 +59,6 @@ class Finance extends MY_Controller {
 	  		$ItemArray= $return['result'];
 			  $chargesArray=array();
 			  $slipNOCharges=array();
-			//echo '<pre>';
 		foreach($ItemArray as $key=>$val)
 		 {
 
@@ -96,6 +95,7 @@ class Finance extends MY_Controller {
 
 		 $data['totalValue']= $chargesArray;
 		 $data['invoiceData']= $slipNOCharges;
+                 
 		$this->load->view('finance/viewinvoice', $data);
 	 }
 

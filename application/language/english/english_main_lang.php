@@ -1234,3 +1234,7 @@ $lang['lang_Send_Courier']="Send Courier";
 $lang['lang_Update_Driver']="Update Driver"; 
 
 $lang['lang_Create_Order_Return']="Create Order Return";
+$lang['lang_Short_List']="Short List";
+$lang['lang_Oldest_Order']="Oldest Order";
+$lang['lang_Newest_Order']="Newest Order";
+$lang['lang_TPL_AWB']="3PL AWB";

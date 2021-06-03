@@ -65,10 +65,10 @@
                                         <label for="phone"><strong>Phone:</strong></label>
                                         <input type="text" class="form-control" name='phone' id="phone" placeholder="Phone" value="<?= $EditData['phone'] ?>">
                                     </div>
-                                    <div class="form-group">
+<!--                                    <div class="form-group">
                                         <label for="fax"><strong>Fax:</strong></label>
-                                        <input type="text" class="form-control" name='fax' id="fax" placeholder="Fax" value="<?= $EditData['fax'] ?>">
-                                    </div>
+                                        <input type="text" class="form-control" name='fax' id="fax" placeholder="Fax" value="<? //= $EditData['fax'] ?>">
+                                    </div>-->
                                     <div class="form-group">
                                         <label for="email"><strong>Email:</strong></label>
                                         <input type="email" class="form-control" name='email' id="email" placeholder="Email" value="<?= $EditData['email'] ?>">
@@ -85,6 +85,31 @@
                                         <label for="webmaster_email"><strong>Default AWB:</strong></label>
                                         <input type="text" class="form-control" maxlength="4" name='default_awb_char_fm' id="default_awb_char_fm" placeholder="Default AWB" value="<?= $EditData['default_awb_char_fm'] ?>">
                                     </div>
+                                    <div class="form-group">
+                                        <label for="default_currency"><strong>Default Currency:</strong></label>
+                                        <input type="text" class="form-control" maxlength="10" name='default_currency' id="default_currency" placeholder="Default Currency" value="<?= $EditData['default_currency'] ?>">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="country_code"><strong>Country Code:</strong></label>
+                                        <input type="text" class="form-control" maxlength="10" name='country_code' id="country_code" placeholder="Country Code" value="<?= $EditData['country_code'] ?>">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="default_time_zone"><strong>Default Time Zone: </strong></label>
+                                        <select  id="default_time_zone" name="default_time_zone"  data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%" >
+                                            <option value="">Select Time Zone</option>el>
+                                            <?php
+                                                if(!empty($TimeZone)){
+                                                    foreach($TimeZone as $zone){ 
+                                                        $select = "";
+                                                        if($zone['value'] == $EditData['default_time_zone']) {$select = "selected";}
+                                                        ?>
+                                                            <option value="<?= $zone['value']; ?>"  <?= $select; ?> ><?= $zone['name']; ?>  </option>el>
+                                             <?php       }
+                                                }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    
                                     <div class="form-group">
                                         <label for="dropoff_option"><strong>Drop Off Details</strong></label>
                                         <textarea  class="form-control" placeholder="Drop Off Details"  name='dropoff_option' id="dropoff_option" ><?= $EditData['dropoff_option'] ?></textarea>

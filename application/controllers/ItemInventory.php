@@ -315,6 +315,11 @@ class ItemInventory extends MY_Controller {
                         $this->ItemInventory_model->updateInventory(array('quantity' => $sku_size, 'id' => $val->id));
                         $qty = $qty - $diff;
                     }
+                    
+                    /*SALLA QTY UPDATE*/
+                    if($this->session->userdata('user_details')['user_id'] == 256){
+                        sendQuantityupdatetosalla($this->input->post('seller'), $this->input->post('sku'), $this->session->userdata('user_details')['user_id']);
+                    }
                 }
 
                 // echo $val['item_sku'];  
@@ -388,15 +393,17 @@ class ItemInventory extends MY_Controller {
                 
            
         } 
-
+       
         $token = GetallCutomerBysellerId($this->input->post('seller'), 'manager_token'); 
-         $sallatoken = GetallCutomerBysellerId($this->input->post('seller'), 'salla_athentication'); 
-         
+        $sallatoken = GetallCutomerBysellerId($this->input->post('seller'), 'salla_athentication'); 
+        $zid_store_id = GetallCutomerBysellerId($this->input->post('seller'), 'zid_sid');   
+        $zidReqArr = GetAllQtyforSellerby_ID($this->input->post('sku'), $this->input->post('seller'));
+        $quantity = $zidReqArr['quantity']; //+$fArray['qty'];
+        
+        digiQtyUpdate($zidReqArr['sku'], $quantity);
         if (!empty($token)) {   //Qty update in Zid section 
-            $zid_store_id = GetallCutomerBysellerId($this->input->post('seller'), 'zid_sid');     
-                 //==========update zid stock===============//
-                     $zidReqArr = GetAllQtyforSellerby_ID($this->input->post('sku'), $this->input->post('seller'));
-                     $quantity = $zidReqArr['quantity']; //+$fArray['qty'];
+              
+                 //==========update zid stock===============//                     
                      $pid = $zidReqArr['zid_pid'];
                      $token = $token;
                      $storeID = $zid_store_id;
