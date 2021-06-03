@@ -3825,7 +3825,7 @@ array_push($itemArray,$peiceArray);
                     }
                     
                     if($ShipArr['mode'] == "COD"){
-                        $pay_mode = "cash";
+                        $pay_mode = "credit_balance";
                         $cod_amount = $ShipArr['total_cod_amt'];
                         $paid = FALSE;
                     }
@@ -3873,14 +3873,14 @@ array_push($itemArray,$peiceArray);
                     'domestic' => true
                 );
                 $package_type = array(
-                    'courier_type' => 'PRIORITY'
+                    'courier_type' => '01'
                 );
+    
                 $charge_items[] = array(
                     'paid' => $paid,
                     'charge' => $cod_amount,
-                    'charge_type' => $ShipArr['mode']               
+                    'charge_type' => "COD"               
                 );
-        
         
                 $details = array(
                     'sender_data' => $sender_data,
