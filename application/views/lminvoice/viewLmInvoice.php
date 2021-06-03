@@ -113,7 +113,7 @@
 												 To date  :
 												  <input type="date" name="p_date2" ng-model="SearArr.p_date2" id="datepicker4" class="form-control" placeholder="dd-mm-yy" >
 												</th>
-												<th width="10px"> <button type="button" class="btn btn-info btn btn-primary" ng-click="getPayableCODlist(1,1);" style="margin-top:80px">{{'lang_search'|translate}} </button>
+												<th width="10px"> <button type="button" class="btn btn-info btn btn-primary" ng-click="getPayableCODlist(1,1);" style="margin-top:80px">Search </button>
 												</th>
 											  </tr>
 											</tbody>      
