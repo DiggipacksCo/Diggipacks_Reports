@@ -72,6 +72,13 @@ $route['manifestPrint/(:any)'] = 'Shipment/manifestPrint/$1';
 
 $route['damage_list']       = 'ItemInventory/damage_list_view';
 
+//===========last mile invoices=========//
+$route['createInvoice']       = 'LastmileInvoice/createInvoice'; 
+$route['viewLmInvoice']       = 'LastmileInvoice/viewLmInvoice'; 
+$route['codreceivablePrint/(:any)'] = 'LastmileInvoice/codreceivablePrint/$1'; 
+
+
+
 
 
 //==============vehicle ==================//

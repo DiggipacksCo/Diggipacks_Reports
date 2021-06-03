@@ -474,6 +474,14 @@
                                     { ?>
                                     <li><a href="<?= base_url('cancelOrder'); ?>"><?= lang('lang_Cancel_Order'); ?></a></li>
                                 <?php } ?>
+
+                                <?php if (menuIdExitsInPrivilageArray(54) == 'Y') { ?>
+                                    <li><a href="<?= base_url('createInvoice'); ?>">Create Lm Invoice</a></li>
+                                <?php } ?>
+                                <?php if (menuIdExitsInPrivilageArray(54) == 'Y') { ?>
+                                    <li><a href="<?= base_url('viewLmInvoice'); ?>">View Lm Invoice</a></li>
+                                <?php } ?>
+
                             </ul>
                         </li>
 <?php } ?>

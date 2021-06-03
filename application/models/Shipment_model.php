@@ -218,6 +218,28 @@ class Shipment_model extends CI_Model {
         }
     }
 
+
+    public function getawbdataqueryInvoice($awbids = array(),$cust_id=null) {
+        // print_r($awbids[0]);
+        $awbarray = $awbids;
+
+        $counter = 0;
+        $conditions = "";
+        foreach ($awbarray as $ids) {
+            if ($counter == 0)
+                $conditions = $ids;
+            else
+                $conditions .= "','" . $ids;
+            $counter++;
+        }
+
+        $query = $this->db->query("select * from shipment_fm where (slip_no IN('$conditions') or booking_id IN('$conditions') or frwd_company_awb IN('$conditions')) and cust_id='".$cust_id."' and code In ('POD','RTC') and super_id='" . $this->session->userdata('user_details')['super_id'] . "'");
+        // echo $this->db->last_query();
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        }
+    }
+
     public function all_json() {
 
 

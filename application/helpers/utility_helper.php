@@ -915,6 +915,90 @@ if (!function_exists('GetuserToatalLOcationQty')) {
 
 }
 
+if (!function_exists('invoiceCountnew')) {
+
+    function invoiceCountnew($invoice_no = null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        $siteQry = "select count(id) as total_numCount from Payable_invoice_fm where invoice_no='" . $invoice_no . "' ";
+        $query = $ci->db->query($siteQry);
+        $invoiceCountData = $query->row_array();
+
+        return $invoiceCountData;
+    }
+
+}
+
+if (!function_exists('GetcustomerDropdata')) {
+
+    function GetcustomerDropdata() {
+        $ci = & get_instance();
+        $ci->load->database();
+
+        $sql = "SELECT id,uniqueid,name as company FROM customer WHERE  status='Y' and deleted='N' and access_fm='Y' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $query = $ci->db->query($sql);
+        $statusData = $query->result_array();
+        return $statusData;
+    }
+
+}
+
+if (!function_exists('getstaff_multycreated')) {
+
+    function getstaff_multycreated($id = null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        $siteQry = "select name,id from user where status='Y' and deleted='N'   order by name asc";
+
+        $query = $ci->db->query($siteQry);
+        $result = $query->result_array();
+        return $result;
+    }
+
+}
+if (!function_exists('invoiceDetailnew')) {
+
+    function invoiceDetailnew($invoice_no = null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        $siteQry = "select SUM(cod_charge) as cod_charge_sum,SUM(return_charge) as return_charge_sum,SUM(service_charge) as service_charge_sum,SUM(cod_amount) as cod_amount_sum,SUM(vat) as vat_sum from Payable_invoice_fm where invoice_no='" . $invoice_no . "'";
+        $query = $ci->db->query($siteQry);
+        $invoiceCountData = $query->row_array();
+        return $invoiceCountData;
+    }
+
+}
+
+if (!function_exists('Get_user_name')) {
+
+    function Get_user_name($id = null, $type = null) {
+
+
+        $ci = & get_instance();
+        $ci->load->database();
+        if ($type == 'user') {
+            $siteQry = "SELECT name FROM user WHERE id='" . $id . "' ";
+            $query = $ci->db->query($siteQry);
+            $countrydata = $query->result_array();
+            $name = $countrydata[0]['name'];
+        }
+        if ($type == 'customer') {
+            // $siteQry = "SELECT name FROM customer WHERE id='" . $id . "' ";
+            // $query = $ci->db->query($siteQry);
+            // $countrydata = $query->result_array();
+            //$name = $countrydata[0]['name'];
+            $name = 'Customer';
+        }
+        if ($type == 'driver') {
+            $siteQry = "SELECT messenger_name FROM courier_staff WHERE cor_id='" . $id . "'  ";
+            $query = $ci->db->query($siteQry);
+            $countrydata = $query->result_array();
+            $name = $countrydata[0]['messenger_name'];
+        }
+        return $name;
+    }
+
+}
 if (!function_exists('GetuserSkuAllqty')) {
 
     function GetuserSkuAllqty($seller_id = null, $item_sku = null) {
