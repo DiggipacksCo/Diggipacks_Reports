@@ -246,5 +246,14 @@ class Seller_model extends CI_Model {
         return $this->db->update('customer', $data);
          
     }
+    
+    public function update_Woocommerce($id, $data) {
+        
+        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->where('id', $id);
+        $this->db->update('customer', $data);
+        //echo $this->db->last_query();die;
+    }
+
 
 }

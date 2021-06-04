@@ -112,6 +112,7 @@ echo '<div class="alert alert-success">'.$this->session->flashdata('msg').' <but
                                <li><a href="<?= site_url('Seller/updateSallaConfig/' . $seller->id); ?>"><i class="icon-pencil7"></i> Salla Configuration</a></li>
                                 <li><a href="<?= site_url('Seller/updateShopify/' . $seller->id); ?>"><i class="fa fa-balance-scale"></i>Shopify config</a></li>
                                <?php echo (($seller->salla_athentication != '' && $seller->salla_active == 'Y') ? '<li><a href="' . site_url("Seller/SallaProducts/" . $seller->id) . '"><i class="icon-pencil7"></i>Salla Product List</a></li>' : '') ?>
+                                  <li><a href="<?= site_url('Seller/updateWoocommerce/' . $seller->id); ?>"><i class="icon-pencil7"></i>Woocommerce Configuration</a></li>
 
                                <?php echo (($seller->manager_token != '' && $seller->zid_active == 'Y') ? '<li><a href="' . site_url("Seller/ZidProducts/" . $seller->id) . '"><i class="icon-pencil7"></i>Zid Product List</a></li>' : '') ?>
                                 <!-- <?php //echo (($seller->manager_token != '' && $seller->zid_active == 'Y') ? '<li><a href="' . site_url("Item/updateZid_product/" . $seller->id) . '"><i class="icon-pencil7"></i>Zid Stock Update </a></li>' : '') ?> -->
