@@ -1,6 +1,6 @@
 <?php
 
-$conn = new mysqli("localhost", "root", "", "diggipacks_db");
+$conn = new mysqli("ajouldb-db-instance-1.ctikm53hr4st.us-east-1.rds.amazonaws.com", "ajoulMaster", "Ajouldb118", "diggipacks_db");
 
 // Check connection
 if ($conn->connect_errno) {
