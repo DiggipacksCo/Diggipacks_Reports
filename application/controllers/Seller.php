@@ -1215,9 +1215,30 @@ class Seller extends MY_Controller {
         redirect('Item');
     }
     
-        public function updateWoocommerce($id) {
+     public function updateShopify($id) {
+        
+        if ($this->input->post('updateshopify')) {
+            $update_data = array(
+                'shopify_url' => $this->input->post('shopify_url'),
+                'shopify_tag' => $this->input->post('shopify_tag'),
+                'location_id' => $this->input->post('location_id'),
+                'is_shopify_active' => $this->input->post('is_shopify_active'),
+            );
+            
+            if ($this->Seller_model->update_shopify($id, $update_data)) {                
+                $this->session->set_flashdata('msg', $this->input->post('name') . '   has been updated successfully');
+                redirect('Seller');
+            }
+        }
+        
         $data['customer'] = $this->Seller_model->edit_view_customerdata($id);
-        $data['seller'] = $this->Seller_model->edit_view($id);
+        $data['seller'] = $this->Seller_model->edit_view($id);        
+        
+        $this->load->view('SellerM/shopify_config', $data);
+    }
+    
+    public function updateWoocommerce($id) {             
+        
         if ($this->input->post('updatewoocommerce')) {
             $update_data = array(
                 'wc_consumer_key' => $this->input->post('consumer_key'),
@@ -1225,12 +1246,14 @@ class Seller extends MY_Controller {
                 'wc_store_url' => $this->input->post('consumer_store_url'),
                 'wc_active' => ($this->input->post('consumer_active')) ? $this->input->post('consumer_active') : 0,
             );
-            if ($this->Seller_model->update_Woocommerce($id, $update_data)) {
-                $customer = $this->Seller_model->edit_view_customerdata($id);
+            if ($this->Seller_model->update_Woocommerce($id, $update_data)) {                
                 $this->session->set_flashdata('msg', $this->input->post('name') . '   has been updated successfully');
                 redirect('Seller');
             }
         }
+        
+        $data['customer'] = $this->Seller_model->edit_view_customerdata($id);
+        $data['seller'] = $this->Seller_model->edit_view($id);
         
         $this->load->view('SellerM/woocommerce_config', $data);
     }
