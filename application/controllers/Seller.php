@@ -1215,6 +1215,28 @@ class Seller extends MY_Controller {
         redirect('Item');
     }
     
+    
+     public function updateShopify($id) {
+        $data['customer'] = $this->Seller_model->edit_view_customerdata($id);
+        $data['seller'] = $this->Seller_model->edit_view($id);
+        
+        if ($this->input->post('updateshopify')) {
+            $update_data = array(
+                'shopify_url' => $this->input->post('shopify_url'),
+                'shopify_tag' => $this->input->post('shopify_tag'),
+                'location_id' => $this->input->post('location_id'),
+                'is_shopify_active' => $this->input->post('is_shopify_active'),
+            );
+            
+            if ($this->Seller_model->update_shopify($id, $update_data)) {
+                $customer= $this->Seller_model->edit_view_customerdata($id);
+                $this->session->set_flashdata('msg', $this->input->post('name') . '   has been updated successfully');
+                redirect('Seller');
+            }
+        }
+        $this->load->view('SellerM/shopify_config', $data);
+    }
+    
 
 }
 
