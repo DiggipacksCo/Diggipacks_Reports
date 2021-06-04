@@ -1248,7 +1248,7 @@ class CourierCompany extends MY_Controller  {
                                     array_push($succssArray, $slipNo);
                                  }else{
 
-                                     $returnArr['responseError'][] = $slipNo . ':' . $responseData['message'];
+                                     $returnArr['responseError'][] = $slipNo . ':' . $responseData['data'][0]['message'];
                                  } 
                     }
                     elseif ($company== 'iMile'){
