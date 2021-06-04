@@ -109,8 +109,7 @@ if ($query->num_rows > 0) {
 
                 $response = requestSend($url, $params);
                 $response = json_decode($response);
-                echo "<pre>";
-                print_r($response);
+                
                 if ($response->status == 200) {
                     fulfillment($url, $response->awb_no, $order->id,$location_id);
                 }
