@@ -239,5 +239,12 @@ class Seller_model extends CI_Model {
         $query = $this->db->get();
         return $query->result_array();
     }
+    
+     public function update_shopify($id, $data) {
+        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->where('id', $id);
+        return $this->db->update('customer', $data);
+         
+    }
 
 }
