@@ -16,7 +16,7 @@ class Zid extends CI_Controller {
 		// ini_set('display_errors', 1);
      
         ignore_user_abort();
-        $file = fopen("/var/www/html/diggipack_new/zidcron.lock", "w+");;
+        $file = fopen("/var/www/html/diggipack_new/zidlock/zidcron.".$uniqueid.".lock", "w+");;
 
         // exclusive lock, LOCK_NB serves as a bitmask to prevent flock() to block the code to run while the file is locked.
         // without the LOCK_NB, it won't go inside the if block to echo the string
@@ -234,7 +234,7 @@ class Zid extends CI_Controller {
                             $url = "https://api.diggipacks.com/API/createLmOrder";
                           $resps =  $this->sendRequest($url, $dataJson);
                         }
-                        print_r($resps);
+                        print_r($resps); 
                     }
                 }
             }
