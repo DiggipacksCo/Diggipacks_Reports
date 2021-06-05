@@ -103,12 +103,9 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('errormess').
          <td>{{data.name}}</td>
            <td>{{data.description}}</td>
           
-          <td ng-if="data.name=='Outbound Charge' || data.name=='Return'">
-           <input type="text" name="setrate"  class="form-control" ng-model="TypesData[$index].rates" style="width:40%; float:left;">
-           <input type="text" name="setpiece"  class="form-control" ng-model="TypesData[$index].setpiece" placeholder="pieces" style="width:40%;"> </td>
-
-           <td ng-if="data.name!='Outbound Charge' && data.name!='Return'"> <input type="text" name="setrate"  class="form-control" ng-model="TypesData[$index].rates"> </td>
-          
+           <td ng-if="data.name=='Outbound Charge' || data.name=='Return' || data.name=='Pickup Charge box'"> <input type="text" name="setrate"  class="form-control" ng-model="TypesData[$index].rates"  style="width:40%; float:left;"><input type="text" name="setpiece"  class="form-control" ng-model="TypesData[$index].setpiece" placeholder="pieces" style="width:40%;"></td>
+           <td ng-if="data.name!='Outbound Charge' && data.name!='Return'  && data.name!='Pickup Charge box'"> <input type="text" name="setrate"  class="form-control" ng-model="TypesData[$index].rates"   ></td>
+               
          
         </tr>
         <tr><td colspan="4" align="right"> <button  class="btn btn-info" ng-show = "IsVisible" ng-click="getUpdateratesdata();">Update</button></td></tr>

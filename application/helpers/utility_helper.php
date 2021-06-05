@@ -3450,7 +3450,7 @@ if(!function_exists('Salla_StatusUpdate')){
                 echo $response->message;
             }
            else{
-               print_r($response);
+              // print_r($response);
            }
         }
     }

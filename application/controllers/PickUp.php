@@ -732,14 +732,17 @@ class PickUp extends MY_Controller {
 
                 $token = GetallCutomerBysellerId($seller_id, 'manager_token');
                 $salatoken = GetallCutomerBysellerId($seller_id, 'salla_athentication');
-
-                
-                $Salla_tracking_url = $data['frwd_company_label'];  
+if(!empty( $salatoken))
+{
+    $Salla_tracking_url = $data['frwd_company_label'];  
                 $frwd_company_awb = ($data['frwd_company_awb'] != '')? $data['frwd_company_awb'] : '';
                 $Salla_status = "DL";
                 $Salla_note = "delivering";
                 $sallaStatus = Salla_StatusUpdate($data['booking_id'], $Salla_status, $Salla_note, $frwd_company_awb, $Salla_tracking_url);
 
+}
+                
+                
                 
                 
                 
