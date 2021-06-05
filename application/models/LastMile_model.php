@@ -12,7 +12,8 @@ class LastMile_model extends CI_Model {
     public function addlmIncoice($addedArray=array())
     {
         $this->db->insert_batch('Payable_invoice_fm', $addedArray);
-         echo  $this->db->last_query(); 
+           $this->db->last_query(); 
+		   return true;
     }
     
 
