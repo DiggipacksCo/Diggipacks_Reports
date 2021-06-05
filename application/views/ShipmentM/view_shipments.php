@@ -620,6 +620,12 @@
                                             <span class="checkmark"></span>    
                                         </label>
                                     </div>
+                                    <div class="col-sm-4">    
+                                        <label class="container">
+                                            <input type="checkbox" name="invoice_details" value="invoice_details"  ng-model="listData2.invoice_details"> Invoice Details
+                                            <span class="checkmark"></span>    
+                                        </label>
+                                    </div>
 
 
 

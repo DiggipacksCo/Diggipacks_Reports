@@ -3318,6 +3318,14 @@ class Shipment_model extends CI_Model {
             $selectQry .= " shipment_fm.reciever_address AS RECEIVER ADDRESS,";
         if ($data['reciever_phone'] == 1)
             $selectQry .= " shipment_fm.reciever_phone AS RECEIVER PHONE,";
+
+            if ($data['invoice_details'] == 1)
+            {
+                $selectQry .= " shipment_fm.pay_invoice_status AS INVOICE PAID,";
+                $selectQry .= " shipment_fm.pay_invoice_no AS INVOICE NUMBER,";
+                $selectQry .= " shipment_fm.rec_invoice_status AS INVOICE PAYMENT RECEIVED ,";
+            }
+            
         if ($data['mode'] == 1)
             $selectQry .= " shipment_fm.mode AS RECEIVER MODE,";
         if ($data['delivered'] == 1) {
