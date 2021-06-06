@@ -106,11 +106,11 @@ if ($query->num_rows > 0) {
                     'skudetails' => $product_arr
                 );
 
-
+                 
                 $response = requestSend($url, $params);
                 $response = json_decode($response);
                 
-                if ($response->status == 200) {
+                if ($response->status == 200 && $customer['shopify_fulfill'] == 1) {
                     fulfillment($url, $response->awb_no, $order->id,$location_id);
                 }
             }
@@ -144,7 +144,7 @@ if ($query->num_rows > 0) {
             "fulfillment" => array(
                 "tracking_number" => $awb,
                 "tracking_url" => "https://track.diggipacks.com/" . $awb,
-                "tracking_company" => "Diggipack",
+                "tracking_company" => "",
                 "location_id" => $location_id
             )
         );

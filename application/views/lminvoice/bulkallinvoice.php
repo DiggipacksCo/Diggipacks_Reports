@@ -8,7 +8,7 @@
     <div class="contenttitle2">
       <h3>
      
-     Invoice detail( <?=$invoiceData[0]['r_invoice'];?>)
+     Invoice detail( <?=$invoiceData[0]['invoice_no'];?>)
      <?php
 $logo = Getsite_configData_field('logo'); //$this->site_data->newlogo;
 ?>

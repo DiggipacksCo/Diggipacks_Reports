@@ -1221,6 +1221,7 @@ class Seller extends MY_Controller {
                 'shopify_tag' => $this->input->post('shopify_tag'),
                 'location_id' => $this->input->post('location_id'),
                 'is_shopify_active' => $this->input->post('is_shopify_active'),
+                'shopify_fulfill' => $this->input->post('shopify_fulfill'),
             );
             
             if ($this->Seller_model->update_shopify($id, $update_data)) {                
