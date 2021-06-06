@@ -61,7 +61,7 @@
                                         <span class="text-danger" ng-show="add_sms.sub_status.$error.required">Sub Status Required</span>
                                     </div>
 
-                                    <div class="form-group">
+                                    <!-- <div class="form-group">
                                         <label>Arabic SMS</label>
                                         <span id="content_id" class=""></span>
                                         <textarea class="form-control mt-15" my-text=""  name="arabic_sms" rows="6" placeholder="Textarea" ng-model="templateArray.arabic_sms" Required></textarea>
@@ -82,7 +82,7 @@
                                         <label>Activity</label><br>
                                         Yes     <input type="radio" id="english_status" name="english_status" ng-model="templateArray.english_status" value="Y" ng-checked="false"/>&nbsp;&nbsp;
                                         No   <input type="radio" id="english_status" name="english_status" ng-model="templateArray.english_status" value="N" ng-checked="false"/>
-                                    </div> 
+                                    </div>  -->
 
                                     <input name="id" type="hidden" value="">
                                     <input name="submit" type="submit" class="btn btn-primary" value="Submit" ng-disabled="add_sms.$invalid" ng-click="AddTemplateform(templateArray);"> 
@@ -103,6 +103,8 @@
 								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('DRIVER_MOBILE')";>DRIVER_MOBILE</span></h4> (#Driver Mobile No..)</a>
 								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('DRIVER_NAME')";>DRIVER_NAME</span></h4> (#Driver Name.)</a>
 								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('CUST_CARE_MOBILE')";>CUST_CARE_MOBILE</span></h4> (#Customer care  No..)</a>
+
+                                <a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('3PL_LINK')";>3PL_LINK</span></h4> (#3Pl Tracking Link..)</a>
 
   									</div>
 									</div>
