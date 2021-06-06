@@ -68,7 +68,8 @@
 
                   
                   <?php 
-                
+                if(!empty($res_data))
+                {
                     $i=1; 
                     $totalCount=count($res_data);
                      
@@ -104,7 +105,7 @@
 
                     </tr>
 
-                
+                <?php }?>
               
               </tbody>
             </table>
