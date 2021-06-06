@@ -61,7 +61,7 @@
                                         <span class="text-danger" ng-show="add_sms.sub_status.$error.required">Sub Status Required</span>
                                     </div>
 
-                                    <!-- <div class="form-group">
+                                   <div class="form-group">
                                         <label>Arabic SMS</label>
                                         <span id="content_id" class=""></span>
                                         <textarea class="form-control mt-15" my-text=""  name="arabic_sms" rows="6" placeholder="Textarea" ng-model="templateArray.arabic_sms" Required></textarea>
@@ -72,7 +72,7 @@
                                         Yes   <input type="radio" id="arabic_status" name="arabic_status" ng-model="templateArray.arabic_status" value="Y" ng-checked="false"/>&nbsp;&nbsp;
                                         No   <input type="radio" id="arabic_status" name="arabic_status" ng-model="templateArray.arabic_status" value="N" ng-checked="false"/>  
                                     </div>    
-                                    <div class="form-group">
+                               <!--       <div class="form-group">
                                         <label>English Sms</label>
                                         <span id="content_id" class=""></span>
                                         <textarea class="form-control mt-15" my-text="" name="english_sms" rows="6" placeholder="Textarea" ng-model="templateArray.english_sms" Required></textarea>
