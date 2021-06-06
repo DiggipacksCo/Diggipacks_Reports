@@ -24,6 +24,7 @@ assets/sellerupload/
 assets/semantic/
 phpqrcode/cache/
 user_guide/
+nbproject/
 # Compiled Java class files
 *.class
 

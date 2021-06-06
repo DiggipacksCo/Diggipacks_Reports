@@ -62,12 +62,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                             <input type="text" class="form-control" name="location_id" id="location_id" value="<?php echo $customer['location_id']; ?>" autocomplete="off">
                                         </div>
 
+                                       
                                        <div class="form-group">
                                             <label class="radio-inline">
                                                 <input type="radio" name="is_shopify_active" <?php echo ($customer['is_shopify_active'] == "1" ? 'checked' : ''); ?> value="1"><?= lang('lang_active'); ?>
                                             </label>
                                             <label class="radio-inline">
                                                 <input type="radio" name="is_shopify_active" <?php echo ($customer['is_shopify_active'] == "0" ? 'checked' : ''); ?> value="0"><?= lang('lang_inactive'); ?>
+                                            </label>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                           <label>Status fulfillment</label>
+                                            <label class="radio-inline">
+                                                <input type="radio" name="shopify_fulfill" <?php echo ($customer['shopify_fulfill'] == "1" ? 'checked' : ''); ?> value="1">Yes
+                                            </label>
+                                            <label class="radio-inline">
+                                                <input type="radio" name="shopify_fulfill" <?php echo ($customer['shopify_fulfill'] == "0" ? 'checked' : ''); ?> value="0">No
                                             </label>
                                         </div>
                                         
