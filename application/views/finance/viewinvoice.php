@@ -50,7 +50,7 @@
 			<table id="print" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;"width: 100%;>
 				<tr>
 					<!-- <td colspan="5"></td> -->
-					<td colspan="11" style="text-align:center;"><strong>Tax Invoice - �?اتورة ضريبية</strong></td>
+					<td colspan="11" style="text-align:center;"><strong>Tax Invoice - الفاتورة الضريبية</strong></td>
 				<!-- 	<td colspan="9"></td> -->
 				</tr>
 				<tr>
@@ -79,8 +79,8 @@
 
 					
 						<!-- <br/> <b>IBAN #:-&nbsp;<?=GetalldashboardClientField($invoiceData[0]['cust_id'], 'iban_number');?> </b> -->
-						<br/> <b>Invoice No:-&nbsp;<?=$invoiceData[0]['invoice_no'];?> - رقم ال�?اتورة</b>
-						<br/> <b>Invoice Date:-&nbsp;<?=$invoiceData[0]['invoice_date'];?> - تاريخ ال�?اتورة</b>
+						<br/> <b>Invoice No:-&nbsp;<?=$invoiceData[0]['invoice_no'];?> - رقم الفاتورة</b>
+						<br/> <b>Invoice Date:-&nbsp;<?=$invoiceData[0]['invoice_date'];?> - تاريخ الفاتورة</b>
 						<br/><b>Toll Free no :-<?=Getsite_configData_field( 'tollfree_fm');?></b>
 						
 					</td>
@@ -215,7 +215,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td align="justify">Total Special Packages Fees - إجمالي التغلي�? الخاص للعميل</td>
+							<td align="justify">Total Special Packages Fees - إجمالي التغليف الخاص للعميل</td>
 							<td align="center"><?= $currency; ?>
 								<?=$totalValue['special_packing'];?>
 							</td>
@@ -224,7 +224,7 @@
 						
 						<tr>
 							<tr>
-							<td align="justify">Total Fees before VAT 15%  - إجمالي الرسوم قبل ضريبة القيمة المضا�?ة </td>
+							<td align="justify">Total Fees before VAT 15%  - إجمالي الرسوم قبل ضريبة القيمة المضافة </td>
 							<td align="center"><?= $currency; ?>
 								<?=$TOTAL;?>
 							</td>
@@ -237,7 +237,7 @@
 							</td>
 						</tr>
 							<tr>
-								<td>Total Fees After VAT <?=$invoiceData[0]['vat_percent'];?>% -  إجمالي الرسوم بعد ضريبة القيمة المضا�?ة</td>
+								<td>Total Fees After VAT <?=$invoiceData[0]['vat_percent'];?>% -  إجمالي الرسوم بعد ضريبة القيمة المضافة</td>
 								<td align="center"><?= $currency; ?>
 									<?=$TOTAL_with_vat;?>
 								</td>
