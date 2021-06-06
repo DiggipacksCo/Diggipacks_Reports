@@ -26,6 +26,7 @@
                             <ul>
                                 <li><a href="<?= base_url('CompanyDetails');?>"><?= lang('lang_company_details'); ?></a></li>
                                 <li><a href="<?= base_url('defaultlist_view');?>"><?= lang('lang_Default_courier_company'); ?></a></li>
+                                <li><a href="<?= base_url('smsconfigration');?>">SMS Configuration</a></li>
                                
                             </ul>
                         </li>

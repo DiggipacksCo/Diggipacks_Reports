@@ -18,7 +18,52 @@ class Generalsetting extends MY_Controller {
         $this->load->model('CourierSeller_model');
         $this->load->model('Ccompany_model');
     }
+   public function smsconfigrationsave($id=null)
+   {
+    
+    $dataArray =$this->input->post();
+    if($id==null)
+    {
+        $socialArray = array('company_name' => $dataArray['company_name'], 'api_url' => $dataArray['api_url'], 'params' => $dataArray['params'], 'super_id' => $this->session->userdata('user_details')['super_id']);
+        $res = $this->General_model->sms_detail($socialArray);
+    }
+    else
+    {
+        
+        $socialArray = array('company_name' => $dataArray['company_name'], 'api_url' => $dataArray['api_url'], 'params' => $dataArray['params']);
+        $res = $this->General_model->smsUpdate($socialArray,$id);
+        
 
+    }
+   
+  //echo "<pre>"; print_r( $res); exit;
+
+
+
+if ($res == true)
+    $this->session->set_flashdata('msg', 'Data has been updated successfully');
+else
+    $this->session->set_flashdata('err_msg', 'Try again');
+    redirect(base_url() . 'smsconfigration');
+   }
+
+
+   public function smsconfigration() {
+
+    $data['res_data'] = $this->General_model->GetsmsConfigrationDataQry();
+    $this->load->view('generalsetting/smsconfig', $data);
+}
+
+public function addsmssetting($id=null) {
+
+    if($id!=null)
+    { 
+        $data['EditData'] = $this->General_model->GetsmsConfigrationDataQry();
+        //print_r($data['res_data']);
+    }
+  
+    $this->load->view('generalsetting/addsms', $data);
+}
     public function defaultlist_view() {
 
         $data['fullfilment_drp'] = $this->General_model->getSellerAddCourier();

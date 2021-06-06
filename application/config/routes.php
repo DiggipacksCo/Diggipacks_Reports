@@ -67,7 +67,10 @@ $route['outbound']            = 'Shipment/outbound';
 $route['manifestView/(:any)'] = 'Shipment/manifestView/$1';
 $route['delivery_manifest']   = 'Shipment/delivery_manifest';
 $route['manifestListFilter']  = 'Shipment/manifestListFilter';
+$route['manifestListFilter']  = 'Shipment/manifestListFilter';
 
+
+$route['smsconfigration'] = 'Generalsetting/smsconfigration';
 $route['manifestPrint/(:any)'] = 'Shipment/manifestPrint/$1';
 
 $route['damage_list']       = 'ItemInventory/damage_list_view';

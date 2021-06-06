@@ -972,23 +972,21 @@ class Seller extends MY_Controller {
       $request=json_encode($request); 
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.salla.dev/admin/v2/webhooks/unsubscribe",
+            CURLOPT_URL => "https://api.salla.dev/admin/v2/webhooks/unsubscribe", 
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "DELETE",
-            CURLOPT_POSTFIELDS => $request,
-            CURLOPT_HTTPHEADER => array(
-                "Accept: en",
-                "Accept-Language: en",
-                "X-MANAGER-TOKEN: " . $customer['manager_token'],
-                "Authorization:Bearer " . $this->config->item('zid_authorization'),
-                "User-Agent: Fastcoo/1.00.00 (web)"
-            ),
-        ));
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "DELETE",
+                CURLOPT_POSTFIELDS => $request,
+                CURLOPT_HTTPHEADER => [
+                    "Authorization: Bearer " . $customer['salla_athentication'],
+                    "Accept-Language: AR",
+                    "Content-Type: application/json"
+                
+            ])
+                );
 
         $response = json_decode(curl_exec($curl));
 

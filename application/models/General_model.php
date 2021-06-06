@@ -9,6 +9,43 @@ class General_model extends CI_Model {
         // $this->user_id =isset($this->session->get_userdata()['user_details'][0]->id)?$this->session->get_userdata()['user_details'][0]->users_id:'1';
     }
 
+
+    public function smsUpdate($data = array(), $id = null) {
+         $this->db->update('sms_setting', $data, array('id' => $id));
+
+        return $this->db->last_query(); die; 
+    }
+
+    public function getEditSMS($id = null) {
+        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->select('*');
+        $this->db->from('sms_setting');
+        //$this->db->where('status', '1');
+        $this->db->where('id', $id);
+
+
+        $query = $this->db->get();
+        // return $this->db->last_query(); die;
+
+        if ($query->num_rows() > 0) {
+            return $query->row_array();
+        }
+    }
+
+    public function sms_detail($data = array()) {
+
+        return $this->db->insert('sms_setting', $data);
+        //echo $this->db->last_query(); // die;
+    }
+
+    public function GetsmsConfigrationDataQry() {
+
+        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->select('*');
+        $this->db->from('sms_setting');
+        $query = $this->db->get();
+        return $query->row_array();
+    }
     public function getSellerAddCourier() {
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('status', 'Y');
