@@ -540,37 +540,42 @@ class Manifest extends CourierCompany_pickup {
                 $services = '';
         }
         
-        if($company == 'Aymakan') {
-           // print "<pre>"; print_r($ShipArr);die;
-            $response = $this->Ccompany_model->AymakanArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$complete_sku,$super_id);
-            $responseArray = json_decode($response, true);
-            //print "<pre>"; print_r($responseArray);die;
-            if (empty($responseArray['errors'])) {
-                $client_awb = $responseArray['data']['shipping']['tracking_number'];
-                $mediaData = $responseArray['data']['shipping']['label'];
-                //****************************aymakan arrival label print cURL****************************
-                file_put_contents("assets/all_labels/$slipNo.pdf", file_get_contents($mediaData));
-                $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+       elseif ($company == 'Aymakan'){
+                            $response = $this->Ccompany_model->AymakanArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1,$complete_sku, $super_id);
+                            $responseArray = json_decode($response, true);
+                       //print_r( $responseArray );
+                            if (empty($responseArray['message'])) 
+                            {
+                                     $client_awb = $responseArray['data']['shipping']['tracking_number'];
+                                     
+                                    
+                                    $tracking_url= $counrierArr['api_url']."bulk_awb/trackings/";
+                                         
+                                    $aymakanlabel= $this->Ccompany_model->Aymakan_tracking($client_awb, $tracking_url,$auth_token);
+                                    $label= json_decode($aymakanlabel,TRUE);
+                                      
+                                    $mediaData = $label['data']['bulk_awb_url'];
+                                       
+                                        
+                                   
+                                //****************************aymakan arrival label print cURL****************************
+                                $generated_pdf = file_get_contents($media_data);
+                                file_put_contents("assets/all_labels/$slipNo.pdf", file_get_contents($mediaData));
+                                $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
 
-                //****************************aymakan label print cURL****************************
-                $CURRENT_DATE = date("Y-m-d H:i:s");
-                $CURRENT_TIME = date("H:i:s");
-
-                $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
-                array_push($succssArray, $slipNo);
-                $returnArr['Success_msg'][] = $slipNo . ':Successfully Assigned';
-            } else {
-                $errors = 'Fail: Please check logs.';
-                if(isset($responseArray['errors']['collection_city']) && !empty($responseArray['errors']['collection_city'])){
-                    $errors = $responseArray['errors']['collection_city'][0];
-                }
-                if(isset($responseArray['errors']['reference']) && !empty($responseArray['errors']['reference'])){
-                    $errors = $responseArray['errors']['reference'][0];
-                }
-
-                $returnArr['Error_msg'][] = $slipNo . ':' . $errors;
-            }
-        }else if($company == "Clex"){
+                                //****************************aymakan label print cURL****************************
+                                $CURRENT_DATE = date("Y-m-d H:i:s");
+                                 $CURRENT_TIME = date("H:i:s");
+                                                             
+                                $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                               array_push($succssArray, $slipNo); 
+                            }   
+                            else{
+                                  
+                                    $returnArr['responseError'][] = $slipNo . ':' . $responseArray['message'].':'.json_encode($responseArray['errors']);
+                                    
+                            }                                    
+                    } else if($company == "Clex"){
             $response = $this->Ccompany_model->ClexArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1, $c_id, $super_id);
 
             if ($response['data'][0]['cn_id']) {
@@ -3615,32 +3620,42 @@ class Manifest extends CourierCompany_pickup {
                             
                     }
             }
-            elseif ($company == 'Aymakan'){
-                    $response = $this->Ccompany_model->AymakanArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1, $super_id);
-                    $responseArray = json_decode($response, true);
-               
-                    if (empty($responseArray['errors'])) 
-                    {
-                             $client_awb = $responseArray['data']['shipping']['tracking_number'];
-                             $mediaData = $responseArray['data']['shipping']['label'];
-                        //****************************aymakan arrival label print cURL****************************
-                        file_put_contents("assets/all_labels/$slipNo.pdf", file_get_contents($mediaData));
-                         $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+             elseif ($company == 'Aymakan'){
+                            $response = $this->Ccompany_model->AymakanArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1,$complete_sku, $super_id);
+                            $responseArray = json_decode($response, true);
+                       //print_r( $responseArray );
+                            if (empty($responseArray['message'])) 
+                            {
+                                     $client_awb = $responseArray['data']['shipping']['tracking_number'];
+                                     
+                                    
+                                    $tracking_url= $counrierArr['api_url']."bulk_awb/trackings/";
+                                         
+                                    $aymakanlabel= $this->Ccompany_model->Aymakan_tracking($client_awb, $tracking_url,$auth_token);
+                                    $label= json_decode($aymakanlabel,TRUE);
+                                      
+                                    $mediaData = $label['data']['bulk_awb_url'];
+                                       
+                                        
+                                   
+                                //****************************aymakan arrival label print cURL****************************
+                                $generated_pdf = file_get_contents($media_data);
+                                file_put_contents("assets/all_labels/$slipNo.pdf", file_get_contents($mediaData));
+                                $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
 
-                        //****************************aymakan label print cURL****************************
-                         $CURRENT_DATE = date("Y-m-d H:i:s");
-                            $CURRENT_TIME = date("H:i:s");
-                                                     
-                        $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
-                       array_push($succssArray, $slipNo); 
-                       $returnArr['Success_msg'][] = 'Data updated successfully.';
-                    }   
-                    else{
-                          
-                            $returnArr['responseError'][] = $slipNo . ':' . $responseArray['errors']['reference'][0];
-                            
-                    }                                    
-            } 
+                                //****************************aymakan label print cURL****************************
+                                $CURRENT_DATE = date("Y-m-d H:i:s");
+                                 $CURRENT_TIME = date("H:i:s");
+                                                             
+                                $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
+                               array_push($succssArray, $slipNo); 
+                            }   
+                            else{
+                                  
+                                    $returnArr['responseError'][] = $slipNo . ':' . $responseArray['message'].':'.json_encode($responseArray['errors']);
+                                    
+                            }                                    
+                    }
             elseif($company == 'Shipsy'){
                 
                 $response = $this->Ccompany_model->ShipsyArray($ShipArr, $counrierArr, $Auth_token, $box_pieces1,$c_id, $super_id);
