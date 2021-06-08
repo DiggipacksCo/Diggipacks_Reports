@@ -90,7 +90,7 @@ class Ccompany_model extends CI_Model {
 
    
 
-    public function GetdeliveryCompanyUpdateQry($cc_id = null,$ShipArr_custid = null,$super_id=null) {
+    public function GetdeliveryCompanyUpdateQry($cc_id = null,$ShipadeliveryArrayrr_custid = null,$super_id=null) {
 
         $this->db->where('super_id', $super_id);
         $this->db->where('cc_id', $cc_id);
@@ -2870,7 +2870,7 @@ class Ccompany_model extends CI_Model {
         );
         
         
-      //  echo "<pre>"; print_r($param);
+     //  echo "<pre>"; print_r($param); die;
      
         $paramArray = json_encode($param);
 
@@ -2908,12 +2908,8 @@ class Ccompany_model extends CI_Model {
                  curl_close($curl);
                  $logresponse =   json_encode($response);                   
                  $response_array = json_decode($response, true);
-                 $faultFlag = false;
-                 if(isset($response_array['fault']) && !empty($response_array['fault'])){
-                     $faultFlag = true;
-                 }
                  $successres = $response_array[0]['code'];
-                    if($successres==0 && $faultFlag == false) 
+                    if($successres==0) 
                         {
                            $successstatus  = "Success";
                         }

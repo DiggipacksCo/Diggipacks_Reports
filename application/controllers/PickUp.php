@@ -897,9 +897,14 @@ if(!empty( $salatoken))
                 
             }
              $ReturnArray[$key]['sku']=json_encode($skuArrayDatap);
-            
-            $ReturnArray[$key]['frwd_company_id']=GetCourCompanynameId($frwd_company_id,'company');
-              $ReturnArray[$key]['frwd_company_awb']=GetshpmentDataByawb($val['slip_no'],'frwd_company_awb');
+            if( $frwd_company_id !='' )
+            {
+                $ReturnArray[$key]['frwd_company_id']=GetCourCompanynameId($frwd_company_id,'company');
+                $ReturnArray[$key]['frwd_company_awb']=GetshpmentDataByawb($val['slip_no'],'frwd_company_awb');
+                $ReturnArray[$key]['print_url']=base_url() . 'assets/all_labels/' .$val['slip_no'] . '.pdf';
+
+            }
+           
             
             
         }
