@@ -242,7 +242,7 @@ else echo set_value('name'); ?>" required/>
                                             <div class="form-group">
                                                 <label><?= lang('lang_Courier_Company'); ?></label>
                                                 <span id="c_id"></span>
-                                                <select name="c_id" id="" required class="js-select4 bigdrop"  required > 
+                                                <select name="c_id" id="courier_id" required class="js-select4 bigdrop"  required > 
                                                 <option value="0" <?php if ($cmpy->id == 0) {
                                                                 echo "selected=selected";} ?>>Last Mile </option>
                                                     <?php
@@ -285,9 +285,8 @@ else echo set_value('name'); ?>" required/>
                                  <div class="subject-info-box-1">
                                     <select multiple="multiple" id='lstBox1'  class="form-control">
                                     <?php if (!empty($ListArr)): ?>
-                                                <?php foreach ($ListArr as $rows):
-                                                    ?>
-<option value="<?= $rows['id']; ?>"> <?= $rows['city']; ?> </option>
+                                                <?php foreach ($ListArr as $rows): ?>
+                                                    <option value="<?= $rows['id']; ?>"> <?= $rows['city']; ?> </option>
                                             <?php endforeach; ?>
                                             <?php endif; ?>
                                     </select>
@@ -302,9 +301,8 @@ else echo set_value('name'); ?>" required/>
                                     <div class="subject-info-box-2">
                                     <select multiple="multiple" name="city_id[]"id='lstBox2' class="form-control">
                                     <?php if (!empty($pre)): ?>
-                                                <?php foreach ($pre as $rows):
-                                                    ?>
-<option selected value="<?= $rows['id']; ?>" > <?= $rows['city']; ?> </option>
+                                                <?php foreach ($pre as $rows): ?>
+                                                <option selected value="<?= $rows['id']; ?>" > <?= $rows['city']; ?> </option>
                                             <?php endforeach; ?>
                                             <?php endif; ?>  
                                     </select>
@@ -380,15 +378,43 @@ else echo set_value('name'); ?>" required/>
 
 <Script>
         $(document).ready(function(){
-        $('#selectAll').click(function(){
+            $('#selectAll').click(function(){
+
+                $('#lstBox2 option').prop('selected', true);
+                $('#subButton').prop('disabled', false);
+            });
+            
            
-            $('#lstBox2 option').prop('selected', true);
-            $('#subButton').prop('disabled', false);
-        });
         });
 
-
-                        (function () {
+    $("#courier_id").change(function(){
+        var cc_id = parseInt($(this).val());
+        $.ajax({
+          url: '<?php echo base_url('Zone/filter_zone_by_cc'); ?>',
+          method: "POST",
+          data: { cc_id : cc_id },
+          dataType: "html",
+          beforeSend:function(){},
+          complete:function(){},
+          success:function(result){
+              var response = $.parseJSON(result);
+              if(response.status == "true"){
+                  if(response.data.length >0){
+                      var str = '';
+                          
+                      for(var i=0;i<response.data.length;i++){
+                          str += '<option value="'+response.data[i].id+'">'+response.data[i].city+'</option> '
+                      }
+                      $("#lstBox1").html(str);
+                  }
+              }else{
+                  alert(response.message);
+              }
+              
+          }
+        });
+    });
+(function () {
 
     
 
@@ -452,4 +478,4 @@ else echo set_value('name'); ?>" required/>
     e.preventDefault();
   });
 })(jQuery);
-                        </Script>
+</Script>
