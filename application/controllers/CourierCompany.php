@@ -981,49 +981,43 @@ class CourierCompany extends MY_Controller  {
                                     $returnArr['responseError'][] = $slipNo . ':' . $response['description'];
                                     
                             }
-                    }elseif ($company == 'Aymakan'){                       
-
-                        $response = $this->Ccompany_model->AymakanArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1,$complete_sku,$super_id);
-                        $responseArray = json_decode($response, true);
-                        //print_r( $responseArray );
-                        if (empty($responseArray['message'])) 
-                        {
-                                 $client_awb = $responseArray['data']['shipping']['tracking_number'];
-                                 
-                                 if(!empty($box_pieces1) && $box_pieces1>1)
-                                  {
-                                     $tracking_url= $counrierArr['api_url']."bulk_awb/trackings/";
+                    }elseif ($company == 'Aymakan'){
+                            $response = $this->Ccompany_model->AymakanArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1,$complete_sku,$super_id);
+                            $responseArray = json_decode($response, true);
+                       //print_r( $responseArray );
+                            if (empty($responseArray['message'])) 
+                            {
+                                     $client_awb = $responseArray['data']['shipping']['tracking_number'];
                                      
-                                     $aymakanlabel= $this->Ccompany_model->Aymakan_tracking($client_awb, $tracking_url,$auth_token);
+                                    
+                                    $tracking_url= $counrierArr['api_url']."bulk_awb/trackings/";
+                                         
+                                    $aymakanlabel= $this->Ccompany_model->Aymakan_tracking($client_awb, $tracking_url,$auth_token);
                                     $label= json_decode($aymakanlabel,TRUE);
-                                  
-                                     $mediaData = $label['data']['bulk_awb_url'];
-                                    }
-                                  else
-                                  { 
-                                     
-                                    $tracking_url= $counrierArr['api_url']."awb/tracking/";
-                                       
-                                      $aymakanlabel= $this->Ccompany_model->Aymakan_tracking($client_awb, $tracking_url,$auth_token);
-                                      $label= json_decode($aymakanlabel, TRUE);
                                       
-                                      $mediaData = $label['data']['awb_url'];
-                                     
-                                     
-                                     }   
-                               
-                            //****************************aymakan arrival label print cURL****************************
-                            file_put_contents("assets/all_labels/$slipNo.pdf", file_get_contents($mediaData));
-                             $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+                                    $mediaData = $label['data']['bulk_awb_url'];
+                                       
+                                        
+                                   
+                                //****************************aymakan arrival label print cURL****************************
+                                $generated_pdf = file_get_contents($media_data);
+                                file_put_contents("assets/all_labels/$slipNo.pdf", file_get_contents($mediaData));
+                                $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
 
-                            //****************************aymakan label print cURL****************************
-                             $CURRENT_DATE = date("Y-m-d H:i:s");
-                                $CURRENT_TIME = date("H:i:s");
-                                                         
-                            $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$super_id);
-                            $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
+                                //****************************aymakan label print cURL****************************
+                                $CURRENT_DATE = date("Y-m-d H:i:s");
+                                 $CURRENT_TIME = date("H:i:s");
+                                                             
+                                $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
                                 array_push($succssArray, $slipNo); 
-                        }   
+                            }   
+                            else{
+                                  
+                                    $returnArr['responseError'][] = $slipNo . ':' . $responseArray['message'].':'.json_encode($responseArray['errors']);
+                                    
+                            }                                    
+                    }   
                         else{
                               
                                 $returnArr['responseError'][] = $slipNo . ':' . $responseArray['message'].':'.json_encode($responseArray['errors']);
