@@ -1341,6 +1341,7 @@ class CourierCompany extends MY_Controller  {
                         }
                     
                     }
+
                     elseif ($company_type== 'F')
                     { // for all fastcoo clients treat as a CC 
                       
@@ -1417,12 +1418,12 @@ class CourierCompany extends MY_Controller  {
                     } //end company type F code 
 
                 }
-                else
-                {
-                    array_push($invalid_slipNO,$slipNo);
+                // else
+                // {
+                //     array_push($invalid_slipNO,$slipNo);
                     
-                }
-            }
+                // }
+           //}
         }
         } 
         $return['invalid_slipNO']=$invalid_slipNO;

@@ -638,16 +638,20 @@ class Seller extends MY_Controller {
         $ListArr = $this->zidCities();//$this->Seller_model->zidCities();
         $data['delivery_options'] = $this->Seller_model->deliverOptionExist($id);
             // echo '<pre>';
-            //         print_r(  $data['zid_cities']); 
-       
-        $listcity =   explode(',', $data['delivery_options'][0]['zid_city']); ; 
-        $pre = array();
+            //         print_r(  $ListArr);  exit;
+            $pre=array();
+       if(  !empty($data['delivery_options']))
+       {
+        $listcity =   explode(',', $data['delivery_options'][0]['zid_city']); 
+
         $keys = array();        
            foreach ($listcity as $citie)
            {
                    $key = array_search($citie, array_column( $ListArr, 'id'));
-                   if(!empty($key))
+
+                   if($key!=-1)
                    {
+               
                        array_push($pre, $ListArr[$key]);  // cities add in next array
                        array_push($keys, $key); // selected cities remove from first list box
                    
@@ -658,6 +662,8 @@ class Seller extends MY_Controller {
            {
                unset($ListArr[$removecity]);    // remove selected cities from left side panel 
            }
+       }
+       
            $data['ListArr'] = $ListArr;
            $data['pre']= $pre;  
         
@@ -1038,8 +1044,8 @@ class Seller extends MY_Controller {
 
         if ($this->input->post('deliver_option')) {
             $cust_id = $this->input->post('id');
-            
-            
+            //  ECHO "<PRE>";
+            //   print_r($this->input->post('zid_city')); exit;
             $rdata = array(         
                 'name' => $this->input->post('zid_delivery_name'),
                 'cost' => $this->input->post('zid_delivery_cost'),
@@ -1049,7 +1055,7 @@ class Seller extends MY_Controller {
                 'delivery_estimated_time_ar' => $this->input->post('delivery_estimated_time_ar'),
                 'delivery_estimated_time_en' => $this->input->post('delivery_estimated_time_en'),
             );
-          ECHO "<PRE>";
+         // ECHO "<PRE>";
              $customer = $this->Seller_model->edit_view_customerdata($cust_id);
              //print_r($customer);
              $request = json_encode($rdata);
