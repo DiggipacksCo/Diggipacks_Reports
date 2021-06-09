@@ -196,7 +196,7 @@ if (!function_exists('GetcheckSlipNo3plButton_bulpage')) {
     function GetcheckSlipNo3plButton_bulpage() {
         $ci = & get_instance();
         $ci->load->database();
-        $listingQry = "select shipment_fm.frwd_company_id,shipment_fm.cust_id,courier_company.cc_id,courier_company.company from shipment_fm LEFT JOIN  courier_company ON shipment_fm.frwd_company_id=courier_company.id where shipment_fm.deleted='N'  and shipment_fm.frwd_company_id>0 and shipment_fm.super_id='" . $ci->session->userdata('user_details')['super_id'] . "' group by shipment_fm.frwd_company_id  ORDER  BY shipment_fm.frwd_company_id asc";
+        $listingQry = "select shipment_fm.frwd_company_id,shipment_fm.cust_id,courier_company.cc_id,courier_company.company from shipment_fm LEFT JOIN  courier_company ON shipment_fm.frwd_company_id=courier_company.cc_id where shipment_fm.deleted='N'  and shipment_fm.frwd_company_id>0 and shipment_fm.super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and courier_company.company!='' group by courier_company.company ORDER BY shipment_fm.frwd_company_id asc";
         $query = $ci->db->query($listingQry);
         $status_update_data = $query->result_array();
         return $status_update_data;
