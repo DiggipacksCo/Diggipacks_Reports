@@ -13,7 +13,7 @@ class Zone_model extends CI_Model {
    
         $this->db->trans_start();
 		$this->db->insert('zone_list_fm',$data);
-		//echo $this->db->last_query();
+		//echo $this->db->last_query();die;
 		$insert_id= $this->db->insert_id();
         $this->db->trans_complete();
 		return $insert_id;
@@ -61,18 +61,19 @@ class Zone_model extends CI_Model {
 
 
 	public function fetch_all_cities_new(){
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
-		$this->db->select('id,city');
-        $this->db->where('city!=','');
-		$this->db->where('deleted','N');
-        $this->db->order_by('city');
-		$query=$this->db->get('country');
-
-		if($query->num_rows()>0){
-			return $query->result_array();
-		}
+            $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+            $this->db->select('id,city');
+            $this->db->where('city!=','');
+            $this->db->where('deleted','N');
+            $this->db->order_by('city');
+            $query=$this->db->get('country');
+           // echo $this->db->last_query(); die;
+            if($query->num_rows()>0){
+                    return $query->result_array();
+            }
 
 	}
+	
 
 	public function all(){
             $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
@@ -287,14 +288,83 @@ public function previousCity_customer($id=null){
       $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
 	 return $this->db->update('zone_list_customer_fm',$data,array('id'=>$id));
   }
-	public function find2()
-	{
-            $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
-		$this->db->where('id!=',0);
-		$query=$this->db->get('zone_list_fm');
+  public function find2()
+  {
+    $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->where('id!=',0);
+        $query=$this->db->get('zone_list_fm');
 
-		if($query->num_rows()>0){
-			return $query->result();
-		}
-	}
+        if($query->num_rows()>0){
+                return $query->result();
+        }
+  }
+
+  public function getCityColumnByCname($companyName=NULL){
+      //strtolower
+      $cityColumnArray = array(
+                'smsa'=>'samsa_city',
+                //''=>'ubreem_city',
+                'aramex'=>'aramex_city',
+                //''=>'dots_city',
+                'imile'=>'imile_city',
+                'naqel'=>'naqel_city_code',
+                'esnad'=>'esnad_city',
+                'samana'=>'samana_city',
+                //''=>'agility_city',
+                'safearrival'=>'safe_arrival',
+                'aymakan'=>'aymakan',
+                'zajil'=>'zajil',
+                'clex'=>'clex',
+                //''=>'rabel_city',
+                //''=>'speedzi_city',
+                'barqfleet'=>'barq_city',
+                'labaih'=>'labaih',
+                'makhdoom'=>'makhdoom',
+                'aramex international'=>'aramex_international',
+                'saee'=>'saee_city',
+                'ajeek'=>'ajeek_city',
+                'emdad'=>'emdad_city',
+                'shipsy'=>'shipsy_city',
+                'shipadelivery'=>'shipsa_city',
+                'saudi post'=>'saudipost_id',
+                //''=>'ara1bic_name',
+                'tamex'=>'tamex_city',
+                'sls'=>'sls',
+                //''=>'moovo',
+                'alamalkon'=>'alamalkon',
+                'burqexpres'=>'burq_city',
+                'thabit'=>'thabit_city',
+                'fetchr'=>'fetchr_city',
+                'glt'=>'GLT',
+                'wadha'=>'Wadha',
+                'ejack'=>'ejack_city',
+                'beez'=>'beez_city',
+      );
+      $columnName = '';
+      if(!empty($companyName)){
+          $cname = strtolower($companyName);
+          
+          if(array_key_exists($cname,$cityColumnArray)){
+              $columnName = $cityColumnArray[$cname];
+          }
+      }
+      
+      return $columnName;  
+      
+  }
+  
+  
+  public function get_cities_by_cc_city($cc_city=NULL){
+    $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+    $this->db->select('id,'.$cc_city.' as city');
+    $this->db->where($cc_city.'!=','');
+    $this->db->where('deleted','N');
+    $this->db->order_by($cc_city);
+    $query=$this->db->get('country');
+   // echo $this->db->last_query();
+    if($query->num_rows()>0){
+    return $query->result_array();
+    }
+
+  }
 }

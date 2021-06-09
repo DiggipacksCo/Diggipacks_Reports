@@ -282,6 +282,7 @@ $route['viewZone']           = 'Zone/list_view';
 $route['addZoneCustomer']            = 'Zone/add_view_customer';
 $route['editZoneCustomer/(:num)']    = 'Zone/add_view_customer/$1';
 $route['viewZoneCustomer']           = 'Zone/list_view_customer';
+$route['filter_zone_by_cc']           = 'Zone/filter_zone_by_cc';
 //=============================================================
 
 

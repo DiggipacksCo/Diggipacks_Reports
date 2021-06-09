@@ -21,7 +21,7 @@ class Ccompany_model extends CI_Model {
         $this->db->order_by('company');
         $this->db->select('company');
         $query = $this->db->get('courier_company');
-        //echo $this->db->last_query(); die;
+        echo $this->db->last_query(); die;
         if ($query->num_rows() > 0) {
             $result= $query->row_array();
              return  $result['company'];
@@ -4573,7 +4573,22 @@ array_push($itemArray,$peiceArray);
             curl_close($curl);
             return  $label_response;
     }
-
+    
+    
+    public function ccNamebYccid($cc_id=null) {
+        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        
+        $this->db->where('cc_id', $cc_id);
+        $this->db->where('deleted', 'N');
+        $this->db->order_by('company');
+        $this->db->select('company');
+        $this->db->limit(1);
+        $query = $this->db->get('courier_company');
+        if ($query->num_rows() > 0) {
+            $result= $query->row_array();
+             return  $result['company'];
+        }
+    }
 
 
 }
