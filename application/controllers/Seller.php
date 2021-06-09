@@ -776,22 +776,23 @@ class Seller extends MY_Controller {
          // $delivery_options[0]['id']
         if ($customer['zid_status'] == 'new') {
             $event = "order.create";
-            $condition = json_encode(array('status'=>'new','delivery_option_id'=>$delivery_options[0]['delivery_id']));;
+            $condition = json_encode(array('status'=>'new','delivery_option_id'=> $delivery_options[0]['delivery_id']));;
         } else {
             $event = "order.status.update";
             $condition = json_encode(array('status'=>'ready','delivery_option_id'=>$delivery_options[0]['delivery_id']));
         }
-        
+       
         if ($customer['zid_active'] == 'Y') {
 
+            $subscribe = site_configTable('company_name');
             $arr = array(
                 "event" => $event,
                 "target_url" => $this->config->item('zid_order_target_url') . '/' . $customer['uniqueid'],
                 "original_id" => $customer['uniqueid'],
-                "subscriber" => "Fastcoo",
+                "subscriber" => $subscribe,
                 "conditions" => $condition
             );
-
+           // echo "<pre>"; print_r($arr); die; 
             
 
             $curl = curl_init();
@@ -826,9 +827,14 @@ class Seller extends MY_Controller {
     }
 
     private function zidWebhookSubscriptionDelete($customer) {
+        $subscribe = site_configTable('company_name');
+
+        // echo "https://api.zid.sa/v1/managers/webhooks?subscriber=".$subscribe."&original_id=" . $customer['uniqueid']";
+        // die; 
         $curl = curl_init();
+  
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.zid.sa/v1/managers/webhooks?subscriber=Fastcoo&original_id=" . $customer['uniqueid'],
+            CURLOPT_URL => "https://api.zid.sa/v1/managers/webhooks?subscriber=".$subscribe."&original_id=" . $customer['uniqueid'],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -931,7 +937,7 @@ class Seller extends MY_Controller {
                 "headers" => array(
                       array(
                          "key" => "X-EVENT-TYPE", 
-                         "value" => "order.updated.fastcoo" 
+                         "value" => "order.updated.diggipacks" 
                       )
                 ) ,
              ); 
