@@ -21,7 +21,7 @@ class Ccompany_model extends CI_Model {
         $this->db->order_by('company');
         $this->db->select('company');
         $query = $this->db->get('courier_company');
-        echo $this->db->last_query(); die;
+        //echo $this->db->last_query(); die;
         if ($query->num_rows() > 0) {
             $result= $query->row_array();
              return  $result['company'];
@@ -2266,7 +2266,7 @@ class Ccompany_model extends CI_Model {
         );  
 
         $json_final_date = json_encode($all_param_data);  
-
+        //echo $json_final_date;die;
 
         $headers = array(
             "Accept:application/json",
