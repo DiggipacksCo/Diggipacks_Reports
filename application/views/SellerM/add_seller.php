@@ -204,11 +204,11 @@
                </div>-->
 
  <?php if (menuIdExitsInPrivilageArray(107) == 'Y') { ?>
-			    <div class="form-group">
+			    <!-- <div class="form-group">
                   <label> &nbsp;</label>
                   <input class="custom-control-input" type="checkbox" name="zid_active" id="zid_active"  value="Y"/> Zid <?=lang('lang_Account');?>
-               </div>
-			   <fieldset class="scheduler-border" id="show_zid_details">   
+               </div> -->
+			   <!-- <fieldset class="scheduler-border" id="show_zid_details">   
                 <legend class="scheduler-border">Zid <?=lang('lang_Details');?></legend>
                 <div class="form-group">
                   <label><?=lang('lang_X_MANAGER_TOKEN');?></label>
@@ -218,17 +218,17 @@
                   <label><?=lang('lang_User_Agent');?></label>
                   <input type="text"  class="form-control" name="user_Agent" id="user_Agent" value="<?=set_value('user_Agent');?>"/>
                 </div>
-              </fieldset>
+              </fieldset> -->
 <?php } else { ?>
 <input class="custom-control-input" type="hidden" name="zid_active" id="zid_active"  value="N"/>
  <input type="hidden" class="form-control" name="manager_token" id="manager_token" value="<?=set_value('manager_token');?>"/>
    <input type="hidden"  class="form-control" name="user_Agent" id="user_Agent" value="<?=set_value('user_Agent');?>"/>
 <?php } ?>
  <?php if (menuIdExitsInPrivilageArray(106) == 'Y') { ?>
-			 <div class="form-group">
+			 <!-- <div class="form-group">
                   <label> &nbsp;</label>
                   <input class="custom-control-input" type="checkbox" name="salla_active" id="salla_active"  value="Y"/> Salla <?=lang('lang_Account');?>   
-               </div>
+               </div> -->
 			    <fieldset class="scheduler-border" id="show_salla_details">   
                 <legend class="scheduler-border">Salla<?=lang('lang_Details');?></legend>
                 <div class="form-group">
