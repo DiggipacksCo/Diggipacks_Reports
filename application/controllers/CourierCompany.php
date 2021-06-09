@@ -26,7 +26,7 @@ class CourierCompany extends MY_Controller  {
 		$this->load->view('courierCompany/view_company');               
 	}
         
-    public function forwardshipments() {
+    public function forwardshipments(){
         $this->load->view("ShipmentM/forward_shipments");
     }
 
@@ -35,7 +35,7 @@ class CourierCompany extends MY_Controller  {
     }
     
     public function GetCompanylistDrop()
-    {
+    {   
          $return=$this->Ccompany_model->GetCompanylistDropQry();
          echo json_encode($return);
     }
@@ -329,12 +329,12 @@ class CourierCompany extends MY_Controller  {
                 }
                 $ShipArr_custid =  $ShipArr['cust_id'];
                 $counrierArr_table=$this->Ccompany_model->GetdeliveryCompanyUpdateQry($courier_id,$ShipArr_custid,$super_id);   
-                 $super_id ."kjdjkfjksjkdfjsk";
+              //  echo $super_id ;
                   $c_id = $counrierArr_table['cc_id'];
+               // $c_id = $counrierArr_table['id'];
          
+             //print_r($zone_id);exit;
 
-           
-               
                 $cc_id = $counrierArr_table['cc_id'];
 
               if ($counrierArr_table['type'] == 'test') {
@@ -376,9 +376,9 @@ class CourierCompany extends MY_Controller  {
                 $counrierArr['auth_token'] = $auth_token;
                  $super_id = $ShipArr['super_id'];
                
+            //  echo "<pre>"; print_r($counrierArr); //die; 
          
 			 
-              
                 if(!empty($ShipArr))
                 {
                     $sku_data = $this->Ccompany_model->Getskudetails_forward($slipNo);
@@ -981,6 +981,43 @@ class CourierCompany extends MY_Controller  {
                                     $returnArr['responseError'][] = $slipNo . ':' . $response['description'];
                                     
                             }
+                    }elseif ($company == 'Aymakan'){
+                            
+                            $response = $this->Ccompany_model->AymakanArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1,$complete_sku,$super_id);
+                            $responseArray = json_decode($response, true);
+                            if (empty($responseArray['message'])) 
+                            {
+                                 $client_awb = $responseArray['data']['shipping']['tracking_number'];
+
+
+                                $tracking_url= $counrierArr['api_url']."bulk_awb/trackings/";
+
+                                $aymakanlabel= $this->Ccompany_model->Aymakan_tracking($client_awb, $tracking_url,$auth_token);
+                                $label= json_decode($aymakanlabel,TRUE);
+
+                                $mediaData = $label['data']['bulk_awb_url'];
+                                       
+                                        
+                                   
+                                //****************************aymakan arrival label print cURL****************************
+                                $generated_pdf = file_get_contents($media_data);
+                                file_put_contents("assets/all_labels/$slipNo.pdf", file_get_contents($mediaData));
+                                $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+
+                                //****************************aymakan label print cURL****************************
+                                $CURRENT_DATE = date("Y-m-d H:i:s");
+                                 $CURRENT_TIME = date("H:i:s");
+                                                             
+                                $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
+                                array_push($succssArray, $slipNo); 
+                            }   
+                            else{
+                                  
+                                    $returnArr['responseError'][] = $slipNo . ':' . $responseArray['message'].':'.json_encode($responseArray['errors']);
+                                    
+                            }    
+                    
                     }elseif($company == 'Shipsy'){
 						
                         $response = $this->Ccompany_model->ShipsyArray($ShipArr, $counrierArr, $Auth_token, $box_pieces1,$c_id,$super_id);

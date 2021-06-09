@@ -540,10 +540,10 @@ class Manifest extends CourierCompany_pickup {
                 $services = '';
         }
         
-       elseif ($company == 'Aymakan'){
+       if ($company == 'Aymakan'){
                             $response = $this->Ccompany_model->AymakanArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1,$complete_sku, $super_id);
                             $responseArray = json_decode($response, true);
-                       //print_r( $responseArray );
+                       
                             if (empty($responseArray['message'])) 
                             {
                                      $client_awb = $responseArray['data']['shipping']['tracking_number'];
@@ -568,6 +568,7 @@ class Manifest extends CourierCompany_pickup {
                                  $CURRENT_TIME = date("H:i:s");
                                                              
                                 $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id);
+                                $returnArr['Success_msg'][] = $slipNo . ':Successfully Assigned';
                                array_push($succssArray, $slipNo); 
                             }   
                             else{
@@ -575,7 +576,7 @@ class Manifest extends CourierCompany_pickup {
                                     $returnArr['responseError'][] = $slipNo . ':' . $responseArray['message'].':'.json_encode($responseArray['errors']);
                                     
                             }                                    
-                    } else if($company == "Clex"){
+        } else if($company == "Clex"){
             $response = $this->Ccompany_model->ClexArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1, $c_id, $super_id);
 
             if ($response['data'][0]['cn_id']) {
@@ -3648,6 +3649,7 @@ class Manifest extends CourierCompany_pickup {
                                  $CURRENT_TIME = date("H:i:s");
                                                              
                                 $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
+                                $returnArr['Success_msg'][] = 'Data updated successfully.';
                                array_push($succssArray, $slipNo); 
                             }   
                             else{
