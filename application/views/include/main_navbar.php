@@ -75,22 +75,22 @@ $margin_left=$marginArr_new[3];
                     </span> <i class="caret"></i> </a>
                 <ul class="dropdown-menu dropdown-menu-right" style="width: 229px;">
 
-                    <li><a href="<?= base_url(); ?>lessqty_alert"><span class="label bg-warning-400 pull-right"><?= Alertcountshowdata('two'); ?></span> <i class="icon-alert"></i> Less Quantity</a></li> 
+                    <li><a href="<?= base_url(); ?>lessqty_alert"><span class="label bg-warning-400 pull-right"><?= Alertcountshowdata('two'); ?></span> <i class="icon-alert"></i> <?= lang('lang_Less_Quantity'); ?></a></li> 
 
 
-                    <li><a href="<?= base_url(); ?>expiry_alert"><span class="label bg-warning-400 pull-right"><?= Alertcountshowdata('one'); ?></span> <i class="icon-alert"></i> Expiry Days</a></li>
+                    <li><a href="<?= base_url(); ?>expiry_alert"><span class="label bg-warning-400 pull-right"><?= Alertcountshowdata('one'); ?></span> <i class="icon-alert"></i> <?= lang('lang_Expiry_Days'); ?></a></li>
                    
-                    <li title="New Manifest"><a href="<?= base_url(); ?>shownewmanifestRequest"><span class="label bg-warning-400 pull-right"><?= GetCountUnseenManifestNew('PR'); ?></span> <i class="icon-alert"></i> New Manifest</a></li>
-                     <li title="Not Picked Manifest"><a href="<?= base_url(); ?>showpickuplist"><span class="label bg-warning-400 pull-right"><?= GetCountUnseenManifestNew('AT'); ?></span> <i class="icon-alert"></i> Not Picked Manifest</a></li>
-                      <li title="Not Stock Update"><a href="<?= base_url(); ?>showmenifest"><span class="label bg-warning-400 pull-right"><?= GetCountUnseenManifestNew('PU'); ?></span> <i class="icon-alert"></i> Not Stock Update</a></li>
+                    <li title="New Manifest"><a href="<?= base_url(); ?>shownewmanifestRequest"><span class="label bg-warning-400 pull-right"><?= GetCountUnseenManifestNew('PR'); ?></span> <i class="icon-alert"></i> <?= lang('lang_New_Manifest'); ?></a></li>
+                     <li title="Not Picked Manifest"><a href="<?= base_url(); ?>showpickuplist"><span class="label bg-warning-400 pull-right"><?= GetCountUnseenManifestNew('AT'); ?></span> <i class="icon-alert"></i> <?= lang('lang_Not_Picked_Manifest'); ?></a></li>
+                      <li title="Not Stock Update"><a href="<?= base_url(); ?>showmenifest"><span class="label bg-warning-400 pull-right"><?= GetCountUnseenManifestNew('PU'); ?></span> <i class="icon-alert"></i><?= lang('lang_Not_Stock_Update'); ?></a></li>
                       
-                       <li title="Not Closed Manifest"><a href="<?= base_url(); ?>show_assignedlist"><span class="label bg-warning-400 pull-right"><?= GetCountUnseenManifestNew('RI','N'); ?></span> <i class="icon-alert"></i> Not Closed Manifest</a></li>
-                       <li title="Open Ticker FF"><a href="<?= base_url(); ?>showTicketview"><span class="label bg-warning-400 pull-right"><?= GetCountFullfilTicketStatus(); ?></span> <i class="icon-alert"></i> Open Ticker FF</a></li>
-                         <li title="Open Ticker Manifest"><a href="<?= base_url(); ?>showTicket"><span class="label bg-warning-400 pull-right"><?= GetCountManifestTicketStatus(); ?></span> <i class="icon-alert"></i> Open Ticker Manifest</a></li>
+                       <li title="Not Closed Manifest"><a href="<?= base_url(); ?>show_assignedlist"><span class="label bg-warning-400 pull-right"><?= GetCountUnseenManifestNew('RI','N'); ?></span> <i class="icon-alert"></i> <?= lang('lang_Not_Closed_Manifest'); ?></a></li>
+                       <li title="Open Ticker FF"><a href="<?= base_url(); ?>showTicketview"><span class="label bg-warning-400 pull-right"><?= GetCountFullfilTicketStatus(); ?></span> <i class="icon-alert"></i> <?= lang('lang_Open_Ticket_FF'); ?></a></li>
+                         <li title="Open Ticker Manifest"><a href="<?= base_url(); ?>showTicket"><span class="label bg-warning-400 pull-right"><?= GetCountManifestTicketStatus(); ?></span> <i class="icon-alert"></i> <?= lang('lang_Open_Ticket_Manifest'); ?></a></li>
                     
                     
                     
-                    <li><a href="<?= base_url('update_password'); ?>"><i class="icon-switch2"></i>Update Password</a></li>          
+                    <li><a href="<?= base_url('update_password'); ?>"><i class="icon-switch2"></i><?= lang('lang_Update_Password'); ?></a></li>          
                     <li><a href="<?= base_url('Home/logout'); ?>"><i class="icon-switch2"></i> <?= lang('lang_Logout'); ?></a></li>
                 </ul>
             </li>

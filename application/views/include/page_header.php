@@ -4,7 +4,7 @@
 		<?php if(basename($_SERVER["REQUEST_URI"],".php"=="Home")): ?>
 		<div class="page-title">
 			
-			<h4><!-- <i class="icon-arrow-left52 position-left"> --><i class="icon-home2 position-left"></i> <span class="text-semibold"><?= "Home";?></span></h4>
+			<h4><!-- <i class="icon-arrow-left52 position-left"> --><i class="icon-home2 position-left"></i> <span class="text-semibold"><?= lang('lang_Home'); ?></span></h4>
 		</div>
 		<?php endif;?>
 

@@ -11,7 +11,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
-    <title>Set SMS Config</title>
+    <title><?= lang('lang_Set_SMS_Config'); ?></title>
     <?php $this->load->view('include/file'); ?>
 
 
@@ -40,28 +40,28 @@
                 <!-- Content area -->
                 <div class="content">
                     <div class="panel panel-flat">
-                        <div class="panel-heading"><h1><strong>SMS Configuration</strong></h1></div>
+                        <div class="panel-heading"><h1><strong><?= lang('lang_SMS_Configuration'); ?></strong></h1></div>
                         <hr>
                         <div class="panel-body">
 
                     
               
                <fieldset class="scheduler-border">
-                <legend class="scheduler-border">SMS Configuration</legend>
+                <legend class="scheduler-border"><?= lang('lang_SMS_Configuration'); ?></legend>
                 
                  <?php if(empty($res_data)) {?>
                 <form action="<?= base_url('Generalsetting/addsmssetting')?>" method="post" enctype="multipart/form-data">
-                <button type="submit" class="btn btn-primary pull-right">ADD</button> 
+                <button type="submit" class="btn btn-primary pull-right"><?= lang('lang_ADD'); ?></button> 
             </form>  
                         <?php } ?>
                  <table class="table table-striped table-hover table-bordered dataTable bg-*" id="example">
                 <thead>
                   <tr>
                   <th>#</th>
-                    <th>Company Name</th>
-                    <th>Param</th>
-                    <th>Api url</th>
-                    <th>Ation</th>
+                    <th><?= lang('lang_Company_name'); ?></th>
+                    <th><?= lang('lang_Param'); ?></th>
+                    <th><?= lang('lang_ApiUrl'); ?></th>
+                    <th><?= lang('lang_Action'); ?></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -91,7 +91,7 @@
                                                         <ul class="dropdown-menu dropdown-menu-right">
                                                            
                                                         
-                                                           <li ><a href="<?=base_url('Generalsetting/addsmssetting/'.$seller['super_id']);?>"  ><i class="icon-pencil7"></i>Edit</a></li>
+                                                           <li ><a href="<?=base_url('Generalsetting/addsmssetting/'.$seller['super_id']);?>"  ><i class="icon-pencil7"></i><?= lang('lang_Edit'); ?></a></li>
                                                            
 
 

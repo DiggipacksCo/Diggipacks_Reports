@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Company Details</title>
+        <title><?=lang('lang_company_details');?> </title>
         <?php $this->load->view('include/file'); ?>
 
 
@@ -34,7 +34,7 @@
                     <!-- Content area -->
                     <div class="content">
                         <div class="panel panel-flat">
-                            <div class="panel-heading"><h1><strong>Company Details</strong></h1></div>
+                            <div class="panel-heading"><h1><strong><?=lang('lang_company_details');?></strong></h1></div>
                             <hr>
                             <div class="panel-body">
                                 <?php if (!empty(validation_errors())) echo'<div class="alert alert-warning" role="alert"><strong>Warning!</strong> ' . validation_errors() . '</div>'; ?>
@@ -53,16 +53,16 @@
 
 
                                     <div class="form-group">
-                                        <label for="company_name"><strong>Company Name:</strong></label>
+                                        <label for="company_name"><strong><?=lang('lang_Company_name');?>:</strong></label>
                                         <input type="text" class="form-control" name='company_name' id="company_name" placeholder="Company Name" value="<?= $EditData['company_name'] ?>">
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="company_address"><strong>Address:</strong></label>
+                                        <label for="company_address"><strong><?=lang('lang_Address');?>:</strong></label>
                                         <input type="text" class="form-control" name='company_address' id="company_address" placeholder="Address" value="<?= $EditData['company_address'] ?>">
                                     </div>
                                     <div class="form-group">
-                                        <label for="phone"><strong>Phone:</strong></label>
+                                        <label for="phone"><strong><?=lang('lang_Phone');?>:</strong></label>
                                         <input type="text" class="form-control" name='phone' id="phone" placeholder="Phone" value="<?= $EditData['phone'] ?>">
                                     </div>
 <!--                                    <div class="form-group">
@@ -70,33 +70,33 @@
                                         <input type="text" class="form-control" name='fax' id="fax" placeholder="Fax" value="<? //= $EditData['fax'] ?>">
                                     </div>-->
                                     <div class="form-group">
-                                        <label for="email"><strong>Email:</strong></label>
-                                        <input type="email" class="form-control" name='email' id="email" placeholder="Email" value="<?= $EditData['email'] ?>">
+                                        <label for="email"><strong> <?=lang('lang_Email');?>:</strong></label>
+                                        <input type="email" class="form-control" name='email' id="email" placeholder="<?=lang('lang_Email');?>" value="<?= $EditData['email'] ?>">
                                     </div>
                                     <div class="form-group">
-                                        <label for="support_email"><strong>Support Email:</strong></label>
+                                        <label for="support_email"><strong><?=lang('lang_SupportEmail');?>:</strong></label>
                                         <input type="email" class="form-control" name='support_email' id="support_email" placeholder="Support Email" value="<?= $EditData['support_email'] ?>">
                                     </div>
                                     <div class="form-group">
-                                        <label for="webmaster_email"><strong>Webmaster Email:</strong></label>
+                                        <label for="webmaster_email"><strong><?=lang('lang_WebmasterEmail');?>:</strong></label>
                                         <input type="email" class="form-control" name='webmaster_email' id="webmaster_email" placeholder="Webmaster Email" value="<?= $EditData['webmaster_email'] ?>">
                                     </div>
                                     <div class="form-group">
-                                        <label for="webmaster_email"><strong>Default AWB:</strong></label>
+                                        <label for="webmaster_email"><strong><?=lang('lang_Default_ABW');?>:</strong></label>
                                         <input type="text" class="form-control" maxlength="4" name='default_awb_char_fm' id="default_awb_char_fm" placeholder="Default AWB" value="<?= $EditData['default_awb_char_fm'] ?>">
                                     </div>
                                     <div class="form-group">
-                                        <label for="default_currency"><strong>Default Currency:</strong></label>
-                                        <input type="text" class="form-control" maxlength="10" name='default_currency' id="default_currency" placeholder="Default Currency" value="<?= $EditData['default_currency'] ?>">
+                                        <label for="default_currency"><strong> <?=lang('lang_Default_Currency');?>:</strong></label>
+                                        <input type="text" class="form-control" maxlength="10" name='default_currency' id="default_currency" placeholder="<?=lang('lang_Default_Currency');?>" value="<?= $EditData['default_currency'] ?>">
                                     </div>
                                     <div class="form-group">
-                                        <label for="country_code"><strong>Country Code:</strong></label>
-                                        <input type="text" class="form-control" maxlength="10" name='country_code' id="country_code" placeholder="Country Code" value="<?= $EditData['country_code'] ?>">
+                                        <label for="country_code"><strong><?=lang('lang_Country_Code');?>:</strong></label>
+                                        <input type="text" class="form-control" maxlength="10" name='country_code' id="country_code" placeholder="<?=lang('lang_Country_Code');?>" value="<?= $EditData['country_code'] ?>">
                                     </div>
                                     <div class="form-group">
-                                        <label for="default_time_zone"><strong>Default Time Zone: </strong></label>
+                                        <label for="default_time_zone"><strong><?=lang('lang_Default_Time_Zone');?>: </strong></label>
                                         <select  id="default_time_zone" name="default_time_zone"  data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%" >
-                                            <option value="">Select Time Zone</option>el>
+                                            <option value=""><?=lang('lang_Select_Time_Zone');?></option>el>
                                             <?php
                                                 if(!empty($TimeZone)){
                                                     foreach($TimeZone as $zone){ 
@@ -111,22 +111,22 @@
                                     </div>
                                     
                                     <div class="form-group">
-                                        <label for="dropoff_option"><strong>Drop Off Details</strong></label>
-                                        <textarea  class="form-control" placeholder="Drop Off Details"  name='dropoff_option' id="dropoff_option" ><?= $EditData['dropoff_option'] ?></textarea>
+                                        <label for="dropoff_option"><strong><?=lang('lang_Drop_Off_Details');?></strong></label>
+                                        <textarea  class="form-control" placeholder="<?=lang('lang_Drop_Off_Details');?>"  name='dropoff_option' id="dropoff_option" ><?= $EditData['dropoff_option'] ?></textarea>
                                         
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="tollfree_fm"><strong>AWB Tollfree No.</strong></label>
-                                        <input type="text" class="form-control" maxlength="12" name='tollfree_fm' id="tollfree_fm" placeholder="AWB Tollfree No" value="<?= $EditData['tollfree_fm'] ?>">
+                                        <label for="tollfree_fm"><strong><?=lang('lang_AWB_Tollfree_No');?>.</strong></label>
+                                        <input type="text" class="form-control" maxlength="12" name='tollfree_fm' id="tollfree_fm" placeholder="<?=lang('lang_AWB_Tollfree_No');?>" value="<?= $EditData['tollfree_fm'] ?>">
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="font_color"><strong>Font Color:</strong></label>
+                                        <label for="font_color"><strong><?=lang('lang_Font_Color');?>:</strong></label>
                                         <input type="color" class="form-control"  name='font_color' id="font_color" placeholder="font_color" value="<?= $EditData['font_color'] ?>">
                                     </div> 
                                     <div class="form-group">
-                                        <label for="vat"><strong>Vat Number:</strong></label>
+                                        <label for="vat"><strong><?=lang('lang_Vat_No');?>:</strong></label>
                                         <input type="text" class="form-control"  name='vat' id="vat" placeholder="vat" value="<?= $EditData['vat'] ?>">
                                     </div>
                                     <!-- <div class="form-group">
@@ -135,10 +135,10 @@
 
                         </div> -->
                                     <div class="form-group">
-                                        <label for="theme_color_fm"><strong>Theme Color:</strong></label>
+                                        <label for="theme_color_fm"><strong><?=lang('lang_Theme_Color');?>:</strong></label>
                                         <input type="color" class="form-control" name='theme_color_fm' id="theme_color_fm" placeholder="Company color" value="<?= $EditData['theme_color_fm'] ?>">
                                     </div>
-                                    <div class="form-group" ><strong>Select Exception Cities:</strong>
+                                    <div class="form-group" ><strong><?=lang('lang_Select_Exception_Cities');?>:</strong>
                                         <br>
                                         <?php
                                         $destData = getAllDestination();
@@ -148,7 +148,7 @@
                                         ?>
                                         <select  id="e_city" name="e_city[]"  multiple data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%" >
 
-                                            <option value="">Select Exception Cities</option>
+                                            <option value=""><?=lang('lang_Select_Exception_Cities');?></option>
                                             <?php foreach ($destData as $data): ?>
                                                 <?php
                                                 if (in_array($data['id'], $e_city)) {
@@ -166,7 +166,7 @@
 
 
                                     <div class="form-group" style="display: none;">
-                                        <label for="logo"><strong>Logo:</strong></label>
+                                        <label for="logo"><strong><?=lang('lang_Logo');?>:</strong></label>
                                         <input type="file" class="form-control" name='logo' id="logo">
                                         <input type="hidden"  name='logo_old' id="logo_old" value="<?= $EditData['logo']; ?>">
                                         <?php
@@ -185,14 +185,14 @@
                                     }
                                     ?>
                                     <div class="form-group">
-                                        <label for="auto_assign_picker"><strong>Auto Assign Picker:</strong></label><br>
+                                        <label for="auto_assign_picker"><strong><?=lang('lang_Auto_Assign_Picker');?>:</strong></label><br>
                                         <input type="radio" name="auto_assign_picker" id="auto_assign_picker" value="Y" <?=$auto_assign_picker_check1;?>> Yes
                                         <input type="radio" name="auto_assign_picker" id="auto_assign_picker1" value="N"  <?=$auto_assign_picker_check2;?>> No
                                     </div>
 
 
                                     <div style="padding-top: 20px;">
-                                        <button type="submit" class="btn btn-success">Update</button>
+                                        <button type="submit" class="btn btn-success"><?=lang('lang_Update');?></button>
                                     </div>
                                 </form>
 

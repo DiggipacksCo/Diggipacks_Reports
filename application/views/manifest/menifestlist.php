@@ -108,11 +108,11 @@
                                                                 <div class="form-group mt-10" >
                                                         <select class="form-control"  ng-model="filterData.sort_list" ng-change="loadMore(1, 1,'no');">
 
-                                                            <option value="">Short List</option>
+                                                            <option value=""><?= lang('lang_Short_List'); ?></option>
 
 
-                                                            <option value="NO">Newest Order</option>
-                                                            <option value="OLD">Oldest Order</option>
+                                                            <option value="NO"><?= lang('lang_Newest_Order'); ?></option>
+                                                            <option value="OLD"><?= lang('lang_Oldest_Order'); ?></option>
                                                           
                                                             
 
@@ -168,14 +168,14 @@
                                                 <th><?= lang('lang_Total_Qty'); ?></th>  
                                                 <th><?= lang('lang_Completed_Qty'); ?></th>  
                                                 <th><?= lang('lang_Pending_Qty'); ?></th>  
-                                                <th>Driver</th>   
-                                                <th>3PL Company</th>  
-                                                <th>3PL AWB</th> 
-                                                <th>City</th> 
-                                                <th>Address</th> 
+                                                <th><?= lang('lang_Drivers'); ?></th>   
+                                                <th><?= lang('lang_TPL_company'); ?></th>  
+                                                <th><?= lang('lang_TPL_AWB'); ?></th> 
+                                                <th><?= lang('lang_City'); ?></th> 
+                                                <th><?= lang('lang_Address'); ?></th> 
                                             <!--<th>Status</th>
                                             <th>Code</th>-->
-                                                 <th>Vehicle Type</th>
+                                                 <th><?= lang('lang_Vehicle_type'); ?></th>
                                                 <th><?= lang('lang_Seller'); ?></th>
                                                 <th><?= lang('lang_On_Hold'); ?></th>
                                                 <th><?= lang('lang_Inventory_Updated'); ?></th>
@@ -230,15 +230,15 @@
                                                         </a>
 
                                                         <ul class="dropdown-menu dropdown-menu-right">
-                                                            <li ><a href="manifestview/{{data.uniqueid}}/PS"><i class="icon-eye" ></i>Pending Sku</a></li>
-                                                            <li ><a href="manifestview/{{data.uniqueid}}/RS"><i class="icon-eye" ></i> Received Sku</a></li>
-                                                            <li ><a href="manifestview/{{data.uniqueid}}/DM"><i class="icon-eye" ></i>Damage Or Missing Sku</a></li>
+                                                            <li ><a href="manifestview/{{data.uniqueid}}/PS"><i class="icon-eye" ></i><?= lang('lang_Pending'); ?> <?= lang('lang_Sku'); ?></a></li>
+                                                            <li ><a href="manifestview/{{data.uniqueid}}/RS"><i class="icon-eye" ></i> <?= lang('lang_Received'); ?> <?= lang('lang_Sku'); ?></a></li>
+                                                            <li ><a href="manifestview/{{data.uniqueid}}/DM"><i class="icon-eye" ></i><?= lang('lang_Damage'); ?> Or <?= lang('lang_Missing'); ?> <?= lang('lang_Sku'); ?></a></li>
 
-                                                            <li ><a ng-click="Getpickupimgview(data.pickimg);"><i class="icon-eye" ></i>Proof Of Pickup</a></li>
+                                                            <li ><a ng-click="Getpickupimgview(data.pickimg);"><i class="icon-eye" ></i><?= lang('lang_Proof_Of_Pickup'); ?></a></li>
 
-                                                            <li ng-if="data.qtyall > data.complatedqty && data.confirmO == 'N'"><a ng-click="updatemanifeststatus(data.id, data.uniqueid, data.sid, data.qtyall, data.complatedqty, data.totalqtycount);"  ><i class="icon-pencil7"></i>Update Stock</a></li> 
+                                                            <li ng-if="data.qtyall > data.complatedqty && data.confirmO == 'N'"><a ng-click="updatemanifeststatus(data.id, data.uniqueid, data.sid, data.qtyall, data.complatedqty, data.totalqtycount);"  ><i class="icon-pencil7"></i><?= lang('lang_Update_stock'); ?></a></li> 
                                                             <li ng-if="data.confirmO == 'N' && data.on_hold == 'N' && data.totalqtycount > 0"><a ng-confirm-click="Are you sure you want to Update On Hold?"  confirmed-click="showonholdorder_pop(data.uniqueid,data.sid);" ><i class="icon-pencil7"></i> <?= lang('lang_Update_On_Hold'); ?></a></li>
-                                                            <li ng-if="data.confirmO == 'N' && data.addBtnI == 'N' && data.complatedqty == data.qtyall && data.error == '0' && data.staff_id==0"><a  ng-click="GetpopAssignStafflist(data.uniqueid);"><i class="icon-user"></i>Assign Staff</a></li>
+                                                            <li ng-if="data.confirmO == 'N' && data.addBtnI == 'N' && data.complatedqty == data.qtyall && data.error == '0' && data.staff_id==0"><a  ng-click="GetpopAssignStafflist(data.uniqueid);"><i class="icon-user"></i><?= lang('lang_assign_Staff'); ?></a></li>
                                                             <li ng-if="data.addBtnI == 'Y' && (data.complatedqty == data.qtyall || itemupdated == 'Y')"><a ng-confirm-click="are you sure want to Add Sku?" confirmed-click="addskufielddata_pop(data.sku,data.uniqueid);"><i class="icon-pencil7"></i><?= lang('lang_Update_Sku'); ?></a></li>
                                                           <!-- <li><a ng-click="updatemanifeststatus_notfound(data.id,data.uniqueid,data.sid,data.qty);"  ><i class="icon-pencil7"></i> Update Not Found</a></li>-->
 
@@ -324,9 +324,9 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" ng-if="returnUpdate.assign_type == 'D'" class="btn btn-primary" ng-click="saveassigntodriver();" >Update Driver</button>
-                            <button type="button" ng-if="returnUpdate.assign_type == 'CC'" class="btn btn-primary" ng-click="saveassigntodriver();" >Send Curier</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><?= lang('lang_Close'); ?></button>
+                            <button type="button" ng-if="returnUpdate.assign_type == 'D'" class="btn btn-primary" ng-click="saveassigntodriver();" ><?= lang('lang_Update_Driver'); ?></button>
+                            <button type="button" ng-if="returnUpdate.assign_type == 'CC'" class="btn btn-primary" ng-click="saveassigntodriver();" ><?= lang('lang_Send_Courier'); ?></button>
                         </div>
                         </form>          
                     </div>
@@ -359,24 +359,24 @@
                             <div class="alert alert-success" ng-if="message.success">{{message.success}}</div>
                             <form novalidate ng-submit="myForm.$valid && createUser()" >
                                 <input type="text"  ng-model="MupdateData.sku" name="sku" id="sku" class="form-control" my-enter="getsavemanifestrecevedata();" required placeholder="SKU" style="width: 50%;float: left;">&nbsp;&nbsp;&nbsp;
-                                <button ng-show="ConfrmBtnDis" class="btn btn-warning" ng-confirm-click="are you sure want to update Status?" confirmed-click="GetConfirmUpdateStatusData();">Confirm</button>
+                                <button ng-show="ConfrmBtnDis" class="btn btn-warning" ng-confirm-click="are you sure want to update Status?" confirmed-click="GetConfirmUpdateStatusData();"><?= lang('lang_Confirm'); ?></button>
                                 <br>
                                 <br>
                                 <table class="" style="width: 100%; margin-top: 25px;" >
-                                    <tr><td>SKU</td><td>Qty</td><td>Scan</td><td>Item Image</td><td>Status</td></tr>
+                                <tr><td><?= lang('lang_SKU'); ?></td><td><?= lang('lang_QTY'); ?></td><td><?= lang('lang_Scan'); ?></td><td><?= lang('lang_Item_Image'); ?></td><td><?= lang('lang_Status'); ?></td></tr>
                                     <tr ng-repeat="im_data in SeachSkuList"><td>{{im_data.sku}}</td>
                                         <td> <span class="badge badge-success">{{im_data.qty}}</span></td>
                                         <td><span class="badge badge-warning">{{im_data.scan}}</span></td> 
                                         <td><img ng-if="im_data.item_path != ''" src="<?= base_url(); ?>{{im_data.item_path}}" width="80">
                                             <img ng-if="im_data.item_path == ''" src="<?= base_url(); ?>assets/nfd.png" width="80">
                                         </td>
-                                     <td><span class="badge badge-warning" ng-if="im_data.status=='pending'">Pending</span>
-                                     <span class="badge badge-success" ng-if="im_data.status=='Compeleted'">Completed</span></td> 
+                                     <td><span class="badge badge-warning" ng-if="im_data.status=='pending'"><?= lang('lang_Pending'); ?></span>
+                                     <span class="badge badge-success" ng-if="im_data.status=='Compeleted'"><?= lang('lang_Completed'); ?></span></td> 
                                     </tr></table>
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" ng-click="Closewidowprces();" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary" ng-click="Closewidowprces();" data-dismiss="modal"><?= lang('lang_Close'); ?></button>
                             <!-- <button type="button" class="btn btn-primary" ng-click="getsavemanifestrecevedata();" >Update</button>-->
                         </div>
                         </form>          
@@ -441,7 +441,7 @@
                                 </div> 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><?= lang('lang_Close'); ?></button>
                             <button type="button" class="btn btn-primary" ng-show="countboxval" ng-click="myForm.$valid && getsaveconfirmOrders()" ><?= lang('lang_Confrim'); ?></button>
                         </div>
                         </form>          
@@ -504,7 +504,7 @@
                         <div class="modal-header">
 
 
-                            <h5 class="modal-title" id="addSkudetailspop">Assign Staff </h5>
+                            <h5 class="modal-title" id="addSkudetailspop"><?= lang('lang_assign_Staff'); ?></h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -517,7 +517,7 @@
 
 
                              <select class="form-control" ng-model="staffUpdateAssignArr.staff_id" required="">
-                                                    <option value=""><?= lang('lang_Please_Select'); ?> Staff</option>
+                                                    <option value=""><?= lang('lang_Please_Select'); ?> <?= lang('lang_Staff'); ?></option>
                                                     <option ng-repeat="wdata in StaffListArr" value="{{wdata.id}}">{{wdata.name}}</option>
                                                 </select>
                         </div>
@@ -543,7 +543,7 @@
                         <div class="modal-header">
 
 
-                            <h5 class="modal-title" id="exampleModalLabel"><?= lang('lang_View_Pickup_Upload'); ?> </h5>
+                            <h5 class="modal-title" id="exampleModalLabel" dir="ltr"><?= lang('lang_View_Pickup_Upload'); ?> </h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>

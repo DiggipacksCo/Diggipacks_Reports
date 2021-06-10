@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png');?>" type="image/x-icon">
-<title>Inventory</title>
+<title><?=lang('lang_Inventory');?></title>
 <?php $this->load->view('include/file'); ?>
 <script type="text/javascript" src="<?=base_url();?>assets/js/angular/iteminventory.app.js"></script>
 </head>
@@ -57,8 +57,8 @@ echo '<div class="alert alert-success">'.$this->session->flashdata('msg').' <but
             
             <!-- Marketing campaigns -->
             <div class="panel panel-flat" >
-              <div class="panel-heading">
-                <h1><strong>Expiry date alert</strong><a href="<?= base_url('Excel_export/shipments');?>"></a> <!--<a  ng-click="ExportExcelitemInventory();" ><i class="icon-file-excel pull-right" style="font-size: 35px; margin-top:3px;"></i></a>-->&nbsp;&nbsp; <a onclick="printPage('block1');" ><i class="fa fa-print pull-right" style="font-size: 40px;color:#999;"></i></a> </h1>
+              <div class="panel-heading" dir="ltr">
+                <h1><strong><?=lang('lang_Expirydate_alert');?></strong><a href="<?= base_url('Excel_export/shipments');?>"></a> <!--<a  ng-click="ExportExcelitemInventory();" ><i class="icon-file-excel pull-right" style="font-size: 35px; margin-top:3px;"></i></a>-->&nbsp;&nbsp; <a onclick="printPage('block1');" ><i class="fa fa-print pull-right" style="font-size: 40px;color:#999;"></i></a> </h1>
                 
                 <!-- <i class="icon-file-excel pull-right" style="font-size: 35px;"></i> --> 
               </div>
@@ -75,13 +75,13 @@ echo '<div class="alert alert-success">'.$this->session->flashdata('msg').' <but
                     <!-- width="170px;" height="200px;" -->
                     <tbody >
                       <tr style="width: 80%;">
-                        <td><div class="form-group" ><strong>SKU:</strong>
+                        <td><div class="form-group" ><strong><?=lang('lang_SKU');?>:</strong>
                             <input type="text" id="sku"name="sku" ng-model="filterData.sku"  class="form-control" placeholder="Enter SKU no.">
                           </div></td>
                       
-                        <td ><div class="form-group" ><strong>Seller:</strong> <br>
+                        <td ><div class="form-group" ><strong><?=lang('lang_Seller');?>:</strong> <br>
                             <select  id="seller" name="seller" ng-model="filterData.seller" class="selectpicker" data-width="100%" >
-                              <option value="">Select Seller</option>
+                              <option value=""><?=lang('lang_SelectSeller');?></option>
                               <?php foreach($sellers as $seller_detail):?>
                               <option value="<?= $seller_detail->id;?>">
                               <?= $seller_detail->name;?>
@@ -89,8 +89,8 @@ echo '<div class="alert alert-success">'.$this->session->flashdata('msg').' <but
                               <?php endforeach;?>
                             </select>
                           </div></td>
-                        <td><button type="button" class="btn btn-success" style="margin-left: 7%">Total <span class="badge">{{shipData.length}}/{{totalCount}}</span></button></td>
-                        <td><button  class="btn btn-danger" ng-click="loadMore(1,1);" >Search</button></td>
+                        <td><button type="button" class="btn btn-success" style="margin-left: 7%"><?=lang('lang_Total');?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button></td>
+                        <td><button  class="btn btn-danger" ng-click="loadMore(1,1);" ><?=lang('lang_Search');?></button></td>
                       </tr>
                       
                     </tbody>
@@ -138,16 +138,16 @@ echo '<div class="alert alert-success">'.$this->session->flashdata('msg').' <but
               <table class="table table-striped table-hover table-bordered dataTable bg-*" id="printTable" style="width:100%;">
                 <thead>
                   <tr>
-                    <th>Sr.No.</th>
+                  <th><?=lang('lang_SrNo');?>.</th>
                  
-                     <th>Item Type</th>
-                    <th>Item Sku</th>
+                   <th><?=lang('lang_Item_Type');?></th>
+                  <th><?=lang('lang_ItemSku');?></th>
                   
-                    <th>Quantity</th>
-                    <th>Seller</th>
+                    <th><?=lang('lang_Quantity');?></th>
+                    <th><?=lang('lang_Seller');?></th>
                  
-                    <th>Expire Status</th>
-                    <th>Expire Date</th>
+                    <th><?=lang('lang_Expire_Status');?></th>
+                    <th><?=lang('lang_Expire_Date');?></th>
                     <!--<th class="text-center" ><i class="icon-database-edit2"></i></th>--> 
                   </tr>
                 </thead>
@@ -166,13 +166,13 @@ echo '<div class="alert alert-success">'.$this->session->flashdata('msg').' <but
                     <td ng-if="data.checkreQty=='N'"><span class="badge badge-success">{{data.quantity}}</span></td>
                     <td>{{data.seller_name}}</td>
                    
-                    <td ng-if='data.expiry=="Y"'><span class="badge badge-danger">YES</span></td>
-                    <td ng-if='data.expiry=="N"'><span class="badge badge-success">NO</span></td>
+                    <td ng-if='data.expiry=="Y"'><span class="badge badge-danger"><?=lang('lang_YES');?></span></td>
+                    <td ng-if='data.expiry=="N"'><span class="badge badge-success"><?=lang('lang_NO');?></span></td>
                     <td>{{data.expity_date !== '0000-00-00' ? data.expity_date : "---"}}</td>
                   </tr>
                 </tbody>
               </table>
-              <button ng-hide="shipData.length==totalCount" class="btn btn-info" ng-click="loadMore(count=count+1,0);" ng-init="count=1">Load More</button>
+              <button ng-hide="shipData.length==totalCount" class="btn btn-info" ng-click="loadMore(count=count+1,0);" ng-init="count=1"><?=lang('lang_Load_More');?></button>
             </div>
             <hr>
           </div>
@@ -208,7 +208,7 @@ return !~text.indexOf(val);
    
     
       
-        <h5 class="modal-title" id="exampleModalLabel">Update Location</h5>
+        <h5 class="modal-title" id="exampleModalLabel"><?=lang('lang_UpdateLocation');?></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -216,7 +216,7 @@ return !~text.indexOf(val);
        <form name="myform" novalidate ng-submit="myForm.$valid && GetupdatelocationData()" enctype="multipart/form-data" >
       <div class="modal-body">
      <select type="text" name="locationUp" id="locationUp" ng-model="UpdateData.locationUp" class="form-control" required>
-     <option value="error">Select Location</option>
+     <option value="error"><?=lang('lang_SelectLocation');?></option>
      <option ng-repeat="data2 in locationData" value="{{data2.stock_location}}">{{data2.stock_location}}</option>
      </select>
       
@@ -226,8 +226,8 @@ return !~text.indexOf(val);
          
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" ng-click="GetupdatelocationData();" >Update</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><?=lang('lang_Close');?></button>
+        <button type="button" class="btn btn-primary" ng-click="GetupdatelocationData();" ><?=lang('lang_Update');?></button>
       </div>
           </form>          
     </div>
@@ -240,7 +240,7 @@ return !~text.indexOf(val);
    
     
       
-        <h5 class="modal-title" id="exampleModalLabel">Update QTY</h5>
+        <h5 class="modal-title" id="exampleModalLabel"><?=lang('lang_UpdateQTY');?></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -248,7 +248,7 @@ return !~text.indexOf(val);
        <form name="myform" novalidate ng-submit="myForm.$valid && GetUpdateqtydata()" enctype="multipart/form-data" >
       <div class="modal-body">
      <span class="badge badge-success" title="Old QTY">{{QtyUpArray.quantity}}</span>
-      <input type="number" class="form-control" required name="newqty" min='0' placeholder="Update Qty" ng-model="QtyUpArray.newqty">
+      <input type="number" class="form-control" required name="newqty" min='0' placeholder="<?=lang('lang_UpdateQTY');?>" ng-model="QtyUpArray.newqty">
       
      
       
@@ -256,8 +256,8 @@ return !~text.indexOf(val);
          
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" ng-click="GetUpdateqtydata();" >Update</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><?=lang('lang_Close');?></button>
+        <button type="button" class="btn btn-primary" ng-click="GetUpdateqtydata();" ><?=lang('lang_Update');?></button>
       </div>
           </form>          
     </div>

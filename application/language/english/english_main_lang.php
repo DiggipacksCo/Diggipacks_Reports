@@ -690,7 +690,7 @@ $lang['lang_Process']="Process";
 $lang['lang_Completed']="Completed"; 
 $lang['lang_All_Orders']="All Orders";
 $lang['lang_AWB']="AWB";
-$lang['lang_SKU']="Select All";
+$lang['lang_SKU']="SKU";
 $lang['lang_Exact_Date']="Exact Date";
 $lang['lang_Item_SKU']="Item SKU";
 $lang['lang_Please_select_item_sku']="Please select item sku";
@@ -737,6 +737,9 @@ $lang['lang_Please_Select_Company_Name']="Please Select Company Name";
 $lang['lang_Picked_Up']="Picked Up";
 $lang['lang_Assigned_To']="Assigned To";
 $lang['lang_Generate_Pickup_List']="Generate Pickup List";
+$lang['lang_import_Bulk_location']="Import Bulk Location";
+$lang['lang_add']="Add";
+$lang['lang_Hub']="Hub";
 
 
 
@@ -1191,6 +1194,223 @@ $lang['lang_Auto_Assign_Picker']="Auto Assign Picker";
 $lang['lang_Font_Color']="Font Color";
 
 $lang['lang_Set_Default_Courier_Companies']="Set Default Courier Companies";
+
+
+
+
+
+
+$lang['lang_Update_Password']="Update Password";
+$lang['lang_Not_Picked_Manifest']="Not Picked Manifest";
+$lang['lang_Not_Stock_Update']="Not Stock Update";
+
+$lang['lang_Not_Closed_Manifest']="Not Closed Manifest";
+$lang['lang_Open_Ticket_FF']="Open Ticket FF";
+$lang['lang_Open_Ticket_Manifest']="Open Ticket Manifest";
+$lang['lang_Add_New_Template']="Add New Template";
+$lang['lang_Clear_Filter']="Clear Filter";
+$lang['lang_Running']="Running";
+$lang['lang_Of_Sku']="Of Sku";
+$lang['lang_Of_Orders']="Of Orders";
+$lang['lang_Staff_Name']="Staff Name";
+$lang['lang_Select_Picker']="Select Picker";
+$lang['lang_Staff_Report']="Staff Report";
+$lang['lang_Client_Report']="Client Report";
+$lang['lang_Day']="Day";
+$lang['lang_Select_Mode']="Select Mode";
+$lang['lang_CC']="CC";
+$lang['lang_Delivery_Performance']="Delivery Performance";
+$lang['lang_TPl_Report_Details']="3Pl Report Details";
+$lang['lang_Sender_Mobile']="Sender Mobile";
+$lang['lang_Sender_Name']="Sender Name";
+$lang['lang_Shipment_Type']="Shipment Type";
+$lang['lang_TPL_AWB']="3PL AWB";
+$lang['lang_Item_Image']="Item Image";
+$lang['lang_ Expire_Status']=" Expire Status";
+$lang['lang_Variables']="Variables";
+$lang['lang_Activity']="Activity";
+$lang['lang_English_Sms']="English Sms";
+$lang['lang_Arabic_SMS']="Arabic SMS";
+$lang['lang_Sub_Status']="Sub Status";
+$lang['lang_Status_Required']="Status Required";
+$lang['lang_Sub_Status_Required']="Sub Status Required";
+$lang['lang_Arabic_Sms_Required']="Arabic Sms Required";
+$lang['lang_English_Sms_Required']="English Sms Required";
+$lang['lang_Change_Destination']="Change Destination";
+$lang['lang_Open_Order']="Open Order";
+$lang['lang_Label_A4']="Label A4";
+$lang['lang_Gift_Item']="Gift Item";
+$lang['lang_Order_By_Date']="Order By Date";
+$lang['lang_Oldest_Order']="Oldest Order";
+$lang['lang_Newest_Order']="Newest Order";
+$lang['lang_Short_List']="Short List";
+$lang['lang_Short']="Short";
+$lang['lang_Reset']="Reset";
+$lang['lang_Order_Cancel']="Order Cancel";
+$lang['lang_Select_Cancel_Type']="Select Cancel Type";
+$lang['lang_With_Fees']="With Fees";
+$lang['lang_Without_Fees']="Without Fees";
+$lang['lang_Please_Verify_the_Cancel_Order_Limit_Exceed']="Please Verify the Cancel Order, Limit Exceed";
+$lang['lang_Booking_ID']="Booking ID";
+$lang['lang_Order_Limit_is_Hundred']="Order Limit is 100";
+$lang['lang_Please_Enter_Your_AWB_Number']="Please Enter Your AWB Number";
+$lang['lang_Save_Report']="Save Repor";
+$lang['lang_export_Report']="Export Report";
+$lang['lang_Inventory_Check']="Inventory Check";
+$lang['lang_Updated_Date']="Updated Date";
+$lang['lang_Expire_Block']="Expire Block";
+$lang['lang_SKU_Limit_is_fifty']="SKU Limit is 50";
+$lang['lang_Image']="Image";
+$lang['lang_Pick_Color']="Pick Color";
+$lang['lang_Import_Images_Zip']="Import Images Zip";
+$lang['lang_Import_Excel_File']="Import Excel File";
+$lang['lang_Icon']="Icon";
+$lang['lang_Vehicle_Table']="Vehicle Table";
+$lang['lang_Send_Courier']="Send Courier";
+$lang['lang_Update_Driver']="Update Driver";
+$lang['lang_Return_Order']="Return Order";
+$lang['lang_Create_Order_Return']="Create Order Return";
+$lang['lang_Return_Type']="Return Type";
+$lang['lang_Search_value']="Search Value";
+$lang['lang_Dispatch_Date_Time']="Dispatch Date & Time";
+$lang['lang_Forward_Company']="Forward Company";
+$lang['lang_Forward_AWB']="Forward AWB";
+$lang['lang_Tpl_frwd_no']="3pl frwd no";
+$lang['lang_Confrim_Generate_Pickup']="Confrim Generate Pickup";
+$lang['lang_Total_COD']="Total COD";
+$lang['lang_Total_COD_Amount']="Total COD Amount";
+$lang['lang_Pickup']="Pickup";
+$lang['lang_Select_Pickup']="Select Pickup";
+$lang['lang_Select_Packed']="Select Packed";
+$lang['lang_Unpacked_Count']="Unpacked Count";
+$lang['lang_Packed_Status']="Packed Status";
+$lang['lang_Tods_No']="Tods No";
+$lang['lang_Back_To_Order']="Back To Order";
+$lang['lang_Delivery_Manifest_list_Details']="Delivery Manifest list Details";
+$lang['lang_Show_Tempalte']="Show Tempalte";
+$lang['lang_Activity_On_Off']="Activity On Off";
+$lang['lang_ No_Record_Found']=" No Record Found";
+$lang['lang_Edit_Template']="Edit Template";
+$lang['lang_Arabic_City_Name ']="Arabic City Name ";
+$lang['lang_Arabic_City_Name']="Arabic City Name";
+$lang['lang_ Dont_Change_Default_File_Format']=" Don't Change Default File Format";
+$lang['lang_Courier_city']="Courier City";
+$lang['lang_Delivery_Company_City']="Delivery Company City";
+$lang['lang_Price']=" Price"; 
+$lang['lang_Tods_No']="Tods No";
+$lang['lang_Log']="Log";
+$lang['lang_Success']="Success";
+$lang['lang_Fail']="Fail";
+$lang['lang_Forward_Log']="Forward Log";
+$lang['lang_password_dont_match']="password don't match";
+$lang['lang_Please_Enter_Confirm_Password']="Please Enter Confirm Password";
+$lang['lang_New_password']="New password";
+$lang['lang_Please_Enter_New_Password']="Please Enter New Password";
+$lang['lang_Please_Enter_Old_Password']="Please Enter Old Password";
+$lang['lang_Old_Password']="Old Password";
+$lang['lang_latitude_longitude']="latitude,longitude";
+$lang['lang_Arabic_Keyword']="Arabic Keyword";
+$lang['lang_Route']="Route";
+$lang['lang_Route_Code']="Route Code";
+$lang['lang_Start_Letters']="Start Letters";
+$lang['lang_Number_Of_TOD']="Number Of TOD";
+
+$lang['lang_Tod']="Tod";
+$lang['lang_Driver_Name']="Driver Name";
+$lang['lang_Print']="Print";
+
+$lang['lang_Order_Packaging_With_TOD']="Order Packaging With TOD";
+$lang['lang_Gift_Offers_List']="Gift Offers List";
+$lang['lang_Offer_On_Off']="Offer On/Off";
+$lang['lang_Please_Select_Gift_Item ']="Please Select Gift Item "; 
+
+$lang['lang_close_date']="Close Date";
+$lang['lang_city_list']="City List";
+$lang['lang_searching_by_city_name']="Search By City Name";
+
+$lang['lang_Fix_Rate']=" Fix Rate";
+$lang['lang_Auto_Forwarding']=" Auto Forwarding ";
+$lang['lang_Inventory_First_In_First_Out']="Inventory First In First Out";
+$lang['lang_Dynamic']="Dynamic";
+$lang['lang_Salla_Configuration']="Salla Configuration";
+
+$lang['lang_Zid_Configuration']="Zid Configuration";
+$lang['lang_SetStorage_Charges']="Set Storage Charges";
+$lang['lang_Zid_Store_ID']="Zid Store ID";
+
+$lang['lang_Salla_Store_ID']="Salla Store ID";
+$lang['lang_Select_Zid_Status']="Select Zid Status";
+$lang['lang_Salla_Webhook_Subscription']="Salla Webhook Subscription";
+$lang['lang_Zid_Webhook_Subscription']="Zid Webhook Subscription";
+$lang['lang_Check_Webhook_List']="Check Webhook List";
+$lang['lang_UnSubscribe_Webhook']="UnSubscribe Webhook";
+$lang['lang_Subscribe_Webhook']="Subscribe Webhook";
+$lang['lang_Delivery_Option']="Delivery Option";
+$lang['lang_Cost']="Cost";
+
+$lang['lang_Cod_Enabled']="Cod Enabled";
+$lang['lang_Enabled']="Enabled";
+$lang['lang_Disabled']="Disabled";
+$lang['lang_Cities']="Cities";
+$lang['lang_Cod_Fee']="Cod Fee";
+$lang['lang_SelectT_Cod_Status']="Select Cod Status";
+$lang['lang_Delivery_Estimated_Time_ar']="Delivery Estimated Time ar";
+$lang['lang_Delivery_Estimated_Time_en']="Delivery Estimated Time en";
+$lang['lang_Proof_Of_Pickup']="Proof Of Pickup";
+$lang['lang_Update_stock']="Update Stock";
+$lang['lang_Cities']="Cities";
+$lang['lang_assign_date']="Assign Date";
+$lang['lang_assign']="Assign ";
+$lang['lang_assign_Staff']="Assign Staff";
+$lang['lang_Scan']="Scan";
+$lang['lang_Staff']="Staff";
+
+$lang['lang_add_from_Master']="Add From Master";
+$lang['lang_Import_Cities_from_Master']="Import Cities From Master";
+$lang['lang_add_In_Master']="Add In Master";
+$lang['lang_Invoice_no']="Invoice No";
+$lang['lang_Please_Enter_Price']="Please Enter Price";
+$lang['lang_Confirm']="Confirm ";
+$lang['lang_Sync']="Sync";
+$lang['lang_Video_Link']="Video Link";
+$lang['lang_bulk_track']="Bulk Track";
+$lang['lang_Order_Limit_is_two_Hundred']="Order Limit is 200";
+$lang['lang_expire_date_not_valid_not_valid']="expire date not valid not valid";
+$lang['lang_bulk_tracking']="Bulk Tracking";
+$lang['lang_Amount_Collected']="Amount Collected";
+$lang['lang_Scheduled']="Scheduled";
+$lang['lang_Schedule_Chanel']="Schedule Chanel";
+$lang['lang_No_of_Pieces']="No of Pieces";
+$lang['lang_Shipping_Zone']="Shipping Zone";
+$lang['lang_Product_Description']="Product Description";
+$lang['lang_record_not_found']="record not found";
+$lang['lang_Add_Gift_Offer']="Add Gift Offer";
+$lang['lang_Picking_Single']="Picking Single";
+$lang['lang_assign_Status']="Assign Status";
+$lang['lang_Days_off']="Days off";
+$lang['lang_Assigning_Time']="Assigning Time";
+$lang['lang_Batch_No']="Batch No";
+
+$lang['lang_Select_Days']="Select Days";
+$lang['lang_Picker_Assign_Setting']="Picker Assign Setting";
+$lang['lang_Order_Dispatched_to']="Order Dispatched to";
+$lang['lang_Per_Day_Target']="Per Day Target";
+$lang['lang_Update_Group_Privilege']="Update Group Privilege";
+$lang['lang_SMS_Configuration']="SMS Configuration";
+$lang['lang_Import_bulk_weight']="Import bulk weight";
+$lang['lang_NEW']="NEW";
+$lang['lang_Add_Seller_Zone']="Add Seller Zone";
+$lang['lang_View_Seller_Zone']="View Seller Zone";
+$lang['lang_Create_Lm_Invoice']="Create Lm Invoice";
+$lang['lang_View_Lm_Invoice']="View Lm Invoice";
+$lang['lang_Drop_Off_Details']="Drop Off Details";
+$lang['lang_Select_Time_Zone']="Select Time Zone";
+$lang['lang_Default_Time_Zone']="Default Time Zone";
+$lang['lang_Country_Code']="Country Code";
+$lang['lang_Default_Currency']="Default Currency";
+$lang['lang_Set_SMS_Config']="Set SMS Config";
+$lang['lang_ADD']="ADD";
+$lang['lang_Param']="Param";
 $lang['lang_FAQ']="FAQ";
 $lang['lang_FAQ']="FAQ";
 $lang['lang_FAQ']="FAQ";
@@ -1206,14 +1426,13 @@ $lang['lang_FAQ']="FAQ";
 $lang['lang_FAQ']="FAQ";
 $lang['lang_FAQ']="FAQ";
 $lang['lang_FAQ']="FAQ";
-$lang['lang_FAQ']="FAQ";
-$lang['lang_FAQ']="FAQ";
-$lang['lang_FAQ']="FAQ";
-$lang['lang_FAQ']="FAQ";
-$lang['lang_FAQ']="FAQ";
-$lang['lang_FAQ']="FAQ";
-$lang['lang_FAQ']="FAQ";
-$lang['lang_FAQ']="FAQ";
+
+
+
+
+
+$lang['lang_City_List']="City List";
+
 
 
 

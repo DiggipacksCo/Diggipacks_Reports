@@ -26,7 +26,7 @@
                             <ul>
                                 <li><a href="<?= base_url('CompanyDetails');?>"><?= lang('lang_company_details'); ?></a></li>
                                 <li><a href="<?= base_url('defaultlist_view');?>"><?= lang('lang_Default_courier_company'); ?></a></li>
-                                <li><a href="<?= base_url('smsconfigration');?>">SMS Configuration</a></li>
+                                <li><a href="<?= base_url('smsconfigration');?>"><?= lang('lang_SMS_Configuration'); ?></a></li>
                                
                             </ul>
                         </li>
@@ -52,7 +52,7 @@
                                     <li><a href="<?= base_url('bulkprint'); ?>"><?= lang('lang_Bulk_Print'); ?></a></li>
                                 <?php } ?>
                                      <?php if (menuIdExitsInPrivilageArray(137) == 'Y') { ?>
-                                    <li><a href="<?= base_url('bulk_tracking'); ?>">Bulk Track</a></li>
+                                    <li><a href="<?= base_url('bulk_tracking'); ?>"><?= lang('lang_bulk_track'); ?></a></li>
                                 <?php } ?>
                                    
                                 <?php if (menuIdExitsInPrivilageArray(30) == 'Y') { ?>
@@ -158,7 +158,7 @@
                                 <?php } ?>
                                 <?php if (menuIdExitsInPrivilageArray(43) == 'Y') { ?>
                                     <li class="navigation-divider"></li>
-                                    <li><a href="<?= base_url('Item/add_bulk_weight_view'); ?>">Import bulk weight <span class="label bg-warning-400"> NEW </span></a></li>
+                                    <li><a href="<?= base_url('Item/add_bulk_weight_view'); ?>"><?= lang('lang_Import_bulk_weight'); ?> <span class="label bg-warning-400">  <?= lang('lang_NEW'); ?></span></a></li>
                                 <?php } ?>
                             </ul>
                         </li>
@@ -400,8 +400,8 @@
                                 <?php if (menuIdExitsInPrivilageArray(45) == 'Y') { ?>
                                     <li><a href="<?= base_url('Seller'); ?>" id="layout2"><?= lang('lang_view_All_sellers'); ?></a></li>
                         <?php } ?>
-                        <li><a href="<?= base_url('addZoneCustomer'); ?>" id="layout2">Add Seller Zone </a></li>
-                        <li><a href="<?= base_url('viewZoneCustomer'); ?>" id="layout2">View Seller Zone</a></li>
+                        <li><a href="<?= base_url('addZoneCustomer'); ?>" id="layout2"><?= lang('lang_Add_Seller_Zone'); ?> </a></li>
+                        <li><a href="<?= base_url('viewZoneCustomer'); ?>" id="layout2"><?= lang('lang_View_Seller_Zone'); ?></a></li>
                             </ul>
                         </li>
 <?php } ?>
@@ -477,10 +477,10 @@
                                 <?php } ?>
 
                                 <?php if (menuIdExitsInPrivilageArray(54) == 'Y') { ?>
-                                    <li><a href="<?= base_url('createInvoice'); ?>">Create Lm Invoice</a></li>
+                                    <li><a href="<?= base_url('createInvoice'); ?>"><?= lang('lang_Create_Lm_Invoice'); ?></a></li>
                                 <?php } ?>
                                 <?php if (menuIdExitsInPrivilageArray(54) == 'Y') { ?>
-                                    <li><a href="<?= base_url('viewLmInvoice'); ?>">View Lm Invoice</a></li>
+                                    <li><a href="<?= base_url('viewLmInvoice'); ?>"><?= lang('lang_View_Lm_Invoice'); ?></a></li>
                                 <?php } ?>
 
                             </ul>
@@ -554,7 +554,7 @@
                                     <li><a href="<?= base_url('Country/Delivery_city_list'); ?>"><?= lang('lang_Delivery_Company_List'); ?></a></li>
                         <?php } ?>
                         <?php if (menuIdExitsInPrivilageArray(91) == 'Y') { ?>
-                                    <li><a href="<?= base_url('import_from_master'); ?>">Add from Master</a></li>
+                                    <li><a href="<?= base_url('import_from_master'); ?>"><?= lang('lang_add_from_Master'); ?></a></li>
                         <?php } ?>
 
 
@@ -647,7 +647,7 @@
                          <li  <?php if ($this->uri->segment(1) == 'add_access_template' || $this->uri->segment(1) == 'show_access_template' ) echo 'class="active"'; ?>>
                             <a href="javascript: void(0);">
                                <i class="fa fa-star"></i>
-                                <span>Access Management </span>
+                                <span> <?= lang('lang_Access_Management'); ?></span>
                                 <span class="badge badge-danger badge-pill float-right"></span>
                             </a>
                             <ul class="nav-second-level" aria-expanded="false">
