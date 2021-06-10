@@ -162,6 +162,8 @@ class Ccompany_model extends CI_Model {
        return $result[$field];
    }
 
+ 
+
 
     public function Update_Manifest_Status($slipNo = null, $client_awb = null, $CURRENT_TIME = null, $CURRENT_DATE = null, $company = null, $comment = null, $fastcoolabel = null, $c_id = null, $barq_order_id= null) 
     {  
@@ -285,8 +287,12 @@ class Ccompany_model extends CI_Model {
     
     public function AramexArrayAdvance(array $ShipArr, array $counrierArr, $complete_sku = null, $pay_mode = null, $CashOnDeliveryAmount = null, $services = null,$box_pieces1= null,$super_id = null, $totalcustomerAmt=null )
     {    
-        $reciever_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'aramex_city',$super_id);
-        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'aramex_city',$super_id);
+        $sender_default_city= Getselletdetails($super_id);
+        $sender_address = $sender_default_city['0']['address'];
+        $sender_city = getdestinationfieldshow_auto_array($sender_default_city['branch_location'], 'city', $super_id);
+        $sender_name = "DIGGIPACKS FULFILLMENT-". $ShipArr['sender_name'];
+
+        $reciever_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'aramex_city',$super_id);       
         $C_code = getdestinationfieldshow_auto_array($ShipArr['destination'], 'aramex_country_code',$super_id);
         $ic_no = getdestinationfieldshow_auto_array($ShipArr['destination'], 'ic_no',$super_id);
         
@@ -396,7 +402,7 @@ class Ccompany_model extends CI_Model {
                                                 'Contact' =>
                                                 array(
                                                     'Department' => '',
-                                                    'PersonName' => $ShipArr['sender_name'],
+                                                    'PersonName' => $sender_name,
                                                     'Title' => '',
                                                     'CompanyName' => $ShipArr['sender_name'],
                                                     'PhoneNumber1' => $ShipArr['sender_phone'],
@@ -2818,11 +2824,15 @@ class Ccompany_model extends CI_Model {
     
     public function ShipadeliveryArray(array $ShipArr, array $counrierArr, $auth_token = null, $c_id = null,$super_id=null) {
         ini_set('default_charset', 'UTF-8');
-      
-        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'shipsa_city',$super_id);
+
+         $sender_default_city= Getselletdetails($super_id);
+         $sender_address = $sender_default_city['0']['address'];
+         $sender_city = getdestinationfieldshow_auto_array($sender_default_city['branch_location'], 'city', $super_id);
          $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'shipsa_city',$super_id);
-//       echo '<pre>'; 
-// print_r($receiver_city); exit;
+      
+
+        //     echo  "sender_city = ". $sender_city . 'reciverr city = <pre>'; 
+        //  print_r($sender_default_city); exit;
 
         if ($ShipArr['mode'] == 'COD') {
             $total_cod_amt = $ShipArr['total_cod_amt'];
@@ -2837,7 +2847,7 @@ class Ccompany_model extends CI_Model {
             $description = 'GOODS';
         }
                
-             
+            
         
         $number  =  $ShipArr['reciever_phone']; 
         $number = ltrim($number, '966 ');
@@ -2846,8 +2856,8 @@ class Ccompany_model extends CI_Model {
         $number = str_replace(' ', '', $number);
         
         $Sender = array(
-            'name' => $ShipArr['sender_name'],
-            'address' => $ShipArr['sender_address'],
+            'name' => "DIGGIPACKS FULFILLMENT -".$ShipArr['sender_name'],
+            'address' => $sender_address,
             'phone' => $ShipArr['sender_phone'],
             'email' => $ShipArr['sender_email'],
         );
@@ -2873,7 +2883,7 @@ class Ccompany_model extends CI_Model {
      //  echo "<pre>"; print_r($param); die;
      
         $paramArray = json_encode($param);
-
+        // echo "<pre>"; print_r($paramArray); die;
        
         if (empty($param[0]['recipient']['city']))
         {
