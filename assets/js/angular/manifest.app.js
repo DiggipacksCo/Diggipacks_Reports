@@ -1,4 +1,4 @@
-var app = angular.module('AppManifest', [])
+var app = angular.module('AppManifest', []) 
 
 
         .controller('IteminventoryAdd', function ($scope, $http, $window, $location) {
@@ -1054,7 +1054,7 @@ $scope.data={};
                 }
 
                 $http({
-                    url: $scope.baseUrl + "/manifestdetails",
+                    url: SITEAPP_PATH + "manifestdetails",
                     method: "POST",
                     data: $scope.filterData,
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -1120,7 +1120,7 @@ $scope.data={};
             {
 
                 $http({
-                    url: $scope.baseUrl + "/Manifest/GetUpdateMissingdamageAll",
+                    url: SITEAPP_PATH+ "Manifest/GetUpdateMissingdamageAll",
                     method: "POST",
                     data: {listIds:$scope.Items,type:type},
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
