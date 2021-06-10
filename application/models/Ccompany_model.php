@@ -2826,7 +2826,7 @@ class Ccompany_model extends CI_Model {
     public function ShipadeliveryArray(array $ShipArr, array $counrierArr, $auth_token = null, $c_id = null,$super_id=null) {
 
          $sender_default_city = Getselletdetails($super_id);         
-         $sellername = "DIGGIPACKS FULFILLMENT - ".GetallCutomerBysellerId($ShipArr['cust_id'],'company');  
+         $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');  
          $sender_address = $sender_default_city['0']['address'];
          $sender_city = getdestinationfieldshow_auto_array($sender_default_city['branch_location'], 'city', $super_id);
          $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'shipsa_city',$super_id);
@@ -2853,11 +2853,12 @@ class Ccompany_model extends CI_Model {
         $number = str_replace(' ', '', $number);
         
         $Sender = array(
-            'name' => $sellername,
+            'name' =>  "DIGGIPACKS FULFILLMENT - ".$sellername,
             'address' => $sender_address,
             'phone' => $ShipArr['sender_phone'],
             'email' => $ShipArr['sender_email'],
         );
+        
         $Recipient = array(
             'name' => $ShipArr['reciever_name'],
             'address' => $ShipArr['reciever_address'],
@@ -2877,10 +2878,10 @@ class Ccompany_model extends CI_Model {
         );
         
         
-     //  echo "<pre>"; print_r($param); die;
+     //echo "<pre>"; print_r($param); die;
      
         $paramArray = json_encode($param);
-        // echo "<pre>"; print_r($paramArray); die;
+       // echo "<pre>"; print_r($paramArray); die;
        
         if (empty($param[0]['recipient']['city']))
         {
