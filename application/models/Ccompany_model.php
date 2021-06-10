@@ -288,6 +288,7 @@ class Ccompany_model extends CI_Model {
     public function AramexArrayAdvance(array $ShipArr, array $counrierArr, $complete_sku = null, $pay_mode = null, $CashOnDeliveryAmount = null, $services = null,$box_pieces1= null,$super_id = null, $totalcustomerAmt=null )
     {    
         $sender_default_city= Getselletdetails($super_id);
+        
         $sender_address = $sender_default_city['0']['address'];
         $sender_city = getdestinationfieldshow_auto_array($sender_default_city['branch_location'], 'city', $super_id);
         $sender_name = "DIGGIPACKS FULFILLMENT-". $ShipArr['sender_name'];
@@ -2823,30 +2824,26 @@ class Ccompany_model extends CI_Model {
     }
     
     public function ShipadeliveryArray(array $ShipArr, array $counrierArr, $auth_token = null, $c_id = null,$super_id=null) {
-        ini_set('default_charset', 'UTF-8');
 
-         $sender_default_city= Getselletdetails($super_id);
+         $sender_default_city = Getselletdetails($super_id);         
+         $sellername = "DIGGIPACKS FULFILLMENT - ".GetallCutomerBysellerId($ShipArr['cust_id'],'company');  
          $sender_address = $sender_default_city['0']['address'];
          $sender_city = getdestinationfieldshow_auto_array($sender_default_city['branch_location'], 'city', $super_id);
          $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'shipsa_city',$super_id);
-      
 
-        //     echo  "sender_city = ". $sender_city . 'reciverr city = <pre>'; 
-        //  print_r($sender_default_city); exit;
+            if ($ShipArr['mode'] == 'COD') {
+                $total_cod_amt = $ShipArr['total_cod_amt'];
+                $paymentMethod = 'CashOnDelivery';
+            }elseif ($ShipArr['mode'] == "CC") {
+                $total_cod_amt = 0;
+                $paymentMethod = 'Prepaid';
+            }
+            $description =  $complete_sku;
 
-        if ($ShipArr['mode'] == 'COD') {
-            $total_cod_amt = $ShipArr['total_cod_amt'];
-            $paymentMethod = 'CashOnDelivery';
-        }elseif ($ShipArr['mode'] == "CC") {
-            $total_cod_amt = 0;
-            $paymentMethod = 'Prepaid';
-        }
-        $description =  $complete_sku;
-
-        if($description==''){
-            $description = 'GOODS';
-        }
-               
+            if($description==''){
+                $description = 'GOODS';
+            }
+                
             
         
         $number  =  $ShipArr['reciever_phone']; 
@@ -2856,7 +2853,7 @@ class Ccompany_model extends CI_Model {
         $number = str_replace(' ', '', $number);
         
         $Sender = array(
-            'name' => "DIGGIPACKS FULFILLMENT -".$ShipArr['sender_name'],
+            'name' => $sellername,
             'address' => $sender_address,
             'phone' => $ShipArr['sender_phone'],
             'email' => $ShipArr['sender_email'],
