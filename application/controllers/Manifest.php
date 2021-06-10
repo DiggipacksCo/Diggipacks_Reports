@@ -5,7 +5,7 @@ require_once(dirname(__FILE__) . "/CourierCompany_pickup.php");
 
 class Manifest extends CourierCompany_pickup { 
 
-    function __construct() {
+    function __construct() { 
         parent::__construct();
         if (menuIdExitsInPrivilageArray(17) == 'N') {
             redirect(base_url() . 'notfound');
@@ -254,7 +254,6 @@ class Manifest extends CourierCompany_pickup {
         //  print_r($_POST);
 
         $shipments = $this->Manifest_model->manifestviewListFilter($_POST);
-
         // json_encode($_POST);exit();
         //getdestinationfieldshow();
         $manifestarray = $shipments['result'];
@@ -266,7 +265,7 @@ class Manifest extends CourierCompany_pickup {
 
             $manifestarray[$ii]['pstatus'] = GetpickupStatus($rdata['pstatus']);
             if ($rdata['seller_id'] > 0)
-                $manifestarray[$ii]['seller_id'] = getallsellerdatabyID($rdata['seller_id'], 'name');
+                $manifestarray[$ii]['seller_id'] = getallsellerdatabyID($rdata['seller_id'], 'name',$rdata['super_id']);
             else
                 $manifestarray[$ii]['seller_id'] = 'N/A';
             if ($rdata['assign_to'] > 0)
