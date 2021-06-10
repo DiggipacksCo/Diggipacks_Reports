@@ -11,7 +11,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
-    <title>Set Courier Companies</title>
+    <title><?=lang('lang_Set_Courier_Companies');?></title>
     <?php $this->load->view('include/file'); ?>
 
 
@@ -40,7 +40,7 @@
                 <!-- Content area -->
                 <div class="content">
                     <div class="panel panel-flat">
-                        <div class="panel-heading"><h1><strong>Set Default Courier Companies</strong></h1></div>
+                        <div class="panel-heading"><h1><strong><?=lang('lang_Set_Default_Courier_Companies');?></strong></h1></div>
                         <hr>
                         <div class="panel-body">
 
@@ -49,16 +49,16 @@
                     
               
                <fieldset class="scheduler-border">
-                <legend class="scheduler-border">Set Default Courier Companies</legend>
+                <legend class="scheduler-border"><?=lang('lang_Set_Default_Courier_Companies');?></legend>
                  <div class="form-group">
 
                  <table class="table table-striped table-hover table-bordered dataTable bg-*" id="example">
                 <thead>
                   <tr>
                   <th>#</th>
-                    <th>Name</th>
-                    <th>Priority</th>
-                    <th>Active</th>
+                    <th><?=lang('lang_Name');?></th>
+                    <th><?=lang('lang_Priority');?></th>
+                    <th><?=lang('lang_active');?></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -89,11 +89,11 @@
                       <select name="status[<?=$seller['id'];?>]"  >
                       
                       <?php if($seller['status']==0){ ?>
-                        <option value="0" selected="selected">Active</option>
-                        <option value="1" >Inactive</option>
+                        <option value="0" selected="selected"><?=lang('lang_active');?></option>
+                        <option value="1" ><?=lang('lang_inactive');?></option>
                      <?php } else { ?>
-                        <option value="0" >Active</option>
-                        <option value="1" selected="selected">Inactive</option>
+                        <option value="0" ><?=lang('lang_active');?></option>
+                        <option value="1" selected="selected"><?=lang('lang_inactive');?></option>
                      <?php } ?>
                      
                       </select> 
@@ -108,7 +108,7 @@
                 </div>
                 </fieldset>
               
-            <button type="submit" class="btn btn-primary pull-right">Update</button> 
+            <button type="submit" class="btn btn-primary pull-right"><?=lang('lang_Update');?></button> 
             </form>
 
                         </div>

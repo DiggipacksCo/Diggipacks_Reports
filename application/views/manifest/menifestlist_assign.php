@@ -109,11 +109,11 @@
                                                                 <div class="form-group mt-10" >
                                                         <select class="form-control"  ng-model="filterData.sort_list" ng-change="loadMore(1, 1,'yes');">
 
-                                                            <option value="">Short List</option>
+                                                        <option value=""><?= lang('lang_Short_List'); ?></option>
 
 
-                                                            <option value="NO">Newest Order</option>
-                                                            <option value="OLD">Oldest Order</option>
+                                                        <option value="NO"><?= lang('lang_Newest_Order'); ?></option>
+                                                        <option value="OLD"><?= lang('lang_Oldest_Order'); ?></option>
                                                           
                                                             
 
@@ -171,16 +171,16 @@
                                                 <th><?= lang('lang_Total_Qty'); ?></th>  
                                                 <th><?= lang('lang_Completed_Qty'); ?></th>  
                                                 <th><?= lang('lang_Pending_Qty'); ?></th>  
-                                                <th>Driver</th>   
-                                                <th>3PL Company</th>  
-                                                <th>3PL AWB</th> 
-                                                <th>City</th> 
-                                                <th>Address</th> 
+                                                <th><?= lang('lang_Drivers'); ?></th>   
+                                                <th><?= lang('lang_TPL_company'); ?></th>  
+                                                <th><?= lang('lang_TPL_AWB'); ?></th> 
+                                                <th><?= lang('lang_City'); ?></th> 
+                                                <th><?= lang('lang_Address'); ?></th> 
                                             <!--<th>Status</th>
                                             <th>Code</th>-->
-                                                 <th>Vehicle Type</th>
-                                                  <th>Staff Name</th>
-                                                  <th>Assign Date</th>
+                                            <th><?= lang('lang_Vehicle_type'); ?></th>
+                                                  <th><?= lang('lang_Staff_Name'); ?></th>
+                                                  <th><?= lang('lang_assign_date'); ?></th>
                                                 <th><?= lang('lang_Seller'); ?></th>
                                                 <th><?= lang('lang_On_Hold'); ?></th>
                                                 <th><?= lang('lang_Inventory_Updated'); ?></th>
@@ -239,11 +239,11 @@
                                                         </a>
 
                                                         <ul class="dropdown-menu dropdown-menu-right">
-                                                            <li ><a href="manifestview/{{data.uniqueid}}/PS"><i class="icon-eye" ></i>Pending Sku</a></li>
-                                                            <li ><a href="manifestview/{{data.uniqueid}}/RS"><i class="icon-eye" ></i> Received Sku</a></li>
-                                                            <li ><a href="manifestview/{{data.uniqueid}}/DM"><i class="icon-eye" ></i>Damage Or Missing Sku</a></li>
+                                                            <li ><a href="manifestview/{{data.uniqueid}}/PS"><i class="icon-eye" ></i><?= lang('lang_Pending'); ?> <?= lang('lang_Sku'); ?></a></li>
+                                                            <li ><a href="manifestview/{{data.uniqueid}}/RS"><i class="icon-eye" ></i> <?= lang('lang_Received'); ?> <?= lang('lang_Sku'); ?></a></li>
+                                                            <li ><a href="manifestview/{{data.uniqueid}}/DM"><i class="icon-eye" ></i><?= lang('lang_Damage'); ?> Or <?= lang('lang_Missing'); ?> <?= lang('lang_Sku'); ?></a></li>
 
-                                                            <li ><a ng-click="Getpickupimgview(data.pickimg);"><i class="icon-eye" ></i>Proof Of Pickup</a></li>
+                                                            <li ><a ng-click="Getpickupimgview(data.pickimg);"><i class="icon-eye" ></i><?= lang('lang_Proof_Of_Pickup'); ?></a></li>
 
                                                               <li ng-if="data.confirmO == 'N' && data.addBtnI == 'N' && data.complatedqty == data.qtyall && data.error == '0'"><a href="<?=base_url();?>updateManifest/{{data.uniqueid}}" ><i class="icon-pencil7"></i><?= lang('lang_Add_Inventory'); ?></a></li>
                                                             
@@ -517,7 +517,7 @@
                         <div class="modal-header">
 
 
-                            <h5 class="modal-title" id="exampleModalLabel"><?= lang('lang_View_Pickup_Upload'); ?> </h5>
+                            <h5 class="modal-title" id="exampleModalLabel" dir="ltr"><?= lang('lang_View_Pickup_Upload'); ?> </h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>

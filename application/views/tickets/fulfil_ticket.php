@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png');?>" type="image/x-icon">
-<title>Inventory</title>
+<title><?=lang('lang_Inventory');?></title>
 <?php $this->load->view('include/file'); ?>
 <script type="text/javascript" src="<?=base_url();?>assets/js/angular/tickets.app.js"></script>
 </head>
@@ -41,7 +41,7 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('something').
 <!-- Marketing campaigns -->
 <div class="panel panel-flat">
 <div class="panel-heading">
-  <h1> <strong>All Ticket List </strong> 
+  <h1> <strong><?=lang('lang_All_Ticket_List');?> </strong> 
     <!--  <a  ng-click="exportmanifestlist();" ><i class="icon-file-excel pull-right" style="font-size: 35px;"></i></a>--> 
     <!-- <a id="pdf" ><i class="icon-file-pdf pull-right" style="font-size: 35px;color: red;"></i></a>--> 
   </h1>
@@ -61,23 +61,23 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('something').
       <!-- width="170px;" height="200px;" -->
       <tbody >
         <tr style="width: 80%;">
-          <td><div class="form-group" ><strong>Sellers:</strong>
+          <td><div class="form-group" ><strong><?=lang('lang_Sellers');?>:</strong>
               <select id="seller_id"name="seller_id" ng-model="filterData.seller_id" class="form-control">
-                <option value="">Select Seller</option>
+                <option value=""><?=lang('lang_SelectSeller');?></option>
                 <option ng-repeat="sdata in sellers"  value="{{sdata.id}}">{{sdata.name}}</option>
               </select>
             </div></td>
-          <td><div class="form-group" ><strong>Status:</strong>
+          <td><div class="form-group" ><strong><?=lang('lang_Status');?>:</strong>
               <select id="searchstatus" name="searchstatus" ng-model="filterData.searchstatus" class="form-control">
-                <option value="">Select Status</option>
-                <option value="pending">Open</option>
-                <option value="process">Process</option>
-                 <option value="complated">Closed</option>
+                <option value=""><?=lang('lang_Select_Status');?></option>
+                <option value="pending"><?=lang('lang_Open');?></option>
+                <option value="process"><?=lang('lang_Process');?></option>
+                 <option value="complated"><?=lang('lang_Closed');?></option>
                 
               </select>
             </div></td>
-          <td><button type="button" class="btn btn-success" style="margin-left: 7%">Total <span class="badge">{{shipData.length}}/{{totalCount}}</span></button></td>
-          <td><button  class="btn btn-danger" ng-click="loadMore(1,1);" >Search</button></td>
+          <td><button type="button" class="btn btn-success" style="margin-left: 7%"><?=lang('lang_Total');?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button></td>
+          <td><button  class="btn btn-danger" ng-click="loadMore(1,1);" ><?=lang('lang_Search');?></button></td>
         </tr>
       </tbody>
     </table>
@@ -101,15 +101,15 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('something').
       <table class="table table-striped table-hover table-bordered dataTable bg-*" id="example" style="width:100%;">
         <thead>
           <tr>
-            <th>Sr.No.</th>
-            <th>Ticket ID</th>
-            <th>#AWB</th>
-            <th>Seller</th>
-            <th>Subject</th>
-            <th>Message</th>
-            <th>Status</th>
+            <th><?=lang('lang_SrNo');?>.</th>
+            <th><?=lang('lang_Ticket_ID');?></th>
+            <th># <?=lang('lang_AWB');?></th>
+            <th><?=lang('lang_Seller');?></th>
+            <th><?=lang('lang_Subjet');?></th>
+            <th><?=lang('lang_Message');?></th>
+            <th><?=lang('lang_Status');?></th>
            <!--  <th>Update</th>-->
-            <th>Created Date</th>
+            <th><?=lang('lang_Created_Date');?></th>
             <th class="text-center" ><i class="icon-database-edit2"></i></th>
           </tr>
         </thead>
@@ -120,7 +120,7 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('something').
           <td > {{data.seller_id}}</td>
           <td > {{data.subject}}</td>
           <td >{{data.message}}</td>
-           <td width="150" ><span class="badge badge-danger" ng-if="data.status=='pending'">Open</span><span class="badge badge-warning" ng-if="data.status=='process'">Process</span><span class="badge badge-success" ng-if="data.status=='complated'">Closed</span></td>
+           <td width="150" ><span class="badge badge-danger" ng-if="data.status=='pending'"><?=lang('lang_Open');?>  </span><span class="badge badge-warning" ng-if="data.status=='process'"><?=lang('lang_Process');?></span><span class="badge badge-success" ng-if="data.status=='complated'"><?=lang('lang_Closed');?></span></td>
           
         <!--  <td> <select id="ticket_status" name="ticket_status" ng-model="data.ticket_status" ng-change="GetUpdateticketStatus(data.ticket_status,data.id);" class="form-control">
                 <option ng-repeat="x in StatusArr" value="{{x.status}}" >{{x.status}}</option>
@@ -131,8 +131,8 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('something').
           <td class="text-center"><ul class="icons-list">
               <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-menu9"></i> </a>
                 <ul class="dropdown-menu dropdown-menu-right">
-                  <li ><a href="<?=base_url();?>Ticket/tickethistory/{{data.ticket_id}}" ><i class="icon-eye" ></i> View</a></li>
-                   <li ng-if="data.status!='complated'"><a ng-click="GetUpdateTicketData(data.id,data.ticket_id);"  ><i class="icon-pencil7"></i> Ticket Update</a></li> 
+                  <li ><a href="<?=base_url();?>Ticket/tickethistory/{{data.ticket_id}}" ><i class="icon-eye" ></i> <?=lang('lang_View');?></a></li>
+                   <li ng-if="data.status!='complated'"><a ng-click="GetUpdateTicketData(data.id,data.ticket_id);"  ><i class="icon-pencil7"></i> <?=lang('lang_Ticket_Update');?></a></li> 
                 
                     
                   
@@ -143,7 +143,7 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('something').
             </ul></td>
         </tr>
       </table>
-      <button ng-hide="shipData.length==totalCount" class="btn btn-info" ng-click="loadMore(count=count+1,0);" ng-init="count=1">Load More</button>
+      <button ng-hide="shipData.length==totalCount" class="btn btn-info" ng-click="loadMore(count=count+1,0);" ng-init="count=1"><?=lang('lang_Load_More');?></button>
     </div>
     <hr>
   </div>
@@ -156,7 +156,7 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('something').
    
     
       
-        <h5 class="modal-title" id="exampleModalLabel">Update Status({{TicketData.ticket_id}})</h5>
+        <h5 class="modal-title" id="exampleModalLabel"><?=lang('lang_Update_Status');?> ({{TicketData.ticket_id}})</h5>
        <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>-->
@@ -167,13 +167,13 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('something').
       <tbody >
         <tr style="width: 80%;">
           
-          <td><div class="form-group" ><strong>Status:</strong>
+          <td><div class="form-group" ><strong><?=lang('lang_Status');?>:</strong>
               <select id="upstatus" name="upstatus" ng-model="TicketData.upstatus" class="form-control" required>
-                <option value="error">Select Status</option>
+                <option value="error"><?=lang('lang_Select_Status');?></option>
               
-                <option value="pending">Open</option>
-                <option value="process">Process</option>
-                 <option value="complated">Closed</option>
+                <option value="pending"><?=lang('lang_Open');?> </option>
+                <option value="process"><?=lang('lang_Process');?></option>
+                 <option value="complated"><?=lang('lang_Closed');?></option>
                 
                 
               </select>
@@ -184,8 +184,8 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('something').
     </table>
        </div>
         <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-        <button type="submit" class="btn btn-primary" ng-click="GetfulfulTicketUpdate();"  >Update Status</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"><?=lang('lang_Cancel');?></button>
+        <button type="submit" class="btn btn-primary" ng-click="GetfulfulTicketUpdate();"  ><?=lang('lang_Update_Status');?></button>
       </div>
     </div>
   </div>

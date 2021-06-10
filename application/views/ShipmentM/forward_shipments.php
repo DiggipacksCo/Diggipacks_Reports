@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Inventory</title>
+        <title><?=lang('lang_Inventory');?></title>
         <?php $this->load->view('include/file'); ?>
         <script src="<?= base_url(); ?>assets/js/angular/courier_company.js"></script> 
     </head>
@@ -36,10 +36,10 @@
                         <!--style="background-color: red;"-->
                         <div class="row" style="margin-top:10px">
                             <div class="col-md-12" ng-if="invalidSslip_no">
-                                <div class="alert alert-warning" ng-if="invalidSslip_no" ng-repeat="in_data in invalidSslip_no">Invalid slip no. "{{in_data}}"</div>
+                                <div class="alert alert-warning" ng-if="invalidSslip_no" ng-repeat="in_data in invalidSslip_no"><?=lang('lang_Invalid_slip_no');?>. "{{in_data}}"</div>
                             </div>
                             <div class="col-md-12" ng-if="Success_msg">
-                                <div class="alert alert-success" ng-repeat="success_msg in Success_msg">{{success_msg}} : Shipment Forwarded</div>
+                                <div class="alert alert-success" ng-repeat="success_msg in Success_msg">{{success_msg}} : <?=lang('lang_Shipment_Forwarded');?></div>
                             </div>
                             <div class="col-md-12" ng-if="Error_msg">
                                 <div class="alert alert-danger" ng-repeat="error_msg in Error_msg">{{error_msg}}</div>
@@ -49,7 +49,7 @@
                                 <div class="alert alert-danger" ng-if="mainstatusEmpty">{{mainstatusEmpty}}</div>
                             </div>
                             <div class="col-md-12" ng-if="messArray1 != 0">
-                                <div class="alert alert-danger" ng-repeat="mdata in messArray1">Wrong Awb {{mdata}}</div>    
+                                <div class="alert alert-danger" ng-repeat="mdata in messArray1"><?=lang('lang_wrong_AWB_no');?> {{mdata}}</div>    
                             </div>
                         </div>
 
@@ -60,9 +60,9 @@
 
                                 <!-- Marketing campaigns -->
                                 <div class="panel panel-flat">
-                                    <div class="panel-heading">
+                                    <div class="panel-heading" dir="ltr">
                                         <h1>
-                                            <strong>Forward to 3PL</strong>
+                                            <strong><?=lang('lang_Forward_to_TPL');?></strong>
 
                                             <a ng-click="getExcelDetails();" >   
                                                 <i class="icon-file-excel pull-right" style="font-size: 35px;">
@@ -70,7 +70,7 @@
                                             </a> 
 
                                             <select id="exportlimit" class="custom-select pull-right" ng-model="filterData.exportlimit" name="exprort_limit" required="" style="    font-size: 16px;padding: 5px;margin-right: 10px;"  >
-                                                <option value="" selected>Select Export Limit</option>
+                                                <option value="" selected><?=lang('lang_select_export_limit');?></option>
                                                 <option ng-repeat="exdata in dropexport" value="{{exdata.i}}" >{{exdata.j}}-{{exdata.i}}</option>  
                                             </select> 
                                         </h1>
@@ -94,7 +94,7 @@
                                             <div class="col-sm-4">             
                                                 <label class="container">
 
-                                                    <input type="checkbox" id='but_checkall' value='Check all' ng-model="checkall" ng-click='toggleAll()'/>    All
+                                                    <input type="checkbox" id='but_checkall' value='Check all' ng-model="checkall" ng-click='toggleAll()'/>    <?= lang('lang_SelectAll'); ?>
                                                     <span class="checkmark"></span>
 
 
@@ -284,7 +284,7 @@
                                                     <tbody >
                                                         <tr style="width: 80%;">
                                                             <td>
-                                                                <div class="form-group" ><strong>Warehouse:</strong>
+                                                                <div class="form-group" ><strong><?=lang('lang_warehouse');?>:</strong>
                                                                     <?php
                                                                     $whData = Getwarehouse_Dropdata();
 
@@ -292,7 +292,7 @@
                                                                     ?>
                                                                     <select  id="warehouse" name="warehouse"  ng-model="filterData.warehouse" multiple data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%" >
 
-                                                                        <option value="">Select Warehouse</option>
+                                                                        <option value=""><?=lang('lang_Selectwarehousename');?></option>
                                                                         <?php foreach ($whData as $data): ?>
                                                                             <option value="<?= $data['id']; ?>"><?= $data['name']; ?></option>
                                                                         <?php endforeach; ?>
@@ -301,7 +301,7 @@
                                                                 </div>
                                                             </td>
                                                             <td>
-                                                                <div class="form-group" ><strong>Origin:</strong>
+                                                                <div class="form-group" ><strong><?=lang('lang_Origin');?>:</strong>
                                                                     <br>
                                                                     <?php
                                                                     $destData = getAllDestination();
@@ -310,7 +310,7 @@
                                                                     ?>
                                                                     <select  id="origin" name="origin"  ng-model="filterData.origin" multiple data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%" >
 
-                                                                        <option value="">Select Origin</option>
+                                                                        <option value=""><?=lang('lang_selectOrigin');?></option>
                                                                         <?php foreach ($destData as $data): ?>
                                                                             <option value="<?= $data['id']; ?>"><?= $data['city']; ?></option>
                                                                         <?php endforeach; ?>
@@ -319,7 +319,7 @@
                                                                 </div> 
                                                             </td>
                                                             <td>
-                                                                <div class="form-group" ><strong>Destination:</strong>
+                                                                <div class="form-group" ><strong><?=lang('lang_Destination');?>:</strong>
                                                                     <br>
                                                                     <?php
                                                                     $destData = getAllDestination();
@@ -328,7 +328,7 @@
                                                                     ?>
                                                                     <select  id="destination" name="destination"  ng-model="filterData.destination" multiple data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%" >
 
-                                                                        <option value="">Select Destination</option>
+                                                                        <option value=""><?=lang('lang_Select_Destination');?></option>
                                                                         <?php foreach ($destData as $data): ?>
                                                                             <option value="<?= $data['id']; ?>"><?= $data['city']; ?></option>
                                                                         <?php endforeach; ?>
@@ -337,12 +337,12 @@
                                                                 </div> 
                                                             </td>
                                                             <td>
-                                                                <div class="form-group" ><strong>Sku value:</strong>
+                                                                <div class="form-group" ><strong><?=lang('lang_sku_value');?>:</strong>
                                                                     <input type="text" id="sku_val" name="sku_val"  ng-model="filterData.sku_val"  class="form-control" placeholder="Enter Sku.">
                                                                 </div>
                                                             </td>
                                                             <td>
-                                                                <div class="form-group" ><strong>AWB value:</strong>
+                                                                <div class="form-group" ><strong><?=lang('lang_AWB_value');?>:</strong>
                                                                     <input type="text" id="s_type_val" name="s_type_val"  ng-model="filterData.s_type_val"  class="form-control" placeholder="Enter AWB no.">
                                                                 </div>
                                                             </td>
@@ -350,23 +350,23 @@
                                                         <tr style="width: 100%;">
 
                                                             <td>
-                                                                <div class="form-group" ><strong>Ref. No:</strong>
+                                                                <div class="form-group" ><strong><?=lang('lang_Ref_No');?>:</strong>
                                                                     <input  id="booking_id" name="booking_id"  ng-model="filterData.booking_id" class="form-control" placeholder="Enter Ref no."> 
 
                                                                 </div>
                                                             </td>
                                                             <td>
-                                                                <div class="form-group" ><strong>Payment Type:</strong>
+                                                                <div class="form-group" ><strong><?=lang('lang_Payment_type');?>:</strong>
                                                                     <br>
                                                                     <select  id="mode" name="mode" ng-model="filterData.mode" class="selectpicker"  data-width="100%" >
-                                                                        <option value="COD">COD</option>
-                                                                        <option value="CC">CC</option>
+                                                                        <option value="COD"><?=lang('lang_COD');?></option>
+                                                                        <option value="CC"><?=lang('lang_CC');?></option>
                                                                     </select>
                                                                 </div>
                                                             </td>
-                                                            <td ><button type="button" class="btn btn-success" style="margin-left: 7%">Total <span class="badge">{{shipData.length}}/{{totalCount}}</span></button></td>
+                                                            <td ><button type="button" class="btn btn-success" style="margin-left: 7%"><?=lang('lang_Total');?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button></td>
 
-                                                            <td colspan=""><a  class="btn btn-danger" ng-click="loadMore(1, 1);" >Search</a></td>
+                                                            <td colspan=""><a  class="btn btn-danger" ng-click="loadMore(1, 1);" ><?=lang('lang_Search');?></a></td>
 
                                                             <td colspan=""><a ng-click ="runshell();"class="btn btn-danger" >Sync</a></td>
 
@@ -384,11 +384,11 @@
                                                     <tbody >
                                                         <tr style="width: 100%;">
                                                             <td>
-                                                                <div class="form-group" ><strong>Please Select Client:</strong>
+                                                                <div class="form-group" ><strong><?=lang('lang_Please_Select');?> <?=lang('lang_Client');?>:</strong>
 
                                                                     <select  id="cc_id" ng-model="userselected.cc_id"  class="form-control"  >
 
-                                                                        <option value="">Please Select Client</option>
+                                                                        <option value=""><?=lang('lang_Please_Select');?> <?=lang('lang_Client');?></option>
                                                                         <?php
                                                                         foreach (GetCourierCompanyDrop() as $val) {
                                                                             echo'<option value="' . $val['cc_id'] . '">' . $val['company'] . '</option>';
@@ -405,10 +405,10 @@
 
                                                                 </div>
                                                             </td>
-                                                            <td ><button  class="btn btn-primary form-control" ng-click="Getforwared3plcompany();" ><i class="fa fa-refresh"></i> Submit</button></td>
+                                                            <td ><button  class="btn btn-primary form-control" ng-click="Getforwared3plcompany();" ><i class="fa fa-refresh"></i> <?=lang('lang_Submit');?></button></td>
                                                         </tr>
                                                         <tr>
-                                                            <td colspan="3"><div class="alert alert-info">System will accept only 10 shipments in a single request.</div></td>
+                                                            <td colspan="3"><div class="alert alert-info"><?=lang('lang_System_will_accept_only_ten_shipments_in_a_single_request');?>.</div></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -442,16 +442,16 @@
                                             <thead>
 
                                                 <tr>
-                                                    <th>Sr.No. <input type="checkbox" ng-model="selectedAll" ng-change="selectAll();"></th>
-                                                    <th>AWB No.</th>
-                                                    <th>Ref. No.</th>
-                                                    <th>Origin</th>  
-                                                    <th>Destination</th>
-                                                    <th>Seller</th>
-                                                    <th>Warehouse</th>
-                                                    <th>Payment Mode</th>
+                                                    <th><?=lang('lang_SrNo');?>. <input type="checkbox" ng-model="selectedAll" ng-change="selectAll();"></th>
+                                                    <th><?=lang('lang_AWBNo');?>.</th>
+                                                    <th><?=lang('lang_Ref_No');?>.</th>
+                                                <th><?=lang('lang_Origin');?></th>  
+                                               <th><?=lang('lang_Destination');?></th>
+                                               <th><?=lang('lang_Seller');?></th>
+                                                 <th><?=lang('lang_warehouse');?></th>
+                                                    <th><?=lang('lang_Payment_Mode');?></th>
 
-                                                    <th>Date</th>
+                                                    <th><?=lang('lang_Date');?></th>
 
                                                 </tr>
                                             </thead>
@@ -471,7 +471,7 @@
 
                                         </table>
 
-                                        <a ng-hide="shipData.length == totalCount" class="btn btn-info" ng-click="loadMore(count = count + 1, 0);" ng-init="count = 1">Load More</a>
+                                        <a ng-hide="shipData.length == totalCount" class="btn btn-info" ng-click="loadMore(count = count + 1, 0);" ng-init="count = 1"><?=lang('lang_Load_More');?></a>
                                     </div>
                                     <hr>
                                 </div>

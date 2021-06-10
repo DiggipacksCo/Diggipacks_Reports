@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Update Password</title>
+        <title><?= lang('lang_Update_Password'); ?></title>
         <?php $this->load->view('include/file'); ?>
 
 
@@ -34,7 +34,7 @@
                     <!-- Content area -->
                     <div class="content">
                         <div class="panel panel-flat">
-                            <div class="panel-heading"><h1><strong>Update Password</strong></h1></div>
+                            <div class="panel-heading"><h1><strong><?= lang('lang_Update_Password'); ?></strong></h1></div>
                             <hr>
                             <div class="panel-body">
                                 <?php if (!empty(validation_errors())) echo'<div class="alert alert-warning" role="alert"><strong>Warning!</strong> ' . validation_errors() . '</div>'; ?>
@@ -53,25 +53,25 @@
 
 
                                     <div class="form-group">
-                                        <label for="old_pass"><strong>Old Password:</strong></label>
+                                        <label for="old_pass"><strong><?= lang('lang_Old_Password'); ?>:</strong></label>
                                         <input type="password" class="form-control" ng-blur="GetcheckOldPassword(UpdateArray.old_pass);" name='old_pass' ng-model="UpdateArray.old_pass" id="old_pass" placeholder="Old Password" required="required">
-                                        <span class="error" ng-if="UpdateArray.old_pass==''"> Please Enter Old Password </span>
+                                        <span class="error" ng-if="UpdateArray.old_pass==''"><?= lang('lang_Please_Enter_Old_Password'); ?></span>
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="new_pass"><strong>New password:</strong></label>
+                                        <label for="new_pass"><strong><?= lang('lang_New_password'); ?>:</strong></label>
                                         <input type="password" class="form-control" name='new_pass' ng-model="UpdateArray.new_pass" id="new_pass" placeholder="New password" required="required">
-                                         <span class="error" ng-if="UpdateArray.new_pass==''"> Please Enter New Password </span>
+                                         <span class="error" ng-if="UpdateArray.new_pass==''"> <?= lang('lang_Please_Enter_New_Password'); ?> </span>
                                     </div>
                                     <div class="form-group">
-                                        <label for="confrim_pass"><strong>Confirm password:</strong></label>
+                                        <label for="confrim_pass"><strong><?= lang('lang_Confirm_Password'); ?>:</strong></label>
                                         <input type="password" class="form-control" name='confrim_pass'  ng-model="UpdateArray.confrim_pass" id="confrim_pass" placeholder="Confirm password" required="required">
-                                         <span class="error" ng-if="UpdateArray.confrim_pass==''"> Please Enter Confirm Password </span>
-                                          <span class="error" ng-if="UpdateArray.confrim_pass!=UpdateArray.new_pass"> password don't match </span>
+                                         <span class="error" ng-if="UpdateArray.confrim_pass==''"> <?= lang('lang_Please_Enter_Confirm_Password'); ?> </span>
+                                          <span class="error" ng-if="UpdateArray.confrim_pass!=UpdateArray.new_pass"> <?= lang('lang_password_dont_match'); ?> </span>
                                     </div>
                                     
                                   <div style="padding-top: 20px;">
-                                      <button type="button" ng-hide="UpdateArray.old_pass==''" ng-if="UpdateArray.new_pass==UpdateArray.confrim_pass" class="btn btn-success" ng-click="GetUpdatePassword();">Update</button>
+                                      <button type="button" ng-hide="UpdateArray.old_pass==''" ng-if="UpdateArray.new_pass==UpdateArray.confrim_pass" class="btn btn-success" ng-click="GetUpdatePassword();"><?= lang('lang_Update'); ?></button>
                                     </div>
                                 </form>
 

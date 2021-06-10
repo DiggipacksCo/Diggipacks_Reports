@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png');?>" type="image/x-icon">
-<title>Inventory</title>
+<title><?=lang('lang_Inventory');?></title>
 <?php $this->load->view('include/file'); ?>
 <script type="text/javascript" src="<?=base_url();?>assets/js/angular/tickets.app.js"></script>
 <style>
@@ -191,10 +191,10 @@
             
             <!-- Marketing campaigns -->
             <div class="panel panel-flat">
-              <div class="panel-heading">
-                <h1> <strong>All Ticket List (<?=$ticketData['ticket_id'];?>)</strong> 
-                    <a href="<?php echo base_url();?>showTicket" class="pull-right btn btn-danger" >Back</a>
-                    <a  class="pull-right btn btn-info" ng-click="getcheckpopshow(<?=$ticketData['id'];?>,<?=$oldtcount;?>,'interCron');" style="margin-inline-end: 5px;" >Chat History</a> 
+              <div class="panel-heading" dir="ltr">
+                <h1> <strong><?=lang('lang_All_Ticket_List');?> (<?=$ticketData['ticket_id'];?>)</strong> 
+                    <a href="<?php echo base_url();?>showTicket" class="pull-right btn btn-danger" ><?=lang('lang_Back');?></a>
+                    <a  class="pull-right btn btn-info" ng-click="getcheckpopshow(<?=$ticketData['id'];?>,<?=$oldtcount;?>,'interCron');" style="margin-inline-end: 5px;" ><?=lang('lang_Chat_History');?></a> 
                   <!-- <a id="pdf" ><i class="icon-file-pdf pull-right" style="font-size: 35px;color: red;"></i></a>--> 
                 </h1>
               </div>
@@ -211,31 +211,31 @@
                     <!-- width="170px;" height="200px;" -->
                     <tbody >
                       <tr>
-                        <td><div class="form-group" ><strong>Ticket ID:</strong></div></td>
+                        <td><div class="form-group" ><strong><?=lang('lang_Ticket_ID');?>:</strong></div></td>
                         <td><?=$ticketData['ticket_id'];?></td>
                       </tr>
                       <tr>
-                        <td><div class="form-group" ><strong>Manifest ID:</strong></div></td>
+                        <td><div class="form-group" ><strong><?=lang('lang_Manifest_ID');?>:</strong></div></td>
                         <td><?=getpickuprequestData($ticketData['pickup_id'],'uniqueid');?></td>
                       </tr>
                       <tr>
-                        <td><div class="form-group" ><strong>Seller:</strong></div></td>
+                        <td><div class="form-group" ><strong><?=lang('lang_Seller');?>:</strong></div></td>
                         <td><?=getallsellerdatabyID($ticketData['seller_id'],'name');?></td>
                       </tr>
                       <tr>
-                        <td><div class="form-group" ><strong>Subjet:</strong></div></td>
+                        <td><div class="form-group" ><strong><?=lang('lang_Subjet');?>:</strong></div></td>
                         <td><?=$ticketData['subject'];?></td>
                       </tr>
                       <tr>
-                        <td><div class="form-group" ><strong>Message:</strong></div></td>
+                        <td><div class="form-group" ><strong><?=lang('lang_Message');?>:</strong></div></td>
                         <td><?=$ticketData['message'];?></td>
                       </tr>
                       <tr>
-                        <td><div class="form-group" ><strong>Status:</strong></div></td>
+                        <td><div class="form-group" ><strong><?=lang('lang_Status');?>:</strong></div></td>
                         <td><?=$ticketData['status'];?></td>
                       </tr>
                       <tr>
-                        <td><div class="form-group" ><strong>Created Date:</strong></div></td>
+                        <td><div class="form-group" ><strong><?=lang('lang_Created_Date');?>:</strong></div></td>
                         <td><?=$ticketData['entrydate'];?></td>
                       </tr>
                       
@@ -286,7 +286,7 @@
                   <div class="panel panel-primary">
                 <div class="panel-heading top-bar">
                     <div class="col-md-12 col-xs-12">
-                        <h3 class="panel-title"><span class="glyphicon glyphicon-comment"></span> Chat  <a data-dismiss="modal" class="pull-right btn btn-danger" >Close</a> </h3>
+                        <h3 class="panel-title"><span class="glyphicon glyphicon-comment"></span> <?=lang('lang_Chat');?>  <a data-dismiss="modal" class="pull-right btn btn-danger" ><?=lang('lang_Close');?></a> </h3>
                         
                     </div>
                 </div>

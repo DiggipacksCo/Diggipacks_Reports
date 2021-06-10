@@ -9,7 +9,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/dgpk.png'); ?>" type="image/x-icon">
-        <title>Inventory</title>
+        <title><?=lang('lang_Inventory');?></title>
         <?php $this->load->view('include/file'); ?>
 
         <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -45,9 +45,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                                 <!-- Marketing campaigns -->
                                 <div class="panel panel-flat" >
-                                    <div class="panel-heading">
-                                        <h6 class="panel-title">Dashboard</h6>
-                                        <div class="heading-elements"> <span class="label bg-success heading-text">DETAILS</span> 
+                                    <div class="panel-heading"dir="ltr">
+                                        <h6 class="panel-title"><?=lang('lang_Dashboard');?></h6>
+                                        <div class="heading-elements"> <span class="label bg-success heading-text"><?=lang('lang_DETAILS');?></span> 
 
                                         </div>
                                     </div>
@@ -90,7 +90,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                             <h3 class="no-margin">
                                                                 <?= $Total_Shipments ?>
                                                             </h3>
-                                                            Total Shipments 
+                                                            <?=lang('lang_Total_Shipments');?>
                                                             <!-- <div class="text-muted text-size-small">34.6% avg</div> --> 
                                                         </div>
                                                         <div id="today-revenue"></div>
@@ -118,7 +118,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                         <h3 class="no-margin">
                                                             <?= GettotalpalletsCount(); ?>
                                                         </h3>
-                                                        Total Used Pallets
+                                                        <?=lang('lang_Total_Used_Pallets');?>
                                                         <!-- <div class="text-muted text-size-small">34.6% avg</div> --> 
                                                     </div>
                                                     <div id="today-revenue"></div>
@@ -145,7 +145,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                             <?php else: ?>
                                                                 <h3 class="no-margin">0</h3>
                                                             <?php endif; ?>
-                                                            Total Items in Inventory 
+                                                            <?=lang('lang_Total_Items_in_mInventory');?> 
                                                             <!-- <div class="text-muted text-size-small">34.6% avg</div> --> 
                                                         </div>
                                                         <div id="today-revenue"></div>
@@ -168,7 +168,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                             <h3 class="no-margin">
                                                                 <?= $Total_Items; ?>
                                                             </h3>
-                                                            Total Items 
+                                                            <?=lang('lang_Total_Items');?> 
                                                             <!-- <div class="text-muted text-size-small">34.6% avg</div> --> 
                                                         </div>
                                                         <div id="today-revenue"></div>
@@ -194,7 +194,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                             <h3 class="no-margin">
                                                                 <?= $Total_Sellers; ?>
                                                             </h3>
-                                                            Total Sellers 
+                                                            <?=lang('lang_Total_Sellers');?> 
 
                                                             <!-- <div class="text-muted text-size-small">34.6% avg</div> --> 
                                                         </div>
@@ -218,7 +218,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                             <h3 class="no-margin">
                                                                 <?= $Item_Inventory_expire; ?>
                                                             </h3>
-                                                            Total Items in Inventory Expired
+                                                            <?=lang('lang_Total_Items_in_Inventory_Expired');?> 
 
                                                             <!-- <div class="text-muted text-size-small">34.6% avg</div> --> 
                                                         </div>
@@ -233,7 +233,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <?php if (menuIdExitsInPrivilageArray(94) == 'Y') { ?>
                                         <div class="row">
                                             <div class="panel-heading">
-                                                <h6 class="panel-title">Today's Dashboard</h6>
+                                                <h6 class="panel-title"><?=lang('lang_TodayDashboard');?></h6>
 
                                             </div>
                                               <div class="col-lg-4" style="padding-left: 20px; padding-right: 20px;"> 
@@ -250,7 +250,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                             <h3 class="no-margin">
                                                                 <?= get_total_current(11); ?>
                                                             </h3>
-                                                            Order Generated
+                                                            <?=lang('lang_OrderGenerated');?>
                                                             <!-- <div class="text-muted text-size-small">34.6% avg</div> --> 
                                                         </div>
                                                         <div id="today-revenue"></div>
@@ -273,7 +273,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                             <h3 class="no-margin">
                                                                 <?= get_total_current(1); ?>
                                                             </h3>
-                                                            Order Created 
+                                                            <?=lang('lang_OrderCreated');?>
                                                             <!-- <div class="text-muted text-size-small">34.6% avg</div> --> 
                                                         </div>
                                                         <div id="today-revenue"></div>
@@ -298,7 +298,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                             <h3 class="no-margin">
                                                                 <?= get_total_current(2); ?>
                                                             </h3>
-                                                            Picklist Generated
+                                                            <?=lang('lang_PicklistGenerated');?> 
                                                             <!-- <div class="text-muted text-size-small">34.6% avg</div> --> 
                                                         </div>
                                                         <div id="today-revenue"></div>
@@ -323,7 +323,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                             <h3 class="no-margin">
                                                                 <?= get_total_current(3); ?>
                                                             </h3>
-                                                            Assigning To Picker
+                                                            <?=lang('lang_AssigningToPicker');?> 
                                                             <!-- <div class="text-muted text-size-small">34.6% avg</div> --> 
                                                         </div>
                                                         <div id="today-revenue"></div>
@@ -346,7 +346,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                             <h3 class="no-margin">
                                                                 <?= get_total_current(4); ?>
                                                             </h3>
-                                                            Packed
+                                                            <?=lang('lang_Packed');?> 
                                                             <!-- <div class="text-muted text-size-small">34.6% avg</div> --> 
                                                         </div>
                                                         <div id="today-revenue"></div>
@@ -370,7 +370,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                             <h3 class="no-margin">
                                                                 <?= get_total_current(5); ?>
                                                             </h3>
-                                                            Dispatched to LM 
+                                                            <?=lang('lang_DispatchedtoLM');?> 
                                                             <!-- <div class="text-muted text-size-small">34.6% avg</div> --> 
                                                         </div>
                                                         <div id="today-revenue"></div>
@@ -393,7 +393,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                             <h3 class="no-margin">
                                                                 <?= get_total_current(7); ?>
                                                             </h3>
-                                                            Delivered
+                                                            <?=lang('lang_Delivered');?>
                                                             <!-- <div class="text-muted text-size-small">34.6% avg</div> --> 
                                                         </div>
                                                         <div id="today-revenue"></div>
@@ -416,7 +416,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                             <h3 class="no-margin">
                                                                 <?= get_total_current(8); ?>
                                                             </h3>
-                                                            Return
+                                                            <?=lang('lang_Return');?>
                                                             <!-- <div class="text-muted text-size-small">34.6% avg</div> --> 
                                                         </div>
                                                         <div id="today-revenue"></div>
@@ -473,7 +473,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                                     <?php if (menuIdExitsInPrivilageArray(96) == 'Y') { ?>    
                                         <div class="panel-heading">
-                                            <h6 class="panel-title">Today's Dashboard</h6>
+                                            <h6 class="panel-title"><?=lang('lang_TodayDashboard');?></h6>
                                             <div class="heading-elements">
 
                                             </div>
@@ -517,7 +517,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     
                                     ?>
                                     <div class="panel-heading" style="width:90%;">
-                                            <h6 class="panel-title">Monthly Shipment Details  <?=$yearDrop;?></h6>
+                                            <h6 class="panel-title"><?=lang('lang_MonthlyShipmentDetails');?>   <?=$yearDrop;?></h6>
                                             <div class="heading-elements">
 
                                             </div>
@@ -641,7 +641,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 type: 'column'
             },
             title: {
-                text: "Today's Dashboard"
+                text: "<?=lang('lang_TodayDashboard');?>"
             },
             /*  subtitle: {
              text: ''
@@ -651,7 +651,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             },
             yAxis: {
                 title: {
-                    text: 'Total Shipment'
+                    text: '<?=lang('lang_Total_Shipments');?>'
                 }
 
             },
@@ -728,7 +728,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 type: 'column'
             },
             title: {
-                text: "Monthly Shipment Details"
+                text: "<?=lang('lang_MonthlyShipmentDetails');?>"
             },
             /*  subtitle: {
              text: ''
@@ -738,7 +738,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             },
             yAxis: {
                 title: {
-                    text: 'Total Shipment'
+                    text: '<?=lang('lang_Total_Shipments');?>'
                 }
 
             },
@@ -816,7 +816,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 type: 'pie'
             },
             title: {
-                text: "Shipment Total's"
+                text: "<?=lang('lang_Shipments_Totals');?> "
             },
             tooltip: {
                 pointFormat: '{series.name}: <b>{point.y}</b>'
