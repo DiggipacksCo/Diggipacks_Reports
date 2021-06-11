@@ -150,6 +150,9 @@
                                                    <?php if (GetCourierCompanyStausActive('Saudi Post') == 'Y') { ?>
                                                 <th class="head1">Saudi Post Id </th>
                                             <?php } ?>
+                                                 <?php if (GetCourierCompanyStausActive('Beez') == 'Y') { ?>
+                                                <th class="head1">Beez </th>
+                                            <?php } ?>
                                                 
                                                 
 
@@ -358,6 +361,13 @@
                                                     <td><input type="text" name="saudipost_id" id="saudipost_id<?php echo $listdata['id']; ?>" placeholder="Saudi Post Id" value="<?php echo $listdata['saudipost_id']; ?>" class="form-control">
                                                         <br>
                                                         <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'saudipost_id');" value="<?php echo $listdata['id']; ?>">Update</a>
+
+                                                    </td>
+                                                      <?php } ?>
+                                                    <?php if (GetCourierCompanyStausActive('Beez') == 'Y') { ?>
+                                                    <td><input type="text" name="beez_city" id="beez_city<?php echo $listdata['id']; ?>" placeholder="Beez City" value="<?php echo $listdata['beez_city']; ?>" class="form-control">
+                                                        <br>
+                                                        <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'beez_city');" value="<?php echo $listdata['id']; ?>">Update</a>
 
                                                     </td>
                                                       <?php } ?>
