@@ -2827,8 +2827,11 @@ class Ccompany_model extends CI_Model {
 
          $sender_default_city = Getselletdetails($super_id);         
          $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');  
+         
          $sender_address = $sender_default_city['0']['address'];
+
          $sender_city = getdestinationfieldshow_auto_array($sender_default_city['branch_location'], 'city', $super_id);
+
          $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'shipsa_city',$super_id);
 
             if ($ShipArr['mode'] == 'COD') {
@@ -2858,7 +2861,7 @@ class Ccompany_model extends CI_Model {
             'phone' => $ShipArr['sender_phone'],
             'email' => $ShipArr['sender_email'],
         );
-        
+
         $Recipient = array(
             'name' => $ShipArr['reciever_name'],
             'address' => $ShipArr['reciever_address'],
