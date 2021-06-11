@@ -1708,9 +1708,9 @@ if (!function_exists('GetSinglesellerdata')) {
 
 }
 
-if (!function_exists('Getselletdetails')) {
+if (!function_exists('Getselletdetails_new')) {
 
-    function Getselletdetails($super_id) {
+    function Getselletdetails_new($super_id) {
         
         $ci = & get_instance();
         $ci->load->database();
