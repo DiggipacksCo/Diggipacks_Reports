@@ -411,7 +411,7 @@ class CourierCompany extends MY_Controller  {
                     }
                     
                     
-                    /*if($company=='Aramex'){
+                    if($company=='Aramex'){
                             $params = $this->Ccompany_model->AramexArray($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id);
 
                             $dataJson = json_encode($params);
@@ -461,7 +461,7 @@ class CourierCompany extends MY_Controller  {
                                         array_push($succssArray, $slipNo);
                                 }
                             }
-                    }else*/
+                    }else
                     if($company=='Aramex International'){
                             //print "<pre>"; print_r($ShipArr);die;
                             $params = $this->Ccompany_model->AramexArrayAdvance($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id,$totalcustomerAmt);
