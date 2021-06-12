@@ -212,7 +212,7 @@ select[size] {
                     <!-- Content area -->
                     <div class="content">
                         <div class="panel panel-flat">
-                            <div class="panel-heading">
+                            <div class="panel-heading" dir="ltr">
                                 <h1><strong><?= lang('lang_Add_Zone'); ?></strong></h1>
                             </div>
                             <hr>
@@ -244,7 +244,7 @@ else echo set_value('name'); ?>" required/>
                                                 <span id="c_id"></span>
                                                 <select name="c_id" id="courier_id" required class="js-select4 bigdrop"  required > 
                                                 <option value="0" <?php if ($cmpy->id == 0) {
-                                                                echo "selected=selected";} ?>>Last Mile </option>
+                                                                echo "selected=selected";} ?>><?= lang('lang_Last_Mile'); ?> </option>
                                                     <?php
                                                     if (!empty($company)) {
                                                         foreach ($company as $cmpy) {
@@ -257,23 +257,23 @@ else echo set_value('name'); ?>" required/>
                                                 </select>
                                             </div>
                                             <div class="form-group ">
-                                                <label>Capcity</label>
+                                                <label><?= lang('lang_Capcity'); ?></label>
                                                 <span id="capacity"></span>
                                                <input type="number" name="capacity" class="form-control" min="0"  onChange="updateTextInput(this.value);" value="<?= $EditData[0]->capacity; ?>" required>
                                               </div>  
 
                                               <div class="form-group ">
-                                                <label>Max Weight Range</label>
+                                                <label><?= lang('lang_Max_Weight_Range'); ?></label>
                                                 <span id="max_weight"></span>
                                                <input type="number" name="max_weight" class="form-control" value="<?= $EditData[0]->max_weight; ?>" required>
                                               </div>
                                               <div class="form-group ">
-                                                 <label>Max Weight Range Rate</label>
+                                                 <label><?= lang('lang_Max_Weight_Range_Rate'); ?></label>
                                                 <span id="flat_price"></span>
                                                <input type="number" name="flat_price" class="form-control" value="<?= $EditData[0]->flat_price; ?>" required>
                                               </div>
                                               <div class="form-group ">
-                                                 <label>Additional Weight Rate</label>
+                                                 <label><?= lang('lang_Additional_Weight_Rate'); ?></label>
                                                 <span id="price"></span>
                                                <input type="number" name="price" class="form-control" value="<?= $EditData[0]->price; ?>" required>
                                               </div>
@@ -314,8 +314,8 @@ else echo set_value('name'); ?>" required/>
                                     <div class="form-group " >  
                                       
 
-                                              <button class="btn btn-warning" type="button"  id="selectAll">Confirm</button>
-                                            <button type="submit" class="btn btn-primary" name="submit" value="submit">Add New Zone</button>
+                                              <button class="btn btn-warning" type="button"  id="selectAll"><?= lang('lang_Confirm'); ?></button>
+                                            <button type="submit" class="btn btn-primary" name="submit" value="submit"><?= lang('lang_Add_New_Zone'); ?></button>
                                     </div>
                                     </form>
                             </div>

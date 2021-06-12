@@ -5,8 +5,9 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Inventory</title>
+        <title><?=lang('lang_Inventory');?></title>
         <?php $this->load->view('include/file'); ?>
+       
        
     </head>
 
@@ -28,7 +29,7 @@
                     <div class="content">
                         <div class="panel panel-flat">
                             <div class="panel-heading">
-                                <h1><strong>Add Template</strong></h1>
+                                <h1><strong><?=lang('lang_Add_Template');?></strong></h1>
                             </div>
                             <hr>
                             <div class="panel-body">
@@ -41,7 +42,7 @@
                                 <div class="col-md-8">
                                 <form class="stdform col-md-12" name="add_sms" enctype="multipart/form-data">
                                     <div class="form-group"  >
-                                        <label>Status</label>
+                                        <label><?=lang('lang_Status');?></label>
                                         <span id="heading_id" class=""></span> 
                                         <select  name="main_status"  ng-change="subStatus();"  class="form-control"   data-show-subtext="true" data-live-search="true" required  data-width="100%"   ng-model="templateArray.status_id"  >
 
@@ -49,28 +50,28 @@
                                         </select>
 
 
-                                        <span class="text-danger" ng-show="add_sms.status_name.$error.required">Status Required</span>
+                                        <span class="text-danger" ng-show="add_sms.status_name.$error.required"><?=lang('lang_Status_Required');?></span>
                                     </div>   
                                     <div class="form-group" ng-if="Substatuslist">   
-                                        <label>Sub Status</label><span id="heading_id" class=""></span>
+                                        <label><?=lang('lang_Sub_Status');?></label><span id="heading_id" class=""></span>
 
                                         <select    name="sub_status" class="form-control" ng-model="templateArray.sub_status" Required >
 
                                             <option ng-repeat="st in Substatuslist" value="{{st.id}}">{{st.sub_status}}</option>
                                         </select>
-                                        <span class="text-danger" ng-show="add_sms.sub_status.$error.required">Sub Status Required</span>
+                                        <span class="text-danger" ng-show="add_sms.sub_status.$error.required"><?=lang('lang_Sub_Status_Required');?></span>
                                     </div>
 
                                    <div class="form-group">
-                                        <label>Arabic SMS</label>
+                                        <label><?=lang('lang_Arabic_SMS');?></label>
                                         <span id="content_id" class=""></span>
                                         <textarea class="form-control mt-15" my-text=""  name="arabic_sms" rows="6" placeholder="Textarea" ng-model="templateArray.arabic_sms" Required></textarea>
-                                        <span class="text-danger" ng-show="add_sms.arabic_sms.$error.required">Arabic Sms Required</span>
+                                        <span class="text-danger" ng-show="add_sms.arabic_sms.$error.required"><?=lang('lang_Arabic_Sms_Required');?></span>
                                     </div>
                                     <div class="form-group">
-                                        <label>Activity</label><br>
-                                        Yes   <input type="radio" id="arabic_status" name="arabic_status" ng-model="templateArray.arabic_status" value="Y" ng-checked="false"/>&nbsp;&nbsp;
-                                        No   <input type="radio" id="arabic_status" name="arabic_status" ng-model="templateArray.arabic_status" value="N" ng-checked="false"/>  
+                                        <label><?=lang('lang_Activity');?></label><br>
+                                        <?=lang('lang_Yes');?>   <input type="radio" id="arabic_status" name="arabic_status" ng-model="templateArray.arabic_status" value="Y" ng-checked="false"/>&nbsp;&nbsp;
+                                        <?=lang('lang_No');?>   <input type="radio" id="arabic_status" name="arabic_status" ng-model="templateArray.arabic_status" value="N" ng-checked="false"/>  
                                     </div>    
                                <!--       <div class="form-group">
                                         <label>English Sms</label>
@@ -94,7 +95,7 @@
                                 <div class="col-md-4">
 									
 									<div class="list-group">
-								<a href="#" class="list-group-item active">Variables</a>
+								<a href="#" class="list-group-item active"><?=lang('lang_Variables');?></a>
 								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('AWB_NO');">AWB_NO</span></h4> (#AWB Number of shipment.)</a>
 								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('SCHEDULE_URL')";>SCHEDULE_URL</span></h4> (URL to schedule shipment by sms.)</a>
 								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('FEED_BACK_URL')";>FEED_BACK_URL</span></h4> (Feedback URL.)</a>

@@ -36,7 +36,7 @@ $margin_left=$marginArr_new[3];
     <div class="navbar-header" style="margin-top:; height: 90px; background-color:#fff;"> 
       <!-- <a class="navbar-brand" href="<?= base_url('Home'); ?>" style="margin-left: 15px;
       margin-top: 9px;"><strong><span><b>Track Fastcoo </b></strong>Solution</span></a>--> 
-        <img src="<?= SUPERPATH . Getsite_configData_field('upload_site_logo'); ?>" style="width:<?= $width ?>px;height:<?= $height ?>px;margin-top: <?=$margin_top;?>px;
+        <img src="<?//= SUPERPATH . Getsite_configData_field('upload_site_logo'); ?>" style="width:<?= $width ?>px;height:<?= $height ?>px;margin-top: <?=$margin_top;?>px;
   margin-bottom: <?=$margin_right;?>px;
   margin-right: <?=$margin_bottom;?>px;
   margin-left: <?=$margin_left;?>px;" />

@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Inventory</title>
+        <title><?=lang('lang_Inventory');?></title>
         <?php $this->load->view('include/file'); ?>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
@@ -63,14 +63,14 @@
 
                                 <!-- Marketing campaigns -->
                                 <div class="panel panel-flat" >
-                                    <div class="panel-heading">
-                                        <h1><strong>Items Inventory Total</strong><a href="<?= base_url('Excel_export/shipments'); ?>"></a>
+                                    <div class="panel-heading" dir="ltr">
+                                        <h1><strong><?=lang('lang_Item_Inventory_total');?></strong><a href="<?= base_url('Excel_export/shipments'); ?>"></a>
 
                                             <a onclick="printPage('block1');" ><i class="fa fa-print pull-right" style="font-size: 40px;color:#999;"></i></a> 
                                             <!--<a  ng-click="ExportExcelitemInventory();" ><i class="icon-file-excel pull-right" style="font-size: 35px; margin-top:3px;"></i></a>-->
                                             <a  ng-click="getExcelDetails();" ><i class="icon-file-excel pull-right" style="font-size: 35px; margin-top:3px;"></i></a>
                                             <select id="exportlimit" class="custom-select pull-right" ng-model="filterData.exportlimit" name="exprort_limit" required="" style="    font-size: 16px;padding: 5px;margin-right: 10px;" >
-                                                <option value="" selected>Select Export Limit</option>
+                                                <option value="" selected><?=lang('lang_select_export_limit');?></option>
                                                 <option ng-repeat="exdata in dropexport" value="{{exdata.k}}" >{{exdata.j}}-{{exdata.k}}</option>  
 
                                             </select> 
@@ -82,7 +82,7 @@
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header" style="background-color: #f3f5f6;">
-                                                    <center>   <h4 class="modal-title" style="color:#000">Select Column to download</h4></center>
+                                                    <center>   <h4 class="modal-title" style="color:#000"><?=lang('lang_Select_Column_to_download');?></h4></center>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
@@ -93,7 +93,7 @@
                                                         <div class="col-sm-4">             
                                                             <label class="container">
 
-                                                                <input type="checkbox" id='but_checkall' value='checkall' ng-model="checkall" ng-click='toggleAll()'/>    SelectAll
+                                                                <input type="checkbox" id='but_checkall' value='checkall' ng-model="checkall" ng-click='toggleAll()'/>    <?=lang('lang_SelectAll');?>
                                                                 <span class="checkmark"></span>
 
 
@@ -103,84 +103,84 @@
                                                         <div class="col-md-12 row">
                                                             <div class="col-sm-4">          
                                                                 <label class="container">  
-                                                                    <input type="checkbox" name="name" value="name"   ng-model="listData2.name"> Name
+                                                                    <input type="checkbox" name="name" value="name"   ng-model="listData2.name"> <?=lang('lang_Name');?>
                                                                     <span class="checkmark"></span>
                                                                 </label>   
                                                             </div>
 
                                                             <div class="col-sm-4">
                                                                 <label class="container">
-                                                                    <input type="checkbox" name="item_type" value="item_type"  ng-model="listData2.item_type"> Item Type
+                                                                    <input type="checkbox" name="item_type" value="item_type"  ng-model="listData2.item_type"> <?=lang('lang_Item_Type');?>
                                                                     <span class="checkmark"></span>
                                                                 </label>
                                                             </div>
                                                             <div class="col-sm-4">
                                                                 <label class="container">
-                                                                    <input type="checkbox" name="storage_id" value="storage_id"  ng-model="listData2.storage_id"> Storage Type
+                                                                    <input type="checkbox" name="storage_id" value="storage_id"  ng-model="listData2.storage_id"> <?=lang('lang_StorageType');?>
                                                                     <span class="checkmark"></span>
                                                                 </label>
                                                             </div>
                                                             <div class="col-sm-4">
                                                                 <label class="container">
-                                                                    <input type="checkbox" name="sku" value="sku"  ng-model="listData2.sku"> Item Sku
-                                                                    <span class="checkmark"></span>
-                                                                </label>
-                                                            </div>
-
-                                                            <div class="col-sm-4">
-                                                                <label class="container">
-                                                                    <input type="checkbox" name="stock_location" value="stock_location" ng-model="listData2.stock_location"> Stock Location
+                                                                    <input type="checkbox" name="sku" value="sku"  ng-model="listData2.sku"> <?=lang('lang_ItemSku');?>
                                                                     <span class="checkmark"></span>
                                                                 </label>
                                                             </div>
 
                                                             <div class="col-sm-4">
                                                                 <label class="container">
-                                                                    <input type="checkbox" name="shelve_no" value="shelve_no" ng-model="listData2.shelve_no"> Shelve No
+                                                                    <input type="checkbox" name="stock_location" value="stock_location" ng-model="listData2.stock_location"> <?=lang('lang_Stock_Location');?>
+                                                                    <span class="checkmark"></span>
+                                                                </label>
+                                                            </div>
+
+                                                            <div class="col-sm-4">
+                                                                <label class="container">
+                                                                    <input type="checkbox" name="shelve_no" value="shelve_no" ng-model="listData2.shelve_no"> <?=lang('lang_Shelve_No');?>
                                                                     <span class="checkmark"></span>
                                                                 </label>
                                                             </div>
                                                             <div class="col-sm-4"> 
                                                                 <label class="container">
-                                                                    <input type="checkbox" name="wh_name" value="wh_name" ng-model="listData2.wh_name">Warehouse
+                                                                    <input type="checkbox" name="wh_name" value="wh_name" ng-model="listData2.wh_name"><?=lang('lang_Warehouse');?>
                                                                     <span class="checkmark"></span>
                                                                 </label>
                                                             </div>
                                                             <div class="col-sm-4">
                                                                 <label class="container">
-                                                                    <input type="checkbox" name="quantity" value="quantity"  ng-model="listData2.quantity"> Quantity
+                                                                    <input type="checkbox" name="quantity" value="quantity"  ng-model="listData2.quantity"> <?=lang('lang_Quantity');?>
                                                                     <span class="checkmark"></span>
                                                                 </label>
                                                             </div>
                                                             <div class="col-sm-4">
                                                                 <label class="container">
-                                                                    <input type="checkbox" name="seller_name" value="seller_name"  ng-model="listData2.seller_name"> Seller  
-                                                                    <span class="checkmark"></span>
-                                                                </label>
-                                                            </div>
-
-                                                            <div class="col-sm-4">
-                                                                <label class="container">
-                                                                    <input type="checkbox" name="item_description" value="item_description"  ng-model="listData2.item_description"> Description
-                                                                    <span class="checkmark"></span>
-                                                                </label>
-                                                            </div>
-                                                            <div class="col-sm-4">
-                                                                <label class="container">
-                                                                    <input type="checkbox" name="update_date" value="update_date"  ng-model="listData2.update_date"> Update date
+                                                                    <input type="checkbox" name="seller_name" value="seller_name"  ng-model="listData2.seller_name"> <?=lang('lang_Seller');?>  
                                                                     <span class="checkmark"></span>
                                                                 </label>
                                                             </div>
 
                                                             <div class="col-sm-4">
                                                                 <label class="container">
-                                                                    <input type="checkbox" name="expiry" value="expiry"  ng-model="listData2.expiry"> Expire Status
+                                                                    <input type="checkbox" name="item_description" value="item_description"  ng-model="listData2.item_description"> <?=lang('lang_Description');?>
                                                                     <span class="checkmark"></span>
                                                                 </label>
                                                             </div>
                                                             <div class="col-sm-4">
                                                                 <label class="container">
-                                                                    <input type="checkbox" name="expity_date" value="expity_date" ng-model="listData2.expity_date"> Expire Date
+                                                                    <input type="checkbox" name="update_date" value="update_date"  ng-model="listData2.update_date"> <?=lang('lang_Update_Date');?>
+                                                                    <span class="checkmark"></span>
+                                                                </label>
+                                                            </div>
+
+                                                            <div class="col-sm-4">
+                                                                <label class="container">
+                                                                    <input type="checkbox" name="expiry" value="expiry"  ng-model="listData2.expiry"><?=lang('Expire_Status');?>
+                                                                    <span class="checkmark"></span>
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-sm-4">
+                                                                <label class="container">
+                                                                    <input type="checkbox" name="expity_date" value="expity_date" ng-model="listData2.expity_date"> <?=lang('lang_Expire_Date');?>
                                                                     <span class="checkmark"></span>
                                                                 </label>
                                                             </div>
@@ -191,7 +191,7 @@
                                                         <div class="row" style="padding-left: 40%;padding-top: 10px;">   
 
 
-                                                            <button type="submit" class="btn btn-info pull-left" name="shipment_transfer" ng-click="ViewTotalInventoryExport(listData2, listData1.exportlimit);">Download Excel Report</button>  
+                                                            <button type="submit" class="btn btn-info pull-left" name="shipment_transfer" ng-click="ViewTotalInventoryExport(listData2, listData1.exportlimit);"><?=lang('lang_Download_Excel_Report');?></button>  
                                                         </div>
 
                                                     </div>
@@ -215,29 +215,29 @@
                                                 <tbody >
 
                                                     <tr style="width: 80%;">
-                                                        <td><div class="form-group" ><strong>SKU:</strong>
+                                                        <td><div class="form-group" ><strong><?=lang('lang_SKU');?>:</strong>
                                                                 <input type="text" id="sku"name="sku" ng-model="filterData.sku"  class="form-control" placeholder="Enter SKU no.">
                                                             </div></td>
 
-                                                        <td ><div class="form-group" ><strong>Quantity:</strong>
+                                                        <td ><div class="form-group" ><strong><?=lang('lang_Quantity');?>:</strong>
                                                                 <input type="number" min='0'  id="quantity"name="quantity"  ng-model="filterData.quantity" class="form-control" placeholder="Enter Quantity">
                                                             </div></td>
-                                                        <td ><div class="form-group"><strong>From:</strong>
+                                                        <td ><div class="form-group"><strong><?=lang('lang_From');?>:</strong>
                                                                 <input type="date" id="from"name="from" ng-model="filterData.from" class="form-control">
                                                             </div></td>
-                                                        <td><div class="form-group" ><strong>To:</strong>
+                                                        <td><div class="form-group" ><strong><?=lang('lang_To');?>:</strong>
                                                                 <input type="date" id="to"name="to" ng-model="filterData.to" class="form-control">
                                                             </div></td>
-                                                        <td><div class="form-group" ><strong>Exact date:</strong>
+                                                        <td><div class="form-group" ><strong><?=lang('lang_Exactdate');?>:</strong>
                                                                 <input type="date" id="exact"name="exact"  ng-model="filterData.exact" class="form-control">
                                                             </div></td>
                                                     </tr>
                                                     <tr style="width: 80%;">
 
 
-                                                        <td ><div class="form-group" ><strong>Seller:</strong> <br>
+                                                        <td ><div class="form-group" ><strong><?=lang('lang_Seller');?>:</strong> <br>
                                                                 <select  id="seller" name="seller" ng-model="filterData.seller" class="selectpicker" data-width="100%" >
-                                                                    <option value="">Select Seller</option>
+                                                                    <option value=""><?=lang('lang_Select_Seller');?></option>
                                                                     <?php foreach ($sellers as $seller_detail): ?>
                                                                         <option value="<?= $seller_detail->id; ?>">
                                                                             <?= $seller_detail->name; ?>
@@ -245,9 +245,9 @@
                                                                     <?php endforeach; ?>
                                                                 </select>
                                                             </div></td>
-                                                        <td ><div class="form-group" ><strong>Storage Type:</strong> <br>
+                                                        <td ><div class="form-group" ><strong><?=lang('lang_StorageType');?>:</strong> <br>
                                                                 <select  id="storage_id" name="storage_id" ng-model="filterData.storage_id" class="selectpicker" data-width="100%" >
-                                                                    <option value="">Select Storage Type</option>
+                                                                    <option value=""><?=lang('lang_SelectStorageType');?></option>
                                                                     <?php foreach ($StorageType as $storage_detail): ?>
                                                                         <option value="<?= $storage_detail['id']; ?>">
                                                                             <?= $storage_detail['storage_type']; ?>
@@ -258,7 +258,7 @@
 
 
 
-                                                        <td colspan="2"><button type="button" class="btn btn-success" style="margin-left: 7%">Total <span class="badge">{{shipData.length}}/{{totalCount}}</span></button> <button  class="btn btn-danger" ng-click="loadMore(1, 1);" >Search</button></td>
+                                                        <td colspan="2"><button type="button" class="btn btn-success" style="margin-left: 7%"><?=lang('lang_Total');?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button> <button  class="btn btn-danger" ng-click="loadMore(1, 1);" ><?=lang('lang_Search');?></button></td>
 
 
 <!--<td colspan="2">
@@ -314,17 +314,17 @@
                                     <table class="table table-striped table-hover table-bordered dataTable bg-*" id="printTable" style="width:100%;">
                                         <thead>
                                             <tr>
-                                                <th>Sr.No.</th>
-                                                <th>Seller</th>
-                                                <th>Item Type</th>
-                                                <th>Item Image</th>
-                                                <th>Storage Type</th>
-                                                <th>Item Sku</th>
+                                            <th><?=lang('lang_SrNo');?>.</th>
+                                        <th><?=lang('lang_Seller');?></th>
+                                        <th><?=lang('lang_Item_Type');?></th>
+                                                <th><?=lang('lang_Item_Image');?></th>
+                                                <th><?=lang('lang_StorageType');?></th>
+                                              <th><?=lang('lang_ItemSku');?></th>
 
 
-                                                <th>Warehouse</th>
+                                              <th><?=lang('lang_Warehouse');?></th>
 
-                                                <th>Quantity</th>
+                                           <th><?=lang('lang_Quantity');?></th>
 
 
 
@@ -366,7 +366,7 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <button ng-hide="shipData.length == totalCount" class="btn btn-info" ng-click="loadMore(count = count + 1, 0);" ng-init="count = 1">Load More</button>
+                                    <button ng-hide="shipData.length == totalCount" class="btn btn-info" ng-click="loadMore(count = count + 1, 0);" ng-init="count = 1"><?=lang('lang_Load_More');?></button>
                                 </div>
                                 <hr>
                             </div>
@@ -402,7 +402,7 @@ return !~text.indexOf(val);
 
 
 
-                        <h5 class="modal-title" id="exampleModalLabel">Update Location</h5>
+                        <h5 class="modal-title" id="exampleModalLabel"><?=lang('lang_UpdateLocation');?></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -410,7 +410,7 @@ return !~text.indexOf(val);
                     <form name="myform" novalidate ng-submit="myForm.$valid && GetupdatelocationData()" enctype="multipart/form-data" >
                         <div class="modal-body">
                             <select type="text" name="locationUp" id="locationUp" ng-model="UpdateData.locationUp" class="form-control" required>
-                                <option value="error">Select Location</option>
+                                <option value="error"><?=lang('lang_SelectLocation');?></option>
                                 <option ng-repeat="data2 in locationData" value="{{data2.stock_location}}">{{data2.stock_location}}</option>
                             </select>
 
@@ -420,8 +420,8 @@ return !~text.indexOf(val);
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" ng-click="GetupdatelocationData();" >Update</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><?=lang('lang_Close');?></button>
+                            <button type="button" class="btn btn-primary" ng-click="GetupdatelocationData();" ><?=lang('lang_Update');?></button>
                         </div>
                     </form>          
                 </div>
@@ -434,7 +434,7 @@ return !~text.indexOf(val);
 
 
 
-                        <h5 class="modal-title" id="exampleModalLabel">Update QTY</h5>
+                        <h5 class="modal-title" id="exampleModalLabel"><?=lang('lang_UpdateQTY');?></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -450,8 +450,8 @@ return !~text.indexOf(val);
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" ng-click="GetUpdateqtydata();" >Update</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><?=lang('lang_Close');?></button>
+                            <button type="button" class="btn btn-primary" ng-click="GetUpdateqtydata();" ><?=lang('lang_Update');?></button>
                         </div>
                     </form>          
                 </div>
@@ -466,29 +466,29 @@ return !~text.indexOf(val);
 
 
 
-                        <h5 class="modal-title" id="UpdateInventory">Update Inventory</h5>
+                        <h5 class="modal-title" id="UpdateInventory"><?=lang('lang_Update_Inventory');?></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <form name="myform" novalidate ng-submit="myForm.$valid && GetupdateMissingInventory()" enctype="multipart/form-data" >
                         <div class="modal-body">
-                            <div class="form-group" ><strong>Current Quantity:</strong>
+                            <div class="form-group" ><strong><?=lang('lang_Current_Quantity');?>:</strong>
 
                                 <span class="badge badge-success">{{updateArray.quantity}}</span>
                             </div>
 
-                            <div class="form-group" ><strong>Deduct Quantity:</strong>
+                            <div class="form-group" ><strong><?=lang('lang_Deduct_Quantity');?>:</strong>
                                 <input type="number" class="form-control" name="upquantity" ng-model="updateArray.upquantity" value="1" min="1" id="upquantity" required>
                                 <br>
-                                <span class="alert alert-warning mt-10" ng-if="updateArray.upquantity > updateArray.quantity">Please Enter Valid Deduct Quantity</span>
+                                <span class="alert alert-warning mt-10" ng-if="updateArray.upquantity > updateArray.quantity"><?=lang('lang_Please_Enter_Valid_Deduct_Quantity');?></span>
                             </div>
-                            <div class="form-group" ><strong>Reason:</strong> 
+                            <div class="form-group" ><strong><?=lang('lang_Reason');?>:</strong> 
                                 <select type="text" name="updateType" id="updateType" ng-model="updateArray.updateType" class="form-control" required>
-                                    <option value="">Select Reason</option>
-                                    <option  value="Damage">Damage</option>
-                                    <option  value="Missing">Missing</option>
-                                    <option  value="Removed for other Reason">Removed for other Reason</option>
+                                    <option value=""><?=lang('lang_Select_Reasons');?></option>
+                                    <option  value="Damage"><?=lang('lang_Damage');?></option>
+                                    <option  value="Missing"><?=lang('lang_Missing');?></option>
+                                    <option  value="Removed for other Reason"><?=lang('lang_Removed_for_other_Reason');?></option>
                                 </select>
                             </div>
 
@@ -498,8 +498,8 @@ return !~text.indexOf(val);
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" ng-if="updateArray.updateType && updateArray.upquantity <= updateArray.quantity" ng-click="GetupdateMissingInventory();" >Update</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><?=lang('lang_Close');?></button>
+                            <button type="button" class="btn btn-primary" ng-if="updateArray.updateType && updateArray.upquantity <= updateArray.quantity" ng-click="GetupdateMissingInventory();" ><?=lang('lang_Update');?></button>
                         </div>
                     </form>          
                 </div>

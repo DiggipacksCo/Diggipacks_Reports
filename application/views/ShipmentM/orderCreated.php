@@ -199,8 +199,8 @@
                                                     <button  class="btn btn-danger ml-10" ng-click="loadMore(1, 1);" ><?=lang('lang_Search');?></button>
                                                     <button type="button" class="btn btn-success ml-10" ><?=lang('lang_Total');?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button>
                                                     
-                                                    <button  class="btn btn-info ml-10" ng-click="GetOpenPopPicker();" >Generate Pickup  <!--  generatePickup(); --> List</button>
-                                                        <a ng-click ="runshell();"class="btn btn-danger ml-10" > AUTO SYNC FRWD </a>
+                                                    <button  class="btn btn-info ml-10" ng-click="GetOpenPopPicker();" ><?=lang('lang_Generate_Pickup_List');?></button>
+                                                        <a ng-click ="runshell();"class="btn btn-danger ml-10" > <?=lang('lang_AUTO_SYNC_FRWD');?> </a>
                                                     </div></div>
 
 

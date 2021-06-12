@@ -3689,7 +3689,7 @@ select[multiple].input-group-xs > .input-group-btn > .btn {
   height: 16px;
 }
 .navbar-nav {
-  margin: 0;
+  margin: -13px;
   text-align: left;
 }
 .navbar-nav > li > a {
@@ -3819,7 +3819,7 @@ select[multiple].input-group-xs > .input-group-btn > .btn {
 }
 @media (min-width: 769px) {
   .navbar-nav {
-    margin-left: 20px;
+    margin-left: 4px;
     float: right;
   }
 }

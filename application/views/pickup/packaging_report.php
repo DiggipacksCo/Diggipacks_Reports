@@ -44,7 +44,7 @@
                                 <!-- Marketing campaigns -->
                                 <div class="panel panel-flat" dir="ltr">
                                     <div class="panel-heading">
-                                        <h1> <strong>Packaging Report </strong> 
+                                        <h1> <strong><?= lang('lang_Packaging_Report'); ?> </strong> 
                                             <a  id="btnExport" ><i class="icon-file-excel pull-right" style="font-size: 35px; margin-top:3px;"></i></a>&nbsp;&nbsp;
 
                                             <a onclick="printPage();" style="display:none"><i class="fa fa-print pull-right" style="font-size: 40px;color:#999;"></i></a> 
