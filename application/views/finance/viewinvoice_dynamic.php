@@ -49,7 +49,7 @@
 			<table id="print" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;"width: 100%;>
 				<tr>
 					<!-- <td colspan="5"></td> -->
-					<td colspan="15" style="text-align:center;"><strong>Tax Invoice - �?اتورة ضريبية</strong></td>
+					<td colspan="15" style="text-align:center;"><strong>Tax Invoice -  الفاتورة الضريبية</strong></td>
 				<!-- 	<td colspan="9"></td> -->
 				</tr>
 				<tr>
@@ -65,23 +65,22 @@
 						<br/> <b>Currency:-<?= $currency; ?></b> 
 					</td>
 
-					<td colspan="3" align="center"> 
+					<td colspan="2" align="center"> 
 						 <img src="<?= SUPERPATH . Getsite_configData_field('logo'); ?>"  height="70px;"/>
 						<!-- <img src="https://super.fastcoo-tech.com/assets/331.png.webp" height="70px;" />  -->
 					</td>
 
-					<td colspan="8"style="padding:2%;" ><b align="left">Name Of Company - <?= Getsite_configData_field('company_name'); ?>- اسم الشركة </b>
+					<td colspan="7"style="padding:2%;" ><b align="left">Name Of Company - <?= Getsite_configData_field('company_name'); ?>- اسم الشركة </b>
 						
 						<br/> <b>Vat Id No.:-&nbsp;<?= Getsite_configData_field('vat'); ?>- الرقم الضريبي </b>
 						<br/> <b>IBAN #:-&nbsp;<?=GetalldashboardClientField($invoiceData[0]['cust_id'], 'iban_number');?> </b>
-						<br/> <b>Invoice No:-&nbsp;<?=$invoiceData[0]['invoice_no'];?> - رقم ال�?اتورة</b>
-						<br/> <b>Invoice Date:-&nbsp;<?=$invoiceData[0]['invoice_date'];?> - تاريخ ال�?اتورة</b>
+						<br/> <b>Invoice No:-&nbsp;<?=$invoiceData[0]['invoice_no'];?> - رقم الفاتورة</b>
+						<br/> <b>Invoice Date:-&nbsp;<?=$invoiceData[0]['invoice_date'];?> - تاريخ الفاتورة</b>
 						<br/><b>Toll Free no :-<?=Getsite_configData_field( 'tollfree_fm');?></b>
-						
 					</td>
 				</tr>
 				<tr>
-					<td colspan="17" align="justify">&nbsp;</td>
+					<td colspan="15" align="justify">&nbsp;</td>
 				</tr>
 				<tr>
 					<th>Sr No. </th>					
@@ -91,10 +90,10 @@
 					<th>Packing Charge</th>
 					<th>Special Packing</th>
 					
-					<th>Return Charge</th>
+				
 					
 					<th>Outbound Charge</th>
-					<th>Shipping Charge </th>
+				
 					<th>Cancel Charge </th>
 					<th>Box Charge </th>
 		
@@ -127,7 +126,7 @@
  						$box_charge = $rowData['box_charge'];
  						$shipping_charge = $rowData['shipping_charge'];
  						$sku_barcode_print = $rowData['sku_barcode_print'];
- 						$total_without_vat = round(($packing_charge+$box_charge+$picking_charge+$special_packing+$return_charge+$shipping_charge+$cancel_charge+$outbound_charge),2);
+ 						$total_without_vat = round(($packing_charge+$box_charge+$picking_charge+$special_packing+$cancel_charge+$outbound_charge),2);
  						$totalvat    =round( (($total_without_vat * 15)/100),2) ;
  						$total_with_vat  =round( ($total_without_vat + $totalvat),2);
  						 $counter = $key + 1;
@@ -139,10 +138,10 @@
 						        <td align="center">' . $rowData['packing_charge'] . '</td>
 						        <td align="center">' . $special_packing . '</td>
 						       
-						        <td align="center">' . $rowData['return_charge'] . '</td>
+						     
 						       
 						        <td align="center">' . $rowData['outbound_charge'] . '</td>
-						        <td align="center">' . $rowData['shipping_charge'] . '</td>							
+						      						
 						        <td align="center">' . $rowData['cancel_charge'] . '</td>							
 						        <td align="center">' . $rowData['box_charge'] . '</td>							
 											
@@ -158,7 +157,7 @@
 					<tr>	
 						<tr>	
 					<?php  
-					$tot = round(($totalValue['picking_charge']+$totalValue['packing_charge']+$totalValue['dispatch_charge']+$totalValue['shipping_charge']+$totalValue['special_packing']+$totalValue['inbound_charge']+$totalValue['outbound_charge']+$totalValue['box_charge']+$totalValue['return_charge']),2); 
+					$tot = round(($totalValue['picking_charge']+$totalValue['packing_charge']+$totalValue['special_packing']+$totalValue['outbound_charge']+$totalValue['box_charge']),2);  
 					$totvat  = round((($tot * 15)/100),2) ;
  					$tot_with_vat  = round(($tot + $totvat),2);
  					$bank_fees = GetalldashboardClientField($invoiceData[0]['cust_id'], 'bank_fees');
@@ -167,10 +166,10 @@
 					<th><?=$totalValue['picking_charge'];?></th>
 					<th><?=$totalValue['packing_charge'];?></th>
 					<th><?=$totalValue['special_packing'];?></th>					
-					<th><?=$totalValue['return_charge'];?></th>
+				
 				
 					<th><?=$totalValue['outbound_charge'];?></th>
-					<th><?=$totalValue['shipping_charge'];?></th>					
+				
 					<th><?=$totalValue['cancel_charge'];?></th>					
 					<th><?=$totalValue['box_charge'];?></th>
 					<th><?=$tot;?></th>					
@@ -182,7 +181,7 @@
 				<td colspan="16">
 					<br>
 					<?php 
-						$TOTAL =round(($tot + $totalValue['pickup_charge']+$totalValue['storage_charges']+$totalValue['onhold_charges']+$totalValue['inventory_charge']+$totalValue['portal_charge']+$totalValue['sku_barcode_print']),2);
+						$TOTAL =round(( $totalValue['pickup_charge']+$totalValue['storage_charge']+$totalValue['onhold_charges']+$totalValue['inventory_charge']+$totalValue['portal_charge']+$totalValue['sku_barcode_print']+$totalValue['packing_charge']+$totalValue['picking_charge']+$totalValue['special_packing']+$totalValue['inbound_charge']+$totalValue['outbound_charge']+$totalValue['box_charge']),2);
 						$TOTALvat    =round( (($TOTAL * 15)/100),2) ;
 						$TOTAL_with_vat  =round( ($TOTAL + $TOTALvat),2);
 					?>
@@ -216,12 +215,7 @@
 							</td>
 						</tr>
 						
-						<tr>
-							<td align="justify"> Total Return Charges</td>
-							<td align="center"><?= $currency; ?>
-								<?=$totalValue['return_charge'];?>
-							</td>
-						</tr>
+						
 
 						<tr>
 							<td align="justify"> Total Inbound Charges</td>
@@ -236,12 +230,7 @@
 								<?=$totalValue['outbound_charge'];?>
 							</td>
 						</tr>
-						<tr>
-							<td align="justify"> Total Shipping Charges</td>
-							<td align="center"><?= $currency; ?>
-								<?=$totalValue['shipping_charge'];?>
-							</td>
-						</tr>
+					
 						<tr>
 							<td align="justify"> Total Inventory Charges</td>
 							<td align="center"><?= $currency; ?>
@@ -280,7 +269,7 @@
 						</tr>
 						<tr>
 							<tr>
-							<td align="justify">Total Fees before VAT 15%  - إجمالي الرسوم قبل ضريبة القيمة المضا�?ة </td>
+							<td align="justify">Total Fees before VAT <?=$invoiceData[0][0]['vat_percent'];?>%  -  إجمالي الرسوم قبل ضريبة القيمة المضافة </td>
 							<td align="center"><?= $currency; ?>
 								<?=$TOTAL;?>
 							</td>
@@ -293,7 +282,7 @@
 							</td>
 						</tr>
 							<tr>
-								<td>Total Fees After VAT <?=$invoiceData[0][0]['vat_percent'];?>% -  إجمالي الرسوم بعد ضريبة القيمة المضا�?ة</td>
+								<td>Total Fees After VAT <?=$invoiceData[0][0]['vat_percent'];?>% -  إجمالي الرسوم بعد ضريبة القيمة المضافة</td>
 								<td align="center"><?= $currency; ?>
 									<?=$TOTAL_with_vat;?>
 								</td>

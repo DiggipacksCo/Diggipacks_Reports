@@ -3201,12 +3201,12 @@ class Shipment extends MY_Controller {
                 if(!empty($data['skuData']))
                 {
                     $totalweight= 0 ;
-                    
+                    $data['weight']=0;
                 foreach ($data['skuData'] as $new_key => $skuDetails) {
                     //      echo"<br><pre>"; 
                     //   print_r($data);
                     //die; 
-
+                    
                     $stock_check = CheckStockBackorder_ordergen($data['cust_id'], $skuDetails['sku'], $skuDetails['piece'], $data['slip_no']);
 
                     if ($stock_check['succ'] == 1) {
