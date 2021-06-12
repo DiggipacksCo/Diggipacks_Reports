@@ -1423,6 +1423,14 @@ $lang['lang_Country_Code']="Country Code";
 $lang['lang_Default_Currency']="Default Currency";
 $lang['lang_Set_SMS_Config']="Set SMS Config";
 $lang['lang_Param']="Param";
+$lang['lang_AUTO_SYNC_FRWD']="AUTO SYNC FRWD";
+$lang['lang_No_Data_Found']="No Data Found";
+$lang['lang_import_Bulk_location']="Import Bulk Location";
+$lang['lang_Additional_Weight_Rate']="Additional Weight Rate";
+$lang['lang_Max_Weight_Range_Rate']="Max Weight Range Rate";
+$lang['lang_Max_Weight_Range']="Max Weight Range";
+$lang['lang_Hub']="المدينة الرئيسية";
+$lang['lang_Toexcel_csvv_file_get_excel_idea_one']="To add bulk of items use this import feature. Below are the columns you must have according to serial number in the excel csv file. ";
 $lang['lang_ADD']="اضف";
 $lang['lang_CC']="CC";
 

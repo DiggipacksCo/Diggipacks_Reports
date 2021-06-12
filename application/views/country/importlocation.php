@@ -119,7 +119,7 @@
                                         <input type="file" name="file" id="file" required accept=".xls,.xlsx,.csv"  class="btn btn-default">
                                         <!-- <span id="weight" class="alert"></span> -->
                                     </span><br> 
-                                    <button type="submit"  class="btn btn-success pull-left"><?=lang('lang_add');?> <?=lang('lang_Location');?></button> 
+                                    <button type="submit"  class="btn btn-success pull-left"><?=lang('lang_Add');?> <?=lang('lang_Location');?></button> 
                                 </form>
                             </div>
                         </div>    

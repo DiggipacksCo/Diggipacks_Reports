@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Show Tempalte</title>
+        <title><?=lang('lang_Show_Tempalte');?></title>
         <?php $this->load->view('include/file'); ?>
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
         <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
@@ -35,9 +35,9 @@
                         <!-- Basic responsive table -->
                         <div class="panel panel-flat" > 
                             <!--style="padding-bottom:220px;background-color: lightgray;"-->
-                            <div class="panel-heading"> 
+                            <div class="panel-heading" dir="ltr"> 
                                 <!-- <h5 class="panel-title">Basic responsive table</h5> -->
-                                <h1><strong>Show Template</strong></h1>
+                                <h1><strong><?=lang('lang_Show_Tempalte');?></strong></h1>
                                 <div class="heading-elements">
                                     <ul class="icons-list">
 
@@ -64,12 +64,12 @@
                                     <table class="table table-striped table-hover table-bordered">
                                         <thead>
                                             <tr>
-                                                <th>Sr.No.</th>
-                                                 <th>Type</th>
+                                                <th><?=lang('lang_SrNo');?>.</th>
+                                                 <th><?=lang('lang_Type');?></th>
                                             
-                                                <th>Category</th>
-                                                <th>Sub Category</th>
-                                                <th>Action</th>
+                                               <th><?=lang('lang_Category');?></th>
+                                                <th><?=lang('lang_SubCategory');?></th>
+                                                <th><?=lang('lang_Action');?></th>
                                               
                                                 
                                             </tr>

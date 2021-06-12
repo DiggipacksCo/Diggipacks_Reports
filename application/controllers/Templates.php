@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-Class Templates extends CI_Controller {
+Class Templates extends MY_Controller {
 
     function __construct() {
         parent::__construct();

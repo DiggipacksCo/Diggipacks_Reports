@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Inventory</title>
+        <title><?=lang('lang_Inventory');?></title>
         <?php $this->load->view('include/file'); ?>
         <script type="text/javascript" src="<?= base_url(); ?>assets/js/angular/pickup.app.js"></script>
     </head>
@@ -36,8 +36,8 @@
                             <div class="col-lg-12" >
 
                                 <div class="panel panel-flat">
-                                    <div class="panel-heading">
-                                        <h1> <strong>Delivery Manifest list Details
+                                    <div class="panel-heading" dir="ltr">
+                                        <h1> <strong><?=lang('lang_Delivery_Manifest_list_Details');?>
                                                 <?= $m_id ?>
                                             </strong> <a id="btnExport" ><i class="icon-file-excel pull-right" style="font-size: 35px;"></i></a>  </h1>
                                     </div>
@@ -57,7 +57,7 @@
                                                            
                                                             
                                                             
-                                                            <td><div class="form-group" ><strong>AWB Value:</strong>
+                                                            <td><div class="form-group" ><strong><?=lang('lang_AWB_value');?>:</strong>
                                                                     <input type="text" id="s_type_val" name="s_type_val"  ng-model="filterData.s_type_val"  class="form-control" placeholder="Enter AWB no.">
                                                                     <!--  <?php // if($condition!=null):          ?>
                                                                                   <input type="text" id="condition" name="condition" class="form-control" value="<?= $condition; ?>" >
@@ -65,13 +65,13 @@
                                                                 </div>
                                                             </td>
                                                             <td>
-                                                                <div class="form-group" ><strong>Ref. No:</strong>
+                                                                <div class="form-group" ><strong><?=lang('lang_Ref_No');?>:</strong>
                                                                     <input  id="booking_id" name="booking_id"  ng-model="filterData.booking_id" class="form-control" placeholder="Enter Ref no."> 
 
                                                                 </div>
                                                             </td>
-                                                            <td><button type="button" class="btn btn-success" style="margin-left: 7%">Total <span class="badge">{{shipData.length}}/{{totalCount}}</span></button></td>
-                                                            <td><button  class="btn btn-danger" ng-click="loadMore(1, 1);" >Search</button></td>
+                                                            <td><button type="button" class="btn btn-success" style="margin-left: 7%"><?=lang('lang_Total');?>  <span class="badge">{{shipData.length}}/{{totalCount}}</span></button></td>
+                                                            <td><button  class="btn btn-danger" ng-click="loadMore(1, 1);" ><?=lang('lang_Search');?></button></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -97,30 +97,30 @@
                                     <table class="table table-striped table-hover table-bordered dataTable bg-*" id="downloadtable" style="width:100%;">
                                         <thead>
                                             <tr>
-                                                <th>Sr.No.</th>
-                                                <th>AWB No.</th>
-                                                <th>Ref. No.</th>
-                                                <th>Origin</th>
-                                                <th>Destination</th>
-                                                <th>Receiver</th>
-                                                <th>Receiver Address</th>
-                                                <th>Receiver Mobile</th>
-                                                <th>Item Sku Detail
+                                                  <th><?=lang('lang_SrNo');?>.</th>
+<th><?=lang('lang_AWB_No');?>.</th>
+<th><?=lang('lang_Ref_No');?></th>
+   <th><?=lang('lang_Origin');?></th>  
+   <th><?=lang('lang_Destination');?></th>
+    <th><?=lang('lang_Receiver');?></th>
+    <th><?=lang('lang_Receiver_Address');?></th>
+     <th><?=lang('lang_Receiver_Mobile');?></th>
+                                                <th><?=lang('lang_Item_Sku_Detail');?>
                                                     <table class="table">
                                                         <thead>
                                                             <tr>
-                                                                <th>SKU</th>
-                                                                <th>Qty</th>
-                                                                <th>COD (<?= site_configTable("default_currency"); ?>)</th>
+                                                               <th><?=lang('lang_SKU');?></th>
+                                                    <th><?=lang('lang_QTY');?></th>
+                                                                <th><?=lang('lang_COD');?> (<?= site_configTable("default_currency"); ?>)</th>
                                                             </tr>
                                                         </thead>
                                                     </table></th>
                                                
                                                 
                                                 
-                                                <th>Seller</th>
+                                                    <th><?=lang('lang_Seller');?></th>
                                                 
-                                                <th>Date</th>
+                                                    <th><?=lang('lang_Date');?></th>
                                                
                                             </tr>
                                         </thead>
@@ -149,7 +149,7 @@
                                             
                                         </tr>
                                     </table>
-                                    <button ng-hide="shipData.length == totalCount" class="btn btn-info" ng-click="loadMore(count = count + 1, 0);" ng-init="count = 1">Load More</button>
+                                    <button ng-hide="shipData.length == totalCount" class="btn btn-info" ng-click="loadMore(count = count + 1, 0);" ng-init="count = 1"><?=lang('lang_LoadMore');?></button>
                                 </div>
 
                                 

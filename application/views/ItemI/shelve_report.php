@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Inventory</title>
+        <title><?=lang('lang_Inventory');?></title>
         <?php $this->load->view('include/file'); ?>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
@@ -42,8 +42,8 @@
 
                                 <!-- Marketing campaigns -->
                                 <div class="panel panel-flat" >
-                                    <div class="panel-heading">
-                                        <h1><strong>Shelve Report</strong><a href="<?= base_url('Excel_export/shipments'); ?>"></a>
+                                    <div class="panel-heading" dir="ltr">
+                                        <h1><strong><?=lang('lang_Shelve_Report');?></strong><a href="<?= base_url('Excel_export/shipments'); ?>"></a>
 
                                             <a onclick="printPage('block1');" ><i class="fa fa-print pull-right" style="font-size: 40px;color:#999;"></i></a> 
                                           
@@ -66,7 +66,7 @@
                                                 <tbody >
 
                                                     <tr style="width: 80%;">
-                                                        <td><div class="form-group" ><strong>Shelve No.:</strong>
+                                                        <td><div class="form-group" ><strong><?=lang('lang_Shelve_No');?>:</strong>
                                                                 <input type="shelve_no" id="sku"name="shelve_no" ng-model="filterData.shelve_no"  class="form-control" placeholder="Enter Shelve No.">
                                                             </div></td>
 
@@ -74,9 +74,9 @@
 
 
 
-                                                        <td ><div class="form-group" ><strong>Seller:</strong> <br>
+                                                        <td ><div class="form-group" ><strong><?=lang('lang_Seller');?>:</strong> <br>
                                                                 <select  id="seller" name="seller" ng-model="filterData.seller" class="selectpicker" data-width="100%" >
-                                                                    <option value="">Select Seller</option>
+                                                                    <option value=""><?=lang('lang_SelectSeller');?></option>
                                                                     <?php foreach ($sellers as $seller_detail): ?>
                                                                         <option value="<?= $seller_detail->id; ?>">
                                                                             <?= $seller_detail->name; ?>
@@ -94,10 +94,10 @@
 
 
 
-                                                        <td colspan="1"><button type="button" class="btn btn-success" style="margin-left: 7%">Total <span class="badge">{{shipData.length}}/{{totalCount}}</span></button></td>
+                                                        <td colspan="1"><button type="button" class="btn btn-success" style="margin-left: 7%"><?=lang('lang_Total');?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button></td>
 
 
-                                                        <td colspan="1"> <button  class="btn btn-danger" ng-click="loadMore(1, 1);" style="margin-left: 7%" >Search</button></td>
+                                                        <td colspan="1"> <button  class="btn btn-danger" ng-click="loadMore(1, 1);" style="margin-left: 7%" ><?=lang('lang_Search');?></button></td>
                                                     </tr> 
                                                 </tbody>
                                             </table>
@@ -129,12 +129,12 @@
                                     <table class="table table-striped table-hover table-bordered" id="printTable" style="width:100%;">
                                         <thead>
                                             <tr>
-                                                <th>Sr.No.</th>
+                                                <th><?=lang('lang_SrNo');?>.</th>
 
-                                                <th>Pallet No.</th>
-                                                <th>Quantity</th>
+                                                <th><?=lang('lang_Pallet_No');?>.</th>
+                                                <th><?=lang('lang_Quantity');?></th>
 
-                                                <th>Seller</th>
+                                                <th><?=lang('lang_Seller');?></th>
 
                                                 <th  ><i class="icon-database-edit2"></i></th>
                                             </tr>
@@ -149,14 +149,14 @@
 
                                                 
                                                 <td>{{data.quantity}}</td><td>{{data.seller_name}}</td>
-                                                <td><a class="btn btn-info" ng-click="GetShowShelveDetails(data.seller_id, data.shelve_no);">Details</a></td>
+                                                <td><a class="btn btn-info" ng-click="GetShowShelveDetails(data.seller_id, data.shelve_no);"><?=lang('lang_Details');?></a></td>
 
 
 
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <button ng-hide="shipData.length == totalCount" class="btn btn-info" ng-click="loadMore(count = count + 1, 0);" ng-init="count = 1">Load More</button>
+                                    <button ng-hide="shipData.length == totalCount" class="btn btn-info" ng-click="loadMore(count = count + 1, 0);" ng-init="count = 1"><?=lang('lang_Load_More');?></button>
                                 </div>
                                 <hr>
                             </div>
@@ -180,7 +180,7 @@
 
 
 
-                            <h5 class="modal-title" id="exampleModalLabel">Details({{showPopData.shelve_no}})</h5>
+                            <h5 class="modal-title" id="exampleModalLabel" dir="ltr"><?=lang('lang_Details');?> ({{showPopData.shelve_no}})</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -191,13 +191,13 @@
                              <table class="table table-striped table-hover table-bordered"  style="width:100%;">
                                         <thead>
                                             <tr>
-                                                <th>Sr.No.</th>
+                                                <th><?=lang('lang_SrNo');?>.</th>
 
-                                                <th>Sku</th>
-                                                <th>Quantity</th>
+                                                <th><?=lang('lang_Sku');?></th>
+                                                <th><?=lang('lang_Quantity');?></th>
 
-                                                <th>Stock Location</th>
-                                                 <th>Warehouse</th>
+                                                <th><?=lang('lang_Stock_Location');?></th>
+                                                 <th><?=lang('lang_warehouse');?></th>
 
                                                
                                             </tr>
@@ -222,7 +222,7 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><?=lang('lang_Close');?></button>
 
                         </div>
 

@@ -44,7 +44,7 @@
                                 <!-- Marketing campaigns -->
                                 <div class="panel panel-flat" dir="ltr">
                                     <div class="panel-heading">
-                                        <h1> <strong>Staff Report </strong> 
+                                        <h1> <strong><?= lang('lang_Staff_Report'); ?> </strong> 
                                             <a  id="btnExport" ><i class="icon-file-excel pull-right" style="font-size: 35px; margin-top:3px;"></i></a>&nbsp;&nbsp;
 
                                             <a onclick="printPage();" style="display:none"><i class="fa fa-print pull-right" style="font-size: 40px;color:#999;"></i></a> 
@@ -61,9 +61,9 @@
                                                     <!-- width="170px;" height="200px;" -->
                                                     <tbody >
                                                         <tr style="width: 80%;">
-                                                            <td><div class="form-group" ><strong>Picker:</strong>
+                                                            <td><div class="form-group" ><strong><?= lang('lang_Picker'); ?>:</strong>
                                                                     <select class="form-control"  ng-model="filterData.assigned_to">
-                                                                    <option  value="">Select Picker</option> 
+                                                                    <option  value=""><?= lang('lang_Select_Picker'); ?></option> 
                                                                     <option ng-repeat="pdata in pickerArr" value="{{pdata.id}}">{{pdata.name}}</option> 
                                                                 </select>
                                                                 </div></td>
@@ -103,11 +103,11 @@
                                             <tr>
 
                                                 <th>#</th>
-                                                <th>Staff Name </th>
-                                                <th># Of Orders</th>
-                                                <th># Of Sku</th>
-                                                <th>Date</th>
-                                                <th>Performance</th>
+                                                <th><?= lang('lang_Staff_Name'); ?> </th>
+                                                <th># <?= lang('lang_Of_Orders'); ?></th>
+                                                <th># <?= lang('lang_Of_Sku'); ?></th>
+                                                <th><?= lang('lang_Date'); ?></th>
+                                                <th><?=lang('lang_Performance');?></th>
 
 
                                             </tr>

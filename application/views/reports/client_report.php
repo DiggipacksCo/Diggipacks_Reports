@@ -43,7 +43,7 @@
                                 <!-- Marketing campaigns -->
                                 <div class="panel panel-flat" dir="ltr">
                                     <div class="panel-heading">
-                                        <h1> <strong>Client Report </strong> 
+                                        <h1> <strong><?= lang('lang_Client_Report'); ?> </strong> 
                                             <a  id="btnExport" ><i class="icon-file-excel pull-right" style="font-size: 35px; margin-top:3px;"></i></a>&nbsp;&nbsp;
 
                                             <a onclick="printPage();" style="display:none"><i class="fa fa-print pull-right" style="font-size: 40px;color:#999;"></i></a> 
@@ -98,9 +98,9 @@
 
 
 
-                                                <div class="col-md-3"> <div class="form-group" ><strong>Customer:</strong>
+                                                <div class="col-md-3"> <div class="form-group" ><strong><?=lang('lang_Customer');?>:</strong>
                                                         <select class="form-control"  ng-model="filterData.cust_id">
-                                                            <option  value="">Select Customer</option> 
+                                                            <option  value=""><?=lang('lang_Select_Customer');?></option> 
                                                             <?php
                                                             $custDrop = Getallsellerdata();
                                                             foreach ($custDrop as $val) {
@@ -109,24 +109,24 @@
                                                             ?>
                                                         </select>
                                                     </div></div>
-                                                <div class="col-md-3"><div class="form-group" ><strong>Year:</strong>
+                                                <div class="col-md-3"><div class="form-group" ><strong><?=lang('lang_Year');?>:</strong>
                                                         <?= $yearDrop; ?>
                                                     </div></div>
-                                                <div class="col-md-3"><div class="form-group" ><strong>Month:</strong>
+                                                <div class="col-md-3"><div class="form-group" ><strong><?=lang('lang_Month');?>:</strong>
                                                         <?= $monthDrop; ?>
                                                     </div></div>
-                                                <div class="col-md-3"><div class="form-group" ><strong>Day:</strong>
+                                                <div class="col-md-3"><div class="form-group" ><strong><?=lang('lang_Day');?>:</strong>
                                                         <?= $daysDrop; ?>
                                                     </div></div>
 
-                                                <div class="col-md-3"><div class="form-group" ><strong>Warehouse:</strong> <br>
+                                                <div class="col-md-3"><div class="form-group" ><strong><?=lang('lang_warehouse');?>:</strong> <br>
                                                         <?php
                                                         $warehouseArr = Getwarehouse_Dropdata();
 
                                                         //print_r($destData);
                                                         ?>
                                                         <select  id="destination" name="destination"  ng-model="filterData.wh_id"  class="selectpicker" data-width="100%" >
-                                                            <option value="">Select Warehouse</option>
+                                                            <option value=""><?=lang('lang_Selectwarehousename');?></option>
                                                             <?php foreach ($warehouseArr as $data): ?>
                                                                 <option value="<?= $data['id']; ?>">
                                                                     <?= $data['name']; ?>
@@ -135,14 +135,14 @@
                                                         </select>
                                                     </div></div>
 
-                                                <div class="col-md-3"> <div class="form-group" ><strong>AWB No.:</strong>
+                                                <div class="col-md-3"> <div class="form-group" ><strong><?=lang('lang_AWB_No');?>:</strong>
                                                         <input type="text" id="slip_no" name="slip_no"  ng-model="filterData.slip_no"  class="form-control" placeholder="Enter AWB no.">
                                                         <!--  <?php // if($condition!=null):    ?>
                                                          <input type="text" id="condition" name="condition" class="form-control" value="<?= $condition; ?>" >
                                                         <?php // endif;  ?> -->
                                                     </div></div>
 
-                                                <div class="col-md-3"> <div class="form-group" ><strong>Destination:</strong>
+                                                <div class="col-md-3"> <div class="form-group" ><strong><?=lang('lang_Destination');?>:</strong>
                                                         <br>
                                                         <?php
                                                         $destData = getAllDestination();
@@ -151,23 +151,23 @@
                                                         ?>
                                                         <select  id="destination" name="destination"  ng-model="filterData.destination" data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%" >
 
-                                                            <option value="">Select Destination</option>
+                                                            <option value=""><?=lang('lang_Select_Destination');?></option>
                                                             <?php foreach ($destData as $data): ?>
                                                                 <option value="<?= $data['id']; ?>"><?= $data['city']; ?></option>
                                                             <?php endforeach; ?>
 
                                                         </select>
                                                     </div> </div>
-                                                <div class="col-md-3"><div class="form-group" ><strong>Ref. No:</strong>
+                                                <div class="col-md-3"><div class="form-group" ><strong><?=lang('lang_Ref_No');?>:</strong>
                                                         <input  id="booking_id" name="booking_id"  ng-model="filterData.booking_id" class="form-control" placeholder="Enter Ref no."> 
 
                                                     </div></div>
 
-                                                <div class="col-md-3"> <div class="form-group" ><strong>Company:</strong>
+                                                <div class="col-md-3"> <div class="form-group" ><strong><?=lang('lang_company');?>:</strong>
 
                                                         <select  id="cc_id" name="cc_id"  ng-model="filterData.cc_id"  data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%" >
 
-                                                            <option value="">Select Company</option>
+                                                            <option value=""><?=lang('lang_Select_Company');?></option>
                                                             <?php foreach (GetCourierCompanyDrop() as $data): ?>
                                                                 <option value="<?= $data['id']; ?>"><?= $data['company']; ?></option>
                                                             <?php endforeach; ?>
@@ -175,20 +175,20 @@
                                                         </select>
                                                     </div> </div>
 
-                                                <div class="col-md-4"><div class="form-group" ><strong>Payment Mode:</strong><br/>
+                                                <div class="col-md-4"><div class="form-group" ><strong><?=lang('lang_Payment_Mode');?>:</strong><br/>
 
                                                         <select  id="mode" name="cc_id"  ng-model="filterData.mode"   class="form-control" data-width="100%" >
 
-                                                            <option value="">Select Mode</option>
-                                                            <option value="COD">COD</option>
-                                                            <option value="CC">CC</option>
+                                                            <option value=""><?=lang('lang_Select_Mode');?></option>
+                                                            <option value="COD"><?=lang('lang_COD');?></option>
+                                                            <option value="CC"><?=lang('lang_CC');?></option>
 
 
                                                         </select>
                                                     </div>  </div>
                                                 <div class="col-md-4"><div class="form-group" ><strong></strong><br/><button  class="btn btn-danger" ng-click="GetClientOrderReports(1, 1);" ><?= lang('lang_Get_Details'); ?></button>
 
-                                                        <button type="button" class="btn btn-success ml-10" >Total <span class="badge">{{shipData.length}}/{{totalCount}}</span></button></div></div>
+                                                        <button type="button" class="btn btn-success ml-10" ><?=lang('lang_Total');?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button></div></div>
 
 
 
@@ -209,21 +209,21 @@
 
                                         <thead>
                                             <tr>
-                                                <th>Sr.No.
+                                                <th><?=lang('lang_SrNo');?>.
                                                 </th>
-                                                <th>Payment Mode</th>
-                                                <th>AWB No.</th>
-                                                <th>Ref. No.</th>
-                                                <th>Forwarded AWB No.</th>
-                                                <th>Forwarded Company</th>
-                                                <th>Destination</th>
-                                                <th>Receiver</th>
-                                                <th>Receiver Address</th>
-                                                <th>Receiver Mobile</th>
-                                                <th>Item Sku Detail
-                                                <th>Seller</th>
-                                                <th>Warehouse</th>
-                                                <th>Date </th>
+                                                <th><?=lang('lang_Payment_Mode');?></th>
+                                                <th><?=lang('lang_AWB_No');?>.</th>
+                                                <th><?=lang('lang_Ref_No');?>.</th>
+                                                <th><?=lang('lang_Forwarded_AWB_No');?>.</th>
+                                                <th><?=lang('lang_Forwarded_Company');?></th>
+                                                <th><?=lang('lang_Destination');?></th>
+                                                <th><?=lang('lang_Receiver');?></th>
+                                                <th><?=lang('lang_Receiver_Address');?></th>
+                                                <th><?=lang('lang_Receiver_Mobile');?></th>
+                                                <th><?=lang('lang_Item_Sku_Detail');?>
+                                                <th><?=lang('lang_Seller');?></th>
+                                                <th><?=lang('lang_warehouse');?></th>
+                                                <th> <?=lang('lang_Date');?></th>
                                             </tr>
 
                                         </thead>
@@ -240,14 +240,14 @@
                                             <td>{{data.reciever_address}}</td>
                                             <td>{{data.reciever_phone}}</td>
 
-                                            <td><a  ng-click="GetInventoryPopup(data.slip_no);"><span class="label label" style="background-color:<?= DEFAULTCOLOR; ?>;">Get Details</span></a></td>
+                                            <td><a  ng-click="GetInventoryPopup(data.slip_no);"><span class="label label" style="background-color:<?= DEFAULTCOLOR; ?>;"><?= lang('lang_Get_Details'); ?></span></a></td>
 
                                             <td>{{data.name}}</td>
                                             <td > {{data.wh_id}}</td>
                                             <td>{{data.entrydate}}</td>
                                         </tr>
                                     </table>
-                                    <button ng-hide="shipData.length == totalCount" class="btn btn-info" ng-click="GetClientOrderReports(count = count + 1, 0);" ng-init="count = 1">Load More</button>
+                                    <button ng-hide="shipData.length == totalCount" class="btn btn-info" ng-click="GetClientOrderReports(count = count + 1, 0);" ng-init="count = 1"><?=lang('lang_Load_More');?></button>
 
 
                                 </div>
@@ -275,10 +275,10 @@
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th>SKU </th>
-                                            <th>Qty</th>
-                                            <th>Deducted Shelve NO</th>
-                                            <th>COD (<?= site_configTable("default_currency"); ?>)</th>
+                                           <th><?=lang('lang_SKU');?> </th>
+                                            <th><?=lang('lang_QTY');?></th>
+                                            <th><?=lang('lang_Deducted_Shelve_NO');?></th>
+                                            <th><?=lang('lang_COD');?> (<?= site_configTable("default_currency"); ?>)</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -302,21 +302,21 @@
 
                                         <thead>
                                             <tr>
-                                                <th>Sr.No.
+                                                <th><?=lang('lang_SrNo');?>.
                                                 </th>
-                                                <th>Payment Mode</th>
-                                                <th>AWB No.</th>
-                                                <th>Ref. No.</th>
-                                                <th>Forwarded AWB No.</th>
-                                                <th>Forwarded Company</th>
-                                                <th>Destination</th>
-                                                <th>Receiver</th>
-                                                <th>Receiver Address</th>
-                                                <th>Receiver Mobile</th>
-                                                <th>Item Sku Detail <table class="table table-striped table-hover table-bordered"><tr><td>SKU</td><td>QTY</td><td>COD</td><td>Deducted Shelve NO</td></tr></table></th>
-                                                <th>Seller</th>
-                                                <th>Warehouse</th>
-                                                <th>Date </th>
+                                                <th><?=lang('lang_Payment_Mode');?></th>
+                                                <th><?=lang('lang_AWB_No');?>.</th>
+                                                <th><?=lang('lang_Ref_No');?>.</th>
+                                                <th><?=lang('lang_Forwarded_AWB_No');?>.</th>
+                                                <th><?=lang('lang_Forwarded_Company');?></th>
+                                                <th><?=lang('lang_Destination');?></th>
+                                                <th><?=lang('lang_Receiver');?></th>
+                                                <th><?=lang('lang_Receiver_Address');?></th>
+                                                <th><?=lang('lang_Receiver_Mobile');?></th>
+                                                <th><?=lang('lang_Item_Sku_Detail');?> <table class="table table-striped table-hover table-bordered"><tr><td><?=lang('lang_SKU');?></td><td><?=lang('lang_QTY');?></td><td><?=lang('lang_COD');?></td><td><?=lang('lang_Deducted_Shelve_NO');?></td></tr></table></th>
+                                                <th><?=lang('lang_Seller');?></th>
+                                                <th><?=lang('lang_warehouse');?></th>
+                                                <th> <?=lang('lang_Date');?></th>
                                             </tr>
 
                                         </thead>

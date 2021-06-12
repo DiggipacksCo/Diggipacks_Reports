@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Add New Template</title>
+        <title><?= lang('lang_Add_New_Template'); ?></title>
         <?php $this->load->view('include/file'); ?>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 
@@ -37,7 +37,7 @@
                     <!-- Content area -->
                     <div class="content">
                         <div class="panel panel-flat">
-                            <div class="panel-heading"><h1><strong>Add New Template</strong></h1></div>
+                            <div class="panel-heading"><h1><strong><?= lang('lang_Add_New_Template'); ?></strong></h1></div>
                             <hr>
                             <div class="panel-body">
                                 <?php if (!empty(validation_errors())) echo'<div class="alert alert-warning" role="alert"><strong>Warning!</strong> ' . validation_errors() . '</div>'; ?>
@@ -50,8 +50,8 @@
                                 <form action="<?= base_url('Users/addnewaccessTemplate'); ?>" name="adduser" method="post">
                                    
                                     <div class="form-group">
-                                        <label for="d_id"><strong>Type:</strong></label>
-                                        <select name="d_id" id="dcat_id" class="form-control"> <option value="">Select Type</option>
+                                        <label for="d_id"><strong><?= lang('lang_Type'); ?>:</strong></label>
+                                        <select name="d_id" id="dcat_id" class="form-control"> <option value=""><?= lang('lang_SelectType'); ?></option>
                                             <?php
                                             foreach ($typeArr as $d_data) {
                                                 if ($d_data['id'] == $editdata['d_id']) {
@@ -64,8 +64,8 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="privilage_array"><strong>Category:</strong>
-                                          <input type="checkbox" id="checkbox" > Select All
+                                        <label for="privilage_array"><strong><?= lang('lang_Category'); ?>:</strong>
+                                          <input type="checkbox" id="checkbox" > <?= lang('lang_SelectAll'); ?>
                                         </label>
                                         <select name="privilage_array[]"  ng-model="filterData.privilage_array" id="main_item" multiple="multiple"  class="form-control js-example-basic-multiple" data-width="100%" ng-change="GetSubCatDatashow(<?=$editdata['id'];?>);"> 
                                        
@@ -75,8 +75,8 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="privilage_array_sub"><strong>Sub Category:</strong>
-                                           <input type="checkbox" id="checkbox2" > Select All
+                                        <label for="privilage_array_sub"><strong><?= lang('lang_SubCategory'); ?>:</strong>
+                                           <input type="checkbox" id="checkbox2" > <?= lang('lang_SelectAll'); ?>
                                         </label>
                                         <select name="privilage_array_sub[]" multiple="multiple" id="main_item_sub" ng-model="filterData.privilage_array_sub"   class="form-control js-example-basic-multiple" data-width="100%"> 
 
@@ -90,7 +90,7 @@
                                     </div>
 
   <div style="padding-top: 20px;">
-                                        <button type="submit" class="btn btn-success">Submit</button>
+                                        <button type="submit" class="btn btn-success"><?= lang('lang_Submit'); ?></button>
                                     </div>
                                 </form>
 

@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Inventory</title>
+        <title><?= lang('lang_Inventory'); ?></title>
         <?php $this->load->view('include/file'); ?>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/1.4.5/numeral.min.js"></script>
@@ -48,9 +48,9 @@
                         <!-- Basic responsive table -->
                         <div class="panel panel-flat" >
                             <!--style="padding-bottom:220px;background-color: lightgray;"-->
-                            <div class="panel-heading">
+                            <div class="panel-heading" dir="ltr">
                                 <!-- <h5 class="panel-title">Basic responsive table</h5> -->
-                                <h1><strong>3Pl Report</strong></h1>
+                                <h1><strong><?= lang('lang_TPL_Report'); ?></strong></h1>
 
                                 <div class="heading-elements">
                                     <ul class="icons-list">
@@ -94,11 +94,11 @@
                                                     ?>
 
 
-                                                    <div class="col-md-3"> <div class="form-group" ><strong>Company:</strong>
+                                                    <div class="col-md-3"> <div class="form-group" ><strong><?=lang('lang_company');?>:</strong>
 
                                                             <select  id="cc_id" name="cc_id"    data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%" >
 
-                                                                <option value="">Select Company</option>
+                                                                <option value=""><?=lang('lang_Select_Company');?></option>
                                                                 <?php
                                                                 foreach (GetCourierCompanyDrop() as $data) {
 
@@ -112,16 +112,16 @@
                                                             </select>
                                                         </div> </div>
                                                     
-                                                     <div class="col-md-3"> <div class="form-group" ><strong>From:</strong>
+                                                     <div class="col-md-3"> <div class="form-group" ><strong><?=lang('lang_From');?>:</strong>
                                                              <input class="form-control date" placeholder="From" id="from_date" name="from_date" value="<?=$postData['from_date'];?>" >
 
                                                     </div></div>
-                                                <div class="col-md-3"><div class="form-group" ><strong>To:</strong>
+                                                <div class="col-md-3"><div class="form-group" ><strong><?=lang('lang_To');?>:</strong>
                                                         <input class="form-control date" placeholder="To" id="to_date"name="to_date" value="<?=$postData['to_date'];?>"  > 
 
                                                     </div></div>
 <div class="col-md-4"><div class="form-group" ><strong></strong><br/><button type="submit"  class="btn btn-danger"- ><?= lang('lang_Get_Details'); ?></button>
-                                                            <button type="submit" value="1" name="clfilter"  class="btn btn-danger"- >Clear Filter</button>
+                                                            <button type="submit" value="1" name="clfilter"  class="btn btn-danger"- ><?=lang('lang_Clear_Filter');?></button>
 
                                                         </div></div>
 
@@ -149,13 +149,13 @@
                                     <table class="table table-striped table-hover table-bordered " >
                                         <thead>
                                             <tr>
-                                                <th>Sr. No.</th>
-                                                <th>Name</th>
-                                                <th>Delivered</th>
+                                            <th><?=lang('lang_SrNo');?>.</th>
+                                                <th><?=lang('lang_Name');?></th>
+                                                <th><?=lang('lang_Delivered');?></th>
 
-                                                <th>Return</th>
+                                                <th><?=lang('lang_Return');?></th>
 
-                                                <th>Delivery Performance</th>
+                                                <th><?=lang('lang_Delivery_Performance');?></th>
 
 
                                                 <th class="text-center" ><i class="icon-database-edit2"></i></th>

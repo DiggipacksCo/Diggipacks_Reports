@@ -70,9 +70,9 @@
                                                 <th><?= lang('lang_company'); ?></th>
                                                 <th><?= lang('lang_Capacity'); ?></th>
                                                 <th><?= lang('lang_City'); ?></th>
-                                                <th>Max Weight Range</th>   
-                                                <th>Max Weight Range Rate</th> 
-                                                <th>Additional Weight Rate</th>                                               
+                                                <th><?= lang('lang_Max_Weight_Range'); ?></th>   
+                                                <th><?= lang('lang_Max_Weight_Range_Rate'); ?></th> 
+                                                <th><?= lang('lang_Additional_Weight_Rate'); ?></th>                                               
                                                 <th><?= lang('lang_Action'); ?></th>
                                             </tr>
                                         </thead>

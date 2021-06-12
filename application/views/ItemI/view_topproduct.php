@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png');?>" type="image/x-icon">
-<title>Inventory</title>
+<title><?=lang('lang_Inventory');?></title>
 <?php $this->load->view('include/file'); ?>
 <script type="text/javascript" src="<?=base_url();?>assets/js/angular/iteminventory.app.js"></script>
 </head>
@@ -36,8 +36,8 @@
             
             <!-- Marketing campaigns -->
             <div class="panel panel-flat" >
-              <div class="panel-heading">
-                <h1><strong>Top Product Dispatch</strong><a href="<?= base_url('Excel_export/shipments');?>"></a> <!--<a  ng-click="ExportExcelitemInventory();" ><i class="icon-file-excel pull-right" style="font-size: 35px; margin-top:3px;"></i></a>-->&nbsp;&nbsp; <a onclick="printPage('block1');" ><i class="fa fa-print pull-right" style="font-size: 40px;color:#999;"></i></a> </h1>
+              <div class="panel-heading"dir="ltr">
+                <h1><strong><?=lang('lang_Top_Product_Dispatch');?></strong><a href="<?= base_url('Excel_export/shipments');?>"></a> <!--<a  ng-click="ExportExcelitemInventory();" ><i class="icon-file-excel pull-right" style="font-size: 35px; margin-top:3px;"></i></a>-->&nbsp;&nbsp; <a onclick="printPage('block1');" ><i class="fa fa-print pull-right" style="font-size: 40px;color:#999;"></i></a> </h1>
                 
                 <!-- <i class="icon-file-excel pull-right" style="font-size: 35px;"></i> --> 
               </div>
@@ -88,13 +88,13 @@
                     <!-- width="170px;" height="200px;" -->
                     <tbody >
                       <tr style="width: 80%;">
-                        <td><div class="form-group" ><strong>SKU:</strong>
+                        <td><div class="form-group" ><strong><?=lang('lang_SKU');?>:</strong>
                             <input type="text" id="sku"name="sku" ng-model="filterData.sku"  class="form-control" placeholder="Enter SKU no.">
                           </div></td>
                       
-                        <td ><div class="form-group" ><strong>Seller:</strong> <br>
+                        <td ><div class="form-group" ><strong><?=lang('lang_Seller');?>:</strong> <br>
                             <select  id="seller" name="seller" ng-model="filterData.seller" class="selectpicker" data-width="100%" >
-                              <option value="">Select Seller</option>
+                              <option value=""><?=lang('lang_SelectSeller');?></option>
                               <?php foreach($sellers as $seller_detail):?>
                               <option value="<?= $seller_detail->id;?>">
                               <?= $seller_detail->name;?>
@@ -103,16 +103,16 @@
                             </select>
                           </div></td>
                           
-                            <td><div class="form-group" ><strong>Year:</strong>
+                            <td><div class="form-group" ><strong><?=lang('lang_Year');?>:</strong>
                           <?=$yearDrop;?>
                           </div></td>
-                            <td><div class="form-group" ><strong>Month:</strong>
+                            <td><div class="form-group" ><strong><?=lang('lang_Month');?>:</strong>
                             <?=$monthDrop;?>
                           </div></td>
                       </tr>
                       <tr>
-                        <td><button type="button" class="btn btn-success" style="margin-left: 7%">Total <span class="badge">{{shipData.length}}/{{totalCount}}</span></button></td>
-                        <td><button  class="btn btn-danger" ng-click="loadMore(1,1);" >Search</button></td>
+                        <td><button type="button" class="btn btn-success" style="margin-left: 7%"><?=lang('lang_Total');?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button></td>
+                        <td><button  class="btn btn-danger" ng-click="loadMore(1,1);" ><?=lang('lang_Search');?></button></td>
                       </tr>
                       
                     </tbody>
@@ -142,12 +142,12 @@
               <table class="table table-striped table-hover table-bordered dataTable bg-*" id="printTable" style="width:100%;">
                 <thead>
                   <tr>
-                    <th>Sr.No.</th>
+                    <th><?=lang('lang_SrNo');?>.</th>
                  
-                     <th>Seller</th>
-                    <th>Item Sku</th>
+                     <th><?=lang('lang_Seller');?></th>
+                    <th><?=lang('lang_ItemSku');?></th>
                   
-                    <th>Quantity</th>
+                    <th><?=lang('lang_Quantity');?></th>
                     
                     <!--<th class="text-center" ><i class="icon-database-edit2"></i></th>--> 
                   </tr>
@@ -171,7 +171,7 @@
                   </tr>
                 </tbody>
               </table>
-              <button ng-hide="shipData.length==totalCount" class="btn btn-info" ng-click="loadMore(count=count+1,0);" ng-init="count=1">Load More</button>
+              <button ng-hide="shipData.length==totalCount" class="btn btn-info" ng-click="loadMore(count=count+1,0);" ng-init="count=1"><?=lang('lang_Load_More');?></button>
             </div>
             <hr>
           </div>

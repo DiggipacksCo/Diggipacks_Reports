@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png');?>" type="image/x-icon">
-<title>Inventory</title>
+<title><?=lang('lang_Inventory');?></title>
 <?php $this->load->view('include/file'); ?>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
@@ -36,7 +36,7 @@
 <!-- Marketing campaigns -->
 <div class="panel panel-flat">
 <div class="panel-heading">
-  <h1> <strong>Delivery Manifest List </strong> <!--<a  ng-click="exportExcel();" ><i class="icon-file-excel pull-right" style="font-size: 35px;"></i></a>
+  <h1> <strong><?=lang('lang_delivery_Manifest_list');?> </strong> <!--<a  ng-click="exportExcel();" ><i class="icon-file-excel pull-right" style="font-size: 35px;"></i></a>
     <select id="exportlimit" class="custom-select pull-right" ng-model="filterData.exportlimit" name="exprort_limit" required="" style="    font-size: 16px;padding: 5px;margin-right: 10px;" >
       <option value="" selected>Select Export Limit</option>
       <option ng-repeat="exdata in dropexport" value="{{exdata.i}}" >{{exdata.j}}-{{exdata.i}}</option>
@@ -60,28 +60,28 @@
       <!-- width="170px;" height="200px;" -->
       <tbody >
         <tr style="width: 80%;">
-          <td><div class="form-group" ><strong>AWB No:</strong>
+          <td><div class="form-group" ><strong><?=lang('lang_AWB_No');?>:</strong>
               <input type="text" id="slip_no"name="slip_no" ng-model="filterData.slip_no" class="form-control" ng-enter="loadMore(1,1);" placeholder="Enter AWB No.">
             </div></td>
-          <td><div class="form-group" ><strong>From:</strong>
+          <td><div class="form-group" ><strong><?=lang('lang_From');?>:</strong>
               <input class="form-control date" id="from" name="from" ng-model="filterData.from" placeholder="From Date">
             </div></td>
-          <td><div class="form-group" ><strong>To:</strong>
+          <td><div class="form-group" ><strong><?=lang('lang_To');?>:</strong>
               <input class="form-control date" id="to"name="to"  ng-model="filterData.to"  placeholder="To Date">
             </div></td>
         </tr>
         <tr>
              
-             <td><div class="form-group" ><strong>Label:</strong>
+             <td><div class="form-group" ><strong><?=lang('lang_label');?>:</strong>
                <select class="form-control" ng-model="filterData.label">
-                         <option value="">Select</option>
-                         <option value="Y">Yes</option>
-                         <option value="N">No</option>
+                         <option value=""><?=lang('lang_select');?></option>
+                         <option value="Y"><?=lang('lang_Yes');?></option>
+                         <option value="N"><?=lang('lang_No');?></option>
                          
                      </select>
             </div></td>
-          <td> <button  class="btn btn-danger" ng-click="loadMore(1,1);" >Search</button>
-              &nbsp;<button type="button" class="btn btn-success" style="margin-left: 7%">Total <span class="badge">{{shipData.length}}/{{totalCount}}</span></button>
+          <td> <button  class="btn btn-danger" ng-click="loadMore(1,1);" ><?=lang('lang_Search');?></button>
+              &nbsp;<button type="button" class="btn btn-success" style="margin-left: 7%"><?=lang('lang_Total');?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button>
              </td>
           
         </tr>
@@ -107,10 +107,10 @@
       <table class="table table-striped table-hover table-bordered dataTable bg-*"  style="width:100%;">
         <thead>
           <tr>
-            <th>Sr.No.</th>
-            <th>Manifest ID#</th>
-            <th>Order Count</th>
-            <th>Date</th>            
+          <th><?=lang('lang_SrNo');?>.</th>
+            <th>  <?=lang('lang_Manifest_ID');?>#</th>
+            <th><?=lang('lang_Order_Count');?></th>
+            <th> <?=lang('lang_Date');?>  </th>            
             <th class="text-center" ><i class="icon-database-edit2"></i></th>
           </tr>
         </thead>
@@ -126,14 +126,14 @@
           <td class="text-center"><ul class="icons-list">
               <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-menu9"></i> </a>
                 <ul class="dropdown-menu dropdown-menu-right">
-                  <li><a href="manifestView/{{data.m_id}}" target="_blank"><i class="icon-eye" ></i> View</a></li>  
-                  <li><a href="manifestPrint/{{data.m_id}}" target="_blank"><i class="icon-file-pdf"></i>Print Manifest</a></li>                 
+                  <li><a href="manifestView/{{data.m_id}}" target="_blank"><i class="icon-eye" ></i>  <?=lang('lang_View');?></a></li>  
+                  <li><a href="manifestPrint/{{data.m_id}}" target="_blank"><i class="icon-file-pdf"></i><?=lang('lang_Print_Manifest');?></a></li>                 
                   </ul>
               </li>
             </ul></td>
         </tr>
       </table>
-      <button ng-hide="shipData.length==totalCount" class="btn btn-info" ng-click="loadMore(count=count+1,0);" ng-init="count=1">Load More</button>
+      <button ng-hide="shipData.length==totalCount" class="btn btn-info" ng-click="loadMore(count=count+1,0);" ng-init="count=1"><?=lang('lang_Load_More');?></button>
     </div>
     <hr>
   </div>
@@ -152,7 +152,7 @@
 <div class="modal-dialog" role="document">
 <div class="modal-content">
 <div class="modal-header">
-  <h5 class="modal-title" id="exampleModalLabel">Assign Picker To {{pickId}} </h5>
+  <h5 class="modal-title" id="exampleModalLabel"><?=lang('lang_Assign_Picker_To');?> {{pickId}} </h5>
   <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
 </div>
 <div class="modal-body">
@@ -162,8 +162,8 @@
   </select>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-    <button type="button" class="btn btn-primary" ng-click="savePicker();" >Assign Picker</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"><?=lang('lang_Close');?></button>
+    <button type="button" class="btn btn-primary" ng-click="savePicker();" ><?=lang('lang_Assign_Picker');?></button>
   </div>
 </form>
 </div>
@@ -185,12 +185,12 @@ return !~text.indexOf(val);
   <table class="table table-striped table-hover table-bordered dataTable bg-*" id="downloadtable" style="width:100%;">
     <thead>
       <tr>
-        <th>Sr.No.</th>
-        <th>PickUp ID#</th>
-        <th>Order Count</th>
-        <th>Date</th>
-        <th>Picked Up</th>
-        <th>Assigned To</th>
+      <th><?=lang('lang_SrNo');?>.</th>
+        <th> <?=lang('lang_PickUp_ID');?></th>
+        <th><?=lang('lang_Order_Count');?></th>
+        <th> <?=lang('lang_Date');?>  </th>
+        <th><?=lang('lang_Picked_Up');?></th>
+        <th><?=lang('lang_Assigned_To');?></th>
         <th class="text-center" ><i class="icon-database-edit2"></i></th>
       </tr>
     </thead>
@@ -198,12 +198,12 @@ return !~text.indexOf(val);
       <td>{{$index+1}} </td>
       <td><br>
         {{data.pickupId}}</td>
-      <td><span class="badge badge-info">Total ({{data.packedcount}})</span><br>
+      <td><span class="badge badge-info"><?=lang('lang_Total');?> ({{data.packedcount}})</span><br>
         <br>
-        <span class="badge badge-danger ">Pending ({{data.unpackedcount}})</span></td>
+        <span class="badge badge-danger "><?=lang('lang_Pending');?> ({{data.unpackedcount}})</span></td>
       <td>{{data.entrydate}}</td>
-      <td ng-if="data.pickup_status=='Y'"><span class="badge badge-success">Yes</span></td>
-      <td ng-if="data.pickup_status=='N'"><span class="badge badge-danger">No</span></td>
+      <td ng-if="data.pickup_status=='Y'"><span class="badge badge-success"><?=lang('lang_Yes');?></span></td>
+      <td ng-if="data.pickup_status=='N'"><span class="badge badge-danger"><?=lang('lang_No');?></span></td>
       <td > {{data.assigned_to}}</td>
     </tr>
   </table>

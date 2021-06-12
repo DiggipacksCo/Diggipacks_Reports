@@ -57,7 +57,7 @@ select[size] {
                     <?php $this->load->view('include/page_header'); ?>
 
                     <!-- Content area -->
-                    <div class="content" > 
+                    <div class="content" dir="ltr"> 
                         <!--style="background-color: red;"-->
                         <?php
                         if ($this->session->flashdata('succmsg'))
@@ -69,9 +69,9 @@ select[size] {
                         <!-- Basic responsive table -->
                         <div class="panel panel-flat" > 
                             <!--style="padding-bottom:220px;background-color: lightgray;"-->
-                            <div class="panel-heading" dir="ltr"> 
+                            <div class="panel-heading" > 
                                 <!-- <h5 class="panel-title">Basic responsive table</h5> -->
-                                <h1><strong>Import Cities from Master</strong> 
+                                <h1><strong><?=lang('lang_Import_Cities_from_Master');?></strong> 
                                     
                             </div>
                             <div class="panel-body" > 
@@ -104,8 +104,8 @@ select[size] {
                                     </select>
                                     </div>
                                     <div class="clearfix"></div>
-                                    <button class="btn btn-warning" type="button"  id="selectAll">Confirm</button>
-                                    <button class="btn btn-info" disabled type="submit" id="subButton" value="sumbit" name="Add in Master">Add in Master</button>
+                                    <button class="btn btn-warning" type="button"  id="selectAll"><?=lang('lang_Confirm');?></button>
+                                    <button class="btn btn-info" disabled type="submit" id="subButton" value="sumbit" name="Add in Master"><?=lang('lang_add_In_Master');?></button>
                                     
                                 </div>
                                 </form>

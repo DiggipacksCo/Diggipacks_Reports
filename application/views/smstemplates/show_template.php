@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Inventory</title>
+        <title><?=lang('lang_Inventory');?></title>
         <?php $this->load->view('include/file'); ?>
         <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>-->
         <!--<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />-->  
@@ -30,7 +30,7 @@
                         <div class="panel panel-flat">
                             <div class="panel-heading">
 
-                                <h1 class="hk-sec-title">Show Template</h1>     
+                                <h1 class="hk-sec-title"><?=lang('lang_Show_Tempalte');?></h1>     
                             </div>
                         </div>
 
@@ -64,14 +64,14 @@
 
                                             <thead>
                                                 <tr>
-                                                    <th class="head0">Sno</th>  
-                                                    <th class="head1">Status</th>                            	
-                                                    <th class="head1">Sub Status</th>
-                                                    <th class="head1">Arabic Sms</th>
-                                                    <th class="head0">Activity On Off</th>
-                                                    <th class="head1">English Sms</th>
-                                                    <th class="head0">Activity</th>
-                                                    <th class="head1">Action</th>
+                                                    <th class="head0"><?=lang('lang_SrNo');?></th>  
+                                                    <th class="head1"><?=lang('lang_Status');?></th>                            	
+                                                    <th class="head1"><?=lang('lang_Sub_Status');?></th>
+                                                    <th class="head1"><?=lang('lang_Arabic_SMS');?></th>
+                                                    <th class="head0"><?=lang('lang_Activity_On_Off');?></th>
+                                                    <th class="head1"><?=lang('lang_English_Sms');?></th>
+                                                    <th class="head0"><?=lang('lang_Activity');?></th>
+                                                    <th class="head1"><?=lang('lang_Action');?></th>
                                                 </tr>
                                             </thead>
 
@@ -101,8 +101,8 @@
                                                                                                         <i class="icon-menu9"></i> 
                                                                                                     </a>
                                                                                                     <ul class="dropdown-menu dropdown-menu-right">
-                                                                                                        <li ><a href="<?= base_url(); ?>edit_template/{{data.id}}" ><i class="icon-eye" ></i> Edit</a></li>
-                                                                                                        <li ><a href="javascript://" ng-click="GetNotifydelete(data.id)" ng-confirm-click="Do you want to Delete?"><i class="icon-trash" ></i> Delete</a></li>
+                                                                                                        <li ><a href="<?= base_url(); ?>edit_template/{{data.id}}" ><i class="icon-eye" ></i> <?=lang('lang_Edit');?></a></li>
+                                                                                                        <li ><a href="javascript://" ng-click="GetNotifydelete(data.id)" ng-confirm-click="Do you want to Delete?"><i class="icon-trash" ></i> <?=lang('lang_Delete');?></a></li>
 
 
                                                                                                     <!-- <li><a ng-click="updatemanifeststatus_notfound(data.id,data.uniqueid,data.sid,data.qty);"  ><i class="icon-pencil7"></i> Update Not Found</a></li>-->
@@ -119,7 +119,7 @@
                                                                                     </tr>
                                                                                     <tr>
                                                                                         <td ng-if="SmslistArray.length == 0" colspan="8" align="center" style="text-align:center;">
-                                                                                            No Record Found
+                                                                                           <?=lang('No_Record_Found');?>
                                                                                         </td> 
 
                                                                                     </tr>  

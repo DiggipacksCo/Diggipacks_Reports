@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Inventory</title>
+        <title><?=lang('lang_Inventory');?></title>
          <link href="<?=base_url();?>assets/theme/css/icons.min.css" rel="stylesheet" type="text/css">
         <?php $this->load->view('include/file'); ?>
        
@@ -85,9 +85,9 @@
 
                         <div class="panel panel-flat" >
 
-                            <div class="panel-heading">
+                            <div class="panel-heading" dir="ltr">
 
-                                <h1><strong>Courier Company</strong></h1>
+                                <h1><strong><?=lang('lang_Courier_Company');?></strong></h1>
 
                                 <div class="heading-elements">
                                     <ul class="icons-list">
@@ -109,10 +109,10 @@
                                         <img class="card-img-top img-fluid" style="padding: 9px 9px 0px 21px; height:120px;" src="<?=SUPERPATH;?>{{data.image}}" alt="{{data.image}}" width="150" height="100">
                                         <div class="card-body">
                                             <p class ="compname">{{data.company}}</p>
-                                            <h5 class="card-title"><span class="badge badge-warning ng-scope" ng-if="data.type == 'test'">Test Mode</span>
-                                                <span class="badge badge-success ng-scope" ng-if="data.type == 'live'">Live Mode</span>
-                                                <span class="badge badge-success ng-scope" ng-if="data.status == 'Y'">Active</span>
-                                                <span class="badge badge-warning ng-scope" ng-if="data.status == 'N'">Inactive</span>
+                                            <h5 class="card-title"><span class="badge badge-warning ng-scope" ng-if="data.type == 'test'"><?=lang('lang_test_mode');?></span>
+                                                <span class="badge badge-success ng-scope" ng-if="data.type == 'live'"><?=lang('lang_Live_mode');?></span>
+                                                <span class="badge badge-success ng-scope" ng-if="data.status == 'Y'"><?=lang('lang_active');?></span>
+                                                <span class="badge badge-warning ng-scope" ng-if="data.status == 'N'"><?=lang('lang_inactive');?></span>
                                             </h5>                                       
 
 
@@ -152,93 +152,93 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header" style="background-color: <?=DEFAULTCOLOR;?>;">
-                                    <h5 class="modal-title text-white" id="myModalLabel">Settings Delivery ({{EditDataArr.company}})</h5>
+                                    <h5 class="modal-title text-white" id="myModalLabel"><?=lang('lang_Settings_Delivery');?> ({{EditDataArr.company}})</h5>
                                     <button type="button" class="close text-white" data-dismiss="modal" aria-hidden="true">x</button><br>
                                 </div>
                                 <div class="modal-body">
                                      <div class="col-sm">
                                     <div class="form-group">
-                                            <label class="text-bold">Web Url</label>
+                                            <label class="text-bold"><?=lang('lang_web_url');?></label>
                                             	<input type="text"  class="form-control"  aria-describedby="textHelpBlock"  ng-model="EditDataArr.company_url">
                                         </div>
                                           </div>
                                     <div class="col-sm-6" style="width:50%; float:left;">
-                                          <h5 class="font-16">Live Details</h5>
+                                          <h5 class="font-16"><?=lang('lang_Live_Details');?></h5>
                                         <div class="form-group">
-                                            <label class="text-bold">Api Url</label>
+                                            <label class="text-bold"><?=lang('lang_ApiUrl');?></label>
                                             	<input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.api_url">
                                         </div>
                                         <div class="form-group">
-                                            <label class="text-bold">Username</label>
+                                            <label class="text-bold"><?=lang('lang_Username');?></label>
                                             	<input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.user_name">
                                         </div>
                                         <div class="form-group">
-                                            <label class="text-bold">Password</label>
+                                            <label class="text-bold"><?=lang('lang_Password');?></label>
                                             	<input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.password">
                                         </div>
                                         <div class="form-group">
-                                            <label class="text-bold">Authentication Token</label>
+                                            <label class="text-bold"><?=lang('lang_Authentication_Token');?></label>
                                             	<input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.auth_token">
                                         </div>
                                         <div class="form-group">
-                                            <label class="text-bold">Courier Account</label>
+                                            <label class="text-bold"><?=lang('lang_Courier_Account');?></label>
                                             	<input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.courier_account_no">
                                         </div>
                                         <div class="form-group">
-                                            <label class="text-bold">Courier Pin</label>
+                                            <label class="text-bold"><?=lang('lang_Courier_Pin');?></label>
                                             	<input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.courier_pin_no">
                                         </div>
                                            <div class="form-group">
-                                            <label class="text-bold">Awb Sequence Start</label>
+                                            <label class="text-bold"><?=lang('lang_Awb_Sequence_Start');?></label>
                                             	<input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.start_awb_sequence">
                                         </div>
                                            <div class="form-group">
-                                            <label class="text-bold">Awb Sequence End</label>
+                                            <label class="text-bold"><?=lang('lang_Awb_Sequence_End');?></label>
                                             	<input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.end_awb_sequence">
                                         </div>
                                     </div>
                                     
                                     
                                    <div class="col-sm-6" style="width:50%; float:left;">
-                                          <h5 class="font-16">Test Details</h5>
+                                          <h5 class="font-16"><?=lang('lang_test_details');?></h5>
                                         <div class="form-group">
-                                            <label class="text-bold">Api Url</label>
+                                            <label class="text-bold"><?=lang('lang_ApiUrl');?></label>
                                             	<input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.api_url_t">
                                         </div>
                                         <div class="form-group">
-                                            <label class="text-bold">Username</label>
+                                            <label class="text-bold"><?=lang('lang_Username');?></label>
                                             	<input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.user_name_t">
                                         </div>
                                         <div class="form-group">
-                                            <label class="text-bold">Password</label>
+                                            <label class="text-bold"><?=lang('lang_Password');?></label>
                                             	<input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.password_t">
                                         </div>
                                         <div class="form-group">
-                                            <label class="text-bold">Authentication Token</label>
+                                            <label class="text-bold"><?=lang('lang_Authentication_Token');?></label>
                                             	<input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.auth_token_t">
                                         </div>
                                         <div class="form-group">
-                                            <label class="text-bold">Courier Account</label>
+                                            <label class="text-bold"><?=lang('lang_Courier_Account');?></label>
                                             	<input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.courier_account_no_t">
                                         </div>
                                         <div class="form-group">
-                                            <label class="text-bold">Courier Pin</label>
+                                            <label class="text-bold"><?=lang('lang_Courier_Pin');?></label>
                                             	<input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.courier_pin_no_t">
                                         </div>
                                            <div class="form-group">
-                                            <label class="text-bold">Awb Sequence Start</label>
+                                            <label class="text-bold"><?=lang('lang_Awb_Sequence_Start');?></label>
                                             	<input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.start_awb_sequence_t">
                                         </div>
                                            <div class="form-group">
-                                            <label class="text-bold">Awb Sequence End</label>
+                                            <label class="text-bold"><?=lang('lang_Awb_Sequence_End');?></label>
                                             	<input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.end_awb_sequence_t">
                                         </div>
                                           
                                     </div>
                                     
                                     <div class="modal-footer">
-                                                    <button type="button" class="btn btn-light waves-effect" data-dismiss="modal">Close</button>
-                                                    <button type="button" class="btn btn-primary waves-effect waves-light" ng-click="GetCompanyChnagesSave();">Save changes</button>
+                                                    <button type="button" class="btn btn-light waves-effect" data-dismiss="modal"><?=lang('lang_Close');?></button>
+                                                    <button type="button" class="btn btn-primary waves-effect waves-light" ng-click="GetCompanyChnagesSave();"><?=lang('lang_Save_changes');?></button>
                                                 </div>
                                   
                                    
