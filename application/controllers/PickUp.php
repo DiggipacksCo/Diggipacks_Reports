@@ -606,6 +606,57 @@ class PickUp extends MY_Controller {
         return $responseArray = json_decode($response, true);
     }
 
+    public function sendSms()
+    {
+
+        $_POST = json_decode(file_get_contents('php://input'), true);
+        $this->load->model('Templates_model');
+        $messageData=$this->Templates_model-> getTempateByStatus(5);
+        $shipData = $this->Shipment_model->shipmetsInAwbAll($_POST['awbArray']);
+        // print_r( $shipData);
+        foreach( $shipData['result'] as $shData)
+        {
+
+        
+        $cc_id= $shData['frwd_company_id'];
+        if($cc_id>0)
+        {
+            $ccData= GetCourCompanynameIdAll($cc_id);
+            $companyName= $ccData['company'];
+            $trackLink= $ccData['company_url'].$shData['frwd_company_awb'];
+        }
+        else
+        {
+            $url = $_SERVER['HTTP_HOST'];
+            $url = ltrim($url, 'fm.');
+            $companyName= 'Diggipacks';
+            $trackLink= 'https://track/'. $url.'/result_detailfm/'.$shData['slip_no'];
+
+        }
+       
+       
+
+       
+        $param['CUSTOMER_NAME'] = $shData['reciever_name'];
+        $param['TRACKING_URL'] =  $trackLink;
+        $param['3PL_COMPANY'] =   $companyName;
+       
+        $param['CUST_CARE_MOBILE'] = '1234567890';
+      
+        $param['SENDER_NAME'] = $shData['sender_name'];
+        $param['AWB_NO'] = $shData['slip_no'];
+        $messageAr = $messageData['arabic_sms'];
+ 
+        $phone_no=$shData['reciever_phone'];
+
+
+        $datamSMS = makeSms($messageAr, $param);
+        SEND_SMS($phone_no, $datamSMS);
+        }
+        echo json_encode($datamSMS); exit;
+
+    }
+        
     public function dispatchOrder() {
 
         $_POST = json_decode(file_get_contents('php://input'), true);
@@ -637,7 +688,7 @@ class PickUp extends MY_Controller {
         foreach ($shipments['result'] as $data) {
 
             if ($new_status == 5) {
-                $d1 = $this->Shipment_model->filter($data['slip_no']);
+                $d1 = $this->Shipment_model->filter($data['slip_no']); 
                 //   print_r($d1);exit;
                 $responseData = $this->addShipIntegration($d1['result']);
 

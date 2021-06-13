@@ -94,18 +94,18 @@
                                 
                                 <div class="col-md-4">
 									
-									<div class="list-group">
+								<div class="list-group">
 								<a href="#" class="list-group-item active"><?=lang('lang_Variables');?></a>
 								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('AWB_NO');">AWB_NO</span></h4> (#AWB Number of shipment.)</a>
-								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('SCHEDULE_URL')";>SCHEDULE_URL</span></h4> (URL to schedule shipment by sms.)</a>
-								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('FEED_BACK_URL')";>FEED_BACK_URL</span></h4> (Feedback URL.)</a>
+								<!-- <a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('SCHEDULE_URL')";>SCHEDULE_URL</span></h4> (URL to schedule shipment by sms.)</a> -->
+								<!-- <a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('FEED_BACK_URL')";>FEED_BACK_URL</span></h4> (Feedback URL.)</a> -->
 								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param( 'CUSTOMER_NAME')";>CUSTOMER_NAME</span></h4> (Name of receiver.)</a>
+                                <a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param( 'TRACKING_URL')";>TRACKING_URL</span></h4> (TRACKING URL.)</a>
+                                <a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param( '3PL_COMPANY')";>3PL_COMPANY</span></h4> (3PL COMPANY.)</a>
 								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('SENDER_NAME')";>SENDER_NAME</span></h4> (Name of sender.)</a>
-								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('DRIVER_MOBILE')";>DRIVER_MOBILE</span></h4> (#Driver Mobile No..)</a>
-								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('DRIVER_NAME')";>DRIVER_NAME</span></h4> (#Driver Name.)</a>
+								<!-- <a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('DRIVER_MOBILE')";>DRIVER_MOBILE</span></h4> (#Driver Mobile No..)</a> -->
+								<!-- <a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('DRIVER_NAME')";>DRIVER_NAME</span></h4> (#Driver Name.)</a> -->
 								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('CUST_CARE_MOBILE')";>CUST_CARE_MOBILE</span></h4> (#Customer care  No..)</a>
-
-                                <a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('3PL_LINK')";>3PL_LINK</span></h4> (#3Pl Tracking Link..)</a>
 
   									</div>
 									</div>

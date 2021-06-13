@@ -1122,7 +1122,7 @@ class Shipment_model extends CI_Model {
         }
     }
 
-    public function filter($awb, $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination, $booking_id, $cc_id = null,$is_menifest = null,$refsno=null,$mobileno=null,$wh_id=null,$data=array()) {
+    public function filter($awb= null, $sku= null, $delivered= null, $seller= null, $to= null, $from= null, $exact= null, $page_no= null, $destination= null, $booking_id= null, $cc_id = null,$is_menifest = null,$refsno=null,$mobileno=null,$wh_id=null,$data=array()) {
       //  ini_set('display_errors', '1');
 //ini_set('display_startup_errors', '1');
 ///error_reporting(E_ALL);

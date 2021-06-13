@@ -14,19 +14,19 @@ class Templates_model extends CI_Model {
         } else {
             $start = ($data['page_no'] - 1) * $limit;
         }
-        if (!empty($data['sms_templates.status_id'])) {
+        if (!empty($data['sms_templates_fm.status_id'])) {
             $status_name = $data['status_name'];
-            $this->db->where('sms_templates.status_id', $status_name);
+            $this->db->where('sms_templates_fm.status_id', $status_name);
         }
-        $this->db->where('sms_templates.super_id', $this->session->userdata('super_id'));
-        $this->db->select('sms_templates.*,status_main_cat.main_status,status_category.sub_status');
-        $this->db->from('sms_templates');
-        $this->db->order_by('sms_templates.id', 'DESC');
+        $this->db->where('sms_templates_fm.super_id', $this->session->userdata('super_id'));
+        $this->db->select('sms_templates_fm.*,status_main_cat.main_status,status_category.sub_status');
+        $this->db->from('sms_templates_fm');
+        $this->db->order_by('sms_templates_fm.id', 'DESC');
         $this->db->limit($limit, $start);
-        // $this->db->where('sms_templates.status','Y');
-        $this->db->where('sms_templates.deleted', 'N');
-        $this->db->join('status_main_cat', 'sms_templates.status_id=status_main_cat.id', 'left outer');
-        $this->db->join('status_category', 'sms_templates.sub_status=status_category.id', 'left outer');
+        // $this->db->where('sms_templates_fm.status','Y');
+        $this->db->where('sms_templates_fm.deleted', 'N');
+        $this->db->join('status_main_cat', 'sms_templates_fm.status_id=status_main_cat.id', 'left outer');
+        $this->db->join('status_category', 'sms_templates_fm.sub_status=status_category.id', 'left outer');
         $query = $this->db->get();
         //return $this->db->last_query(); die;
 
@@ -74,7 +74,7 @@ class Templates_model extends CI_Model {
         $this->db->where('status', 'Y');
         $this->db->where('deleted', 'N');
         $this->db->select('COUNT(id) as sh_count');
-        $this->db->from('sms_templates');
+        $this->db->from('sms_templates_fm');
         $this->db->order_by('id', 'DESC');
 
         $query = $this->db->get();
@@ -87,12 +87,12 @@ class Templates_model extends CI_Model {
 
     public function insertsmsdata($data = array()) {
         
-        return $this->db->insert('sms_templates', $data);
+        return $this->db->insert('sms_templates_fm', $data);
         //return $this->db->insert_id();
     }
 
     public function UpdateSmsDataQry($data = array(), $id = null) {
-        return $this->db->update('sms_templates', $data, array('id' => $id));
+        return $this->db->update('sms_templates_fm', $data, array('id' => $id));
     }
 
     public function getnotifydelete($data = array(), $id = null) {
@@ -102,7 +102,7 @@ class Templates_model extends CI_Model {
     public function QueryEditData($id = null) {
         $this->db->where('super_id', $this->session->userdata('super_id'));
         $this->db->select('*');
-        $this->db->from('sms_templates');
+        $this->db->from('sms_templates_fm');
         $this->db->where('status', 'Y');
         $this->db->where('deleted', 'N');
         $this->db->where('id', $id);
@@ -116,8 +116,25 @@ class Templates_model extends CI_Model {
         }
     }
 
+    public function getTempateByStatus($id = null) {
+        $this->db->where('super_id', $this->session->userdata('super_id'));
+        $this->db->select('*');
+        $this->db->from('sms_templates_fm');
+        $this->db->where('status', 'Y');
+        $this->db->where('deleted', 'N');
+        $this->db->where('status_id', $id);
+
+
+        $query = $this->db->get();
+        // return $this->db->last_query(); die;
+
+        if ($query->num_rows() > 0) {
+            return $query->row_array();
+        }
+    }
+
     public function smsUpdate($data = array(), $id = null) {
-        return $this->db->update('sms_templates', $data, array('id' => $id));
+        return $this->db->update('sms_templates_fm', $data, array('id' => $id));
         //$this->db->last_query(); die(); 
     }
 

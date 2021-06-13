@@ -381,6 +381,34 @@ if (!function_exists('Getwarehouse_Dropdata')) {
     }
 
 }
+
+if (!function_exists('makeSms')) {
+
+    function makeSms($message, $param) {
+
+        // print_r($param);
+
+       
+
+        $message = str_replace('AWB_NO', $param['AWB_NO'], $message);
+        $message = str_replace('SCHEDULE_URL', $param['SCHEDULE_URL'], $message);
+        $message = str_replace('FEED_BACK_URL', $param['FEED_BACK_URL'], $message);
+        $message = str_replace('CUSTOMER_NAME', $param['CUSTOMER_NAME'], $message);
+        $message = str_replace('DRIVER_NAME', $param['DRIVER_NAME'], $message);
+        $message = str_replace('CUST_CARE_MOBILE', $param['CUST_CARE_MOBILE'], $message);
+        $message = str_replace('DRIVER_MOBILE', $param['DRIVER_MOBILE'], $message);
+        $message = str_replace('SENDER_NAME', $param['SENDER_NAME'], $message);
+        $message = str_replace('TRACKING_URL', $param['TRACKING_URL'], $message);
+        $message = str_replace('3PL_COMPANY', $param['3PL_COMPANY'], $message);
+        $message = str_replace('COD_AMOUNT', $param['COD_AMOUNT'], $message);
+        $message = str_replace('TOLL_FREE', $param['TOLL_FREE'], $message);
+        $message = str_replace('O_T_P', $param['O_T_P'], $message);
+
+        return $message;
+    }
+
+}
+
 if (!function_exists('GetCourCompanynameId')) {
     function GetCourCompanynameId($id = null, $field = null) {
         $ci = & get_instance();
@@ -391,6 +419,19 @@ if (!function_exists('GetCourCompanynameId')) {
         // die; 
         $result = $query->row_array();
         return $result[$field];
+    }
+}
+
+if (!function_exists('GetCourCompanynameIdAll')) {
+    function GetCourCompanynameIdAll($id = null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        $sql = "SELECT company,company_url FROM courier_company where cc_id='$id' and super_id='".$ci->session->userdata('user_details')['super_id'] . "'";
+        $query = $ci->db->query($sql);
+        // echo   $ci->db->last_query();
+        // die; 
+        return $result = $query->row_array();
+        
     }
 }
 if (!function_exists('GetCourCompanynameIdbulkprint')) {
@@ -655,38 +696,44 @@ if (!function_exists('sms_prepared')) {
 
 }
 
-
 if (!function_exists('SEND_SMS')) {
 
+    function SEND_SMS($number = null, $message = null) {
+        $ci = & get_instance();
+        $ci->load->database();
 
-    function SEND_SMS($number, $message) {
-
+         $sup_id =$ci->session->userdata('user_details')['super_id'];
+        $smsQry ="select * from sms_setting where super_id = ".$sup_id;
+         $query = $ci->db->query($smsQry);
+          $result = $query->row_array();
 
         $number = ltrim($number, '966 ');
         $number = ltrim($number, '0');
-        $number = '0' . $number;
+        if(  $result['api_url']==trim('https://hiwhats.com/API/send'))
+            {
+                $number = '966' . $number;   
+            }
+            else
+            {
+                $number = '0' . $number;
+            }
+       
         $number = str_replace(' ', '', $number);
-
-        // echo $number."///".$message;exit;
-        $params = array(
-            'username' => 'Track', //username used in HQSMS
-            'password' => 'abtrackcd',
-            'numbers' => $number, //destination number
-            'sender' => 'TRACK', //sender name have to be activated
-            'message' => $message,
-            'unicode' => 'E', 'return' => 'full'
-        );
-        $data = '?' . http_build_query($params);
-        $url = "https://www.safa-sms.com/api/sendsms.php" . $data;
-        file_get_contents($url);
-//die;
-// Call API and get return message
-//fopen($url,"r");
-        /* if(file_get_contents($url)){
-          return true;
-          }
-
-          else{return true;} */
+        $message = urlencode($message);
+        $paramNew =  $result['params'];
+        $APIURL =  $result['api_url'];
+        $paramNew = str_replace('onLMfac', $number, $paramNew);
+        $paramNew = str_replace('onlfav', $message, $paramNew);
+        $paramNew = str_replace(',', '&', $paramNew);
+        $paramNew = str_replace('& ', '&', $paramNew);
+        $paramNew = str_replace(' &', '&', $paramNew);
+        $paramNew = str_replace('= ', '=', $paramNew);
+        $paramNew = str_replace(' =', '=', $paramNew);
+            
+    //echo $APIURL.'?'. $paramNew;
+       file_get_contents($APIURL.'?'. $paramNew);        
+       
+        return true;
     }
 
 }

@@ -37,8 +37,8 @@ app.controller('templatesCtrl', function ($scope, $rootScope, $location, $http,$
     };
     $scope.showStatusDrop = function () {
         $scope.baseUrl = new $window.URL($location.absUrl()).origin;
-        if($scope.baseUrl == "http://localhost"){
-            $scope.baseUrl = $scope.baseUrl+"/demofulfillment";
+        if($scope.baseUrl == "https://localhost"){
+            $scope.baseUrl = $scope.baseUrl+"/diggipacks/fullfillment";
         }
         $http.post($scope.baseUrl+'/Templates/getStatusDrop').then(function (results) {
             console.log(results.data);
@@ -68,7 +68,10 @@ app.controller('templatesCtrl', function ($scope, $rootScope, $location, $http,$
         {
             $scope.SmslistArray = [];
         }
-        $http.post('Templates/showSmsList', $scope.filterData).then(function (results) {
+        if($scope.baseUrl == "https://localhost"){
+            $scope.baseUrl = $scope.baseUrl+"/diggipacks/fullfillment";
+        }
+        $http.post( $scope.baseUrl+'/Templates/showSmsList', $scope.filterData).then(function (results) {
             $scope.totalCount = results.data.count;
             //console.log(results);
             if (results.data.result.length > 0)
@@ -136,8 +139,8 @@ app.controller('templatesCtrl', function ($scope, $rootScope, $location, $http,$
     $scope.AddTemplateform = function (add_sms) {
         //console.log(add_route);
          $scope.baseUrl = new $window.URL($location.absUrl()).origin;
-        if($scope.baseUrl == "http://localhost"){
-            $scope.baseUrl = $scope.baseUrl+"/demofulfillment";
+         if($scope.baseUrl == "https://localhost"){
+            $scope.baseUrl = $scope.baseUrl+"/diggipacks/fullfillment";
         }
         $scope.submit_val = "Submitting...";
         $http.post($scope.baseUrl+'/Templates/AddtemplateSave', {
@@ -165,8 +168,8 @@ app.controller('templatesCtrl', function ($scope, $rootScope, $location, $http,$
  console.log(smsid);
  
   $scope.baseUrl = new $window.URL($location.absUrl()).origin;
-        if($scope.baseUrl == "http://localhost"){
-            $scope.baseUrl = $scope.baseUrl+"/demofulfillment";
+         if($scope.baseUrl == "https://localhost"){
+            $scope.baseUrl = $scope.baseUrl+"/diggipacks/fullfillment";
         }
         $http.post($scope.baseUrl+'/Templates/GetSmsEditData', {smsid: smsid}).then(function (results) {
             console.log(results.data);

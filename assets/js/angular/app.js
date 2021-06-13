@@ -322,7 +322,7 @@ var app = angular.module('fulfill', [])
                 }).then(function (response) {
                     console.log(response);
                     // $scope.scan.awbArray={};
-                    $scope.scan = {};
+                  
                     if (response.data == 'null')
                     {
 
@@ -330,12 +330,31 @@ var app = angular.module('fulfill', [])
                         sound.play();
                         $scope.Message = "Orders Dispatched !";
                         responsiveVoice.speak($scope.Message);
+                        $scope.sendSms();
+
                     } else
                     {
                         $scope.warning = response.data;
                     }
 
                 })
+
+            }
+
+            $scope.sendSms=function()
+            {
+                $scope.scan.type = $scope.type;
+                $http({
+                    url: "PickUp/sendSms",
+                    method: "POST",
+                    data: $scope.scan,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+
+
+                }).then(function (response) {
+                    console.log(response);
+                    $scope.scan = {};
+                });
 
             }
             function removeDumplicateValue(myArray) {

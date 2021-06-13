@@ -74,17 +74,8 @@
                                          <?=lang('lang_Yes');?>    <input type="radio" id="arabic_status" name="arabic_status" ng-model="templateArray.arabic_status" value="Y" ng-checked="false"/>&nbsp;&nbsp;
                                          <?=lang('lang_No');?> <input type="radio" id="arabic_status" name="arabic_status" ng-model="templateArray.arabic_status" value="N" ng-checked="false"/>  
                                     </div>    
-                                    <div class="form-group">
-                                        <label><?=lang('lang_English_Sms');?></label>
-                                        <span id="content_id" class=""></span>
-                                        <textarea class="form-control mt-15" my-text="" name="english_sms" rows="6" placeholder="Textarea" ng-model="templateArray.english_sms" Required></textarea>
-                                        <span class="text-danger" ng-show="add_sms.english_sms.$error.required">English Sms Required</span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label><?=lang('lang_Activity');?></label><br>
-                                        <?=lang('lang_Yes');?>   <input type="radio" id="english_status" name="english_status" ng-model="templateArray.english_status" value="Y" ng-checked="false"/>&nbsp;&nbsp;
-                                        <?=lang('lang_No');?>   <input type="radio" id="english_status" name="english_status" ng-model="templateArray.english_status" value="N" ng-checked="false"/>
-                                    </div> 
+                                  
+                                   
 
                                     <input name="id" type="hidden" value="">
                                     <input name="submit" type="submit" class="btn btn-primary" value="Submit" ng-disabled="add_sms.$invalid" ng-click="AddTemplateform(templateArray);"> 
@@ -97,12 +88,14 @@
 									<div class="list-group">
 								<a href="#" class="list-group-item active"><?=lang('lang_Variables');?></a>
 								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('AWB_NO');">AWB_NO</span></h4> (#AWB Number of shipment.)</a>
-								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('SCHEDULE_URL')";>SCHEDULE_URL</span></h4> (URL to schedule shipment by sms.)</a>
-								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('FEED_BACK_URL')";>FEED_BACK_URL</span></h4> (Feedback URL.)</a>
+								<!-- <a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('SCHEDULE_URL')";>SCHEDULE_URL</span></h4> (URL to schedule shipment by sms.)</a> -->
+								<!-- <a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('FEED_BACK_URL')";>FEED_BACK_URL</span></h4> (Feedback URL.)</a> -->
 								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param( 'CUSTOMER_NAME')";>CUSTOMER_NAME</span></h4> (Name of receiver.)</a>
+                                <a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param( 'TRACKING_URL')";>TRACKING_URL</span></h4> (TRACKING URL.)</a>
+                                <a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param( '3PL_COMPANY')";>3PL_COMPANY</span></h4> (3PL COMPANY.)</a>
 								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('SENDER_NAME')";>SENDER_NAME</span></h4> (Name of sender.)</a>
-								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('DRIVER_MOBILE')";>DRIVER_MOBILE</span></h4> (#Driver Mobile No..)</a>
-								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('DRIVER_NAME')";>DRIVER_NAME</span></h4> (#Driver Name.)</a>
+								<!-- <a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('DRIVER_MOBILE')";>DRIVER_MOBILE</span></h4> (#Driver Mobile No..)</a> -->
+								<!-- <a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('DRIVER_NAME')";>DRIVER_NAME</span></h4> (#Driver Name.)</a> -->
 								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('CUST_CARE_MOBILE')";>CUST_CARE_MOBILE</span></h4> (#Customer care  No..)</a>
 
   									</div>
