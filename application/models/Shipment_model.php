@@ -1282,7 +1282,7 @@ class Shipment_model extends CI_Model {
 
         $query = $this->db->get();
 
-       // echo $this->db->last_query(); die;
+       //echo $this->db->last_query(); die;
      //  echo $this->db->last_query();     exit;                
 
         if ($query->num_rows() > 0) {
@@ -1733,9 +1733,9 @@ class Shipment_model extends CI_Model {
         $this->db->where('shipment_fm.deleted', $deleted);
         $this->db->select('COUNT(shipment_fm.id) as sh_count');
         $this->db->from('shipment_fm');
-        $this->db->join('status_main_cat_fm', 'status_main_cat_fm.id=shipment_fm.delivered');
+      //  $this->db->join('status_main_cat_fm', 'status_main_cat_fm.id=shipment_fm.delivered');
         // $this->db->join('diamention_fm', 'diamention_fm.slip_no = shipment_fm.slip_no');
-        $this->db->join('customer', 'customer.id=shipment_fm.cust_id');
+      //  $this->db->join('customer', 'customer.id=shipment_fm.cust_id');
 
 
         if (!empty($exact)) {

@@ -133,7 +133,7 @@
                                                 <th class="head1">SHIPSY</th>
                                             <?php } ?>
                                             <?php if (GetCourierCompanyStausActive('Shipadelivery') == 'Y') { ?>
-                                                <th class="head1">SHIPSA</th>
+                                                <th class="head1">SHIPA</th>
                                             <?php } ?>
                                             <?php if (GetCourierCompanyStausActive('TAMEX') == 'Y') { ?>
                                                 <th class="head1">TAMEX</th>

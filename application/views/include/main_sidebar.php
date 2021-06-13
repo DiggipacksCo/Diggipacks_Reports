@@ -108,7 +108,7 @@
                         </li>
                     <?php } ?>
 
-                    <?php if (menuIdExitsInPrivilageArray(19) == 'Y') { ?>
+                    <?php if (menuIdExitsInPrivilageArray(2) == 'Y') { ?>
                         <li <?php if ($this->uri->segment(2) == 'AddofferGift' || $this->uri->segment(2) == 'giftOffersList' || $this->uri->segment(1) == 'generateStockLocation' || $this->uri->segment(1) == 'showStock' || $this->uri->segment(2) == 'giftOffersList' || $this->uri->segment(2) == 'edit_offer_gift' ) echo 'class="active"'; ?>> <a href="#"><i class="icon-gift"></i> <span> <?= lang('lang_Stock_Location_management'); ?> </span></a>
                             <ul>
 

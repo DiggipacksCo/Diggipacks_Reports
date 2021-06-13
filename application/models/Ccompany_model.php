@@ -2241,7 +2241,7 @@ class Ccompany_model extends CI_Model {
     }
     public function AymakanArray(array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null,$box_pieces1,$complete_sku=null,$super_id) {
 
-        
+   
         $sender_default_city = Getselletdetails_new($super_id);
         $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
         $sender_address = $sender_default_city['0']['address'];
@@ -2316,6 +2316,7 @@ class Ccompany_model extends CI_Model {
         );  
 
         $json_final_date = json_encode($all_param_data);  
+     //  echo "<pre>"; print_r($all_param_data); die; 
         //echo $json_final_date;die;
 
         $headers = array(
@@ -3684,7 +3685,7 @@ array_push($itemArray,$peiceArray);
                 "BillingAddress"=>array(
                     array(
                         "CustomerFirstname"=> $Receiver_name,
-                        "CustomerLastname"=> $Receiver_name,
+                        "CustomerLastname"=>'',
                         "CustomerPhone1"=> "+".$Receiver_phone,
                         "CustomerPhone2"=> "+".$Receiver_phone,
                         "Lat"=> $lat,
@@ -3701,7 +3702,7 @@ array_push($itemArray,$peiceArray);
                 "ShippingAddress"=>array(
                     array(
                         "CustomerFirstname"=> $Receiver_name,
-                        "CustomerLastname"=> $Receiver_name,
+                        "CustomerLastname"=> '',
                         "CustomerPhone1"=> "+".$Receiver_phone,
                         "CustomerPhone2"=> "+".$Receiver_phone,
                         "Lat"=>$lat,
