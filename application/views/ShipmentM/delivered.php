@@ -212,7 +212,7 @@
                                                 <span ><br>({{data.total_cod_amt}})</span></td>  
                                            
 
-                                            <td>{{data.name}}</td>
+                                            <td>{{data.sender_name}}</td>
                                             <td > {{data.wh_id}}</td>
                                             <td>{{data.entrydate}}</td>
                                         </tr>
