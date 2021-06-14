@@ -295,7 +295,7 @@
                                             <td><span class="label label-success" ng-if="data.order_type == 'B2B'">{{data.order_type}}</span>
                                                 <span class="label label-warning" ng-if="data.order_type == 'B2C'">{{data.order_type}}</span></td>
                                             <td><a href="<?php base_url() ?>TrackingDetails/{{data.slip_no}}"  target="_blank"> {{data.slip_no}}  </a></td>     
-                                            <td>{{data.frwd_company_awb}} <a href='{{data.frwd_link}}' target='_blank'>Track</a> </td> 
+                                            <td>{{data.frwd_company_awb}} <a  ng-if="data.frwd_company_awb!=''" href='{{data.frwd_link}}' target='_blank'>Track</a> </td> 
                                             <td>{{data.cc_name}}</td>
                                             <td>{{data.booking_id}}</td>
                                             <td>{{data.origin}}</td>

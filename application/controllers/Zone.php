@@ -530,10 +530,17 @@ class Zone extends MY_Controller {
     
     public function filter_zone_by_cc(){
         $cc_id = $this->input->post('cc_id');
-        $cNanme = $this->Ccompany_model->ccNamebYccid($cc_id);
-        if(!empty($cNanme)){
+        $cRetsult = $this->Ccompany_model->ccNamebYccid($cc_id);
+        
+        if(!empty($cRetsult)){
+            if($cRetsult['company_type'] == "F"){
+                $cityColumn = 'city';
+            }else{
+               $cNanme = $cRetsult['company'];
+               $cityColumn = $this->Zone_model->getCityColumnByCname($cNanme);
+            }
             
-            $cityColumn = $this->Zone_model->getCityColumnByCname($cNanme);
+            
             
             if(!empty($cityColumn)){
                 
