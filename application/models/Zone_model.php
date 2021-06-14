@@ -356,11 +356,11 @@ public function previousCity_customer($id=null){
   
   public function get_cities_by_cc_city($cc_city=NULL){
     $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
-    $this->db->select('id,'.$cc_city.' as city');
+    $this->db->select('id,city');
     $this->db->where($cc_city.'!=','');
     $this->db->where('deleted','N');
-    $this->db->order_by($cc_city);
-    $this->db->group_by($cc_city);
+    $this->db->order_by('city');
+    $this->db->group_by('city');
     $query=$this->db->get('country');
    // echo $this->db->last_query();
     if($query->num_rows()>0){
