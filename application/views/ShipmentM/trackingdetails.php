@@ -38,13 +38,18 @@
                         <!-- Dashboard content -->
                         <div class="row" >
                             <div class="col-lg-12" > 
-
+                                <?php 
+                                    $awb_label = '';
+                                    if(!empty($Shipmentinfo['frwd_company_awb'])){
+                                        $awb_label = ' / <a href="'.$Shipmentinfo['frwd_company_label'].'" target="_blank" >'.$Shipmentinfo['frwd_company_awb'].' </a>';
+                                    }
+                                ?>
                                 <!-- Marketing campaigns -->
                                 <div class="panel panel-flat">
                                     <div class="panel-heading">
                                         <h1> <strong>Detail - (Tracking No. :
                                                 <?= $Shipmentinfo['slip_no']; ?>
-                                                ) / (Reference No. :123)</strong> </h1>
+                                                ) / (Reference No. : <?php echo $Shipmentinfo['booking_id'] ?>) <?php echo $awb_label; ?></strong> </h1>
                                     </div>
 
 

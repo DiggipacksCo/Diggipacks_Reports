@@ -29,6 +29,7 @@ class Shipment extends MY_Controller {
     }
 
     public function index() {
+        $data = GetCourierCompanyDrop();
         if (menuIdExitsInPrivilageArray(1) == 'N') {
             redirect(base_url() . 'notfound');
             die;
@@ -1986,6 +1987,7 @@ class Shipment extends MY_Controller {
 
         //$data['AWBNO']=getallsratusshipmentid($shipmentId,'slip_no');
         $data['Shipmentinfo'] = $this->Shipment_model->getallshipmentdatashow($shipmentId);
+        //print "<pre>"; print_r($data['Shipmentinfo']);die;
         ////echo $data['Shipmentinfo']['slip_no']; die;
         $data['THData'] = $this->Shipment_model->getalltravelhistorydata($data['Shipmentinfo']['slip_no']);
         $this->load->view('ShipmentM/trackingdetails', $data);
@@ -2503,7 +2505,7 @@ class Shipment extends MY_Controller {
         $pageShortArr = $this->pageshortDropData($tolalShip);
         // print_r($pageShortArr); die;
         foreach ($shipments['result'] as $rdata) {
-
+            //print "<pre>"; print_r($rdata);die;
             $expire_data = $this->Shipment_model->GetallexpredataQuery($rdata['seller_id'], $rdata['sku']);
        
                 $itemtypes = getalldataitemtablesSKU(trim($rdata['sku']), 'type');
@@ -2518,9 +2520,21 @@ class Shipment extends MY_Controller {
             $shiparray[$ii]['wh_id'] = Getwarehouse_categoryfield($rdata['wh_id'], 'name');
             $shiparray[$ii]['cc_name'] = GetCourCompanynameId($rdata['frwd_company_id'], 'company');
             
-             $shiparray[$ii]['DispatchDate'] = GetStatusFmTableCodes($rdata['slip_no'],'DL');
+            $shiparray[$ii]['DispatchDate'] = GetStatusFmTableCodes($rdata['slip_no'],'DL');
 
             $shiparray[$ii]['wh_ids'] = $rdata['wh_id'];
+            if($rdata['frwd_company_awb'] != ''){
+                $track_url = GetCourCompanynameId($rdata['frwd_company_id'], 'company_url');
+                if(!empty($track_url)){
+                    $shiparray[$ii]['frwd_link'] = $track_url.$rdata['frwd_company_awb'];
+                }else{
+                    $shiparray[$ii]['frwd_link'] = '#';
+                }
+                
+            }else{
+                $shiparray[$ii]['frwd_link'] = "#";
+            }
+            
 
             $shiparray[$ii]['deducted_shelve_no'] = $this->Shipment_model->get_deducted_shelve_no($rdata['slip_no']);
 
