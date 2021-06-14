@@ -288,7 +288,7 @@
                                         </td>
                                             -->
 
-                                            <td>{{data.name}}</td>
+                                            <td>{{data.sender_name}}</td>
                                             <td>{{data.wh_id}}</td>
                                             <td>{{data.back_reasons}}</td>
                                             <td>{{data.entrydate}}</td>
