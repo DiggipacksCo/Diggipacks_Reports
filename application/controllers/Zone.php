@@ -531,17 +531,15 @@ class Zone extends MY_Controller {
     public function filter_zone_by_cc(){
         $cc_id = $this->input->post('cc_id');
         $cRetsult = $this->Ccompany_model->ccNamebYccid($cc_id);
-        
+     
         if(!empty($cRetsult)){
+         
             if($cRetsult['company_type'] == "F"){
                 $cityColumn = 'city';
             }else{
                $cNanme = $cRetsult['company'];
                $cityColumn = $this->Zone_model->getCityColumnByCname($cNanme);
             }
-            
-            
-            
             if(!empty($cityColumn)){
                 
                 $masterCity = $this->Zone_model->get_cities_by_cc_city($cityColumn);
@@ -550,13 +548,19 @@ class Zone extends MY_Controller {
                 }else{
                     $response = json_encode(array("status"=>"false","message"=>"City Not Found"));
                 }
-            }else{
-                $response = json_encode(array("status"=>"false","message"=>"City Column Not Found"));
             }
-            
-            
-        }else{
-            $response = json_encode(array("status"=>"false","message"=>"Data Not Found"));
+        }elseif($cc_id == 0 ) {
+
+             $cityColumn = 'city';
+            $masterCity = $this->Zone_model->get_cities_by_cc_city($cityColumn);
+            if(!empty($masterCity)){
+                $response = json_encode(array("status"=>"true","data"=>$masterCity));
+            }else{
+                $response = json_encode(array("status"=>"false","message"=>"City Not Found"));
+            }
+        }
+        else{
+            $response = json_encode(array("status"=>"false","message"=>"City Column Not Found"));
         }
         echo $response;
     }

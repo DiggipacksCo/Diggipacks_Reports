@@ -234,8 +234,7 @@ select[size] {
 
                                             <div class="form-group">
                                                 <label><?= lang('lang_Zone_Name'); ?></label>
-                                                <input type="text" class="form-control" id="company" name="name" value="<?php if (!empty($EditData)) echo $EditData[0]->name;
-else echo set_value('name'); ?>" required/>
+                                                <input type="text" class="form-control" id="company" name="name" value="<?php if (!empty($EditData)) echo $EditData[0]->name;else echo set_value('name'); ?>" required/>
                                             </div>
 
 
@@ -243,6 +242,8 @@ else echo set_value('name'); ?>" required/>
                                                 <label><?= lang('lang_Courier_Company'); ?></label>
                                                 <span id="c_id"></span>
                                                 <select name="c_id" id="courier_id" required class="js-select4 bigdrop"  required > 
+                                                <option value=" "> Please select city  </option>
+
                                                 <option value="0" <?php if ($cmpy->id == 0) {
                                                                 echo "selected=selected";} ?>><?= lang('lang_Last_Mile'); ?> </option>
                                                     <?php
