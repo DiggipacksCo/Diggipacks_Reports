@@ -241,6 +241,7 @@
                                                             <li ng-if="data.confirmO == 'N' && data.addBtnI == 'N' && data.complatedqty == data.qtyall && data.error == '0' && data.staff_id==0"><a  ng-click="GetpopAssignStafflist(data.uniqueid);"><i class="icon-user"></i><?= lang('lang_assign_Staff'); ?></a></li>
                                                             <li ng-if="data.addBtnI == 'Y' && (data.complatedqty == data.qtyall || itemupdated == 'Y')"><a ng-confirm-click="are you sure want to Add Sku?" confirmed-click="addskufielddata_pop(data.sku,data.uniqueid);"><i class="icon-pencil7"></i><?= lang('lang_Update_Sku'); ?></a></li>
                                                           <!-- <li><a ng-click="updatemanifeststatus_notfound(data.id,data.uniqueid,data.sid,data.qty);"  ><i class="icon-pencil7"></i> Update Not Found</a></li>-->
+                                                            <li><a href="<?=base_url();?>manifestPrint/{{data.uniqueid}}" target="_blank"  ><i class="fa fa-print"></i>Print</a></li>
 
 
 
