@@ -913,5 +913,19 @@ class Manifest_model extends CI_Model {
       //  echo $this->db->last_query(); exit;
         return $query->row_array();
     }
+    
+     public function GetallcustomerManifestResults($uniqueid = null) {
+        $this->db->where("uniqueid", $uniqueid);
+        $this->db->where("deleted", 'N');
+       
+        $this->db->where("super_id", $this->session->userdata('user_details')['super_id']);
+        $this->db->select('count(id) as newqty,`id`, `uniqueid`, `seller_id`, `sku`, `qty`, `assign_to`, `expire_date`, `req_date`, `pstatus`, `code`, `user_id`, `user_type`, `pickimg`, `on_hold`, `on_hold_date`, `itemupdated`, `confirmO`, `schedule_date`, `super_id`, `lat`, `lng`, `address`, `city`, `3pl_awb`, `3pl_name`, `3pl_label`, `3pl_date`, `boxes`, `pack_type`, `description`, `label_type`, `r_3pl_awb`, `r_3pl_name`, `r_3pl_label`, `r_3pl_date`, `return_type`')->from('pickup_request');
+        $this->db->group_by('sku,code');
+        $query = $this->db->get();
+        //echo $this->FULFIL->last_query(); die;
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        }
+    }
 
 }

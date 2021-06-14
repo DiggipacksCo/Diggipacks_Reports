@@ -312,6 +312,8 @@ $route['zid/(:any)']   = 'Zid/getOrder/$1';
 $route['bulk_tracking']= 'Shipment/bulk_tracking';
 
 //===================================================//
+
+$route['manifestPrint/(:any)'] = 'Manifest/manifestPrint/$1';
 $route['notfound'] = 'Mynotfound';
 
 //$route['(:any)'] = "Login/$1";
