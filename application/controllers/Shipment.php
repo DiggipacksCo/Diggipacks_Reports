@@ -2523,7 +2523,7 @@ class Shipment extends MY_Controller {
             $shiparray[$ii]['DispatchDate'] = GetStatusFmTableCodes($rdata['slip_no'],'DL');
 
             $shiparray[$ii]['wh_ids'] = $rdata['wh_id'];
-            if($rdata['frwd_company_awb'] != ''){
+            if($rdata['frwd_company_awb'] != ''){ 
                 $track_url = GetCourCompanynameId($rdata['frwd_company_id'], 'company_url');
                 if(!empty($track_url)){
                     $shiparray[$ii]['frwd_link'] = $track_url.$rdata['frwd_company_awb'];

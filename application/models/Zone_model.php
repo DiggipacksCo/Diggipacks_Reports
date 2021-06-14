@@ -360,6 +360,7 @@ public function previousCity_customer($id=null){
     $this->db->where($cc_city.'!=','');
     $this->db->where('deleted','N');
     $this->db->order_by($cc_city);
+    $this->db->group_by($cc_city);
     $query=$this->db->get('country');
    // echo $this->db->last_query();
     if($query->num_rows()>0){

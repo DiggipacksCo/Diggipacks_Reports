@@ -39,18 +39,33 @@
                         <div class="row" >
                             <div class="col-lg-12" > 
                                 <?php 
-                                    $awb_label = '';
+                                    $awb_label = ''; $trackFlag = FALSE; $track_awb= '';
                                     if(!empty($Shipmentinfo['frwd_company_awb'])){
-                                        $awb_label = ' / <a href="'.$Shipmentinfo['frwd_company_label'].'" target="_blank" >'.$Shipmentinfo['frwd_company_awb'].' </a>';
+                                        $track_url = GetCourCompanynameId($Shipmentinfo['frwd_company_id'], 'company_url');
+                                        if(!empty($track_url)){
+                                            $trackFlag = TRUE;
+                                            $track_awb = $track_url.$Shipmentinfo['frwd_company_awb'];
+                                        }else{
+                                            $track_awb = '#';
+                                        }
+                                        $awb_label = ' / ( 3pl-Label : <a href="'.$Shipmentinfo['frwd_company_label'].'" target="_blank" >'.$Shipmentinfo['frwd_company_awb'].' </a> )';
                                     }
                                 ?>
                                 <!-- Marketing campaigns -->
                                 <div class="panel panel-flat">
                                     <div class="panel-heading">
+                                        
                                         <h1> <strong>Detail - (Tracking No. :
                                                 <?= $Shipmentinfo['slip_no']; ?>
-                                                ) / (Reference No. : <?php echo $Shipmentinfo['booking_id'] ?>) <?php echo $awb_label; ?></strong> </h1>
+                                                ) / (Reference No. : <?php echo $Shipmentinfo['booking_id'] ?>) <?php echo $awb_label; ?></strong> 
+                                        <?php if($trackFlag){ ?>
+                                            <a class="btn btn-danger" target="_blank" href="<?php echo $track_awb; ?>" >Track</a>
+                                        <?php } ?>
+                                        </h1>
+                                        
+                                                
                                     </div>
+                                    
 
 
 <!-- href="<? // base_url('Excel_export/shipments');  ?>" --> 
@@ -60,6 +75,7 @@
                                     <!-- /quick stats boxes --> 
                                 </div>
                             </div>
+                            
                         </div>
                         <!-- /dashboard content --> 
                         <!-- Basic responsive table -->
