@@ -280,8 +280,8 @@ else echo set_value('name'); ?>" required/>
                                               
                                               <div class="form-group " style="margin-bottom 50px !important; min-height: 250px;" >  
                                               <div class="form-group ">
-    <label>City </label>
-    </div>  
+                                                <label>City </label>&nbsp;<span class="city_error text-danger hidden"> <b>(City Not Found) </b></span>
+                                              </div>  
                                  <div class="subject-info-box-1">
                                     <select multiple="multiple" id='lstBox1'  class="form-control">
                                     <?php if (!empty($ListArr)): ?>
@@ -394,7 +394,7 @@ else echo set_value('name'); ?>" required/>
           method: "POST",
           data: { cc_id : cc_id },
           dataType: "html",
-          beforeSend:function(){},
+          beforeSend:function(){$(".city_error").addClass('hidden');},
           complete:function(){},
           success:function(result){
               var response = $.parseJSON(result);
@@ -408,7 +408,9 @@ else echo set_value('name'); ?>" required/>
                       $("#lstBox1").html(str);
                   }
               }else{
-                  alert(response.message);
+                  $("#lstBox1").html("");  
+                  $(".city_error").removeClass('hidden');
+                  //alert(response.message);
               }
               
           }
