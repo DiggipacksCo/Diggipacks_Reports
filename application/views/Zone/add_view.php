@@ -242,10 +242,9 @@ select[size] {
                                                 <label><?= lang('lang_Courier_Company'); ?></label>
                                                 <span id="c_id"></span>
                                                 <select name="c_id" id="courier_id" required class="js-select4 bigdrop"  required > 
-                                                <option value=" "> Please select city  </option>
+                                                <option value="" selected="selected"> Please select city  </option>
 
-                                                <option value="0" <?php if ($cmpy->id == 0) {
-                                                                echo "selected=selected";} ?>><?= lang('lang_Last_Mile'); ?> </option>
+                                                <option value="0" ><?= lang('lang_Last_Mile'); ?> </option>
                                                     <?php
                                                     if (!empty($company)) {
                                                         foreach ($company as $cmpy) {
