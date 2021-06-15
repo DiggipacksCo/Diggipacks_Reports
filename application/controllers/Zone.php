@@ -44,14 +44,10 @@ class Zone extends MY_Controller {
 
             $data['EditData'] = $this->Zone_model->find_customer_sellerm($id);
             $data['id'] = $id;
-            $data['customers'] = $this->Zone_model->Zone();
-           
+            $data['customers'] = $this->Zone_model->Zone();           
             $data['company'] = $this->Ccompany_model->all();
-
-
-            
-
             $masterCity = array();
+           // echo 'xxx';
             //print_r($masterCity); exit;
             if($id!=null)
             {
@@ -61,14 +57,27 @@ class Zone extends MY_Controller {
 
                 $keyArray=array();
                 $preArray=array();
+
+                
                 $cNanme = $this->Ccompany_model->ccNamebYccid($precityData['cc_id']);
-                $cityColumn = $this->Zone_model->getCityColumnByCname($cNanme);
-            
+              if($cNanme['company_type']=='O')
+              {
+                $cityColumn = $this->Zone_model->getCityColumnByCname($cNanme['company']);
+                
+              }
+              else
+              {
+                $cityColumn='city';
+              }
+              //echo "<pre>"; print_r($cNanme);  die();
+                
+                
+               // echo "<pre>"; print_r($cityColumn);  die();
                 if(!empty($cityColumn)){
                     $masterCity = $this->Zone_model->get_cities_by_cc_city($cityColumn);
                 }
                 //$masterCity = $this->Zone_model->fetch_all_cities_new();
-                
+                 // echo "<pre>"; print_r($masterCity);  die();
                 //echo $precityData['city_id'];die;
                 
                 
@@ -95,6 +104,7 @@ class Zone extends MY_Controller {
                    }
 
                 }
+
                 foreach($keyArray as $k1)
                 {
                     //echo '<pre>xx'.$k1 .print_r($masterCity[$k1]);
@@ -102,13 +112,10 @@ class Zone extends MY_Controller {
 
                 }
                 array_values($masterCity); 
-                
-            }    
-            
-            
+            } 
         }
             
-          //print "<pre>";  print_r($masterCity); exit;
+        //  print "<pre>";  print_r($masterCity); exit;
              
             $data['ListArr']=$masterCity;
 
