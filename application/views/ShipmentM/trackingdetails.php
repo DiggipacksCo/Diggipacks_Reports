@@ -357,17 +357,17 @@
                                             foreach ($THData as $historydata) {
                                                 $counter1 = $counter + 1;
                                                 echo'<tr>
-                <td>' . $counter1 . '</td>
-                <td>' . date("Y-m-d", strtotime($historydata['entry_date'])) . '</td>
-                <td>' . $historydata['Activites'] . '</td>';
-//    if ($historydata['new_location'] > 0)
-//        echo'<td>' . getdestinationfieldshow($historydata['new_location'], 'city') . '</td>';
-//    else
-//        echo'<td>--</td>';
-//    if ($historydata['new_location'] > 0)
-//        echo'<td>' . getdestinationfieldshow($historydata['new_location'], 'city_code') . '</td>';
-//    else
-//        echo'<td>--</td>';
+                                                <td>' . $counter1 . '</td>
+                                                <td>' . date("Y-m-d H:i:s", strtotime($historydata['entry_date'])) . '</td>
+                                                <td>' . $historydata['Activites'] . '</td>';
+                                //    if ($historydata['new_location'] > 0)
+                                //        echo'<td>' . getdestinationfieldshow($historydata['new_location'], 'city') . '</td>';
+                                //    else
+                                //        echo'<td>--</td>';
+                                //    if ($historydata['new_location'] > 0)
+                                //        echo'<td>' . getdestinationfieldshow($historydata['new_location'], 'city_code') . '</td>';
+                                //    else
+                                //        echo'<td>--</td>';
                                                 echo'<td>' . $historydata['code'] . '</td>
                 <td>' . $historydata['Details'] . '</td>
                 <td>' . getUserNameByIdType($historydata['user_id'], $historydata['user_type'], $Shipmentinfo['Api_Integration']) . '</td>
