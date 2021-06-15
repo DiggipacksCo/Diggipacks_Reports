@@ -31,10 +31,11 @@ class Zone extends MY_Controller {
        
         foreach($sellers as $key=>$val)
         {
-            $sellers[$key]->cust_name=getallsellerdatabyID(  $sellers[$key]->cust_id,'name');
+            $sellers[$key]->cust_name=getallsellerdatabyID(  $sellers[$key]->cust_id,'name',$sellers[$key]->super_id);
             //cust_name=
         }
          $data['sellers']=$sellers;
+         //print "<pre>"; print_r($data);die;
         $this->load->view('Zone/list_view_customer', $data);
     } 
 
@@ -185,28 +186,36 @@ class Zone extends MY_Controller {
             $data['company'] = $this->Ccompany_model->all();
 
 
-            $masterCity = $this->Zone_model->fetch_all_cities_new();
+           // $masterCity = $this->Zone_model->fetch_all_cities_new();
 
 
             //print_r($masterCity); exit;
             if($id!=null)
             {
                 $data['EditData'] = $this->Zone_model->find_customer_sellerm_cust($id);
+                //print "<pre>"; print_r($data['EditData']);die;
                 $precityData=$this->Zone_model->previousCity_customer($id);
                 $precity=json_decode($precityData['city_id']);
 
-               // print_r( $data['EditData']); exit;
+               //print "<pre>";  print_r( $precity); exit;
                 
-            $data['EditData'][0]->cust_name=getallsellerdatabyID(  $data['EditData'][0]->cust_id,'name');
+                $data['EditData'][0]->cust_name = getallsellerdatabyID(  $data['EditData'][0]->cust_id,'name',$data['EditData'][0]->super_id);
+            
             //cust_name=
     
 
-                //print_r($precity); exit;
+                //print_r($precityData); exit;
            
                 $keyArray=array();
                 $preArray=array();
+                $cNanme = $this->Ccompany_model->ccNamebYccid($precityData['cc_id']);
+                $cityColumn = $this->Zone_model->getCityColumnByCname($cNanme['company']);
          
-            // print_r( $masterCity); exit;
+                if(!empty($cityColumn)){
+                    $masterCity = $this->Zone_model->get_cities_by_cc_city($cityColumn);
+                }
+         
+            if(!empty($masterCity)){
             foreach($precity as $key=>$val)
             {
               // array_map($masterCity);
@@ -234,6 +243,8 @@ class Zone extends MY_Controller {
               
             }
             array_values($masterCity); 
+        }
+            
         }
             
           //  print_r($preArray); exit;
@@ -547,14 +558,18 @@ class Zone extends MY_Controller {
                $cNanme = $cRetsult['company'];
                $cityColumn = $this->Zone_model->getCityColumnByCname($cNanme);
             }
+            
             if(!empty($cityColumn)){
                 
                 $masterCity = $this->Zone_model->get_cities_by_cc_city($cityColumn);
+                
                 if(!empty($masterCity)){
                     $response = json_encode(array("status"=>"true","data"=>$masterCity));
                 }else{
                     $response = json_encode(array("status"=>"false","message"=>"City Not Found"));
                 }
+            }else{
+                $response = json_encode(array("status"=>"false","message"=>"City Not Found"));
             }
         }elseif($cc_id == 0 ) {
 
