@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+    <head> 
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -193,7 +193,7 @@
 
                                             <td><a  ng-click="GetInventoryPopup(data.slip_no);"><span class="label label" style="background-color:<?= DEFAULTCOLOR; ?>;"><?=lang('lang_Get_Details');?></span></a></td>
 
-                                            <td>{{data.name}}</td>
+                                            <td>{{data.sender_name}}</td>
                                             <td > {{data.wh_id}}</td>
                                             <td>{{data.entrydate}}</td>
                                         </tr>

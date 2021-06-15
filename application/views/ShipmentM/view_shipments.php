@@ -154,7 +154,7 @@
 
                                                             <option value="">Select Company</option>
                                                             <?php foreach (GetCourierCompanyDrop() as $data): ?>
-                                                                <option value="<?= $data['id']; ?>"><?= $data['company']; ?></option>
+                                                                <option value="<?= $data['cc_id']; ?>"><?= $data['company']; ?></option>
                                                             <?php endforeach; ?>
 
                                                         </select>
@@ -291,11 +291,11 @@
 
                                             <td>{{$index + 1}} 
                                                 <input type="checkbox" value="{{data.slip_no}}" check-list='Items' ng-model="data.Selected" ng-click="checkIfAllSelected()" />
-
+                                            </td>    
                                             <td><span class="label label-success" ng-if="data.order_type == 'B2B'">{{data.order_type}}</span>
                                                 <span class="label label-warning" ng-if="data.order_type == 'B2C'">{{data.order_type}}</span></td>
                                             <td><a href="<?php base_url() ?>TrackingDetails/{{data.slip_no}}"  target="_blank"> {{data.slip_no}}  </a></td>     
-                                            <td>{{data.frwd_company_awb}}</td> 
+                                            <td>{{data.frwd_company_awb}} <a  ng-if="data.frwd_company_awb!=''" href='{{data.frwd_link}}' target='_blank'>Track</a> </td> 
                                             <td>{{data.cc_name}}</td>
                                             <td>{{data.booking_id}}</td>
                                             <td>{{data.origin}}</td>

@@ -4688,15 +4688,18 @@ array_push($itemArray,$peiceArray);
     public function ccNamebYccid($cc_id=null) {
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         
-        $this->db->where('cc_id', $cc_id);
+             $this->db->where('cc_id', $cc_id);
+        
         $this->db->where('deleted', 'N');
         $this->db->order_by('company');
-        $this->db->select('company');
+        $this->db->select('company,company_type');
         $this->db->limit(1);
         $query = $this->db->get('courier_company');
+       // echo $this->db->last_query();
         if ($query->num_rows() > 0) {
+
             $result= $query->row_array();
-             return  $result['company'];
+             return  $result;
         }
     }
 

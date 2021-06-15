@@ -38,14 +38,34 @@
                         <!-- Dashboard content -->
                         <div class="row" >
                             <div class="col-lg-12" > 
-
+                                <?php 
+                                    $awb_label = ''; $trackFlag = FALSE; $track_awb= '';
+                                    if(!empty($Shipmentinfo['frwd_company_awb'])){
+                                        $track_url = GetCourCompanynameId($Shipmentinfo['frwd_company_id'], 'company_url');
+                                        if(!empty($track_url)){
+                                            $trackFlag = TRUE;
+                                            $track_awb = $track_url.$Shipmentinfo['frwd_company_awb'];
+                                        }else{
+                                            $track_awb = '#';
+                                        }
+                                        $awb_label = ' / ( 3pl-Label : <a href="'.$Shipmentinfo['frwd_company_label'].'" target="_blank" >'.$Shipmentinfo['frwd_company_awb'].' </a> )';
+                                    }
+                                ?>
                                 <!-- Marketing campaigns -->
                                 <div class="panel panel-flat">
                                     <div class="panel-heading">
+                                        
                                         <h1> <strong>Detail - (Tracking No. :
                                                 <?= $Shipmentinfo['slip_no']; ?>
-                                                ) / (Reference No. :123)</strong> </h1>
+                                                ) / (Reference No. : <?php echo $Shipmentinfo['booking_id'] ?>) <?php echo $awb_label; ?></strong> 
+                                        <?php if($trackFlag){ ?>
+                                            <a class="btn btn-danger" target="_blank" href="<?php echo $track_awb; ?>" >Track</a>
+                                        <?php } ?>
+                                        </h1>
+                                        
+                                                
                                     </div>
+                                    
 
 
 <!-- href="<? // base_url('Excel_export/shipments');  ?>" --> 
@@ -55,6 +75,7 @@
                                     <!-- /quick stats boxes --> 
                                 </div>
                             </div>
+                            
                         </div>
                         <!-- /dashboard content --> 
                         <!-- Basic responsive table -->
@@ -336,17 +357,17 @@
                                             foreach ($THData as $historydata) {
                                                 $counter1 = $counter + 1;
                                                 echo'<tr>
-                <td>' . $counter1 . '</td>
-                <td>' . date("Y-m-d", strtotime($historydata['entry_date'])) . '</td>
-                <td>' . $historydata['Activites'] . '</td>';
-//    if ($historydata['new_location'] > 0)
-//        echo'<td>' . getdestinationfieldshow($historydata['new_location'], 'city') . '</td>';
-//    else
-//        echo'<td>--</td>';
-//    if ($historydata['new_location'] > 0)
-//        echo'<td>' . getdestinationfieldshow($historydata['new_location'], 'city_code') . '</td>';
-//    else
-//        echo'<td>--</td>';
+                                                <td>' . $counter1 . '</td>
+                                                <td>' . date("Y-m-d H:i:s", strtotime($historydata['entry_date'])) . '</td>
+                                                <td>' . $historydata['Activites'] . '</td>';
+                                //    if ($historydata['new_location'] > 0)
+                                //        echo'<td>' . getdestinationfieldshow($historydata['new_location'], 'city') . '</td>';
+                                //    else
+                                //        echo'<td>--</td>';
+                                //    if ($historydata['new_location'] > 0)
+                                //        echo'<td>' . getdestinationfieldshow($historydata['new_location'], 'city_code') . '</td>';
+                                //    else
+                                //        echo'<td>--</td>';
                                                 echo'<td>' . $historydata['code'] . '</td>
                 <td>' . $historydata['Details'] . '</td>
                 <td>' . getUserNameByIdType($historydata['user_id'], $historydata['user_type'], $Shipmentinfo['Api_Integration']) . '</td>

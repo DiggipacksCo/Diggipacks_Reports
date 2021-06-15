@@ -200,6 +200,9 @@
                                                         <ul class="dropdown-menu dropdown-menu-right">
 
                                                             <li><a ng-click="updatemanifeststatus($index, data.uniqueid);"  ><i class="icon-pencil7"></i><?=lang('lang_Assign_TO');?></a></li>
+                                                            <li><a href="<?=base_url();?>manifestPrint/{{data.uniqueid}}" target="_blank"  ><i class="fa fa-print"></i>Print</a></li>
+                                                            
+                                                            
 
 
 

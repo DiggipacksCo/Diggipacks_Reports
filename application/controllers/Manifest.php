@@ -3990,6 +3990,216 @@ class Manifest extends CourierCompany_pickup {
             
         
     }
+    
+    public function manifestPrint($uniqueid = null) {
+
+
+
+       // $view['traking_awb_no'] = array($uniqueid);
+        $status_update_data= $this->Manifest_model->GetallcustomerManifestResults($uniqueid);
+ // print_r($pickUpId); die;
+ $this->load->helper('pdf_helper');
+ //$this->load->library('pagination');
+ $this->load->library('M_pdf');
+
+ $data['pickupId'] = $uniqueid;
+
+ $CURRENT_DATE = date("Y-m-d H:i:s");
+ $destination = getdestinationfieldshow($status_update_data[0]['city'], 'city');
+//  echo '<pre>';
+
+// print_r( $status_update_data); die();
+ if (!empty($status_update_data)) {
+
+     // echo $this->config->item('base_url_super').site_configTable('logo'); die;
+     // echo site_configTable('logo'); die;
+     $html .= '<!doctype html><html><head><meta charset="utf-8">';
+     $html .= '<title>Menifest </title> ';
+
+     $html .= '<style>.invoice-box {
+                                     max-width: 100%;
+                                     margin: auto;
+                                     padding: 10px;
+                                     border: 1px solid #eee;
+                                     box-shadow: 0 0 10px rgba(0, 0, 0, .15);
+                                     font-size: 12px;
+                                     line-height: 24px;
+                                     font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+                                     color: #555;
+                                     height:850px
+                             }
+                 
+                     .invoice-box table {
+                             width: 100%;
+                             line-height: inherit;
+                             text-align: left;
+                     }
+
+                     .invoice-box table td {
+                             padding: 5px;
+                             vertical-align: top;
+                     }
+
+                     .invoice-box table tr td:nth-child(2) {
+                             text-align: right;
+                     }
+
+                     .invoice-box table tr.top table td {
+                             padding-bottom: 20px;
+                     }
+
+                     .invoice-box table tr.top table td.title {
+                             font-size: 45px;
+                             line-height: 45px;
+                             color: #333;
+                     }
+
+                     .invoice-box table tr.information table td {
+                             padding-bottom: 40px;
+                     }
+
+                     .invoice-box table tr.heading td {
+                             background: #eee;
+                             border-bottom: 1px solid #ddd;
+                             font-weight: bold;
+                     }
+
+                     .invoice-box table tr.details td {
+                             padding-bottom: 20px;
+                     }
+
+                     .invoice-box table tr.item td{
+                             border-bottom: 1px solid #eee;
+                     }
+
+                     .invoice-box table tr.item.last td {
+                             border-bottom: none;
+                     }
+
+                     .invoice-box table tr.total td:nth-child(2) {
+                             border-top: 2px solid #eee;
+                             font-weight: bold;
+                     }
+
+                     @media only screen and (max-width: 600px) {
+                             .invoice-box table tr.top table td {
+                                     width: 100%;
+                                     display: block;
+                                     text-align: center;
+                             }
+
+                             .invoice-box table tr.information table td {
+                                     width: 100%;
+                                     display: block;
+                                     text-align: center;
+                             }
+                     }
+                     table {
+                             font-family: arial, sans-serif;
+
+                     }
+
+                     td, th {
+
+
+                     } 
+                     /** RTL **/
+                     .rtl {
+                             direction: rtl;
+                             font-family: Tahoma, "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+                     }
+
+                     .rtl table {
+                             text-align: right;
+                     }
+
+                     .rtl table tr td:nth-child(2) {
+                             text-align: left;
+                     }
+                     .margin_top{
+                             margin-top:100%;
+                     }
+                     .footer {
+                        position: fixed;
+                        left: 250px;
+                        bottom: 0;
+                        width: 100%;
+
+                        color: #000;
+                        text-align: center;
+                     }
+                     #signaturetitle { 
+                       font-weight: bold;
+                       font-size: 100%;
+                     }
+
+                     #signature {
+                       text-align: center;
+                       height: 30px;
+                       word-spacing: 1px;
+                     }
+                     </style>
+ </head> <body><div class="invoice-box"><table cellpadding="0" cellspacing="0"><tr class="top"><td colspan="6"><table><tr><td class="title"><img src="' .SUPERPATH . site_configTable('logo') . '" width="100"></td><td> 
+                             Created: ' . date("F j, Y") . '<br> <br> <br> <br> 
+                      <!--   ' . $status_update_data[0]['sender_name'] . '
+                      <br>
+                     ' . $status_update_data[0]['address'] . '<br>-->
+                    Manifest ID: ' . $uniqueid . '<br> 
+                           Schedule Date:  ' .$status_update_data[0]['schedule_date']  . '<br> 
+</td>
+                                                         </tr>
+                                                 </table>
+                                         </td>
+                                 </tr> 
+
+                 <tr class="heading">
+                       
+                         <td align="center">  SKU</td>
+                         <td align="center">  Sku Img</td>
+                         <td align="center">  Qty </td>
+                         <td align="center">  Expire Date </td>
+                         <td align="center">  Description </td>
+                        
+                 </tr> ';
+
+        
+
+
+     foreach ($status_update_data as $menifest) {
+       
+         $html .= '<tr class="item">  
+             
+            
+             <td align="center">' . (!empty($menifest['sku']) ? $menifest['sku'] : 'N/A') . '</td>
+             <td align="center">  <img src="'.base_url().getalldataitemtablesSKU($menifest['sku'],'item_path').'" width="65"></td>
+             <td align="center">' . (!empty($menifest['qty']) ? $menifest['qty'] : 'N/A') . ' </td>
+             <td align="center">' . (!empty($menifest['expire_date']) ? $menifest['expire_date'] : 'N/A') . '</td>
+             <td align="center">' . (!empty($menifest['description']) ? $menifest['description'] : 'N/A') . '</td> 
+                 </tr>';
+     }
+ 
+     $html .= '</table></div><br />';
+
+    
+   
+    
+     $html .= '
+            
+          
+
+            
+     </body>
+</html>';
+
+     //  echo $html; die;
+     $mpdf = new mPDF('utf-8');
+     $mpdf->WriteHTML($html);
+     //$mpdf->SetDisplayMode('fullpage'); 
+     //$mpdf->Output();
+     $mpdf->Output('AWB_print.pdf', 'I');
+ }
+        
+    }
 
 }
 

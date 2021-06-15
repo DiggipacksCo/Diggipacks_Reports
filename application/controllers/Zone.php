@@ -44,14 +44,10 @@ class Zone extends MY_Controller {
 
             $data['EditData'] = $this->Zone_model->find_customer_sellerm($id);
             $data['id'] = $id;
-            $data['customers'] = $this->Zone_model->Zone();
-           
+            $data['customers'] = $this->Zone_model->Zone();           
             $data['company'] = $this->Ccompany_model->all();
-
-
-            
-
             $masterCity = array();
+           // echo 'xxx';
             //print_r($masterCity); exit;
             if($id!=null)
             {
@@ -61,14 +57,27 @@ class Zone extends MY_Controller {
 
                 $keyArray=array();
                 $preArray=array();
+
+                
                 $cNanme = $this->Ccompany_model->ccNamebYccid($precityData['cc_id']);
-                $cityColumn = $this->Zone_model->getCityColumnByCname($cNanme);
-            
+              if($cNanme['company_type']=='O')
+              {
+                $cityColumn = $this->Zone_model->getCityColumnByCname($cNanme['company']);
+                
+              }
+              else
+              {
+                $cityColumn='city';
+              }
+              //echo "<pre>"; print_r($cNanme);  die();
+                
+                
+               // echo "<pre>"; print_r($cityColumn);  die();
                 if(!empty($cityColumn)){
                     $masterCity = $this->Zone_model->get_cities_by_cc_city($cityColumn);
                 }
                 //$masterCity = $this->Zone_model->fetch_all_cities_new();
-                
+                 // echo "<pre>"; print_r($masterCity);  die();
                 //echo $precityData['city_id'];die;
                 
                 
@@ -95,6 +104,7 @@ class Zone extends MY_Controller {
                    }
 
                 }
+
                 foreach($keyArray as $k1)
                 {
                     //echo '<pre>xx'.$k1 .print_r($masterCity[$k1]);
@@ -102,13 +112,10 @@ class Zone extends MY_Controller {
 
                 }
                 array_values($masterCity); 
-                
-            }    
-            
-            
+            } 
         }
             
-          //print "<pre>";  print_r($masterCity); exit;
+        //  print "<pre>";  print_r($masterCity); exit;
              
             $data['ListArr']=$masterCity;
 
@@ -530,11 +537,16 @@ class Zone extends MY_Controller {
     
     public function filter_zone_by_cc(){
         $cc_id = $this->input->post('cc_id');
-        $cNanme = $this->Ccompany_model->ccNamebYccid($cc_id);
-        if(!empty($cNanme)){
-            
-            $cityColumn = $this->Zone_model->getCityColumnByCname($cNanme);
-            
+        $cRetsult = $this->Ccompany_model->ccNamebYccid($cc_id);
+     
+        if(!empty($cRetsult)){
+         
+            if($cRetsult['company_type'] == "F"){
+                $cityColumn = 'city';
+            }else{
+               $cNanme = $cRetsult['company'];
+               $cityColumn = $this->Zone_model->getCityColumnByCname($cNanme);
+            }
             if(!empty($cityColumn)){
                 
                 $masterCity = $this->Zone_model->get_cities_by_cc_city($cityColumn);
@@ -543,13 +555,19 @@ class Zone extends MY_Controller {
                 }else{
                     $response = json_encode(array("status"=>"false","message"=>"City Not Found"));
                 }
-            }else{
-                $response = json_encode(array("status"=>"false","message"=>"City Column Not Found"));
             }
-            
-            
-        }else{
-            $response = json_encode(array("status"=>"false","message"=>"Data Not Found"));
+        }elseif($cc_id == 0 ) {
+
+             $cityColumn = 'city';
+            $masterCity = $this->Zone_model->get_cities_by_cc_city($cityColumn);
+            if(!empty($masterCity)){
+                $response = json_encode(array("status"=>"true","data"=>$masterCity));
+            }else{
+                $response = json_encode(array("status"=>"false","message"=>"City Not Found"));
+            }
+        }
+        else{
+            $response = json_encode(array("status"=>"false","message"=>"City Column Not Found"));
         }
         echo $response;
     }

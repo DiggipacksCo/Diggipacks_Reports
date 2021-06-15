@@ -149,16 +149,17 @@ if (!function_exists('GetCountUnseenManifestNew')) {
     function GetCountUnseenManifestNew($code=null,$other=null) {
         $ci = & get_instance();
         $ci->load->database();
+        $condition="";
         if($code=='PR')
         {
-            $condition=" and seen='0'";
+           // $condition=" and seen='0'";
         }
           if($other=='N')
         {
             $condition2=" and confirmO='N'";
         }
         
-       $sql = "SELECT count(id) as total_show FROM pickup_request where    super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and  code='$code' $condition $condition2 group by uniqueid";
+        $sql = "SELECT count(id) as total_show FROM pickup_request where    super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and deleted='N' and  code='$code' $condition $condition2 group by uniqueid";
         $query = $ci->db->query($sql);
        return $query->num_rows();
     }
