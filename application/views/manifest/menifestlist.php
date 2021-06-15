@@ -351,7 +351,11 @@
                         
 
                         <div class="modal-body">
-
+<style>
+    td, th {
+    padding: 2px;
+}
+    </style>
 
                            <div class="alert alert-warning" ng-if="messageshow_wl">{{messageshow_wl}}</div>
                             <div class="alert alert-success" ng-if="messageshow_al">{{messageshow_al}}</div>
@@ -366,13 +370,16 @@
                                 <tr><td><?= lang('lang_SKU'); ?></td><td><?= lang('lang_QTY'); ?></td><td><?= lang('lang_Scan'); ?></td><td><?= lang('lang_Item_Image'); ?></td><td><?= lang('lang_Status'); ?></td></tr>
                                     <tr ng-repeat="im_data in SeachSkuList"><td>{{im_data.sku}}</td>
                                         <td> <span class="badge badge-success">{{im_data.qty}}</span></td>
-                                        <td><span class="badge badge-warning">{{im_data.scan}}</span></td> 
+                                        <td><span class="badge badge-warning" ng-click="MupdateData.sku=im_data.sku" >{{im_data.scan}} </span><input type="number"  ng-if="im_data.sku==MupdateData.sku" my-enter="getsavemanifestrecevedata();" max='{{im_data.qty}}' ng-model="im_data.scan"></td> 
                                         <td><img ng-if="im_data.item_path != ''" src="<?= base_url(); ?>{{im_data.item_path}}" width="80">
                                             <img ng-if="im_data.item_path == ''" src="<?= base_url(); ?>assets/nfd.png" width="80">
                                         </td>
                                      <td><span class="badge badge-warning" ng-if="im_data.status=='pending'"><?= lang('lang_Pending'); ?></span>
                                      <span class="badge badge-success" ng-if="im_data.status=='Compeleted'"><?= lang('lang_Completed'); ?></span></td> 
-                                    </tr></table>
+                                     
+                                    </tr>
+                                    <tr> <td><br></td></tr>
+                                </table>
 
                         </div>
                         <div class="modal-footer">

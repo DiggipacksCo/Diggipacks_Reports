@@ -427,6 +427,7 @@ var app = angular.module('AppManifest', [])
                         $scope.SeachSkuList[$scope.arrayIndex].status = 'Compeleted';
                         $scope.messageshow_wl = "Completed for " + $scope.SeachSkuList[$scope.arrayIndex].sku;
                         $scope.messageshow_al = null;
+                        $scope.ConfrmBtnDis = true;
                     }
 
                     if ($scope.SeachSkuList[$scope.arrayIndex].tqty == $scope.newtotalQty)
