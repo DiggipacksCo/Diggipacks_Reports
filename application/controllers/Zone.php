@@ -214,7 +214,7 @@ class Zone extends MY_Controller {
               
              // echo '<br>'. $key1.'//' .  $val['city']; 
                if(!empty($key1) || $key1==0 )
-               {
+               { 
               
                  if(!in_array($key1,$keyArray))
                  {
