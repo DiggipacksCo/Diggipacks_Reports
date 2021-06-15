@@ -320,7 +320,7 @@ public function previousCity_customer($id=null){
                 'barqfleet'=>'barq_city',
                 'labaih'=>'labaih',
                 'makhdoom'=>'makhdoom',
-                'aramex international'=>'aramex_international',
+                //'aramex international'=>'aramex_international',
                 'saee'=>'saee_city',
                 'ajeek'=>'ajeek_city',
                 'emdad'=>'emdad_city',
@@ -362,7 +362,7 @@ public function previousCity_customer($id=null){
     $this->db->order_by('city');
     $this->db->group_by('city');
     $query=$this->db->get('country');
-   // echo $this->db->last_query();
+    //echo $this->db->last_query();
     if($query->num_rows()>0){
     return $query->result_array();
     }

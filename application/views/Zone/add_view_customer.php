@@ -260,9 +260,10 @@ else echo set_value('name'); ?>" required/>
                                             <div class="form-group">
                                                 <label><?= lang('lang_Courier_Company'); ?></label>
                                                 <span id="c_id"></span>
-                                                <select name="c_id" id="" required class="js-select4 bigdrop"  required > 
-                                                <option value="0" <?php if ($cmpy->id == 0) {
-                                                                echo "selected=selected";} ?>>Last Mile </option>
+                                                <select name="c_id" id="courier_id" required class="js-select4 bigdrop"  required > 
+                                                <option value="" selected="selected"> Please select city  </option>
+
+                                                <option value="0" ><?= lang('lang_Last_Mile'); ?> </option>
                                                     <?php
                                                     if (!empty($company)) {
                                                         foreach ($company as $cmpy) {
@@ -298,7 +299,7 @@ else echo set_value('name'); ?>" required/>
                                               </div>
                                               <div class="form-group " style="margin-bottom 50px !important; min-height: 250px;" >  
                                               <div class="form-group ">
-    <label>City </label>
+                                                    <label>City </label>&nbsp;<span class="city_error text-danger hidden"> <b>(City Not Found) </b></span>
     </div>  
                                  <div class="subject-info-box-1">
                                     <select multiple="multiple" id='lstBox1'  class="form-control">
@@ -405,7 +406,35 @@ else echo set_value('name'); ?>" required/>
         });
         });
 
+        $("#courier_id").change(function(){
+            var cc_id = parseInt($(this).val());
+            $.ajax({
+              url: '<?php echo base_url('Zone/filter_zone_by_cc'); ?>',
+              method: "POST",
+              data: { cc_id : cc_id },
+              dataType: "html",
+              beforeSend:function(){$(".city_error").addClass('hidden');},
+              complete:function(){},
+              success:function(result){
+                  var response = $.parseJSON(result);
+                  if(response.status == "true"){
+                      if(response.data.length >0){
+                          var str = '';
 
+                          for(var i=0;i<response.data.length;i++){
+                              str += '<option value="'+response.data[i].id+'">'+response.data[i].city+'</option> '
+                          }
+                          $("#lstBox1").html(str);
+                      }
+                  }else{
+                      $("#lstBox1").html("");  
+                      $(".city_error").removeClass('hidden');
+                      //alert(response.message);
+                  }
+
+              }
+            });
+        });
                         (function () {
 
     
