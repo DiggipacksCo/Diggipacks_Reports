@@ -451,7 +451,7 @@ class CourierCompany extends MY_Controller  {
                                         $generated_pdf = file_get_contents($awb_label);
                                         $encoded = base64_decode($generated_pdf);
                                         header('Content-Type: application/pdf');
-                                        file_put_contents("/var/www/html/fastcoo-tech/demofulfillment/assets/all_labels/$slipNo.pdf", $generated_pdf);
+                                        file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
 
                                         $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
 
