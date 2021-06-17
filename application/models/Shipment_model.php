@@ -1211,13 +1211,18 @@ class Shipment_model extends CI_Model {
         if (!empty($delivered)) {
 
             // print_r($delivered);
-//            if ($delivered == '1' || $delivered == '4' || $delivered == '5' || $delivered == '7' || $delivered == '8') {
-//                if (array_key_exists(0, $delivered))
-//                    $delivered = array_filter(0, $delivered);
-//            } else
-//                $delivered = array_filter($delivered);
-
-            $this->db->where_in('shipment_fm.code', $delivered);
+            if ($delivered == '1' || $delivered == '4' || $delivered == '5' || $delivered == '7' || $delivered == '8') {
+                if (array_key_exists(0, $delivered))
+                    $delivered = array_filter(0, $delivered);
+            } else
+                $delivered = array_filter($delivered);
+            if(is_numeric($delivered)){
+                $this->db->where_in('shipment_fm.delivered', $delivered);
+            }else{
+                
+                $this->db->where_in('shipment_fm.code', $delivered);
+            }
+            
         }
 
         if (!empty($destination)) {
