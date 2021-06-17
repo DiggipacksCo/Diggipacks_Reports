@@ -1562,6 +1562,8 @@ if (!function_exists('getallsellerdatabyID')) {
     function getallsellerdatabyID($id = null, $field = null,$super_id =null) {
         $ci = & get_instance();
         $ci->load->database();
+        if($super_id ==null)
+        $super_id= $ci->session->userdata('user_details')['super_id'] ;
         //$sql = "SELECT $field FROM customer where id='$id' and access_fm='Y' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
          $sql = "SELECT $field FROM customer where id='$id' and access_fm='Y' and super_id='" . $super_id . "'";
      

@@ -926,6 +926,8 @@ if(!empty( $salatoken))
         //echo json_encode($_POST);
         $shipments = $this->Pickup_model->pickListFilterNotPicked($_POST['slip_no'], $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination);
         $ReturnArray=$shipments['result'];
+
+       // print_r( $shipments); exit;
         foreach($ReturnArray as $key=>$val)
         {
             $frwd_company_id=GetshpmentDataByawb($val['slip_no'],'frwd_company_id');

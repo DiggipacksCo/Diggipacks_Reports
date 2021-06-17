@@ -3082,7 +3082,7 @@ class Ccompany_model extends CI_Model {
         $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
         $sender_address = $sender_default_city['0']['address'];
         $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
-        $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'saudipost_id',$super_id);
+         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'saudipost_id',$super_id);
 
         $username = $counrierArr['user_name'];
         $password = $counrierArr['password'];
@@ -3144,19 +3144,19 @@ class Ccompany_model extends CI_Model {
         }
 
     
-$itemArray=array();
-for($ii=1;$ii<$box_pieces;$ii++)
-{
-  $peiceArray=array(
+            $itemArray=array();
+            for($ii=1;$ii<$box_pieces;$ii++)
+            {
+            $peiceArray=array(
 
-    "PieceWeight"=> (float)$weight,
-    "PiecePrice"=> 0,
-    "PieceDescription"=> $complete_sku
+                "PieceWeight"=> (float)$weight,
+                "PiecePrice"=> 0,
+                "PieceDescription"=> $complete_sku
 
-  );
-array_push($itemArray,$peiceArray);
+            );
+            array_push($itemArray,$peiceArray);
 
-}
+            }
 
 
 
