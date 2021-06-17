@@ -39,7 +39,6 @@ class Shipment extends MY_Controller {
         // $status=$this->Shipment_model->allstatus();
         $sellers = $this->Seller_model->find2();
         $status = $this->Status_model->allstatus();
-
         // 	$shipments = $this->Shipment_model->all();
 
         $search = $this->input->post('tracking_numbers');
@@ -1987,8 +1986,20 @@ class Shipment extends MY_Controller {
 
         //$data['AWBNO']=getallsratusshipmentid($shipmentId,'slip_no');
         $data['Shipmentinfo'] = $this->Shipment_model->getallshipmentdatashow($shipmentId);
-        //print "<pre>"; print_r($data['Shipmentinfo']);die;
+        
+        
+        $transaction_date = '';
+        if(!empty($data['Shipmentinfo']['3pl_close_date'])){
+            $pickup_date = new DateTime($data['Shipmentinfo']['3pl_pickup_date']);
+            $closed_date = new DateTime($data['Shipmentinfo']['3pl_close_date']);
+            $interval = $pickup_date->diff($closed_date);
+            $transaction_date =  $interval->format('%a days');
+        }
+        $data['Shipmentinfo']['pl3_pickup_date'] = $data['Shipmentinfo']['3pl_pickup_date'];
+        $data['Shipmentinfo']['pl3_closed_date'] = $data['Shipmentinfo']['3pl_close_date'];
+        $data['Shipmentinfo']['transaction_date'] = $transaction_date;
         ////echo $data['Shipmentinfo']['slip_no']; die;
+        //print "<pre>"; print_r($data['Shipmentinfo']);die;
         $data['THData'] = $this->Shipment_model->getalltravelhistorydata($data['Shipmentinfo']['slip_no']);
         $this->load->view('ShipmentM/trackingdetails', $data);
     }
@@ -2446,7 +2457,7 @@ class Shipment extends MY_Controller {
         // $search=$this->input->post('tracking_numbers');
         // echo $search;exit;
         $_POST = json_decode(file_get_contents('php://input'), true);
-
+ 
 
         $exact = $_POST['exact']; //date('Y-m-d 00:00:00',strtotime($this->input->post('exact'))); 
         // $exact2 =$this->input->post('exact');//date('Y-m-d 23:59:59',strtotime($this->input->post('exact'))); 
@@ -2479,7 +2490,7 @@ class Shipment extends MY_Controller {
         // print($delivered);  
         // print($seller);
         //exit();
-
+       
         $shipments = $this->Shipment_model->filter($awb, $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination, $booking_id, $cc_id, $is_menifest, $refsno, $mobileno, $wh_id, $_POST);
 
 
@@ -2521,6 +2532,19 @@ class Shipment extends MY_Controller {
             $shiparray[$ii]['cc_name'] = GetCourCompanynameId($rdata['frwd_company_id'], 'company');
             
             $shiparray[$ii]['DispatchDate'] = GetStatusFmTableCodes($rdata['slip_no'],'DL');
+            $shiparray[$ii]['status'] = getStatusByCode_fm($rdata['code']);
+            $shiparray[$ii]['pl3_pickup_date'] = $rdata['3pl_pickup_date'];
+            $shiparray[$ii]['pl3_closed_date'] = $rdata['3pl_close_date'];
+            
+            $transaction_date = '';
+            if(!empty($rdata['3pl_close_date'])){
+                $pickup_date = new DateTime($rdata['3pl_pickup_date']);
+                $closed_date = new DateTime($rdata['3pl_close_date']);
+                $interval = $pickup_date->diff($closed_date);
+                $transaction_date =  $interval->format('%a days');
+            }
+            
+            $shiparray[$ii]['transaction_date'] = $transaction_date;
 
             $shiparray[$ii]['wh_ids'] = $rdata['wh_id'];
             if($rdata['frwd_company_awb'] != ''){ 

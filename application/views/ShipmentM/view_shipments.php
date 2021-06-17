@@ -105,7 +105,7 @@
 
                                                             <option value="">Select Status</option>
                                                             <?php foreach ($status as $status_detail): ?>
-                                                                <option value="<?= $status_detail->id; ?>"><?= $status_detail->main_status; ?></option>
+                                                                <option value="<?= $status_detail->code; ?>"><?= $status_detail->main_status; ?></option>
                                                             <?php endforeach; ?>
                                                         </select>
                                                     </div> </div>
@@ -278,12 +278,17 @@
                                                 <th>Item Details</th>
                                                 <!-- <th>Cartoon Sku#</th> -->
                                                 <th>Payment Mode</th>
+                                                <th>Payment Date</th>
                                                 <th>Status</th>
                                                <!-- <th>Quantity</th>-->
                                                 <!-- <th>Cartoon Quantity</th> -->
                                                 <th>Seller</th>
                                                 <th>Warehouse</th>
-                                                <th>Date</th>  
+                                                <th>Date</th>
+                                                <th>No. Of Attempt</th>
+                                                <th>3pl Pickup Date</th>
+                                                <th>3pl Closed Date</th>
+                                                <th>Transaction Date</th>
                                                 <th class="text-center" ><i class="icon-database-edit2"></i></th>
                                             </tr>  
                                         </thead>  
@@ -305,12 +310,18 @@
                                             <td>{{data.reciever_phone}}</td>   
                                             <td><a  ng-click="GetInventoryPopup(data.slip_no);"><span class="label label" style="background-color:<?= DEFAULTCOLOR; ?>;">Get Details</span></a></td>
                                             <td>{{data.mode}}
-                                                <span ><br>({{data.total_cod_amt}})</span></td>  
-                                            <td>{{data.main_status}}</td>
+                                            <span ><br>({{data.total_cod_amt}})</span></td>
+                                            <td>--</td>
+<!--                                            <td>{{data.main_status}}</td>-->
+                                            <td>{{data.status}}</td>
                                             <!--<td>{{data.piece}}</td>-->
                                             <td>{{data.name}}</td>
                                             <td>{{data.wh_id}}</td>
                                             <td>{{data.entrydate}}</td>
+                                            <td>{{data.no_of_attempt}}</td>
+                                            <td>{{data.pl3_pickup_date}}</td>
+                                            <td>{{data.pl3_closed_date}}</td>
+                                            <td>{{data.transaction_date}}</td>
                                             <td class="text-center">
                                                 <ul class="icons-list">
                                                     <li class="dropdown">
