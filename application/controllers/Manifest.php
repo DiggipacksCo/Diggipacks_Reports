@@ -4141,9 +4141,9 @@ class Manifest extends CourierCompany_pickup {
                      </style>
  </head> <body><div class="invoice-box"><table cellpadding="0" cellspacing="0"><tr class="top"><td colspan="6"><table><tr><td class="title"><img src="' .SUPERPATH . site_configTable('logo') . '" width="100"></td><td> 
                              Created: ' . date("F j, Y") . '<br> <br> <br> <br> 
-                      <!--   ' . $status_update_data[0]['sender_name'] . '
+                       ' . $status_update_data[0]['sender_name'] . '
                       <br>
-                     ' . $status_update_data[0]['address'] . '<br>-->
+                     Pickup Address:' . $status_update_data[0]['address'] . '<br>
                     Manifest ID: ' . $uniqueid . '<br> 
                            Schedule Date:  ' .$status_update_data[0]['schedule_date']  . '<br> 
 </td>
