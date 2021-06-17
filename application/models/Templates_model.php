@@ -6,7 +6,7 @@ class Templates_model extends CI_Model {
         parent::__construct();
     }
     public function getTempateByStatus($id = null) {
-        $this->db->where('super_id', $this->session->userdata('super_id'));
+        $this->db->where('super_id', $this->session->userdata('user_details')['user_id']);
         $this->db->select('*');
         $this->db->from('sms_templates_fm');
         $this->db->where('status', 'Y');
@@ -34,7 +34,7 @@ class Templates_model extends CI_Model {
             $status_name = $data['status_name'];
             $this->db->where('sms_templates_fm.status_id', $status_name);
         }
-        $this->db->where('sms_templates_fm.super_id', $this->session->userdata('super_id'));
+        $this->db->where('sms_templates_fm.super_id', $this->session->userdata('user_details')['user_id']);
         $this->db->select('sms_templates_fm.*,status_main_cat.main_status,status_category.sub_status');
         $this->db->from('sms_templates_fm');
         $this->db->order_by('sms_templates_fm.id', 'DESC');
@@ -85,7 +85,7 @@ class Templates_model extends CI_Model {
         }
 
 
-        $this->db->where('super_id', $this->session->userdata('super_id'));
+        $this->db->where('super_id', $this->session->userdata('user_details')['user_id']);
 
         $this->db->where('status', 'Y');
         $this->db->where('deleted', 'N');
@@ -116,7 +116,7 @@ class Templates_model extends CI_Model {
     }
 
     public function QueryEditData($id = null) {
-        $this->db->where('super_id', $this->session->userdata('super_id'));
+        $this->db->where('super_id', $this->session->userdata('user_details')['user_id']);
         $this->db->select('*');
         $this->db->from('sms_templates_fm');
         $this->db->where('status', 'Y');
