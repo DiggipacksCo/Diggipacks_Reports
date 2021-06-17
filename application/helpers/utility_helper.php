@@ -3598,3 +3598,26 @@ function digiQtyUpdate($sku,$qty) {
         curl_close($curl);
     }
 }
+
+if(!function_exists('getStatusByCode_fm')){
+    function getStatusByCode_fm($status_code=null)
+            {
+                    $ci=& get_instance();
+                    $ci->load->database();
+
+                     $sql="select sub_status from status_category_fm where code='".$status_code."' and deleted='N'"; 
+                    $query = $ci->db->query($sql);
+                    if($query->num_rows()>0){
+                    $result=$query->row_array();
+                    return $result['sub_status'];
+                    }
+                    else
+                    {
+                            $sql="select main_status from status_main_cat where code='".$status_code."' and deleted='N'";
+                            $query = $ci->db->query($sql);
+                            $result=$query->row_array();
+                            return $result['main_status'];
+                    }
+
+            }
+    }

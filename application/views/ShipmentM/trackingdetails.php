@@ -108,14 +108,13 @@
                                                 echo' <tr><th><b class="size-2">Payment Mode</b></th><td>' . $Shipmentinfo['mode'] . ' ' . $Shipmentinfo['total_cod_amt'] . '</td></tr>';
                                             else
                                                 echo' <tr><th><b class="size-2">Payment Mode</b></th><td>' . $Shipmentinfo['mode'] . '</td></tr>';
-
                                             echo'<tr><th><b class="size-2">Schedule Chanel</b></th>';
                                             if ($Shipmentinfo['schedule_type'])
                                                 echo'<td><span class="label label-success">' . $Shipmentinfo['schedule_type'] . '</span></td>';
                                             else
                                                 echo'<td><span class="label label-danger">N/A</span></td>';
                                             echo'</tr>';
-
+                                            echo '<tr><th><b class="size-2">Payment Date</b></th><td>--</td></tr>';
                                             if ($Shipmentinfo['shipping_zone'])
                                                 echo'<tr><th><b class="size-2">Shipping Zone</b></th><td>' . $Shipmentinfo['shipping_zone'] . '</td></tr>';
 
@@ -143,10 +142,15 @@
                                             else
                                                 echo' <tr><th><b class="size-2">Ammount Collected</b></th><td>Yes</td></tr>';
                                             echo' <tr><th><b class="size-2">Weight</b></th><td>' . $Shipmentinfo['weight'] . 'Kg</td></tr>
-                          <tr><th><b class="size-2" >Status </b></th><td ' . $colorclass . ' ' . $colorclass2 . '>' . getallmaincatstatus($Shipmentinfo['delivered'], 'main_status') . '</td></tr>
+                          <!--<tr><th><b class="size-2" >Status </b></th><td ' . $colorclass . ' ' . $colorclass2 . '>' . getallmaincatstatus($Shipmentinfo['delivered'], 'main_status') . '</td></tr>-->
+                          <tr><th><b class="size-2" >Status </b></th><td ' . $colorclass . ' ' . $colorclass2 . '>' . getStatusByCode_fm($Shipmentinfo['code'] ) . '</td></tr>
                          <!-- <tr><th><b class="size-2">Store Link</b></th><td>' . $Shipmentinfo['cust_id'] . '</td></tr>
                           <tr><th><b class="size-2">User Type</b></th><td>' . $Shipmentinfo['cust_id'] . '</td></tr>-->
                           <tr><th><b class="size-2">Product Type</b></th><td>' . $Shipmentinfo['nrd'] . '</td></tr>
+                          <tr><th><b class="size-2">No. Of Attempt</b></th><td>' . $Shipmentinfo['no_of_attempt'] . '</td></tr>                              
+                          <tr><th><b class="size-2">3pl Pickup Date</b></th><td>' . $Shipmentinfo['pl3_pickup_date'] . '</td></tr>
+                          <tr><th><b class="size-2">3pl Closed Date</b></th><td>' . $Shipmentinfo['pl3_closed_date'] . '</td></tr>
+                          <tr><th><b class="size-2">Transaction Date</b></th><td>' . $Shipmentinfo['transaction_date'] . '</td></tr>
                           <tr><th><b class="size-2">Product Description</b></th><td>' . $Shipmentinfo['status_describtion'] . '</td></tr>';
                                             ?>
                                             <?php
