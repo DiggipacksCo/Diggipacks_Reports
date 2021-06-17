@@ -143,7 +143,7 @@
                                                 echo' <tr><th><b class="size-2">Ammount Collected</b></th><td>Yes</td></tr>';
                                             echo' <tr><th><b class="size-2">Weight</b></th><td>' . $Shipmentinfo['weight'] . 'Kg</td></tr>
                           <!--<tr><th><b class="size-2" >Status </b></th><td ' . $colorclass . ' ' . $colorclass2 . '>' . getallmaincatstatus($Shipmentinfo['delivered'], 'main_status') . '</td></tr>-->
-                          <tr><th><b class="size-2" >Status </b></th><td ' . $colorclass . ' ' . $colorclass2 . '>' . getStatusByCode_fm($Shipmentinfo['code'] ) . '</td></tr>
+                          <tr><th><b class="size-2" >Status </b></th><td ' . $colorclass . ' ' . $colorclass2 . '>' . $Shipmentinfo['status_fm'] . '</td></tr>
                          <!-- <tr><th><b class="size-2">Store Link</b></th><td>' . $Shipmentinfo['cust_id'] . '</td></tr>
                           <tr><th><b class="size-2">User Type</b></th><td>' . $Shipmentinfo['cust_id'] . '</td></tr>-->
                           <tr><th><b class="size-2">Product Type</b></th><td>' . $Shipmentinfo['nrd'] . '</td></tr>

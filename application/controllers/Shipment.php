@@ -1987,7 +1987,7 @@ class Shipment extends MY_Controller {
         //$data['AWBNO']=getallsratusshipmentid($shipmentId,'slip_no');
         $data['Shipmentinfo'] = $this->Shipment_model->getallshipmentdatashow($shipmentId);
         
-        
+        //print "<pre>"; print_r($data['Shipmentinfo']);die;
         $transaction_date = '';
         if(!empty($data['Shipmentinfo']['3pl_close_date'])){
             $pickup_date = new DateTime($data['Shipmentinfo']['3pl_pickup_date']);
@@ -1998,6 +1998,17 @@ class Shipment extends MY_Controller {
         $data['Shipmentinfo']['pl3_pickup_date'] = $data['Shipmentinfo']['3pl_pickup_date'];
         $data['Shipmentinfo']['pl3_closed_date'] = $data['Shipmentinfo']['3pl_close_date'];
         $data['Shipmentinfo']['transaction_date'] = $transaction_date;
+        
+        $status = getStatusByCode_fm($data['Shipmentinfo']['code']);
+        
+        if(!empty($status)){
+            $data['Shipmentinfo']['status_fm'] = $status;
+        }else{
+            
+            
+            $data['Shipmentinfo']['status_fm'] = getallmaincatstatus($data['Shipmentinfo']['delivered'],'main_status');
+        }
+        
         ////echo $data['Shipmentinfo']['slip_no']; die;
         //print "<pre>"; print_r($data['Shipmentinfo']);die;
         $data['THData'] = $this->Shipment_model->getalltravelhistorydata($data['Shipmentinfo']['slip_no']);
@@ -2532,7 +2543,13 @@ class Shipment extends MY_Controller {
             $shiparray[$ii]['cc_name'] = GetCourCompanynameId($rdata['frwd_company_id'], 'company');
             
             $shiparray[$ii]['DispatchDate'] = GetStatusFmTableCodes($rdata['slip_no'],'DL');
-            $shiparray[$ii]['status'] = getStatusByCode_fm($rdata['code']);
+            $status = getStatusByCode_fm($rdata['code']);
+            if(!empty($status)){
+                $shiparray[$ii]['status'] = $status;
+            }else{
+                $shiparray[$ii]['status'] = $rdata['main_status'];
+            }
+            
             $shiparray[$ii]['pl3_pickup_date'] = $rdata['3pl_pickup_date'];
             $shiparray[$ii]['pl3_closed_date'] = $rdata['3pl_close_date'];
             
