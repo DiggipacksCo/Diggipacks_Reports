@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png');?>" type="image/x-icon">
-<title>Inventory</title>
+<title><?=lang('lang_Inventory');?></title>
 <?php $this->load->view('include/file'); ?>
 <script src="<?=base_url();?>assets/js/angular/finance.app.js"></script>
 </head>
@@ -41,7 +41,7 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('errormess').
 <!-- Marketing campaigns -->
 <div class="panel panel-flat">
 <div class="panel-heading">
-  <h1> <strong>All Storage Type </strong> 
+  <h1> <strong><?=lang('lang_All_Storage_Type');?> </strong> 
     <!--  <a  ng-click="exportmanifestlist();" ><i class="icon-file-excel pull-right" style="font-size: 35px;"></i></a>--> 
     <!-- <a id="pdf" ><i class="icon-file-pdf pull-right" style="font-size: 35px;color: red;"></i></a>--> 
   </h1>
@@ -78,11 +78,11 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('errormess').
       <table class="table table-striped table-hover table-bordered dataTable bg-*" id="example" style="width:100%;">
         <thead>
           <tr>
-            <th>Sr.No.</th>
-            <th>Name</th>
+          <th><?=lang('lang_Sr_No');?></th>
+            <th><?=lang('lang_name');?></th>
            <!--  <th>Type</th> -->
 <!--            <th>Created Date</th>-->
-            <th>Description</th>
+            <th><?=lang('lang_Description');?></th>
 <!--             <th class="text-center" ><i class="icon-database-edit2"></i></th>-->
             
           </tr>

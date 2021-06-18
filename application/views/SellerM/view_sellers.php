@@ -5,11 +5,12 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png');?>" type="image/x-icon">
-  <title>Inventory</title>
+  <title><?= lang('lang_Inventory'); ?></title>
   <?php $this->load->view('include/file'); ?>
 
 
 </head>
+
 
 <body>
 
@@ -42,9 +43,9 @@ echo '<div class="alert alert-success">'.$this->session->flashdata('msg').' <but
           <!-- Basic responsive table -->
           <div class="panel panel-flat" >
             <!--style="padding-bottom:220px;background-color: lightgray;"-->
-            <div class="panel-heading">
+            <div class="panel-heading"dir="ltr">
               <!-- <h5 class="panel-title">Basic responsive table</h5> -->
-              <h1><strong>Sellers Table</strong></h1>
+                                <h1><strong><?= lang('lang_Sellers_Table'); ?></strong></h1>
 
               <div class="heading-elements">
                 <ul class="icons-list">
@@ -67,15 +68,16 @@ echo '<div class="alert alert-success">'.$this->session->flashdata('msg').' <but
               <table class="table table-striped table-hover table-bordered dataTable bg-*" id="example">
                 <thead>
                   <tr>
-                    <th>Sr.No.</th>
-					<th>Secret Key</th>
-                    <th>Name</th>
-                    <th>Company Name</th>
-                    <th>Email</th>
-                    <th>Account No#</th>
-                    <th>Location</th>
-                    <th>Phone #1</th>
-                    <th>Invoice Type</th>
+                                                <th><?= lang('lang_SrNo'); ?>.</th>
+                                                <th><?= lang('lang_secret_key'); ?></th>
+                                                <th><?= lang('lang_Name'); ?></th>
+                                                <th><?= lang('lang_Company_name'); ?></th>
+                                                <th><?= lang('lang_Email'); ?></th>
+                                                <th><?= lang('lang_Account_No'); ?>#</th>
+                                                <th><?= lang('lang_Location'); ?></th>
+                                                <th> <?= lang('lang_Phone'); ?>#1</th>
+                                                <th><?= lang('lang_Invoice_Type'); ?></th>
+                                             
                     <th class="text-center" ><i class="icon-database-edit2"></i></th>
                   </tr>
                 </thead>
@@ -104,24 +106,24 @@ echo '<div class="alert alert-success">'.$this->session->flashdata('msg').' <but
                             </a>
 
                             <ul class="dropdown-menu dropdown-menu-right">  
-                              <li><a href="<?= site_url('Seller/edit_view/'.$seller->id);?>"><i class="icon-pencil7"></i> Edit </a></li>
-                               <li><a href="<?= site_url('Seller/set_courier/'.$seller->id);?>"><i class="icon-pencil7"></i> Set Courier Companies</a></li>
-                               <li><a href="<?= site_url('Seller/storage_charges/'.$seller->id);?>"><i class="icon-pencil7"></i> Set Storages Charges</a></li>
-                               <li><a href="<?= site_url('Seller/add_courier_company/'.$seller->id);?>"><i class="icon-pencil7"></i> Add Courier Company </a></li>
+                              <li><a href="<?= site_url('Seller/edit_view/'.$seller->id);?>"><i class="icon-pencil7"></i> <?= lang('lang_Edit'); ?> </a></li>
+                               <li><a href="<?= site_url('Seller/set_courier/'.$seller->id);?>"><i class="icon-pencil7"></i><?= lang('lang_Set_Courier_Companies'); ?></a></li>
+                               <li><a href="<?= site_url('Seller/storage_charges/'.$seller->id);?>"><i class="icon-pencil7"></i> <?= lang('lang_SetStorage_Charges'); ?></a></li>
+                               <li><a href="<?= site_url('Seller/add_courier_company/'.$seller->id);?>"><i class="icon-pencil7"></i> <?= lang('lang_AddCourierCompany'); ?> </a></li>
                                <?php if (menuIdExitsInPrivilageArray(107) == 'Y') { ?>
-                                  <li><a href="<?= site_url('Seller/updateZidConfig/' . $seller->id); ?>"><i class="icon-pencil7"></i> Zid Configuration</a></li>
+                                  <li><a href="<?= site_url('Seller/updateZidConfig/' . $seller->id); ?>"><i class="icon-pencil7"></i> <?= lang('lang_Zid_Configuration'); ?></a></li>
                                   <?php echo (($seller->manager_token != '' && $seller->zid_active == 'Y') ? '<li><a href="' . site_url("Seller/ZidProducts/" . $seller->id) . '"><i class="icon-pencil7"></i>Zid Product List</a></li>' : '') ?>
                                <?php } ?>
                                <?php if (menuIdExitsInPrivilageArray(106) == 'Y') { ?>
-                                  <li><a href="<?= site_url('Seller/updateSallaConfig/' . $seller->id); ?>"><i class="icon-pencil7"></i> Salla Configuration</a></li>
+                                  <li><a href="<?= site_url('Seller/updateSallaConfig/' . $seller->id); ?>"><i class="icon-pencil7"></i> <?= lang('lang_Salla_Configuration'); ?></a></li>
                                   <?php echo (($seller->salla_athentication != '' && $seller->salla_active == 'Y') ? '<li><a href="' . site_url("Seller/SallaProducts/" . $seller->id) . '"><i class="icon-pencil7"></i>Salla Product List</a></li>' : '') ?>
                                <?php } ?>
 
-                                <li><a href="<?= site_url('Seller/updateShopify/' . $seller->id); ?>"><i class="fa fa-balance-scale"></i>Shopify config</a></li>
+                                <li><a href="<?= site_url('Seller/updateShopify/' . $seller->id); ?>"><i class="fa fa-balance-scale"></i><?= lang('lang_Shopify_Config'); ?></a></li>
 
                                
 
-                                  <li><a href="<?= site_url('Seller/updateWoocommerce/' . $seller->id); ?>"><i class="icon-pencil7"></i>Woocommerce Configuration</a></li>
+                                  <li><a href="<?= site_url('Seller/updateWoocommerce/' . $seller->id); ?>"><i class="icon-pencil7"></i> <?= lang('lang_Woocommerce_Configuration'); ?></a></li>
 
                              
 

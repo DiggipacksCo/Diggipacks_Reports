@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
         <script src='https://code.responsivevoice.org/responsivevoice.js'></script>    
-        <title>Inventory</title>
+        <title><?=lang('lang_Inventory');?></title>
         <?php $this->load->view('include/file'); ?>
 
 
@@ -54,7 +54,7 @@
                                 <div class="panel panel-flat">
                                     <div class="panel-heading">
                                         <h1>
-                                            <strong>Bulk Update</strong>
+                                            <strong><?=lang('lang_Bulk_Update');?></strong>
                                             <!--
                                                               <a  ng-click="exportExcel();" ><i class="icon-file-excel pull-right" style="font-size: 35px;"></i></a>
                                                              <a id="pdf" ><i class="icon-file-pdf pull-right" style="font-size: 35px;color: red;"></i></a>
@@ -74,13 +74,13 @@
                                             <div class="col-lg-12" >
 
 
-                                                <div  ng-if="invalidstring" ><div class="alert alert-danger">Not avaible for selected Update Orders(removed automatically):{{invalidstring}}</div>
+                                                <div  ng-if="invalidstring" ><div class="alert alert-danger"><?=lang('lang_Not_avaible_selected_Update_Orders_removed_automatically');?>:{{invalidstring}}</div>
 
                                                 </div> 
                                             </div>
                                             <div class="col-lg-6">
 
-                                                <div ng-if="awbArray.length > 200" class="alert alert-danger">Please Verify the Packing, Limit Exceed! </div>
+                                                <div ng-if="awbArray.length > 200" class="alert alert-danger"><?=lang('lang_Please_Verify_the_Packing_Limit_Exceed');?>! </div>
                                                 <div ng-if='warning' class="alert alert-warning">{{warning}} </div>
                                                 <div ng-if='Message' class="alert alert-success">{{Message}} </div>
                                             </div>      
@@ -101,7 +101,7 @@
                                             </div>
                                             <div class="col-md-2">
                                                 <div class="form-group">
-                                                    <a type="button"  class="btn btn-warning" style=" margin-left: 2%; margin-right: 3%; ">Row Count <span class="badge badge badge-pill badge-success" id="count_val">{{scan.awbArray.length}}</span>	</a>
+                                                    <a type="button"  class="btn btn-warning" style=" margin-left: 2%; margin-right: 3%; ">><?=lang('lang_Row_Count');?> <span class="badge badge badge-pill badge-success" id="count_val">{{scan.awbArray.length}}</span>	</a>
 
                                                 </div>
                                             </div>
@@ -109,7 +109,7 @@
                                                 <div class="form-group">
                                                     <select  id="status" name="status" ng-model="scan.status" ng-change="scan_awb();" class="selectpicker"  data-width="100%" >
 
-                                                        <option value="">Select Status</option>
+                                                        <option value=""><?=lang('lang_Select_Status');?></option>
                                                         <?php foreach ($status as $status_detail): ?>
                                                             <?php if ($status_detail->id != '2'): ?>  <?php endif; ?>
                                                             <option value="<?= $status_detail->id; ?>"><?= $status_detail->main_status; ?></option>
@@ -122,8 +122,8 @@
                                             <div class="col-md-4">	
 
                                                 <div class="form-group">
-                                                    <button type"submit" ng-if="scan.validate"  role="button" class="btn btn-primary form-control" >Update</button>	
-                                                    <button type"submit" ng-if="scan.validate == null"  role="button" class="btn btn-danger form-control" disabled >Update</button>	
+                                                    <button type"submit" ng-if="scan.validate"  role="button" class="btn btn-primary form-control" ><?=lang('lang_Update');?></button>	
+                                                    <button type"submit" ng-if="scan.validate == null"  role="button" class="btn btn-danger form-control" disabled ><?=lang('lang_Update');?></button>	
 
 
                                                 </div>	 </div>	

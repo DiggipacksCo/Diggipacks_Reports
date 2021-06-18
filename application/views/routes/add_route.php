@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Add Route</title>
+        <title><?= lang('lang_Add_Route'); ?></title>
         <?php $this->load->view('include/file'); ?>
 
 
@@ -37,7 +37,7 @@ $countyname="'".$EditData['country_id']."'";
                     <!-- Content area -->
                     <div class="content">
                         <div class="panel panel-flat">
-                            <div class="panel-heading"><h1><strong> <?php if(!empty($EditData)){ echo 'Edit';} else { echo 'Add';}?> Route</strong></h1></div>
+                            <div class="panel-heading"><h1><strong> <?php if(!empty($EditData)){ echo 'Edit';} else { echo 'Add';}?> <?= lang('lang_Route'); ?></strong></h1></div>
                             <hr>
                             <div class="panel-body">
                                 <?php if (!empty(validation_errors())) echo'<div class="alert alert-warning" role="alert"><strong>Warning!</strong> ' . validation_errors() . '</div>'; ?>
@@ -52,10 +52,10 @@ $countyname="'".$EditData['country_id']."'";
                                     <input type="hidden" id="edit_id" name="edit_id" value="<?=$EditData['id'];?>">
                                     
                                      <div class="form-group">
-                                        <label for="country" ><strong>Country:</strong></label>
+                                        <label for="country" ><strong><?=lang('lang_Country');?>:</strong></label>
                                         <select name="country" class="form-control" id="country" required ng-model="country" ng-change="getStatelist(country);">
                                             
-                                            <option value="">Select</option>
+                                            <option value=""><?=lang('lang_select');?></option>
                                             <?php 
                                             
                                             foreach($Countrylist as $val)
@@ -74,29 +74,29 @@ $countyname="'".$EditData['country_id']."'";
                                     </div> 
                                     
                                      <div class="form-group">
-                                        <label for="city_id" ><strong>Select City:</strong></label>
+                                        <label for="city_id" ><strong><?=lang('lang_Please_Select_City');?>:</strong></label>
                                         <select name="city_id" class="form-control" id="city_id" required ng-model="city_id" >
                                             
-                                            <option value="">Select City</option>
+                                            <option value=""><?=lang('lang_Please_Select_City');?></option>
                                             <option ng-repeat="cdata in stateListArr" value="{{cdata.city}}">{{cdata.city}}</option>
                                           
                                         </select>
                                     </div> 
                                     <div class="form-group">
-                                        <label for="route"><strong>Route:</strong></label>
+                                        <label for="route"><strong><?=lang('lang_Route');?>:</strong></label>
                                        <input type="text" class="form-control" name='route' id="country" required placeholder="Enter Route" value="<?=$EditData['route'];?>">
                                     </div> 
                                       <div class="form-group">
-                                        <label for="routecode"><strong>Route Code:</strong></label>
+                                        <label for="routecode"><strong><?=lang('lang_Route_Code');?>:</strong></label>
                                         <input type="text" class="form-control" name='routecode' id="country" required placeholder="Enter Route Code" value="<?=$EditData['routecode'];?>">
                                     </div> 
                                     
                                     <div class="form-group">
-                                        <label for="keyword"><strong>Arabic Keyword:</strong></label>
+                                        <label for="keyword"><strong><?=lang('lang_Arabic_Keyword');?>:</strong></label>
                                        <input type="text" class="form-control" name='keyword' id="keyword" required placeholder="Enter Arabic Keyword" value="<?=$EditData['keyword'];?>">
                                     </div> 
                                     <div class="form-group">
-                                        <label for="latlang"><strong>latitude,longitude:</strong></label>
+                                        <label for="latlang"><strong><?=lang('lang_latitude_longitude');?>:</strong></label>
                                        <input type="text" class="form-control" name='latlang' id="latlang" required placeholder="latitude,longitude" value="<?=$EditData['latlang'];?>">
                                     </div> 
                                    
@@ -106,7 +106,7 @@ $countyname="'".$EditData['country_id']."'";
 
 
                                     <div style="padding-top: 20px;">
-                                        <button type="submit" class="btn btn-success">Submit</button>
+                                        <button type="submit" class="btn btn-success"><?=lang('lang_Submit');?></button>
                                     </div>
                                 </form>
 

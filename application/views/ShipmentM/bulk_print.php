@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Inventory</title>
+        <title><?=lang('lang_Inventory');?></title>
         <?php $this->load->view('include/file'); ?>
     </head>
 
@@ -42,15 +42,15 @@
                                 <!-- Marketing campaigns -->
                                 <div class="panel panel-flat">
                                     <div class="panel-heading">
-                                        <h1> <strong>Bulk Print</strong> </h1>
+                                        <h1> <strong><?=lang('lang_Bulk_Print');?></strong> </h1>
                                     </div>
                                     <div class="panel-body">
                                         <div class="row"> </div>
-                                        <div class="alert alert-danger">Note: Order Limit is 100</div>
+                                        <div class="alert alert-danger"><?=lang('lang_Note');?> <?=lang('lang_Order_Limit_is_Hundred');?></div>
                                         <form  method="post" action="<?= base_url(); ?>PickUp/BulkPrintAllLabels" target="_blank" >
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <textarea rows="8" id="show_awb_no" name="show_awb_no"  placeholder="Please Enter Your AWB Number" required class="form-control"></textarea>
+                                                    <textarea rows="8" id="show_awb_no" name="show_awb_no"  placeholder="<?=lang('lang_Please_Enter_Your_AWB_Number');?>" required class="form-control"></textarea>
                                                 </div>
                                             </div>
                                             
@@ -64,7 +64,7 @@
                                             <div class="col-md-2" >
                                                 <div class="form-group">
 
-                                                    <input type="submit" name="print_ready" class="btn btn-primary form-control checkdisable" value="Label 4*6">	 
+                                                    <input type="submit" name="print_ready" class="btn btn-primary form-control checkdisable" value="<?=lang('lang_Label_46');?>">	 
 
                                                 </div>
 
@@ -74,7 +74,7 @@
                                             <div class="col-md-2" >
                                             <div class="form-group">
 
-                                            <input type="submit" name="print_ready" class="btn btn-primary form-control checkdisable" value="Label A4">	
+                                            <input type="submit" name="print_ready" class="btn btn-primary form-control checkdisable" value="<?=lang('lang_Label_A4');?>">	
 
                                             </div> 
                                             </div>

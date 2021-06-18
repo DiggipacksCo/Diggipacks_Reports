@@ -45,8 +45,8 @@
                             <div class="col-lg-12" >
                                 <!-- Marketing campaigns -->
                                 <div class="panel panel-flat">
-                                    <div class="panel-heading">
-                                        <h1> <strong>LastMile Invoice View</strong> </h1>
+                                    <div class="panel-heading"dir="ltr">
+                                        <h1> <strong><?=lang('lang_LastMile_Invoice_View');?></strong> </h1>
                                     </div>
                                     <div class="panel-body">
                                         <div class="row"> </div>
@@ -57,62 +57,62 @@
 											
 											<tbody>
 											  <tr style="width:100%">
-												<th style="width:35%">Seller :
+												<th style="width:35%"> <?=lang('lang_Seller');?>:
 												  <select class="select2 select2-multiple form-control" style="word-wrap: break-word;" ng-model="SearArr.cust_id"  multiple="multiple" data-placeholder="Choose">
 												 
 													<option ng-repeat="cdata in CustomerDropdata" value="{{cdata.id}}">{{cdata.company}}({{cdata.uniqueid}})</option>
 												  </select>  
 												  <br>
-												Created By :
+												 <?=lang('lang_Created_By');?>:
 												  <select class="select2 select2-multiple form-control" ng-model="SearArr.created" multiple="multiple" data-placeholder="Choose">
 													<option ng-repeat="sdata in staffDropdata" value="{{sdata.id}}">{{sdata.name}}</option>
 												  </select>
 												  <br>
-												 Cod Pay By :
+												<?=lang('lang_Cod_Pay_By');?>:
 												  <select class="select2 select2-multiple form-control" ng-model="SearArr.paid" multiple="multiple" data-placeholder="Choose">
 													<option ng-repeat="sdata in staffDropdata" value="{{sdata.id}}">{{sdata.name}}</option>
 												  </select>
 												  <br>  
-												 Payment Received By :
+												  <?=lang('lang_Payment_Received_By');?>:
 												  <select class="select2 select2-multiple form-control" ng-model="SearArr.received" multiple="multiple" data-placeholder="Choose">
 													<option ng-repeat="sdata in staffDropdata" value="{{sdata.id}}">{{sdata.name}}</option>
 												  </select>
-												<th width="30%">Invoice No.: 
+												<th width="30%"> <?=lang('lang_Invoice_no');?>.: 
 												  <select  class="form-control custom-select" >
-												  <option value="">Select</option>
+												  <option value=""><?=lang('lang_select');?></option>
 												  </select>
 												   <br>
-												Payement Mode:
+												<?=lang('lang_Payment_Mode');?>:
 												  <select class="form-control custom-select  mt-15" ng-model="SearArr.mode">
-													<option value=""> Select </option>
-													<option value="CC">Paid</option>
-													<option value="COD">COD</option>
+													<option value=""> <?=lang('lang_select');?> </option>
+													<option value="CC"><?=lang('lang_Paid');?></option>
+													<option value="COD"><?=lang('lang_COD');?></option>
 												  </select>
 												  <br>
-												Status :
+												 <?=lang('lang_Status');?>:
 												  <select class="form-control custom-select  mt-15" ng-model="SearArr.status">
-													<option value=""> Select </option>
-													<option value="Delivered">Delivered</option>
-													<option value="Return to shiper">Return to shiper</option>
+													<option value="">  <?=lang('lang_select');?></option>
+													<option value="Delivered"><?=lang('lang_Delivered');?></option>
+													<option value="Return to shiper"><?=lang('lang_Return_to_shipper');?></option>
 												  </select>
 												</th>
-												<th style="width:30%"> Create Date<br>
-												From Date :
+												<th style="width:30%"> <?=lang('lang_Created_Date');?><br>
+												<?=lang('lang_From_Date');?>
 												  <input type="date" name="c_date1"  ng-model="SearArr.c_date1" id="datepicker1" class="form-control" placeholder="dd-mm-yy" >
 												  <br>
-												 To Date:
+												  <?=lang('lang_To_Date');?>
 												  <input type="date" name="c_date2" ng-model="SearArr.c_date2" id="datepicker2" class="form-control" placeholder="dd-mm-yy">
 												</th> 
 											  </tr>
 											  <tr>
 											  
-												<th width="10px"> Payment Date <br>
-												  From Date  :
+												<th width="10px"> <?=lang('lang_Payment_Date');?><br>
+												   <?=lang('lang_From_Date');?>:
 												  <input type="date" name="p_date1" ng-model="SearArr.p_date1" id="datepicker3" class="form-control" placeholder="dd-mm-yy" >
 </th>
 <th>
 
-												 To date  :
+												   <?=lang('lang_To_Date');?>:
 												  <input type="date" name="p_date2" ng-model="SearArr.p_date2" id="datepicker4" class="form-control" placeholder="dd-mm-yy" >
 												</th>
 												<th width="10px"> <button type="button" class="btn btn-info btn btn-primary" ng-click="getPayableCODlist(1,1);" style="margin-top:80px">Search </button>
@@ -125,20 +125,20 @@
 										<table class="table ticket-list table-lg dataTable no-footer">
 										  <thead>
 											<tr>
-											  <th>Sr No. </th>
-												<th>Account No.</th>
-												<th>Company Name</th>
-												 <th>Invoice#</th>
-												<th>Summery </th>
-												<th>Craeted By </th>
-												 <th>Create date  </th>
-												<th>Received By </th>
-												<th>Received Date  </th>
-												<th> Pay by</th>
-												<th>Pay date</th>   
-												<th> Receive </th>   
-												<th> Pay </th>
-												<th >Action </th>
+											  <th><?=lang('lang_Sr_No');?>. </th>
+												<th><?=lang('lang_Account_No');?>.</th>
+												<th><?=lang('lang_Company_name');?></th>
+												 <th> <?=lang('lang_Invoice');?></th>
+												<th><?=lang('lang_Summery');?> </th>
+												<th> <?=lang('lang_Created_By');?></th>
+												 <th> <?=lang('lang_Created_Date');?> </th>
+												<th><?=lang('lang_Received_By');?> </th>
+												<th> <?=lang('lang_Received');?> <?=lang('lang_Date');?></th>
+												<th> <?=lang('lang_Pay_By');?></th>
+												<th><?=lang('lang_Pay_Date');?></th>   
+												<th>  <?=lang('lang_Receive');?></th>   
+												<th>  <?=lang('lang_Pay');?></th>
+												<th > <?=lang('lang_Action');?></th>
 											</tr>
 										  </thead>
 										  <tbody>
@@ -148,10 +148,10 @@
 											<td>{{data.uniqueid}}</td>
 											<td>{{data.company}}</td>
 											<td>{{data.invoice_no}}</td>
-											<td><strong>Shipemnt</strong>:{{data.invoiceCount}}<br>
-												<strong> COD Charges</strong>:{{data.cod_charge_sum}}<br> <strong> Return Charges </strong>:{{data.return_charge_sum}}<br><strong>Service Charge</strong>:{{data.service_charge_sum}}
-												<br><strong>Total Vat</strong>:{{data.vat_sum}}
-												<hr><strong>COD Amount</strong>:{{data.cod_amount_sum}}
+											<td><strong><?=lang('lang_Shipment');?></strong>:{{data.invoiceCount}}<br>
+												<strong> <?=lang('lang_COD_Charges');?></strong>:{{data.cod_charge_sum}}<br> <strong> <?=lang('lang_Return_Charges');?></strong>:{{data.return_charge_sum}}<br><strong><?=lang('lang_Service_Charge');?></strong>:{{data.service_charge_sum}}
+												<br><strong><?=lang('lang_Total_Vat');?></strong>:{{data.vat_sum}}
+												<hr><strong><?=lang('lang_COD_Amount');?></strong>:{{data.cod_amount_sum}}
 											</td>
 											<td>{{data.invoice_created_by}}</td>
 											<td>{{data.invoice_created_date}}</td>  
@@ -161,13 +161,13 @@
 											<td> {{data.cod_paid_date}} </td>  
 											<td>
 											
-											<a ng-if="data.receivable_pay_status=='N'" data-toggle="modal" class="btn btn-danger text-white" data-target="#updateLinehoulC51201961561904494" title="Received" ng-click="Getpopoprncustdetais(data.pid,'#payable_invoice','one');"> Receive</a>
-											  <a ng-if="data.receivable_pay_status=='Y'"  class="btn btn-primary text-white"  title="Received"  ng-click="Getpopoprncustdetais(data.pid,'#payable_invoice_list','one');" > Received </a>  
+											<a ng-if="data.receivable_pay_status=='N'" data-toggle="modal" class="btn btn-danger text-white" data-target="#updateLinehoulC51201961561904494" title="Received" ng-click="Getpopoprncustdetais(data.pid,'#payable_invoice','one');"> <?=lang('lang_Receive');?></a>
+											  <a ng-if="data.receivable_pay_status=='Y'"  class="btn btn-primary text-white"  title="Received"  ng-click="Getpopoprncustdetais(data.pid,'#payable_invoice_list','one');" > <?=lang('lang_Received');?> </a>  
 											  </td><td>
-											 <a ng-if="data.cod_pay_status=='N'" data-toggle="modal" class="btn btn-danger text-white" data-target="#updateLinehoulC51201961561904494" title="PAY" ng-click="Getpopoprncustdetais(data.pid,'#account_detail','one');"> Pay</a>	
-											  <a ng-if="data.cod_pay_status!='N'" class="btn btn-primary text-white" title="PAY" ng-click="Getpopoprncustdetais(data.pid,'#payable_invoice_list1','one');"> Paid</a>	  
+											 <a ng-if="data.cod_pay_status=='N'" data-toggle="modal" class="btn btn-danger text-white" data-target="#updateLinehoulC51201961561904494" title="PAY" ng-click="Getpopoprncustdetais(data.pid,'#account_detail','one');">  <?=lang('lang_Pay');?></a>	
+											  <a ng-if="data.cod_pay_status!='N'" class="btn btn-primary text-white" title="PAY" ng-click="Getpopoprncustdetais(data.pid,'#payable_invoice_list1','one');"> <?=lang('lang_Paid');?></a>	  
 											   </td><td>
-											<a href="codreceivablePrint/{{data.invoice_no}}" target="_blank" class="btn btn-primary">View</a></td>
+											<a href="codreceivablePrint/{{data.invoice_no}}" target="_blank" class="btn btn-primary"><?=lang('lang_View');?></a></td>
 
 										 
 										   </tr>
@@ -181,7 +181,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">   
         <div class="modal-content"> 
 <div class="modal-header">
-                <h5 class="modal-title">Show Transaction Proof Invoice #({{editcodlistArray.invoice_no}})</h5>
+                <h5 class="modal-title"><?=lang('lang_Show_Transaction_Proof_Invoice');?> #({{editcodlistArray.invoice_no}})</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>   
@@ -193,12 +193,12 @@
         <div class="modal-body">
 				<div class="col-md-4">
 					<div class="form-group">
-						<label>Transaction No. : #({{editcodlistArray.rec_voucher}}) </label>
+						<label> <?=lang('lang_Transaction_Number');?>. : #({{editcodlistArray.rec_voucher}}) </label>
 					</div>
 				</div>
                      
 				<br>  
-               <button style="margin-top: 3px;" type="submit" class="btn btn-info pull-right"  name="update_linehoul" ng-click="modelClose('payable_invoice_list')">close </button>     
+               <button style="margin-top: 3px;" type="submit" class="btn btn-info pull-right"  name="update_linehoul" ng-click="modelClose('payable_invoice_list')"><?=lang('lang_Close');?> </button>     
 		</div> 
         
        </div>
@@ -209,7 +209,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">   
         <div class="modal-content"> 
 <div class="modal-header">
-                <h5 class="modal-title">Show Transaction Proof Invoice  #({{editcodlistArray.invoice_no}})</h5>
+                <h5 class="modal-title"  dir="ltr"> <?=lang('lang_Show_Transaction_Proof_Invoice');?> #({{editcodlistArray.invoice_no}})</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>   
@@ -221,13 +221,13 @@
 					
 					<div class="col-md-4">
                  <div class="form-group">  
-                    <label>   <a href="{{editcodlistArray.pay_voucher}}" target="_blank">Invoice Copy</a> </label>   
+                    <label>   <a href="{{editcodlistArray.pay_voucher}}" target="_blank"><?=lang('lang_Invoice_Copy');?></a> </label>   
                 
                     </div></div>
                      
 				<br>
                
-			      <button style="margin-top: 3px;" type="submit" class="btn btn-info pull-right" name="update_linehoul" ng-click="modelClose('payable_invoice_list1')">close </button>         
+			      <button style="margin-top: 3px;" type="submit" class="btn btn-info pull-right" name="update_linehoul" ng-click="modelClose('payable_invoice_list1')"><?=lang('lang_Close');?> </button>         
 
 					
 			    
@@ -244,7 +244,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Prouf of Payment #({{editcodlistArray.invoice_no}})</h5>
+                <h5 class="modal-title"  dir="ltr"> <?=lang('lang_Proof_of_Payment');?>#({{editcodlistArray.invoice_no}})</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -253,13 +253,13 @@
 			<div class="modal-body">
    					<div class="col-md-8">
                  		<div class="form-group">
-                   		 <label>Transaction No.  </label>
+                   		 <label><?=lang('lang_Transaction_Number');?>.  </label>
                     	<input type="text" name="invoice_no" class="form-control" ng-model="editcodlistArray.rec_voucher" required="">
                     	</div>
                     </div>
              
                
-				<button style="margin-top: 3px;" type="submit" class="btn btn-info" name="update_linehoul" ng-click="payableInvoice_update(editcodlistArray);">Update </button>  
+				<button style="margin-top: 3px;" type="submit" class="btn btn-info" name="update_linehoul" ng-click="payableInvoice_update(editcodlistArray);"> <?=lang('lang_Update');?></button>  
 					
 			   </div>
            
@@ -271,7 +271,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title"> Proof #({{editcodlistArray.invoice_no}})</h5>
+                <h5 class="modal-title" dir="ltr">  <?=lang('lang_Proof');?>#({{editcodlistArray.invoice_no}})</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -280,13 +280,13 @@
 			<div class="modal-body">
    					<div class="col-md-8">
                  		<div class="form-group">
-                   		 <label>Transaction</label>
+                   		 <label><?=lang('lang_Transaction');?></label>
                     		 <input type="file" name="pro_image" ng-files="file" accept="image/*" class="form-control" >
                     	</div>
                     </div>
              
                
-				<button style="margin-top: 3px;" type="submit" class="btn btn-info" name="update_linehoul" ng-click="GetupdatePayment(editcodlistArray)">Update</button>  
+				<button style="margin-top: 3px;" type="submit" class="btn btn-info" name="update_linehoul" ng-click="GetupdatePayment(editcodlistArray)"><?=lang('lang_Update');?></button>  
 					
 			   </div>
            
