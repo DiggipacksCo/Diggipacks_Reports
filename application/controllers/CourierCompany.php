@@ -1584,6 +1584,10 @@ class CourierCompany extends MY_Controller  {
         return $result;
     }
 
+// reverse order 
 
+public function BulkForwardCompanyReversse(){
+
+}
 }
 ?>

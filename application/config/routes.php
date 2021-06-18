@@ -113,6 +113,8 @@ $route['dispatch3pl'] = 'PickUp/dispacth3pl';
 $route['orderCreated']             = 'Shipment/orderCreated';
 $route['bulkprint']                = 'Shipment/BulkPrintPage';
 $route['Forward_Delivery_Station'] = 'Shipment/ForwardtoDeliveryStation';
+$route['Reverse_Delivery_Station'] = 'Shipment/ReversetoDeliveryStation';
+
 
 $route['generatePickup']   = 'Shipment/generatePickup';
 $route['bulk_update_view'] = 'Shipment/bulk_update_view';
