@@ -12,13 +12,13 @@ die;*/
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png');?>" type="image/x-icon">
-<title>Inventory</title>
+<title><?=lang('lang_Inventory');?></title>
 <?php $this->load->view('include/file'); ?>
 <script src="<?=base_url();?>assets/js/angular/finance.app.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">
  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script> 
 </head>
-</head>
+
 
 <body ng-app="Appfinance" >
 <?php $this->load->view('include/main_navbar'); ?>
@@ -44,11 +44,11 @@ die;*/
 
 <!-- Marketing campaigns -->
 <div class="panel panel-flat">
-<div class="panel-heading">
-  <h1> <strong>Transaction Report</strong> 
+<div class="panel-heading" dir="ltr">
+  <h1> <strong><?=lang('lang_Transaction_Report');?></strong> 
      <a ng-click="ExporttransectionReport();"><i class="icon-file-excel pull-right" style="font-size: 35px; margin-top:3px;"></i></a>&nbsp;&nbsp;
   <select id="exportlimit" class="custom-select pull-right" ng-model="filterData.exportlimit" name="exprort_limit" required="" style="    font-size: 16px;padding: 5px;margin-right: 10px;" >
-								<option value="" selected>Select Export Limit</option>
+								<option value="" selected><?=lang('lang_select_export_limit');?></option>
 								   <option ng-repeat="exdata in dropexport" value="{{exdata.k}}" >{{exdata.j}}-{{exdata.k}}</option>  
 								
 							</select> 
@@ -72,25 +72,25 @@ die;*/
                     <tbody >
                     
                       <tr style="width: 80%;">
-                        <td><div class="form-group" ><strong>AWB No:</strong>
+                        <td><div class="form-group" ><strong><?=lang('lang_AWB_No');?>:</strong>
                             <input type="text" id="slip_no"name="sku" ng-model="filterData.slip_no"  class="form-control" placeholder="Enter AWB no.">
                           </div></td>
                      
-                        <td ><div class="form-group"><strong>From:</strong>
+                        <td ><div class="form-group"><strong><?=lang('lang_From');?>:</strong>
                             <input id="from"name="from" ng-model="filterData.from" class="form-control date" placeholder="YYYY-MM-DD">
                           </div></td>
-                        <td><div class="form-group" ><strong>To:</strong>
+                        <td><div class="form-group" ><strong><?=lang('lang_To');?>:</strong>
                             <input id="to"name="to" ng-model="filterData.to" class="form-control date" placeholder="YYYY-MM-DD">
                           </div></td>
                       </tr>
                      
-                        <td ><div class="form-group" ><strong>Seller:</strong> <br>
+                        <td ><div class="form-group" ><strong><?=lang('lang_Sellers');?>:</strong> <br>
                              <select id="seller_id"name="seller_id" ng-model="filterData.seller_id" class="form-control">
-								<option value="">Select Seller</option>
+								<option value=""><?=lang('lang_SelectSeller');?></option>
 								<option ng-repeat="sdata in sellerdata"  value="{{sdata.id}}">{{sdata.name}}</option>
 							  </select>
                           </div></td>
-                         <td co><button type="button" class="btn btn-success" style="margin-left: 7%">Total <span class="badge">{{totalCount}}</span></button> <button  class="btn btn-danger" ng-click="transactionReport(1,1);" >Search</button></td>
+                         <td co><button type="button" class="btn btn-success" style="margin-left: 7%"><?=lang('lang_Total');?> <span class="badge">{{totalCount}}</span></button> <button  class="btn btn-danger" ng-click="transactionReport(1,1);" ><?=lang('lang_Search');?></button></td>
                       
                         
                         <!--<td colspan="2">     
@@ -124,19 +124,20 @@ die;*/
         <thead>
           <tr>
           
-            <th>Sl No.</th>
-			<th> AWB No.</th>
-			 <th>Seller</th>
+          <th><?=lang('lang_SrNo');?>.</th>
+            <th> <?=lang('lang_AWB_No');?>.</th>
+            <th><?=lang('lang_Sellers');?></th>
             
-            <th>Outbound Charge</th>
+            <th><?=lang('lang_Outbound_Charge');?></th>
+            
 			<!--<th>Daily Space Rental</th>-->
-            <th>Packaging</th>
-            <th>Picking</th>
-            <th> Special Packing</th>
+            <th><?=lang('lang_Packaging');?></th>
+            <th><?=lang('lang_Picking');?></th>
+            <th> <?=lang('lang_Special_Packing');?></th>
          
-		    <th>VAT</th>
-           <th>Total Amount</th>
-            <th>Date</th>
+		      <th><?=lang('lang_VAT');?></th>
+           <th><?=lang('lang_TotalAmount');?></th>
+            <th><?=lang('lang_Date');?></th>
             
           </tr>
           
@@ -173,7 +174,7 @@ die;*/
         </tr>
         
       </table>
-      <button ng-hide="showlistData.length==totalCount" class="btn btn-info" ng-click="transactionReport(count=count+1,0);" ng-init="count=1">Load More</button>
+      <button ng-hide="showlistData.length==totalCount" class="btn btn-info" ng-click="transactionReport(count=count+1,0);" ng-init="count=1"><?=lang('lang_Load_More');?></button>
     </div>
    
     <hr>

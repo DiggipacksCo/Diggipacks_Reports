@@ -5,7 +5,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png');?>" type="image/x-icon">
-	<title>Add Storage Type</title>
+	<title><?=lang('lang_Add_Storage_Type');?></title>
 	<?php $this->load->view('include/file'); ?>
 <script src="<?=base_url();?>assets/js/angular/storage.app.js"></script>
 
@@ -34,7 +34,7 @@
 				<!-- Content area -->
 				<div class="content">
 					<div class="panel panel-flat">
-						<div class="panel-heading"><h1><strong>Add Storage Type</strong></h1></div>
+						<div class="panel-heading"><h1><strong><?=lang('lang_Add_Storage_Type');?></strong></h1></div>
 						<hr>
 						<div class="panel-body">
                   <?php if(!empty(validation_errors())) echo'<div class="alert alert-warning" role="alert"><strong>Warning!</strong> '.validation_errors().'</div>';?>
@@ -45,20 +45,20 @@
                             <input type="hidden" name="editid" value="<?php if(!empty($editid)) echo $editid;?>">
 								
                                 <div class="form-group">
-									<label for="storage_type"><strong>Storage Type:</strong></label>
+									<label for="storage_type"><strong><?=lang('lang_StorageType');?>:</strong></label>
 								<input type="text" class="form-control" name="storage_type" ng-model="storedata.storage_type" placeholder="Storage Type" value="<?php if(!empty($editdata))echo $editdata['storage_type']; ?>" required>
-                                 <span class="error" ng-show="storfrm.storage_type.$error.required"> Please Enter Storage Type </span>
+                                 <span class="error" ng-show="storfrm.storage_type.$error.required"> <?=lang('lang_Please_Enter_Storage_Type');?>  </span>
 								</div>
 								<div class="form-group">
-									<label for="rate"><strong>Price:</strong></label>
+									<label for="rate"><strong><?=lang('lang_Price');?>:</strong></label>
 									<input type="text"  class="form-control" name='rate' min="1" step="any" ng-model="storedata.rate" id="rate" placeholder="rate" value="<?php if(!empty($editdata))echo $editdata['rate']; ?>"  required>
-                                     <span class="error" ng-show="storfrm.rate.$error.required"> Please Enter Price </span>
+                                     <span class="error" ng-show="storfrm.rate.$error.required"> <?=lang('lang_Please_Enter_Price');?> </span>
 								</div>
                                
 								
 
 								<div style="padding-top: 20px;">
-                                <button type="submit" ng-disabled="storfrm.$invalid" class="btn btn-success">Submit</button>
+                                <button type="submit" ng-disabled="storfrm.$invalid" class="btn btn-success"><?=lang('lang_Submit');?></button>
                                 </div>
 							</form>
 

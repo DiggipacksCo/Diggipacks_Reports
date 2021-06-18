@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png');?>" type="image/x-icon">
-<title>Inventory</title>
+<title><?=lang('lang_Inventory');?></title>
 <?php $this->load->view('include/file'); ?>
 <script src="<?=base_url();?>assets/js/angular/finance.app.js"></script>
 
@@ -56,8 +56,8 @@ thead.report-header {
 
 <!-- Marketing campaigns -->
 <div class="panel panel-flat">
-<div class="panel-heading">
-  <h1> <strong>All Charges Invoices</strong> 
+<div class="panel-heading" dir="ltr">
+  <h1> <strong><?=lang('lang_All_Charges_Invoices');?></strong> 
 <!--     <a  id="btnExport" ><i class="icon-file-excel pull-right" style="font-size: 35px; margin-top:3px;"></i></a>&nbsp;&nbsp;-->
  
                  <a onclick="printPage();" ><i class="fa fa-print pull-right" style="font-size: 40px;color:#999;"></i></a> 
@@ -78,15 +78,15 @@ thead.report-header {
       <!-- width="170px;" height="200px;" -->
       <tbody >
         <tr style="width: 80%;">
-          <td><div class="form-group" ><strong>Sellers:</strong>
+          <td><div class="form-group" ><strong><?=lang('lang_Seller');?>:</strong>
               <select id="seller_id"name="seller_id" ng-model="filterData.seller_id" class="form-control">
-                <option value="">Select Seller</option>
+                <option value=""><?=lang('lang_SelectSeller');?></option>
                 <option ng-repeat="sdata in sellerdata"  value="{{sdata.id}}">{{sdata.name}}</option>
               </select>
             </div></td>
-             <td><div class="form-group" ><strong>Year:</strong>
+             <td><div class="form-group" ><strong><?=lang('lang_Year');?>:</strong>
               <select id="years" name="years" ng-model="filterData.years" class="form-control">
-                <option value="">Select Year</option>
+                <option value=""><?=lang('lang_select');?> <?=lang('lang_Year');?></option>
                   <?php
                     // Sets the top option to be the current year. (IE. the option that is chosen by default).
                     $currently_selected = date('Y'); 
@@ -103,16 +103,16 @@ thead.report-header {
                   ?>
               </select>
             </div></td>
-          <td><div class="form-group"> <strong>Months:</strong>
+          <td><div class="form-group"> <strong><?=lang('lang_Months');?>:</strong>
               <select id="monthid"name="monthid" ng-model="filterData.monthid" class="form-control">
-                <option value="">Select Month</option>
+                <option value=""><?=lang('lang_Select_Month');?></option>
                 <option ng-repeat="num in [0,1,2,3,4,5,6,7,8,9,10,11]"  value="{{$index + 1}}">{{$index | month}}</option>
               </select>
             </div></td>
          
-          <td><button  class="btn btn-danger" ng-click="invoiceReport(1,1);" >Get Details</button></td>
+          <td><button  class="btn btn-danger" ng-click="invoiceReport(1,1);" ><?=lang('lang_Get_Details');?></button></td>
           <td>
-          <a class="btn btn-danger" ng-click= "run_shell_fixrate();" target="_blank" >Sync</a>
+          <a class="btn btn-danger" ng-click= "run_shell_fixrate();" target="_blank" ><?=lang('lang_Sync');?></a>
            
 
           </td>
@@ -136,10 +136,10 @@ thead.report-header {
       <table class="table table-striped table-hover table-bordered dataTable bg-* display nowrap" style="width:100%; overflow:scroll;">
         <thead>
           <tr>
-            <th>Sr No.</th>
-            <th>Invoice no</th>
-             <th>Seller Name  </th>             
-             <th>Month </th>             
+            <th><?=lang('lang_Sr_No');?>.</th>
+            <th><?=lang('lang_Invoice_no');?></th>
+             <th> <?=lang('lang_Seller');?> <?=lang('lang_Name');?></th>             
+             <th><?=lang('lang_Months');?> </th>             
              <!-- <th>Pickup Charge</th>
              <th>Handline Fees </th>
              <th>Special Packing </th>
@@ -149,12 +149,12 @@ thead.report-header {
              <th>Storaage Charge </th>
              <th> Vat Charges </th>
              <th>Total Charges</th> -->
-              <th>Create Date </th>
-             <th>Pay Status </th>
-             <th>Pay Date </th>
-             <th>Pay Updated By </th>
-             <th>Created By </th>
-             <th>Action </th>
+              <th> <?=lang('lang_Created_Date');?></th>
+             <th> <?=lang('lang_Pay');?> <?=lang('lang_Status');?></th>
+             <th> <?=lang('lang_Pay_Date');?></th>
+             <th><?=lang('lang_Pay_Updated_By');?> </th>
+             <th> <?=lang('lang_Create_By');?></th>
+             <th><?=lang('lang_Action');?> </th>
           </tr>
         </thead>
         
@@ -174,15 +174,15 @@ thead.report-header {
        
           <td>SAR {{data.total_charges}} </td> -->
           <td style="width:15%;"> {{data.invoice_date}}</td>
-          <td><span ng-if= "data.pay_status=='Y'">Yes</span> <span ng-if= "data.pay_status!='Y'">No</span> </td>
+          <td><span ng-if= "data.pay_status=='Y'">Yes</span> <span ng-if= "data.pay_status!='Y'"><?=lang('lang_No');?></span> </td>
           <td style="width:15%;"> {{data.pay_date}}</td>
           <td style="width:15%;"> <span ng-if= "data.pay_update_by <= 0">NA </span> <span ng-if= "data.pay_update_by>0">{{data.payby}}</span> </td>
           <td> {{data.username}}</td>
           <td class="text-center"><ul class="icons-list">
               <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-menu9"></i> </a>
                 <ul class="dropdown-menu dropdown-menu-right">
-                  <li ><a  href="<?=base_url();?>"><i class="icon-money fa fa-money" ></i> Pay</a></li>
-                  <li ><a  href="<?=base_url();?>viewinvoice/{{data.invoice_no}}"><i class="icon-eye" ></i>  View Invoice </a></li>
+                  <li ><a  href="<?=base_url();?>"><i class="icon-money fa fa-money" ></i> <?=lang('lang_Pay');?></a></li>
+                  <li ><a  href="<?=base_url();?>viewinvoice/{{data.invoice_no}}"><i class="icon-eye" ></i>   <?=lang('lang_View_Invoice');?></a></li>
                 </ul>
               </li>
             </ul></td>

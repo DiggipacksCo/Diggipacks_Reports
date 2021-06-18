@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png');?>" type="image/x-icon">
-<title>Inventory</title>
+<title><?=lang('lang_Inventory');?></title>
 <?php $this->load->view('include/file'); ?>
 <script src="<?=base_url();?>assets/js/angular/finance.app.js"></script>
 </head>
@@ -40,8 +40,8 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('errormess').
 
 <!-- Marketing campaigns -->
 <div class="panel panel-flat">
-<div class="panel-heading">
-  <h1> <strong>Storage Charges Invoices</strong> 
+<div class="panel-heading" dir="ltr">
+  <h1> <strong><?=lang('lang_StorageChargesInvoices');?></strong> 
     <a  id="btnExport" ><i class="icon-file-excel pull-right" style="font-size: 35px; margin-top:3px;"></i></a>&nbsp;&nbsp;
  
                  <a onclick="printPage();" ><i class="fa fa-print pull-right" style="font-size: 40px;color:#999;"></i></a> 
@@ -62,20 +62,20 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('errormess').
       <!-- width="170px;" height="200px;" -->
       <tbody >
         <tr style="width: 80%;">
-          <td><div class="form-group" ><strong>Sellers:</strong>
+          <td><div class="form-group" ><strong><?=lang('lang_Sellers');?>:</strong>
               <select id="seller_id"name="seller_id" ng-model="filterData.seller_id" class="form-control">
-                <option value="">Select Seller</option>
+                <option value=""><?=lang('lang_SelectSeller');?></option>
                 <option ng-repeat="sdata in sellerdata"  value="{{sdata.id}}">{{sdata.name}}</option>
               </select>
             </div></td>
-             <td><div class="form-group" ><strong>From Date:</strong>
+             <td><div class="form-group" ><strong><?=lang('lang_From_Date');?>:</strong>
                <input type="text" name="fromdate" id="fromdate" ng-model="filterData.fromdate" class="form-control">
             </div></td>
-              <td><div class="form-group" ><strong>To Date:</strong>
+              <td><div class="form-group" ><strong><?=lang('lang_To_Date');?>:</strong>
              <input type="text" name="todate" id="todate" ng-model="filterData.todate" class="form-control">
             </div></td>
           
-          <td><button  class="btn btn-danger" ng-click="loadMore(1,1);" >Get Details</button></td>
+          <td><button  class="btn btn-danger" ng-click="loadMore(1,1);" ><?=lang('lang_Get_Details');?></button></td>
         
         </tr>
       </tbody>
@@ -100,14 +100,14 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('errormess').
       <table class="table table-striped table-hover table-bordered dataTable bg-*" id="printTable" style="width:100%;">
         <thead>
           <tr>
-            <th>Sr.No.</th>
-            <th>Date</th>
+          <th><?=lang('lang_SrNo');?></th>
+            <th><?=lang('lang_Date');?></th>
            <!-- <th>SKU</th>
             <th>QTY</th>-->
             <!--<th align="center" style="text-align:center;">Storage Details<table class="table table-striped table-hover table-bordered dataTable bg-*"><tr><th>Type</th><th>Pallets</th><th>Rates</th></tr></table></th>-->
-            <th>Total Pallets</th>
-            <th>Total Rate</th>
-            <th>Seller</th>
+            <th><?=lang('lang_Total_Pallets');?></th>
+            <th><?=lang('lang_TotalRate');?></th>
+            <th><?=lang('lang_Seller');?></th>
            <!-- <th class="text-center" ><i class="icon-database-edit2"></i></th>-->
             
           </tr>
@@ -141,7 +141,7 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('errormess').
          
         </tr>
       </table>
-      <button ng-hide="showlistData.length==totalCount" class="btn btn-info" ng-click="loadMore(count=count+1,0);" ng-init="count=1">Load More</button>
+      <button ng-hide="showlistData.length==totalCount" class="btn btn-info" ng-click="loadMore(count=count+1,0);" ng-init="count=1"><?=lang('lang_Load_More');?></button>
     </div>
     <hr>
   </div>

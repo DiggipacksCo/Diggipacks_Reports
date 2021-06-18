@@ -40,42 +40,42 @@
                                 <!-- Marketing campaigns -->
                                 <div class="panel panel-flat">
                                     <div class="panel-heading">
-                                        <h1> <strong>Bulk Create Invoice</strong> </h1>
+                                        <h1> <strong><?=lang('lang_Bulk_Create_Invoice');?></strong> </h1>
                                     </div>
 
                                     <div class="panel-body" ng-if="returnData">
                                     <div  ng-if="returnData.Available.length>0" class="alert alert-success">Available to Create Invoice <button class="float-right" ng-click="downloadexl(returnData.Available,'Available to Create Invoice ')">Download</button></div>
 
                                     <div ng-if="returnData.destinationIssue.length>0" class="alert alert-info"> Destination Missing for these sellers  
-                                    <button class="float-right" ng-click="downloadexl(returnData.destinationIssue,'Destination Missing for these sellers')">Download</button>
+                                    <button class="float-right" ng-click="downloadexl(returnData.destinationIssue,'Destination Missing for these sellers')">><?=lang('lang_Download');?><</button>
                                     </div>
 
                                     <div ng-if="returnData.belongToOther.length>0"  class="alert alert-waring"> Shipment Belongs to other seller
                                     
-                                    <button class="float-right" class="float-right" ng-click="downloadexl(returnData.belongToOther,'Shipment Belongs to other seller')">Download</button>
+                                    <button class="float-right" class="float-right" ng-click="downloadexl(returnData.belongToOther,'Shipment Belongs to other seller')">><?=lang('lang_Download');?><</button>
                                     </div>
 
                                     <div  ng-if="returnData.statusNotcorrect.length>0" class="alert alert-danger">
                                     Status Incorrect 
-                                    <button class="float-right" ng-click="downloadexl(returnData.statusNotcorrect,' Status Incorrect ')">Download</button>
+                                    <button class="float-right" ng-click="downloadexl(returnData.statusNotcorrect,' Status Incorrect ')">><?=lang('lang_Download');?><</button>
                                     </div>
 
                                     <div  ng-if="returnData.areadyExit.length>0" class="alert alert-danger">
                                     Invoice Already Created
-                                    <button class="float-right" ng-click="downloadexl(returnData.areadyExit,'Invoice Already Created')">Download</button>
+                                    <button class="float-right" ng-click="downloadexl(returnData.areadyExit,'Invoice Already Created')">><?=lang('lang_Download');?><</button>
                                     </div>
 
                                     
-                                    <input type="submit" name="track_ready" class="btn btn-primary form-control "  ng-click="createInvoice()" value="Create Invoice">	
+                                    <input type="submit" name="track_ready" class="btn btn-primary form-control "  ng-click="createInvoice()" value="<?=lang('lang_Create_Invoice');?>">	
                                     </div>
                                     <div class="panel-body" ng-if="returnData==undefined">
                                         <div class="row"> </div>
                                         <!-- <div class="alert alert-danger"><?=lang('lang_Note');?> Note Order Limit is 200</div> -->
                                         <!-- <form  method="post" action="<?= base_url(); ?>lastmile/checkInvoice"  > -->
                                             
-                                        <div class="col-md-3"><div class="form-group" ><strong>Seller:</strong> <br>
+                                        <div class="col-md-3"><div class="form-group" ><strong><?=lang('lang_Seller');?>:</strong> <br>
                                                         <select  id="seller" name="seller"  ng-model="filterData.seller"  data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%" >
-                                                            <option value="">Select Seller</option>
+                                                            <option value=""><?=lang('lang_SelectSeller');?></option>
                                                             <?php foreach ($sellers as $seller_detail): ?>
                                                                 <option value="<?= $seller_detail->id; ?>">
                                                                     <?= $seller_detail->name; ?>
@@ -100,7 +100,7 @@
                                             <div class="col-md-2"  ng-if="filterData.seller">
                                             <div class="form-group">
 
-                                            <input type="button" ng-click="checkIncvoice()"  name="track_ready" class="btn btn-primary form-control" value="Check Invoice">	
+                                            <input type="button" ng-click="checkIncvoice()"  name="track_ready" class="btn btn-primary form-control" value="<?=lang('lang_Check_Invoice');?>">	
 
                                             </div> 
                                             </div>

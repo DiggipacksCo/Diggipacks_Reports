@@ -41,7 +41,7 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('errormess').
 <!-- Marketing campaigns -->
 <div class="panel panel-flat">
 <div class="panel-heading">
-  <h1> <strong>Set Finance Rate </strong> 
+  <h1> <strong><?=lang('lang_Set_FinanceRate');?> </strong> 
     <!--  <a  ng-click="exportmanifestlist();" ><i class="icon-file-excel pull-right" style="font-size: 35px;"></i></a>--> 
     <!-- <a id="pdf" ><i class="icon-file-pdf pull-right" style="font-size: 35px;color: red;"></i></a>--> 
   </h1>
@@ -61,9 +61,9 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('errormess').
       <!-- width="170px;" height="200px;" -->
       <tbody >
         <tr style="width: 80%;">
-          <td><div class="form-group" ><strong>Sellers:</strong>
+          <td><div class="form-group" ><strong><?=lang('lang_Sellers');?>:</strong>
               <select id="seller_id"name="seller_id" ng-model="sellerdata.seller_id" class="form-control">
-                <option value="">Select Seller</option>
+                <option value=""><?=lang('lang_SelectSeller');?></option>
                 <option ng-repeat="sdata in sellerdata"  value="{{sdata.id}}">{{sdata.name}}</option>
               </select>
             </div>
@@ -73,7 +73,7 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('errormess').
               <input type ="radio" class="btn btn-danger" ng-click="" > Dynamic 
             </td> -->
             <td>
-              <button  class="btn btn-danger" ng-click="getallsetratedata();" >Get Details</button> 
+              <button  class="btn btn-danger" ng-click="getallsetratedata();" ><?=lang('lang_Get_Details');?></button> 
             </td>
         </tr>
       </tbody>
@@ -100,9 +100,9 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('errormess').
           <tr>
             
            
-            <th>Category Name</th>
-             <th>Description</th>
-            <th>Rates</th>
+          <th><?=lang('lang_Category_Name');?></th>
+             <th><?=lang('lang_Description');?></th>
+             <th><?=lang('lang_Rates');?></th>
             
             
           </tr>
@@ -118,7 +118,7 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('errormess').
           
          
         </tr>
-        <tr><td colspan="4" align="right"> <button  class="btn btn-info" ng-show = "IsVisible" ng-click="getUpdateratesdata();">Update</button></td></tr>
+        <tr><td colspan="4" align="right"> <button  class="btn btn-info" ng-show = "IsVisible" ng-click="getUpdateratesdata();"><?=lang('lang_Update');?></button></td></tr>
       </table>
      
     </div>
