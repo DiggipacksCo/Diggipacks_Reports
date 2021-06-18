@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Add New User</title>
+        <title><?=lang('lang_Add_New_User');?></title>
         <?php $this->load->view('include/file'); ?>
 
 
@@ -37,7 +37,7 @@ $countyname="'".$EditData['country']."'";
                     <!-- Content area -->
                     <div class="content">
                         <div class="panel panel-flat">
-                            <div class="panel-heading"><h1><strong> <?php if(!empty($EditData)){ echo 'Edit';} else { echo 'Add';}?> City</strong></h1></div>
+                            <div class="panel-heading"><h1><strong> <?php if(!empty($EditData)){ echo 'Edit';} else { echo 'Add';}?> <?=lang('lang_City');?></strong></h1></div>
                             <hr>
                             <div class="panel-body">
                                 <?php if (!empty(validation_errors())) echo'<div class="alert alert-warning" role="alert"><strong>Warning!</strong> ' . validation_errors() . '</div>'; ?>
@@ -52,10 +52,10 @@ $countyname="'".$EditData['country']."'";
                                     <input type="hidden" id="id" name="id" value="<?=$EditData['id'];?>">
                                     
                                      <div class="form-group">
-                                        <label for="country" ><strong>Country:</strong></label>
+                                        <label for="country" ><strong><?=lang('lang_Country');?>:</strong></label>
                                         <select name="country" class="form-control" id="country" ng-model="country" ng-change="getStatelist(country);">
                                             
-                                            <option value="">Select</option>
+                                            <option value=""><?=lang('lang_select');?></option>
                                             <?php 
                                             
                                             foreach($Countrylist as $val)
@@ -74,20 +74,20 @@ $countyname="'".$EditData['country']."'";
                                     </div> 
                                     
                                      <div class="form-group">
-                                        <label for="state" ><strong>Select Hub:</strong></label>
+                                        <label for="state" ><strong><?=lang('lang_select');?> <?=lang('lang_Hub');?>:</strong></label>
                                         <select name="state" class="form-control" id="state" ng-model="state" >
                                             
-                                            <option value="">Select Hub</option>
+                                            <option value=""><?=lang('lang_select');?> <?=lang('lang_Hub');?></option>
                                             <option ng-repeat="cdata in stateListArr" value="{{cdata.state}}">{{cdata.state}}</option>
                                           
                                         </select>
                                     </div> 
                                     <div class="form-group">
-                                        <label for="state"><strong>City Name:</strong></label>
+                                        <label for="state"><strong><?=lang('lang_City');?> <?=lang('lang_Name');?>:</strong></label>
                                        <input type="text" class="form-control" name='city' id="country" placeholder="Enter City" value="<?=$EditData['city'];?>">
                                     </div> 
                                       <div class="form-group">
-                                        <label for="city_code"><strong>City Code:</strong></label>
+                                        <label for="city_code"><strong><?=lang('lang_City_Code');?>:</strong></label>
                                        <input type="text" class="form-control" name='city_code' id="country" placeholder="Enter City Code" value="<?=$EditData['city_code'];?>">
                                     </div> 
                                    
@@ -97,7 +97,7 @@ $countyname="'".$EditData['country']."'";
 
 
                                     <div style="padding-top: 20px;">
-                                        <button type="submit" class="btn btn-success">Submit</button>
+                                        <button type="submit" class="btn btn-success"><?=lang('lang_Submit');?></button>
                                     </div>
                                 </form>
 

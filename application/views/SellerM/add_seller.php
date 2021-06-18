@@ -48,24 +48,24 @@
                 
                  <div class="form-group radiosection">
                       <label for="access_lm"><strong><?=lang('lang_Access_LM');?>:</strong></label><br>
-                      <input type="radio" name="access_lm" id="access_lm" value="Y">  Yes <input type="radio" name="access_lm" id="access_lm" checked="" value="N">  No                      
+                      <input type="radio" name="access_lm" id="access_lm" value="Y">  <?= lang('lang_Yes'); ?> <input type="radio" name="access_lm" id="access_lm" checked="" value="N">  <?= lang('lang_No'); ?>                      
                   </div>
 
                   <div class="form-group radiosection">
-                      <label for="auto_forward"><strong>Auto Forwarding :</strong></label><br>                      
-                      <input type="radio" name="auto_forward" id="auto_forward" value="Y">  Yes <input type="radio" name="auto_forward" id="auto_forward" checked="" value="N">  No
+                      <label for="auto_forward"><strong><?= lang('lang_Auto_Forwarding'); ?>:</strong></label><br>                      
+                      <input type="radio" name="auto_forward" id="auto_forward" value="Y">  <?= lang('lang_Yes'); ?> <input type="radio" name="auto_forward" id="auto_forward" checked="" value="N">  <?= lang('lang_No'); ?>
                   </div>
 
                   <div class="form-group radiosection">
-                      <label for="invoice_type"><strong>Invoice Type :</strong></label><br>
+                      <label for="invoice_type"><strong><?= lang('lang_Invoice_Type'); ?> :</strong></label><br>
                       
-                      <input type="radio" name="invoice_type" id="invoice_type" value="Fix Rate">  Fix Rate <input type="radio" name="invoice_type" id="invoice_type" checked="" value="Dynamic">  Dynamic
+                      <input type="radio" name="invoice_type" id="invoice_type" value="Fix Rate">  <?= lang('lang_Fix_Rate'); ?> <input type="radio" name="invoice_type" id="invoice_type" checked="" value="Dynamic">  <?= lang('lang_Dynamic'); ?> 
                   </div> 
 
                   <div class="form-group radiosection">
-                      <label for="first_out"><strong>Inventory First In First Out: :</strong></label><br>
+                      <label for="first_out"><strong><?= lang('lang_Inventory_First_In_First_Out'); ?>  :</strong></label><br>
                       
-                      <input type="radio" name="first_out" id="first_out" value="Y">  Yes <input type="radio" name="first_out" id="first_out" checked="" value="N">  No
+                      <input type="radio" name="first_out" id="first_out" value="Y">  <?= lang('lang_Yes'); ?> <input type="radio" name="first_out" id="first_out" checked="" value="N">  <?= lang('lang_No'); ?>
                   </div>
 
                 <div class="form-group">

@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>All Users</title>
+        <title><?= lang('lang_All_Users'); ?></title>
         <?php $this->load->view('include/file'); ?>
     </head>
 
@@ -35,11 +35,11 @@
                         ?>
 
                         <!-- Basic responsive table -->
-                        <div class="panel panel-flat" > 
+                        <div class="panel panel-flat" dir="ltr"> 
                             <!--style="padding-bottom:220px;background-color: lightgray;"-->
                             <div class="panel-heading"> 
                                 <!-- <h5 class="panel-title">Basic responsive table</h5> -->
-                                <h1><strong>Users Table</strong></h1>
+                                <h1><strong><?= lang('lang_Users_Table'); ?></strong></h1>
                                 <div class="heading-elements">
                                     <ul class="icons-list">
                                         <!-- <li><a data-action="collapse"></a></li>
@@ -49,7 +49,7 @@
                                 </div>
                                 <hr>
                             </div>
-                            <div class="panel-body" > 
+                            <div class="panel-body"dir="rtl" > 
 
 <!-- <input type="text" id="search"  placeholder="Search .." class="form-control">
                                 -->
@@ -59,12 +59,12 @@
                                     <table class="table table-striped table-hover table-bordered dataTable bg-*" id="example">
                                         <thead>
                                             <tr>
-                                                <th>Sr.No.</th>
-                                                <th>Username</th>
-                                                <th>User Type</th>
-                                                <th>Email</th>
-                                                <th>Mobile No.</th>
-                                                <th>User Logo</th>
+                                                 <th><?= lang('lang_SrNo'); ?>.</th>
+                                                <th><?= lang('lang_Username'); ?></th>
+                                                <th><?= lang('lang_User_Type'); ?></th>
+                                                <th><?= lang('lang_Email'); ?></th>
+                                                <th><?= lang('lang_Mobile_No'); ?>.</th>
+                                                <th><?= lang('lang_User_Logo'); ?></th>
                                                 <th class="text-center" ><i class="icon-database-edit2"></i></th>
                                             </tr>
                                         </thead>
@@ -91,14 +91,14 @@
                                                                 <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-menu9"></i> </a>
                                                                     <ul class="dropdown-menu dropdown-menu-right">
                                                                         <?php if ($this->session->userdata('user_details')['user_type'] == 1) { ?>
-                                                                            <li><a href="<?= site_url('user-privilege/' . $user->id); ?>"><i class="fa fa-star"></i> Privilege  Access</a></li>
+                                                                            <li><a href="<?= site_url('user-privilege/' . $user->id); ?>"><i class="fa fa-star"></i> <?= lang('lang_Privilege_Access'); ?></a></li>
                                                                         <?php } ?>
 
 
                                                       
-                                                        <li><a href="<?= site_url('update-user/' . $user->id); ?>"><i class="icon-pencil7"></i> Edit </a></li>
+                                                        <li><a href="<?= site_url('update-user/' . $user->id); ?>"><i class="icon-pencil7"></i>  <?= lang('lang_Edit'); ?> </a></li>
 
-                                                        <li><a href="<?= site_url('delete-user/' . $user->id); ?>"><i class="icon-bin"></i> Delete </a></li>
+                                                        <li><a href="<?= site_url('delete-user/' . $user->id); ?>"><i class="icon-bin"></i> <?= lang('lang_Delete'); ?> </a></li>
 
                                                                     </ul>
 

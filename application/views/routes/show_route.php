@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>All Users</title>
+        <title><?=lang('lang_All_Users');?></title>
         <?php $this->load->view('include/file'); ?>
        <script src="<?=base_url();?>assets/js/angular/routemanagementCtrl.js"></script>
     </head>
@@ -38,9 +38,9 @@
                         <!-- Basic responsive table -->
                         <div class="panel panel-flat" > 
                             <!--style="padding-bottom:220px;background-color: lightgray;"-->
-                            <div class="panel-heading"> 
+                            <div class="panel-heading" dir="ltr"> 
                                 <!-- <h5 class="panel-title">Basic responsive table</h5> -->
-                                <h1><strong>Show Route</strong> <a class="btn btn-primary mb-10 pull-right" href="<?=base_url('add_route');?>" style="margin-left: 10px;">Add Route</a> </h1>
+                                <h1><strong><?= lang('lang_Show_Route'); ?></strong> <a class="btn btn-primary mb-10 pull-right" href="<?=base_url('add_route');?>" style="margin-left: 10px;"><?= lang('lang_Add_Route'); ?></a> </h1>
                                
                                 
                             </div>
@@ -52,11 +52,11 @@
                                     <table class="table table-striped table-hover table-bordered">
                                         <thead>
                                             <tr>
-                                                <th>Sr.No.</th>
-                                                <th>Route Code</th>
-                                                <th>Route</th>
-                                                <th>Arabic Keyword</th>
-                                                <th>latitude,longitude</th>
+                                                <th><?=lang('lang_SrNo');?>.</th>
+                                                <th><?=lang('lang_Route_Code');?></th>
+                                                <th><?=lang('lang_Route');?></th>
+                                                <th><?=lang('lang_Arabic_Keyword');?></th>
+                                                <th><?=lang('lang_latitude_longitude');?></th>
 
                                                 <th class="text-center" ><i class="icon-database-edit2"></i></th>
                                             </tr>
@@ -72,8 +72,8 @@
                                                   <td class="text-center"><ul class="icons-list">
                                                                 <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-menu9"></i> </a>
                                                                     <ul class="dropdown-menu dropdown-menu-right">
-                                                                        <li><a href="<?= site_url()?>edit_route/{{data.id}}"> Edit </a></li>
-                                                                        <li><a href="<?= site_url()?>delete_route/{{data.id}}"> Delete </a></li>
+                                                                        <li><a href="<?= site_url()?>edit_route/{{data.id}}">  <?=lang('lang_Edit');?></a></li>
+                                                                        <li><a href="<?= site_url()?>delete_route/{{data.id}}"> <?=lang('lang_Delete');?> </a></li>
                                                                     </ul>
 
                                                                 </li>
@@ -83,7 +83,7 @@
                                         </tbody>
                                     </table>
                                     
-                                     <button ng-hide="RoutelistArray.length==totalCount" class="btn btn-info" ng-click="getRoutelist(count=count+1,0);" ng-init="count=1">Load More</button>
+                                     <button ng-hide="RoutelistArray.length==totalCount" class="btn btn-info" ng-click="getRoutelist(count=count+1,0);" ng-init="count=1"><?=lang('lang_Load_More');?></button>
                                 </div>
 
                                 <hr>

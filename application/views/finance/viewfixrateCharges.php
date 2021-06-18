@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png');?>" type="image/x-icon">
-<title>Inventory</title>
+<title><?=lang('lang_Inventory');?></title>
 <?php $this->load->view('include/file'); ?>
 <script src="<?=base_url();?>assets/js/angular/finance.app.js"></script>
 </head>
@@ -41,7 +41,7 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('errormess').
 <!-- Marketing campaigns -->
 <div class="panel panel-flat">
 <div class="panel-heading">
-  <h1> <strong>Set Finance Rate </strong> 
+  <h1> <strong><?=lang('lang_Set_FinanceRate');?> </strong> 
     <!--  <a  ng-click="exportmanifestlist();" ><i class="icon-file-excel pull-right" style="font-size: 35px;"></i></a>--> 
     <!-- <a id="pdf" ><i class="icon-file-pdf pull-right" style="font-size: 35px;color: red;"></i></a>--> 
   </h1>
@@ -61,14 +61,14 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('errormess').
       <!-- width="170px;" height="200px;" -->
       <tbody >
         <tr style="width: 80%;">
-          <td><div class="form-group" ><strong>Sellers:</strong>
+          <td><div class="form-group" ><strong><?=lang('lang_Sellers');?>:</strong>
               <select id="seller_id"name="seller_id" ng-model="sellerdata.seller_id" class="form-control">
-                <option value="">Select Seller</option>
+                <option value=""><?=lang('lang_SelectSeller');?></option>
                 <option ng-repeat="sdata in sellerdata"  value="{{sdata.id}}">{{sdata.name}}</option>
               </select>
             </div>
           </td>
-            <td> <button  class="btn btn-danger" ng-click="getallfixratedata();" >Get Details</button> </td>
+            <td> <button  class="btn btn-danger" ng-click="getallfixratedata();" ><?=lang('lang_Get_Details');?></button> </td>
         </tr>
       </tbody>
     </table>
@@ -92,9 +92,9 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('errormess').
       <table class="table table-striped table-hover table-bordered dataTable bg-*" id="example" style="width:100%;">
         <thead>
           <tr>
-             <th>Category Name</th>
-             <th>Description</th>
-             <th>Rates</th>
+          <th><?=lang('lang_Category_Name');?></th>
+             <th><?=lang('lang_Description');?></th>
+             <th><?=lang('lang_Rates');?></th>
           </tr>
         </thead>
         
@@ -108,7 +108,7 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('errormess').
                
          
         </tr>
-        <tr><td colspan="4" align="right"> <button  class="btn btn-info" ng-show = "IsVisible" ng-click="getUpdateratesdata();">Update</button></td></tr>
+        <tr><td colspan="4" align="right"> <button  class="btn btn-info" ng-show = "IsVisible" ng-click="getUpdateratesdata();"><?=lang('lang_Update');?></button></td></tr>
       </table>
      
     </div>

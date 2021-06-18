@@ -42,11 +42,11 @@
                                 <!-- Marketing campaigns -->
                                 <div class="panel panel-flat">
                                     <div class="panel-heading">
-                                        <h1> <strong>Bulk Tracking</strong> </h1>
+                                        <h1> <strong><?=lang('lang_bulk_tracking');?></strong> </h1>
                                     </div>
                                     <div class="panel-body">
                                         <div class="row"> </div>
-                                        <div class="alert alert-danger"><?=lang('lang_Note');?> Note Order Limit is 200</div>
+                                        <div class="alert alert-danger"><?=lang('lang_Note');?> <?=lang('lang_Order_Limit_is_two_Hundred');?></div>
                                         <form  method="post" action="<?= base_url(); ?>Shipment/BulkTrackingsbt"  >
                                             <div class="col-md-12">
                                                 <div class="form-group">
@@ -65,7 +65,7 @@
                                             <div class="col-md-2" >
                                             <div class="form-group">
 
-                                            <input type="submit" name="track_ready" class="btn btn-primary form-control checkdisable" value="Track">	
+                                            <input type="submit" name="track_ready" class="btn btn-primary form-control checkdisable" value="<?=lang('lang_Track');?>">	
 
                                             </div> 
                                             </div>

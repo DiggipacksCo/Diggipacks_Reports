@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Inventory</title>
+        <title><?=lang('lang_Inventory');?></title>
         <?php $this->load->view('include/file'); ?>
 
         <script type="text/javascript" src="<?=base_url();?>assets/js/angular/generalSetting.js"></script>
@@ -55,9 +55,9 @@
 
                                 <!-- Marketing campaigns -->
                                 <div class="panel panel-flat">
-                                    <div class="panel-heading">
+                                    <div class="panel-heading" dir="ltr">
                                         <h1>
-                                            <strong>Forward Log</strong>
+                                            <strong><?=lang('lang_Forward_Log');?></strong>
                                             <!--<a  ng-click="exportExcel();" >-->
                                             <!-- <a  ng-click="getExcelDetails();" >   
                                                 <i class="icon-file-excel pull-right" style="font-size: 35px;"></i></a> 
@@ -81,25 +81,25 @@
 
                                                 <!-- <div class="panel-body" > -->
                                                
-                                                <div class="col-md-3"> <div class="form-group" ><strong>AWB :</strong>
+                                                <div class="col-md-3"> <div class="form-group" ><strong><?=lang('lang_AWB');?> :</strong>
                                                         <input type="text" id="s_type_val" name="s_type_val"  ng-model="filterData.slip_no"  class="form-control" placeholder="Enter AWB no.">
                                                         <!--  <?php // if($condition!=null):      ?>
                                                          <input type="text" id="condition" name="condition" class="form-control" value="<?= $condition; ?>" >
                                                         <?php // endif;  ?> -->
                                                     </div></div>
-                                                <div class="col-md-3">  <div class="form-group" ><strong>Status:</strong>
+                                                <div class="col-md-3">  <div class="form-group" ><strong><?=lang('lang_Status');?>:</strong>
                                                         <br>
                                                         <select  id="status" name="status" ng-model="filterData.status" class="selectpicker"  data-show-subtext="true" data-live-search="true" data-width="100%" >
 
-                                                        <option value="">Select status</option>
-                  <option value="Success">Success</option>     
-                  <option value="Fail">Fail</option>     
+                                                        <option value=""><?=lang('lang_Select_Status');?></option>
+                  <option value="Success"><?=lang('lang_Success');?></option>     
+                  <option value="Fail"><?=lang('lang_Fail');?></option>     
                                                             
                                                         </select>
                                                     </div> </div>
                                              
                                                 
-                                                <div class="col-md-3"> <div class="form-group" ><strong>Company:</strong>
+                                                <div class="col-md-3"> <div class="form-group" ><strong><?=lang('lang_company');?>:</strong>
                                                         <br>
                                                         <?php
                                                         //$destData = getAllDestination();
@@ -107,7 +107,7 @@
                                                         ?>
                                                         <select  id="cc_id" name="cc_id"  ng-model="filterData.cc_id"  data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%" >
 
-                                                            <option value="">Select Company</option>
+                                                            <option value=""><?=lang('lang_Select_Company');?></option>
                                                             <?php foreach (GetCourierCompanyDrop() as $data): ?>
                                                                 <option value="<?= $data['id']; ?>"><?= $data['company']; ?></option>
                                                             <?php endforeach; ?>
@@ -119,8 +119,8 @@
                                              
                                              
                                                 <div class="col-md-5"><div class="form-group" >
-                                                        <button  class="btn btn-danger" ng-click="loadMore(1, 1);" >Search</button>
-                                                        <button type="button" class="btn btn-success" style="margin-left: 7%">Total <span class="badge">{{shipData.length}}/{{totalCount}}</span></button>
+                                                        <button  class="btn btn-danger" ng-click="loadMore(1, 1);" ><?=lang('lang_Search');?></button>
+                                                        <button type="button" class="btn btn-success" style="margin-left: 7%"><?=lang('lang_Total');?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button>
                                                         
                                                  
 
@@ -156,11 +156,11 @@
 
                                             <tr>
                                             <th>#</th>
-                                      <th>Awb No.</th>
-                                      <th>Status</th>
-                                      <th>Company</th>
-                                      <th>Entry Date</th>
-                                      <th>Log</th>
+                                      <th><?=lang('lang_AWB_No');?>.</th>
+                                      <th><?=lang('lang_Status');?></th>
+                                      <th><?=lang('lang_company');?></th>
+                                      <th><?=lang('lang_Entry_Date');?></th>
+                                      <th><?=lang('lang_Log');?></th>
                                       
                                                                 
                                            
@@ -181,7 +181,7 @@
 
                                     </table>
 
-                                    <button ng-hide="shipData.length == totalCount" class="btn btn-info" ng-click="loadMore(count = count + 1, 0);" ng-init="count = 1">Load More</button>
+                                    <button ng-hide="shipData.length == totalCount" class="btn btn-info" ng-click="loadMore(count = count + 1, 0);" ng-init="count = 1"><?=lang('lang_Load_More');?></button>
                                 </div>
                                 <hr>
                             </div>

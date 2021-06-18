@@ -12,7 +12,7 @@ die;*/
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png');?>" type="image/x-icon">
-<title>Inventory</title>
+<title><?=lang('lang_Inventory');?></title>
 <?php $this->load->view('include/file'); ?>
 <script src="<?=base_url();?>assets/js/angular/finance.app.js"></script>
 
@@ -63,8 +63,8 @@ thead.report-header {
 
 <!-- Marketing campaigns -->
 <div class="panel panel-flat">
-<div class="panel-heading">
-  <h1> <strong>All Charges Invoices</strong> 
+<div class="panel-heading" dir="ltr">
+  <h1> <strong><?=lang('lang_All_Charges_Invoices');?></strong> 
 <!--     <a  id="btnExport" ><i class="icon-file-excel pull-right" style="font-size: 35px; margin-top:3px;"></i></a>&nbsp;&nbsp;-->
  
                  <a onclick="printPage();" ><i class="fa fa-print pull-right" style="font-size: 40px;color:#999;"></i></a> 
@@ -85,15 +85,15 @@ thead.report-header {
       <!-- width="170px;" height="200px;" -->
       <tbody >
         <tr style="width: 80%;">
-          <td><div class="form-group" ><strong>Sellers:</strong>
+          <td><div class="form-group" ><strong><?=lang('lang_Seller');?>:</strong>
               <select id="seller_id"name="seller_id" ng-model="filterData.seller_id" class="form-control">
-                <option value="">Select Seller</option>
+                <option value=""><?=lang('lang_SelectSeller');?></option>
                 <option ng-repeat="sdata in sellerdata"  value="{{sdata.id}}">{{sdata.name}}</option>
               </select>
             </div></td>
-             <td><div class="form-group" ><strong>Year:</strong>
+             <td><div class="form-group" ><strong><?=lang('lang_Year');?>:</strong>
               <select id="years" name="years" ng-model="filterData.years" class="form-control">
-                <option value="">Select Year</option>
+                <option value=""><?=lang('lang_select');?> <?=lang('lang_Year');?></option>
               <?php
               
   // Sets the top option to be the current year. (IE. the option that is chosen by default).
@@ -113,14 +113,14 @@ thead.report-header {
   ?>
               </select>
             </div></td>
-          <td><div class="form-group" ><strong>Months:</strong>
+          <td><div class="form-group" ><strong><?=lang('lang_Months');?>:</strong>
               <select id="monthid"name="monthid" ng-model="filterData.monthid" class="form-control">
-                <option value="">Select Month</option>
+                <option value=""><?=lang('lang_Select_Month');?></option>
                 <option ng-repeat="num in [0,1,2,3,4,5,6,7,8,9,10,11]"  value="{{$index + 1}}">{{$index | month}}</option>
               </select>
             </div></td>
          
-          <td><button  class="btn btn-danger" ng-click="loadMore(1,0);" >Get Details</button></td>
+          <td><button  class="btn btn-danger" ng-click="loadMore(1,0);" ><?=lang('lang_Get_Details');?></button></td>
         </tr>
       </tbody>
     </table>
@@ -150,7 +150,7 @@ thead.report-header {
       <table ng-show="tableshow" class="table table-striped table-hover table-bordered dataTable bg-* display nowrap"  style="width:100%;">
         <thead >
             
-            <tr><th colspan="14" align="center" style="text-align:center;">Tax Invoice</th></tr>
+            <tr><th colspan="14" align="center" style="text-align:center;"><?=lang('lang_Tax_Invoice');?></th></tr>
             
             <tr>
         <th colspan="5">

@@ -11,7 +11,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
         
 
-        <title>Inventory</title>
+        <title><?= lang('lang_Inventory'); ?></title>
         <?php $this->load->view('include/file'); ?>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script> 
@@ -46,7 +46,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <!-- Content area -->
                     <div class="content">
                         <div class="panel panel-flat">
-                            <div class="panel-heading"><h1><strong>Edit Seller</strong></h1></div>
+                            <div class="panel-heading"><h1><strong><?= lang('lang_Edit_Seller'); ?></strong></h1></div>
                             <hr>
                             <div class="panel-body">
 
@@ -55,11 +55,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                                     <div class="form-group ">
                                         <p style="display:none;">
-                                            <label>Account No</label>
+                                            <label><?= lang('lang_Account_No'); ?></label>
                                             <input type="text" name="uniqueid" readonly="1" class="form-control" />
                                     </div>
                                     <fieldset class="scheduler-border">
-                                        <legend class="scheduler-border">Profile Details</legend>
+                                        <legend class="scheduler-border"><?= lang('lang_Profile_Details'); ?></legend>
 
 
                                         <?php
@@ -94,14 +94,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         ?>
                                         
                                         <div class="form-group radiosection">
-                                        <label for="auto_forward"><strong>Auto Forwarding :</strong></label><br>
+                                            <label for="auto_forward"><strong> <?= lang('lang_Auto_Forwarding'); ?>:</strong></label><br>
                                         
-                                        <input type="radio" name="auto_forward" id="auto_forward"  <?= $checkauto1; ?>  value="Y">  Yes <input type="radio" name="auto_forward" id="auto_forward"  <?= $checkauto2; ?>  value="N">  No
+                                        <input type="radio" name="auto_forward" id="auto_forward"  <?= $checkauto1; ?>  value="Y">  <?= lang('lang_Yes'); ?> <input type="radio" name="auto_forward" id="auto_forward"  <?= $checkauto2; ?>  value="N">  <?= lang('lang_No'); ?>
                                         </div>
                                         <div class="form-group radiosection">
-                                            <label for="access_lm"><strong>Access LM:</strong></label><br>
+                                            <label for="access_lm"><strong><?= lang('lang_Access_LM'); ?>:</strong></label><br>
 
-                                            <input type="radio" name="access_lm" id="system_access" <?= $check1; ?>  value="Y">  Yes <input type="radio" name="access_lm" id="system_access1" <?= $check2; ?>  value="N">  No
+                                            <input type="radio" name="access_lm" id="system_access" <?= $check1; ?>  value="Y">  <?= lang('lang_Yes'); ?> <input type="radio" name="access_lm" id="system_access1" <?= $check2; ?>  value="N">  <?= lang('lang_No'); ?>
                                         </div>
                                         <!-- <div class="form-group radiosection">
                                             <label for="access_lm"><strong>Invoice Type:</strong></label><br>
@@ -110,25 +110,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         </div> -->
                                         
                                           <div class="form-group radiosection">
-                                            <label for="access_lm"><strong>Inventory First In First Out:</strong></label><br>
+                                            <label for="access_lm"><strong><?= lang('lang_Inventory_First_In_First_Out'); ?>:</strong></label><br>
 
-                                            <input type="radio" name="first_out" id="first_out" <?= $checkfirst_out; ?>  value="Y">  Yes <input type="radio" name="first_out" id="invoice_type1" <?= $checkfirst_out1; ?> value="N"> No
+                                            <input type="radio" name="first_out" id="first_out" <?= $checkfirst_out; ?>  value="Y">  <?= lang('lang_Yes'); ?> <input type="radio" name="first_out" id="invoice_type1" <?= $checkfirst_out1; ?> value="N"> <?= lang('lang_No'); ?>
                                         </div>
                                         <div class="form-group">
-                                            <label>Name</label>
+                                            <label><?= lang('lang_Name'); ?></label>
                                             <input type="text"  class="form-control" id="name" name="name" value="<?= $customer['name']; ?>"/>
                                         </div>
 
                                         <div class="form-group">
-                                            <label>Company Name</label>
+                                            <label><?= lang('lang_Company_name'); ?></label>
                                             <input type="text" class="form-control" id="company" name="company" value="<?= $customer['company']; ?>"/>
                                         </div>
 
                                         <div class="form-group">
-                                            <label>City</label>
+                                            <label><?= lang('lang_City'); ?></label>
                                             <span id="city"></span>
                                             <select name="city_drop" id="city_drop" required class="form-control">
-                                                <option  selected="selected">Please Select City<?= $customer['city']; ?></option>
+                                                <option  selected="selected"><?= lang('lang_Please_Select_City'); ?><?= $customer['city']; ?></option>
                                             <?php
                                             if (!empty($city_drp)) {
                                                 foreach ($city_drp as $cry) {
@@ -144,59 +144,59 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label>Address</label>
+                                            <label><?= lang('lang_Address'); ?></label>
                                             <input type="text" class="form-control" id="address" name="address" value="<?= $customer['address']; ?>"/>
                                         </div>
                                         <div class="form-group">
-                                            <label>Phone No 1</label>
+                                            <label> <?= lang('lang_PhoneNo'); ?>1</label>
                                             <input type="text" name="phone1" class="form-control" id="phone1" value="<?= $customer['phone']; ?>"/>
                                         </div>
                                         <div class="form-group">
-                                            <label>Phone No 2</label>
+                                            <label><?= lang('lang_PhoneNo'); ?> 2</label>
                                             <input type="text"  name="phone2" class="form-control" id="phone2" value="<?= $customer['fax']; ?>"/>
                                         </div>
                                         <div class="form-group">
-                                            <label> Store Link:<span class="bold_alert">*</span></label>
+                                            <label> <?= lang('lang_Store_Link'); ?>:<span class="bold_alert">*</span></label>
                                             <input class="form-control" type="text" name="store_link" id="store_link" value="<?= $customer['store_link']; ?>" placeholder=" Store Link"/>
                                         </div>
                                     </fieldset>
                                     <!--========================================Bank Detail=======================-->
 
                                     <fieldset class="scheduler-border">
-                                        <legend class="scheduler-border">Bank Details</legend>
+                                        <legend class="scheduler-border"><?= lang('lang_Bank_Detail'); ?> </legend>
                                         <div class="form-group">
-                                            <label>Bank Name</label>
+                                            <label><?= lang('lang_Bank_Name'); ?> </label>
                                             <input type="text"  class="form-control" name="bank_name" id="bank_name" value="<?= $customer['bank_name']; ?>"/>
                                         </div>
                                         <div class="form-group">
-                                            <label>Account Number</label>
+                                            <label><?= lang('lang_Account_Number'); ?> </label>
                                             <input type="text"  class="form-control" name="account_number" id="account_number" value="<?= $customer['account_number']; ?>"/>
                                         </div>
                                         <div class="form-group">
-                                            <label>Iban Number</label>
+                                            <label><?= lang('lang_Iban_Number'); ?> </label>
                                             <input type="text"  class="form-control" name="iban_number" id="iban_number" value="<?= $customer['iban_number']; ?>"/>
                                         </div>
                                         <div class="form-group">
-                                            <label>Account Manager</label>
+                                            <label><?= lang('lang_Account_Manager'); ?> </label>
                                             <input type="text" class="form-control" name="account_manager" id="account_manager" value="<?= $customer['account_manager']; ?>"/>
                                         </div>
                                         <div class="form-group">
-                                            <label>Manager Email</label>
+                                            <label><?= lang('lang_Manager_Email'); ?> </label>
                                             <input type="text" class="form-control" name="managerEmail" id="managerEmail" value="<?= $customer['managerEmail']; ?>"/>
                                         </div>
                                         <div class="form-group">
-                                            <label>Manager Number</label>
+                                            <label><?= lang('lang_Manager_Number'); ?> </label>
                                             <input type="text" class="form-control" name="managerMobileNo" id="managerMobileNo" value="<?= $customer['managerMobileNo']; ?>"/>
                                         </div>
                                         <div class="form-group">
-                                            <label>Bank Fee:</label>
+                                            <label><?= lang('lang_Bank_Fee'); ?> :</label>
                                             <input type="num"  class="form-control" name="bankfee" id="bankfee" value="<?= $customer['bank_fees']; ?>"/>
                                         </div>
                                     </fieldset>
                                     <fieldset class="scheduler-border">
-                                        <legend class="scheduler-border">Files</legend>
+                                        <legend class="scheduler-border"><?= lang('lang_Files'); ?></legend>
                                         <div class="form-group">
-                                            <label>Upload CR (pdf):</label>
+                                            <label><?= lang('lang_UploadCRpdf'); ?> :</label>
                                             <input type="file"  class="form-control" name="upload_cr" id="upload_cr" />
                                             <input type="hidden"   name="upload_cr_old"  value="<?= $customer['upload_cr']; ?>" />
                                         </div>
@@ -216,7 +216,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         }
                                         ?>
                                         <div class="form-group">
-                                            <label>Upload ID (pdf):</label>
+                                            <label><?= lang('lang_UploadIDpdf'); ?> :</label>
                                             <input type="file"  class="form-control" name="upload_id" id="upload_id" />
                                             <input type="hidden"   name="upload_id_old"  value="<?= $customer['upload_id']; ?>" />
                                         </div>
@@ -235,7 +235,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         }
                                         ?>
                                         <div class="form-group">
-                                            <label>Upload Contract (pdf):</label>
+                                            <label><?= lang('lang_UploadContractpdf'); ?> :</label>
                                             <input type="file"  class="form-control" name="upload_contact" id="upload_contact" />
                                             <input type="hidden"   name="upload_contact_old"  value="<?= $customer['upload_contact']; ?>" />
                                         </div>
@@ -256,13 +256,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         ?>
                                     </fieldset>
                                     <fieldset class="scheduler-border">
-                                        <legend class="scheduler-border">Contract</legend>
+                                        <legend class="scheduler-border"><?= lang('lang_Contract'); ?> </legend>
                                         <div class="form-group">
-                                            <label> Contract Date </label>
+                                            <label> <?= lang('lang_Contract_Date'); ?>  </label>
                                             <input class="form-control" type="date" name="entrydate" id="entrydate"  value="<?= $customer['entrydate']; ?>"/>
                                         </div>
                                         <div class="form-group">
-                                            <label> Vat No</label>
+                                            <label> <?= lang('lang_Vat_No'); ?> </label>
                                             <input class="form-control" type="text" name="vat_no" id="vat_no"  value="<?= $customer['vat_no']; ?>"/>
                                         </div>
                                     </fieldset>
@@ -272,13 +272,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                   <strong>B2C Client</strong>&nbsp;&nbsp;<input type="radio" name="VIP_user" checked="checked" />
                                                   </div>-->
                                     <fieldset class="scheduler-border">
-                                        <legend class="scheduler-border">Login Details</legend>
+                                        <legend class="scheduler-border"><?= lang('lang_Login_Details'); ?> </legend>
                                         <div class="form-group">
-                                            <label>Email</label>
+                                            <label><?= lang('lang_Email'); ?> </label>
                                             <input type="text"  class="form-control" id="email" name="email" value="<?= $customer['email']; ?>" disabled/>
                                         </div>
                                         <div class="form-group">
-                                            <label>Password</label>
+                                            <label><?= lang('lang_Password'); ?> </label>
                                             <input type="password" class="form-control" value="" name="password"  id="alert_password" autocorrect="off" spellcheck="false" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');" />
                                         </div>
 
@@ -291,13 +291,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <?php  } ?>
                                  
                                     <fieldset class="scheduler-border" id="show_zid_details" <?php echo ($customer['zid_active'] == 'Y' ? 'style="display:block"' : 'style="display:none"'); ?>>   
-                                        <legend class="scheduler-border">Zid Details</legend>
+                                        <legend class="scheduler-border">Zid <?= lang('lang_DETAILS'); ?> </legend>
                                         <div class="form-group">
                                             <label>X-MANAGER-TOKEN</label>
                                             <input type="text" class="form-control" name="manager_token" id="manager_token" value="<?= $customer['manager_token']; ?>"/>
                                         </div>
                                         <div class="form-group">
-                                            <label>User-Agent</label>
+                                            <label><?= lang('lang_User_Agent'); ?>t</label>
                                             <input type="text"  class="form-control" name="user_Agent" id="user_Agent" value="<?= $customer['user_Agent']; ?>"/>
                                         </div>
                                         
@@ -311,12 +311,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                                     <?php  } ?>
 									 <fieldset class="scheduler-border" id="show_salla_details" <?php echo ($customer['salla_active'] == 'Y' ? 'style="display:block"' : 'style="display:none"'); ?>>   
-                                        <legend class="scheduler-border">Salla Details</legend>
+                                        <legend class="scheduler-border">Salla <?= lang('lang_DETAILS'); ?></legend>
                                         <div class="form-group">
                                             <label>X-MANAGER-TOKEN</label>
                                             <input type="text" class="form-control" name="salla_manager_token" id="salla_manager_token" value="<?= $customer['salla_athentication']; ?>"/>
                                         </div>
-                                          <div class="form-group" ><strong>From Date:</strong>
+                                          <div class="form-group" ><strong><?= lang('lang_From_Date'); ?>:</strong>
                                                         <input type="text" class="form-control datepppp"  id="from" name="from" ng-model="filterData.from">
 
                                                     </div>
@@ -324,7 +324,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     </fieldset>
 
 
-                                    <button type="submit" class="btn btn-primary pull-right">Edit</button>
+                                    <button type="submit" class="btn btn-primary pull-right"><?= lang('lang_Edit'); ?></button>
                                 </form>
 
                             </div>

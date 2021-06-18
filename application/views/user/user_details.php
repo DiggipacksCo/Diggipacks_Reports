@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Edit User</title>
+        <title><?= lang('lang_Edit_User'); ?></title>
         <?php $this->load->view('include/file'); ?>
 
 
@@ -34,7 +34,7 @@
                     <!-- Content area -->
                     <div class="content">
                         <div class="panel panel-flat">
-                            <div class="panel-heading"><h1><strong>Edit User</strong></h1></div>
+                            <div class="panel-heading"><h1><strong><?= lang('lang_Edit_User'); ?></strong></h1></div>
                             <hr>
                             <div class="panel-body">
                                 <?php if (!empty(validation_errors())) echo'<div class="alert alert-warning" role="alert"><strong>Warning!</strong> ' . validation_errors() . '</div>'; ?>
@@ -55,41 +55,41 @@
                                     }
                                     ?>
                                     <div class="form-group">
-                                        <label for="usertype"><strong>Access LM:</strong></label><br>
+                                        <label for="usertype"><strong><?= lang('lang_Access_LM'); ?>:</strong></label><br>
 
                                         <input type="radio" name="system_access" id="system_access" <?= $check1; ?>  value="Y">  Yes <input type="radio" name="system_access" id="system_access1" <?= $check2; ?>  value="N">  No
                                     </div>
                                     
                                      <div class="form-group">
-                                        <label for="usertype"><strong>Update Group Privilege :</strong></label><br>
+                                        <label for="usertype"><strong> <?= lang('lang_Update_Group_Privilege'); ?>:</strong></label><br>
 
                                         <input type="radio" name="g_privilage" id="g_privilage"   value="Y">  Yes <input type="radio" name="g_privilage" id="g_privilage" checked="checked"  value="N">  No
                                     </div>
                                     <input type="hidden" id="uid" name="uid" value="<?= $editdata['id']; ?>">
 
                                     <div class="form-group">
-                                        <label for="usertype"><strong>warehouse:</strong></label>   
+                                        <label for="usertype"><strong><?= lang('lang_warehouse'); ?>:</strong></label>   
                                         <?= GetwherehouseDropShow($editdata['wh_id']); ?>
                                     </div> 
                                     <div class="form-group">
-                                        <label for="usertype"><strong>User Type:</strong></label>
+                                        <label for="usertype"><strong><?= lang('lang_User_Type'); ?>:</strong></label>
                                         <?= getusertypedropdown($editdata['user_type']); ?>
                                     </div>
                                     <div class="form-group">
-                                        <label for="username"><strong>User Name:</strong></label>
+                                        <label for="username"><strong><?= lang('lang_User_Name'); ?>:</strong></label>
                                         <input type="text" class="form-control" name='username' id="username" placeholder="User Name" value="<?= $editdata['username']; ?>">
                                     </div>
                                     <div class="form-group">
-                                        <label for="email"><strong>Email Address:</strong></label>
+                                        <label for="email"><strong><?= lang('lang_Email_Address'); ?>:</strong></label>
                                         <input type="text" class="form-control" name='email' id="email" placeholder="Email Address" value="<?= $editdata['email']; ?>">
                                     </div>
                                     <div class="form-group">
-                                        <label for="mobile_no"><strong>Mobile No.:</strong></label>
+                                        <label for="mobile_no"><strong><?= lang('lang_Mobile_No'); ?>.:</strong></label>
                                         <input type="text" class="form-control" name='mobile_no' id="mobile_no" placeholder="Mobile No." value="<?= $editdata['phone']; ?>">
                                     </div>
                                     
                                     <div class="form-group">
-                                        <label for="branch_location"><strong>Branch Location:</strong></label>
+                                        <label for="branch_location"><strong><?= lang('lang_Branch_Location'); ?>:</strong></label>
                                         <select name="branch_location" class="form-control" id="branch_location">
                                  <?php 
                                  
@@ -106,22 +106,22 @@
                                             </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="address"><strong>Address:</strong></label>
+                                        <label for="address"><strong><?= lang('lang_Address'); ?>:</strong></label>
                                         <input type="text" class="form-control" name='address' id="address" placeholder="Address" value="<?= $editdata['address']; ?>">
                                     </div>
                                     <div class="form-group">
-                                        <label for="password"><strong>Password:</strong></label>
+                                        <label for="password"><strong><?= lang('lang_Password'); ?>:</strong></label>
                                         <input type="password" class="form-control" name='password' id="password" placeholder="Password" autocorrect="off" spellcheck="false" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');">
                                     </div>
                                     <?php if($editdata['user_type']==4){?>
                                      <div class="form-group">
-                                        <label for="per_day_target"><strong>Per Day Target:</strong></label>
+                                        <label for="per_day_target"><strong><?= lang('lang_Per_Day_Target'); ?>:</strong></label>
                                         <input type="number" min="0"  class="form-control" name='per_day_target' id="password" placeholder="Per Day Target">
                                     </div>
                                     <?php } ?>
                                     
                                     <div class="form-group">
-                                        <label for="logo_path"><strong>User Logo:</strong></label>
+                                        <label for="logo_path"><strong><?= lang('lang_User_Logo'); ?>:</strong></label>
                                         <input type="file" class="form-control" name='logo_path' id="logo_path">
                                         <input type="hidden" class="form-control" name='logo_path_old' id="logo_path_old" value="<?= $editdata['logopath']; ?>">
                                     </div>
@@ -136,7 +136,7 @@
 
 
                                     <div style="padding-top: 20px;">
-                                        <button type="submit" class="btn btn-success">Submit</button>
+                                        <button type="submit" class="btn btn-success"><?= lang('lang_Submit'); ?></button>
                                     </div>
                                 </form>
 
