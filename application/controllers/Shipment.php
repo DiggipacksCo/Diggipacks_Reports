@@ -89,6 +89,9 @@ class Shipment extends MY_Controller {
     public function ForwardtoDeliveryStation() {
         $this->load->view('ShipmentM/forward_client', $bulk);
     }
+    public function ReversetoDeliveryStation() {
+        $this->load->view('ShipmentM/reverse_client');
+    }
 
     public function runshell() {
       $are=  shell_exec('php /var/www/html/diggipack_new/fs_files/auto_assign.php');

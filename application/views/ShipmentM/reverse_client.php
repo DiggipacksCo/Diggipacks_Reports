@@ -113,7 +113,7 @@
 
                                                 <div class="col-md-2" style="margin-bottom: 11px;">   
                                                     <label>&nbsp;</label>
-                                                    <button type="submit" class="btn btn-primary form-control" ng-click="BulkForwardCompanyReverse();">Submit </button>
+                                                    <button type="submit" class="btn btn-primary form-control" ng-click="BulkForwardCompanyRev();">Submit </button>
                                                 </div>
                                             </div>
 

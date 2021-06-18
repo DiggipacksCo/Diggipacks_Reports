@@ -133,6 +133,7 @@ var app = angular.module('CourierAppPage', [])
             $scope.invalidSslip_no = {};
             $scope.Success_msg = {};
             $scope.Error_msg = {};
+
             $scope.BulkForwardCompany = function ()
             {
                 disableScreen(1);
@@ -142,6 +143,39 @@ var app = angular.module('CourierAppPage', [])
 
                 $http({
                     url: URLBASE + "CourierCompany/BulkForwardCompanyReady",
+                    method: "POST",
+                    data: $scope.userselected,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+
+                }).then(function (response) {
+                    disableScreen(0);
+                    $scope.loadershow = false;
+                    $scope.userselected = {};
+                    $scope.scan.awbArray = {};
+                    $scope.invalidSslip_no = response.data.invalid_slipNO;
+                    $scope.Success_msg = response.data.Success_msg;
+                    $scope.Error_msg = response.data.Error_msg;
+
+
+
+                }, function (data) {
+                    disableScreen(0);
+                    $scope.loadershow = false;
+                });
+
+
+            };
+
+            $scope.BulkForwardCompanyRev = function ()
+            {
+              
+                disableScreen(1);
+                $scope.loadershow = true;
+                console.log($scope.userselected);
+                //   $scope.isVisible.loading = true;
+
+                $http({
+                    url: URLBASE + "CourierCompany/BulkForwardCompanyReverse",
                     method: "POST",
                     data: $scope.userselected,
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
