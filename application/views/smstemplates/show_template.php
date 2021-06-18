@@ -53,7 +53,7 @@
 
                                                     </th>
                                                     <th class="head1" colspan="3">
-                                                        <input type="submit" name="Search" class="btn btn-primary" value="Search" ng-click="getSmslist(1, 1);">        </th>  
+                                                        <input type="submit" name="Search" class="btn btn-primary" value="<?=lang('lang_Search');?>" ng-click="getSmslist(1, 1);">        </th>  
 
                                                 </tr> 
 

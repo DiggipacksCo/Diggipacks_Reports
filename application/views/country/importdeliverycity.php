@@ -89,8 +89,8 @@
 <?php elseif($this->session->flashdata('error')):?>
 <?= '<div class="alert alert-danger">'.$this->session->flashdata('error').' <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';?>
 <?php endif;?>   
-<!--                            <div class="alert alert-danger"><strong><?=lang('lang_Note');?> ! </strong><br>&nbsp1. <?=lang('lang_Toexcel_csvv_file_get_excel_idea_one');?>.<br>&nbsp2. <?=lang('lang_All_fields_are_required');?>.<br>&nbsp3. <?=lang('lang_Click_above_excel_icon_excel_file_idea');?>.<br>&nbsp4. <?=htmlentities(lang('Dont_Change_Default_File_Format'));?></div>  <hr>-->
-                            <div class="alert alert-danger"><strong><?=lang('lang_Note');?> ! </strong><br>&nbsp1. <?=lang('lang_Toexcel_csvv_file_get_excel_idea_one');?>.<br>&nbsp2. <?=lang('lang_All_fields_are_required');?>.<br>&nbsp3. <?=lang('lang_Click_above_excel_icon_excel_file_idea');?>.<br>&nbsp4. Don't Change Default File Format</div>  <hr>
+<!--                            <div class="alert alert-danger"><strong><?=lang('lang_Note');?> ! </strong><br>&nbsp1. <?=lang('lang_Toexcel_csvv_file_get_excel_idea_one');?>.<br>&nbsp2. <?=lang('lang_All_fields_are_required');?>.<br>&nbsp3. <?=lang('lang_Click_above_excel_icon_excel_file_idea');?>.<br>&nbsp4. <?=htmlentities(lang('lang_Dont_Change_Default_File_Format'));?></div>  <hr>-->
+                            <div class="alert alert-danger"><strong><?=lang('lang_Note');?> ! </strong><br>&nbsp1. <?=lang('lang_Toexcel_csvv_file_get_excel_idea_one');?>.<br>&nbsp2. <?=lang('lang_All_fields_are_required');?>.<br>&nbsp3. <?=lang('lang_Click_above_excel_icon_excel_file_idea');?>.<br>&nbsp4. <?=lang('lang_Dont_Change_Default_File_Format');?></div>  <hr>
 
                                 <br> 
                                 <div class="table-responsive">
@@ -128,7 +128,7 @@
                                         <input type="file" name="file" id="file" required accept=".xls,.xlsx,.csv"  class="btn btn-default">
                                         <!-- <span id="weight" class="alert"></span> -->
                                     </span><br> 
-                                    <button type="submit"  class="btn btn-success pull-left"><?=lang('lang_add');?> <?=lang('lang_Location');?></button> 
+                                    <button type="submit"  class="btn btn-success pull-left"><?=lang('lang_Add');?> <?=lang('lang_Location');?></button> 
                                 </form>
                             </div>
                         </div>    

@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Update User Privilege</title>
+        <title><?=lang('lang_Update_User_Privilege');?></title>
         <?php $this->load->view('include/file'); ?>
         <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
         <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
@@ -41,6 +41,9 @@
                              
                                        
                                         <?php
+                                         $SrNo=lang('lang_SrNo');	
+                                         $lang_Privilege_Name=lang('lang_Privilege_Name');	
+                                         $lang_Action=lang('lang_Action');	
                                         echo'<div id="privilage_table">';
                                         // if(!empty($privikegeData))
                                         //  {
@@ -51,9 +54,9 @@
 
                                         echo'<thead>
                 <tr>
-                <td>Sr.No.</td>
-                <td>Privilege Name</td>
-                <td>Action</td>
+                <td>'.$SrNo.'</td>
+                <td>'.$lang_Privilege_Name.'</td>
+                <td>'.$lang_Action.'</td>
                 </tr>
                 </thead>
                 <tbody>
