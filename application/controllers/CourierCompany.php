@@ -29,6 +29,10 @@ class CourierCompany extends MY_Controller  {
     public function forwardshipments(){
         $this->load->view("ShipmentM/forward_shipments");
     }
+    
+    public function ReversetoDeliveryStation() {
+        $this->load->view('ShipmentM/reverse_client');
+    }
 
     public function forwardedshipments() {
         $this->load->view("ShipmentM/forwarded_shipments");
