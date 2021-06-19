@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png');?>" type="image/x-icon">
-<title>Inventory</title>
+<title><?=lang('lang_Inventory');?></title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
 <?php $this->load->view('include/file'); ?>
 
@@ -138,7 +138,7 @@
   <div class="page-header page-header-default">
     <div class="page-header-content">
       <div class="page-title">
-        <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Packaging</span> </h4>
+        <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold"><?=lang('lang_Packaging');?></span> </h4>
       </div>
     </div>
  </div>
@@ -147,7 +147,7 @@
  <div class="">
     <div class="panel panel-flat">
       <div class="panel-heading">
-        <h5 class="panel-title">Order Packaging</h5>
+        <h5 class="panel-title"><?=lang('lang_Order_Packaging');?></h5>
         <!--<div class="heading-elements">
                     <ul class="icons-list">
                         <li><a data-action="collapse"></a></li>
@@ -226,25 +226,25 @@
                 </div>
                <div class="col-md-3">
                   <div class="form-group"  ng-if="completeArray.length>20 ">
-                    <input type="button" ng-click="finishScan();" value='Verify'class="btn btn-danger" />
+                    <input type="button" ng-click="finishScan();" value='<?=lang('lang_Verify');?> 'class="btn btn-danger" />
                   </div>
                    <div class="form-group" ng-if="completeArray.length<=20">
              
                       
-                    <input type="button" ng-click="finishScan();" value='Verify'class="btn btn-primary" />
+                    <input type="button" ng-click="finishScan();" value='<?=lang('lang_Verify');?> 'class="btn btn-primary" />
                   </div>
                   
                   
                 </div> 
            <div class="col-md-12">
-            <div class="form-group"> <label for="primary" class="btn btn-primary">Special Packing <input type="checkbox" ng-model="specialtype.specialpack" id="primary" class="badgebox" name="specialpack" ng-change="Getallspecialpackstatus(specialtype.specialpack);"><span class="badge">&check;</span></label></div>
+            <div class="form-group"> <label for="primary" class="btn btn-primary"><?=lang('lang_Special_Packing');?> <input type="checkbox" ng-model="specialtype.specialpack" id="primary" class="badgebox" name="specialpack" ng-change="Getallspecialpackstatus(specialtype.specialpack);"><span class="badge">&check;</span></label></div>
            </div>
             <div class="col-md-3" ng-if="specialtype.specialpack">
             <div class="form-group">   <div class="radio">
             <label style="font-size: 2em">
                 <input type="radio" name="specialpacktype" ng-model="specialtype.specialpacktype" ng-change="Getallspecialpackstatus(specialtype.specialpacktype);" value="warehouse" checked>
                 <span class="cr"><i class="cr-icon fa fa-circle"></i></span>
-               warehouse
+                <?=lang('lang_warehouse');?>
             </label>
              
         </div></div>
@@ -255,7 +255,7 @@
              <div class="radio">
             <label style="font-size: 2em"><input type="radio" ng-model="specialtype.specialpacktype" ng-change="Getallspecialpackstatus(specialtype.specialpacktype);"  name="specialpacktype" value="seller">
                 <span class="cr"><i class="cr-icon fa fa-circle"></i></span>
-                Seller
+                <?=lang('lang_Seller');?>
             </label>
        
         </div></div>
@@ -271,7 +271,7 @@
              
                <div class="col-lg-12">
                    
-                <div ng-if="completeArray.length>20" class="alert alert-danger">Please Verify the Packing, Limit Exceed! </div>
+                <div ng-if="completeArray.length>20" class="alert alert-danger"><?=lang('lang_Please_Verify_the_Packing_Limit_Exceed');?> ! </div>
                   <div ng-if='warning' class="alert alert-warning">{{warning}} </div>
                   <div ng-if='Message' class="alert alert-success">{{Message}} </div>
                 </div>
@@ -288,18 +288,18 @@
              
              <div class="col-md-6">
              <div class="panel panel-default">
-  <div class="panel-body">Sort</div>
+  <div class="panel-body"><?=lang('lang_Sort');?></div>
 </div>
                    <div class="table-responsive" style="padding-bottom:20px;" >
               <table class="table table-striped table-bordered table-hover" id="show_messanger_print1">
                 <thead>
                   <tr>
-                    <th class="head1">Sr.No.</th>
-                    <th class="head0">Awb.</th>
-                      <th class="head1">SKU</th>
-                     <th class="head0">Total</th> 
-                      <th class="head1">Scaned</th>
-                       <th class="head0">Extra</th>
+                  <th class="head1"><?=lang('lang_SrNo');?>.</th>
+                  <th class="head0"><?=lang('lang_AWB');?>.</th>
+                  <th class="head1"><?=lang('lang_SKU');?>.</th>
+                  <th class="head0"><?=lang('lang_Total');?></th> 
+                  <th class="head1"><?=lang('lang_Scaned');?></th>
+                  <th class="head0"><?=lang('lang_Extra');?></th>
                     
 <!--                   	  <th class="head1">Remove</th>-->
                   </tr>
@@ -331,17 +331,16 @@
                  </div>
              <div class="col-md-6">
                 <div class="panel panel-default">
-  <div class="panel-body">Completed</div>
+  <div class="panel-body"><?=lang('lang_Completed');?></div>
 </div><div class="table-responsive" style="padding-bottom:20px;" >
               <table class="table table-striped table-bordered table-hover" id="show_messanger_print">
                 <thead>
                   <tr>
-                    <th class="head1">Sr.No.</th>
-                   
-                    <th class="head0">AWB.</th>
+                     <th class="head1"><?=lang('lang_SrNo');?>.</th>  
+                    <th class="head0"><?=lang('lang_AWB');?>.</th>
                      <th class="head0">3PL</th>
-                      <th class="head0">3PL AWB.</th>
-                     <th class="head1">Print</th>
+                      <th class="head0"><?=lang('lang_TPL_AWB');?>.</th>
+                     <th class="head1"><?=lang('lang_Print');?></th>
                    
                    
                    
@@ -375,7 +374,7 @@
                     <img class="img-responsive" alt="{{md_data.sku}}" src="{{md_data.item_path}}" width="100" />
                     <br />
                     <h2 class="pull-right">{{md_data.piece}}</h2>
-                    <h3>Qty : </h3>
+                    <h3> <?=lang('lang_QTY');?>: </h3>
                      <h2><a href="#">{{md_data.sku}}</a></h2>
                     <br />
                     <p class="text-justify"></p>

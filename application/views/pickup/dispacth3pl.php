@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Inventory</title>
+        <title><?= lang('lang_Inventory'); ?></title>
         <?php $this->load->view('include/file'); ?>
         <script src='https://code.responsivevoice.org/responsivevoice.js'></script>
         <script type="text/javascript" src="<?= base_url(); ?>assets/js/angular/dispatch3pl.js"></script>
@@ -44,9 +44,9 @@
                         <!-- Basic responsive table -->
                         <div class="panel panel-flat"  >
                             <!--style="padding-bottom:220px;background-color: lightgray;"-->
-                            <div class="panel-heading">
+                            <div class="panel-heading" dir="ltr">
                                 <!-- <h5 class="panel-title">Basic responsive table</h5> -->
-                                <h1><strong>Dispatch To 3PL</strong>
+                                <h1><strong><?= lang('lang_Dispatch_To_tpl'); ?></strong>
 
                                     <a id="btnExport" ><i class="icon-file-excel pull-right" style="font-size: 35px;"></i></a>
 
@@ -72,7 +72,7 @@
 
                                 <div class="col-lg-12">
 
-                                    <div ng-if='Message_new' class="alert alert-success">Order Dispatched to <span style="font-size: 20px;">{{Message_new}} </span></div>
+                                    <div ng-if='Message_new' class="alert alert-success"><?= lang('lang_Order_Dispatched_to'); ?> <span style="font-size: 20px;">{{Message_new}} </span></div>
                                     <div ng-if='warning' class="alert alert-warning">{{warning}} </div>
                                     <div ng-if='Message' class="alert alert-success">{{Message}} </div>
                                 </div>
@@ -87,7 +87,7 @@
                                                 </div></td>
 
 
-                                            <td><button type="button" class="btn btn-success" style="margin-left: 7%">Total <span class="badge">{{awbArray.length}}</span></td>
+                                            <td><button type="button" class="btn btn-success" style="margin-left: 7%"> <?= lang('lang_Total'); ?><span class="badge">{{awbArray.length}}</span></td>
 
                                         </tr>
 
@@ -99,16 +99,16 @@
                                     <table class="table table-striped table-hover table-bordered" id="example">
                                         <thead>
                                             <tr>
-                                                <th>Sr.No.</th>
-                                                <th>AWB</th>
-                                                <th>3PL AWB</th>
-                                                <th>REF#</th>
-                                                <th>3PL COMPANY</th>
-                                                <th>Origin</th>
+                                                <th><?= lang('lang_SrNo'); ?>.</th>
+                                                <th><?= lang('lang_AWB'); ?></th>
+                                                <th><?= lang('lang_TPL_AWB'); ?></th>
+                                                <th><?= lang('lang_Ref_No'); ?>#</th>
+                                                <th><?= lang('lang_TPL_company'); ?></th>
+                                                <th><?= lang('lang_Origin'); ?></th>
 
-                                                <th>Destination </th>
-                                                <th>Seller </th>
-                                                <th>Description  </th>
+                                                <th> <?= lang('lang_Destination'); ?></th>
+                                                <th> <?= lang('lang_Seller'); ?></th>
+                                                <th> <?= lang('lang_Description'); ?> </th>
 
 
                                             </tr>
@@ -158,15 +158,15 @@
             <table id="downloadtable">
                 <thead>
                     <tr>
-                        <th>Sr.No.</th>
-                        <th>AWB</th>
-                        <th>3PL AWB</th>
-                        <th>REF#</th>
-                        <th>3PL COMPANY</th>
-                        <th>Origin</th>
+                    <th><?= lang('lang_SrNo'); ?>.</th>
+                     <th><?= lang('lang_AWB'); ?></th>
+                     <th><?= lang('lang_TPL_AWB'); ?></th>
+                     <th><?= lang('lang_Ref_No'); ?>#</th>
+                     <th><?= lang('lang_TPL_company'); ?></th>
+                     <th><?= lang('lang_Origin'); ?></th>
 
-                        <th>Destination </th>
-                        <th>Description  </th>
+                     <th> <?= lang('lang_Destination'); ?></th>         
+                     <th> <?= lang('lang_Description'); ?> </th>
 
 
                     </tr>

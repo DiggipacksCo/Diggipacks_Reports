@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png');?>" type="image/x-icon">
-  <title>Inventory</title>
+  <title><?= lang('lang_Inventory'); ?></title>
   <?php $this->load->view('include/file'); ?>
 
 
@@ -45,9 +45,9 @@
           <!-- Basic responsive table -->
           <div class="panel panel-flat"  >
             <!--style="padding-bottom:220px;background-color: lightgray;"-->
-            <div class="panel-heading">
+                            <div class="panel-heading" dir="ltr">
               <!-- <h5 class="panel-title">Basic responsive table</h5> -->
-              <h1><strong>Offers List</strong></h1>
+                                <h1><strong><?= lang('lang_Offers_List'); ?></strong></h1>
 
               <div class="heading-elements">
                 <ul class="icons-list">
@@ -72,22 +72,22 @@
                     <tbody >
                     
                       <tr style="width: 80%;">
-                       <td><div class="form-group" ><strong>Promo Code:</strong>
+                                            <td><div class="form-group" ><strong><?= lang('lang_Promo_Code'); ?>:</strong>
                             <input type="text" id="promocode"name="promocode" ng-model="filterData.promocode"  class="form-control" placeholder="Enter Promo Code.">
                           </div></td>
-                        <td><div class="form-group" ><strong>SKU:</strong>
+                                            <td><div class="form-group" ><strong><?= lang('lang_SKU'); ?>:</strong>
                             <input type="text" id="sku"name="sku" ng-model="filterData.sku"  class="form-control" placeholder="Enter SKU no.">
                           </div></td>
-                        <td ><div class="form-group" ><strong>Quantity:</strong>
+                                            <td ><div class="form-group" ><strong><?= lang('lang_Quantity'); ?>:</strong>
                             <input type="number" min="1" id="qty"name="qty"  ng-model="filterData.qty" class="form-control" placeholder="Enter Quantity">
                           </div></td>
                         
                           
                           </tr>
                           <tr>
-                          <td ><div class="form-group" ><strong>Seller:</strong> <br>
+                                            <td ><div class="form-group" ><strong><?= lang('lang_Sellers'); ?>:</strong> <br>
                             <select  id="seller" name="seller_id" ng-model="filterData.seller_id" class="selectpicker" data-width="100%" >
-                              <option value="">Select Seller</option>
+                              <option value=""><?= lang('lang_SelectSeller'); ?></option>
                               <?php foreach($sellersArray as $seller_detail):?>
                               <option value="<?= $seller_detail['id'];?>">
                               <?= $seller_detail['name'];?>
@@ -95,7 +95,7 @@
                               <?php endforeach;?>
                             </select>
                           </div></td>
-                          <td co><button type="button" class="btn btn-success" style="margin-left: 7%">Total <span class="badge">{{listArr.length}}/{{totalCount}}</span></button> <button  class="btn btn-danger" ng-click="loadmore(1,1);" >Search</button></td>
+                                            <td co><button type="button" class="btn btn-success" style="margin-left: 7%"><?= lang('lang_Total'); ?> <span class="badge">{{listArr.length}}/{{totalCount}}</span></button> <button  class="btn btn-danger" ng-click="loadmore(1, 1);" ><?= lang('lang_Search'); ?></button></td>
                         
                       </tr>
                       
@@ -108,19 +108,19 @@
               <table class="table table-striped table-hover table-bordered dataTable bg-*" id="example">
                 <thead>
                   <tr>
-                    <th>Sr.No.</th>
-                    <th>Promo Code</th>
-                     <th align="center">Main Item <table class="table table-striped table-hover table-bordered dataTable bg-*"><tr><th>SKU</th><th>Qty</th></tr></table></th>
+                                                <th><?= lang('lang_SrNo'); ?>.</th>
+                                                <th><?= lang('lang_Promo_Code'); ?></th>
+                                                <th align="center"><?= lang('lang_Main_Item'); ?><table class="table table-striped table-hover table-bordered dataTable bg-*"><tr><th><?= lang('lang_SKU'); ?></th><th><?= lang('lang_QTY'); ?></th></tr></table></th>
                   
                     
-                      <th>Seller</th>
+                                                <th><?= lang('lang_Sellers'); ?></th>
                     
-                      <th>Start Date</th>
-                      <th>End Date</th>
-                      <th>Create By</th>
-                      <th>Created Date</th>
-                        <th>Expiry</th>
-                        <th>Status</th>
+                                                <th><?= lang('lang_Start_Date'); ?></th>
+                                                <th><?= lang('lang_End_Date'); ?></th>
+                                                <th><?= lang('lang_Create_By'); ?> </th>
+                                                <th><?= lang('lang_Created_Date'); ?></th>
+                                                <th><?= lang('lang_Expiry'); ?></th>
+                                                <th><?= lang('lang_Status'); ?></th>
                     <!-- <th>Category</th> -->
                     <th class="text-center" ><i class="icon-database-edit2"></i></th>
                   </tr>
@@ -141,8 +141,8 @@
                       <td>{{data.entrydate}}</td>
                       
                      
-                      <td><span  class="label bg-danger-400" ng-if="data.expireStatus=='Y'">Yes</span><span class="label bg-success-400" ng-if="data.expireStatus=='N'">No</span></td>
-                       <td><span class="label bg-success-400" ng-if="data.status=='Y'">Active</span><span class="label bg-warning-400" ng-if="data.status=='N'">Inactive</span></td>
+                                                <td><span  class="label bg-danger-400" ng-if="data.expireStatus == 'Y'"><?= lang('lang_Yes'); ?></span><span class="label bg-success-400" ng-if="data.expireStatus == 'N'"><?= lang('lang_No'); ?></span></td>
+                                                <td><span class="label bg-success-400" ng-if="data.status == 'Y'"><?= lang('lang_active'); ?></span><span class="label bg-warning-400" ng-if="data.status == 'N'"><?= lang('lang_inactive'); ?></span></td>
                      
                       
                     
@@ -156,9 +156,9 @@
 
 
                             <ul class="dropdown-menu dropdown-menu-right">
-                              <li><a href="<?=site_url();?>Offers/edit_offer/{{data.promocode}}"><i class="icon-pencil7"></i> Edit </a></li>
-                              <li ng-if="data.status=='N'"><a href="<?=site_url();?>Offers/Inactive/{{data.promocode}}/Y"><i class="icon-unlocked"></i> Active </a></li>
-                              <li ng-if="data.status=='Y'"><a href="<?=site_url();?>Offers/Inactive/{{data.promocode}}/N"><i class="icon-lock4"></i> Inactive </a></li>
+                              <li><a href="<?=site_url();?>Offers/edit_offer/{{data.promocode}}"><i class="icon-pencil7"></i> <?= lang('lang_Edit'); ?> </a></li>
+                              <li ng-if="data.status=='N'"><a href="<?=site_url();?>Offers/Inactive/{{data.promocode}}/Y"><i class="icon-unlocked"></i> <?= lang('lang_active'); ?>  </a></li>
+                              <li ng-if="data.status=='Y'"><a href="<?=site_url();?>Offers/Inactive/{{data.promocode}}/N"><i class="icon-lock4"></i> <?= lang('lang_inactive'); ?>  </a></li>
                             
                             </ul>
                           </li>
@@ -170,7 +170,7 @@
                
               </tbody>
             </table>
-             <button ng-hide="listArr.length==totalCount" class="btn btn-info" ng-click="loadmore(count=count+1,0);" ng-init="count=1">Load More</button>
+             <button ng-hide="listArr.length==totalCount" class="btn btn-info" ng-click="loadmore(count=count+1,0);" ng-init="count=1"><?= lang('lang_LoadMore'); ?></button>
            
            </div>
             <hr>

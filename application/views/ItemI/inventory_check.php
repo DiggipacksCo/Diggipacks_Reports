@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Inventory</title>
+        <title><?=lang('lang_Inventory');?></title>
         <?php $this->load->view('include/file'); ?>
 
         <script src='https://code.responsivevoice.org/responsivevoice.js'></script>
@@ -45,7 +45,7 @@
                         <div class="">
                             <div class="panel panel-flat">
                                 <div class="panel-heading">
-                                    <h5 class="panel-title">Inventory Check </h5>
+                                    <h5 class="panel-title"> <?=lang('lang_Inventory_Check');?></h5>
 
                                 </div>
                                 <div class="panel-body">
@@ -72,7 +72,7 @@
                                                             
                                                             <select ng-disabled="cust_nameBtn"  class="form-control" ng-model="scan.cust_name" ng-change="scan_customer();">
                                                                 
-                                                                <option value="">Select Customer</option>
+                                                                <option value=""><?=lang('lang_Select_Customer');?></option>
                                                                 <option ng-repeat="cust_data in CustDropArr" value="{{cust_data.id}}">{{cust_data.name}}</option>
                                                                 
                                                             </select>
@@ -101,8 +101,8 @@
 
 
                                                         <div class="form-group">
- <a class="btn btn-info" ng-show="ExportBtnShow" type="button" id="btnExport" >Export Report</a>
-                                                            <a class="btn btn-success" ng-show="ExportBtnShow" ng-confirm-click="Are you sure want save report?" confirmed-click="GetSaveReportInventpry();" >Save Report </a>
+ <a class="btn btn-info" ng-show="ExportBtnShow" type="button" id="btnExport" ><?=lang('lang_export_Report');?></a>
+                                                            <a class="btn btn-success" ng-show="ExportBtnShow" ng-confirm-click="Are you sure want save report?" confirmed-click="GetSaveReportInventpry();" >t<?=lang('Lang_Save_Report');?> </a>
 
                                                            
                                                          
@@ -141,19 +141,19 @@
 
                                         <div class="col-md-8">
                                             <div class="panel panel-default">
-                                                <div class="panel-body">Sort</div>
+                                                <div class="panel-body"><?=lang('lang_Sort');?></div>
                                             </div>
                                             <div class="table-responsive" style="padding-bottom:20px;" >
                                                 <table class="table table-striped table-bordered table-hover" id="downloadtable" ng-init="shipData.total = {}">
                                                     <thead>
                                                         <tr>
-                                                            <th class="head1">Sr.No.</th>
-                                                            <th class="head0">Customer</th>
-                                                            <th class="head1">Stock Location</th>
-                                                            <th class="head1">SKU</th>
-                                                            <th class="head0">Total</th> 
-                                                            <th class="head1">Scaned</th>
-                                                            <th class="head0">Extra</th>
+                                                            <th class="head1"><?=lang('lang_Sr_No');?>.</th>
+                                                            <th class="head0"><?=lang('lang_Customer');?></th>
+                                                            <th class="head1"><?=lang('lang_Stock_Location');?></th>
+                                                            <th class="head1"><?=lang('lang_SKU');?></th>
+                                                            <th class="head0"><?=lang('lang_Total');?></th> 
+                                                            <th class="head1"><?=lang('lang_Scaned');?></th>
+                                                            <th class="head0"><?=lang('lang_Extra');?></th>
 
 <!--                   	  <th class="head1">Remove</th>-->
                                                         </tr>
@@ -190,7 +190,7 @@
                                                             -->
                                                         </tr>
                                                         <tr>
-                                                            <th colspan="4">Total </th>
+                                                            <th colspan="4"><?=lang('lang_Total');?> </th>
                                                             <td >{{total.peices}} </td>
                                                             <td> {{total.scaned}}</td>
                                                             <td> {{total.extra}}</td>
@@ -202,14 +202,14 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="panel panel-default">
-                                                <div class="panel-body">Completed</div>
+                                                <div class="panel-body"><?=lang('lang_Completed');?></div>
                                             </div><div class="table-responsive" style="padding-bottom:20px;" >
                                                 <table class="table table-striped table-bordered table-hover" >
                                                     <thead>
                                                         <tr>
-                                                            <th class="head1">Sr.No.</th>
+                                                            <th class="head1"><?=lang('lang_Sr_No');?>.</th>
 
-                                                            <th class="head0">Stock Location</th>
+                                                            <th class="head0"><?=lang('lang_Stock_Location');?></th>
 
 
 
