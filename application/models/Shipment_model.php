@@ -723,6 +723,42 @@ class Shipment_model extends CI_Model {
             return $data;
         }
     }
+    
+    public function shipmetsInAwbAll_dishpacth($awb) {
+        if ($this->session->userdata('user_details')['user_type'] != 1) {
+            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
+        }
+        $this->db->select('*');
+        $this->db->where('shipment_fm.super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->from('shipment_fm');
+        $this->db->where('shipment_fm.deleted', 'N');
+        $this->db->where('shipment_fm.cod', 'PK');
+        
+        
+
+
+       // if (!empty($awb)) {
+          //  $awb = array_filter($awb);
+
+            $this->db->where_in('slip_no', $awb);
+        //}
+
+
+        $query = $this->db->get();
+
+        //return $this->db->last_query(); die;
+        if ($query->num_rows() > 0) {
+
+            $data['result'] = $query->result_array();
+            $data['count'] = $query->num_rows();
+            return $data;
+            // return $page_no.$this->db->last_query();
+        } else {
+            $data['result'] = array();
+            $data['count'] = 0;
+            return $data;
+        }
+    }
 
     public function get_deducted_shelve_no_details($slip_no) {
 
