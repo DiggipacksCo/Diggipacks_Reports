@@ -663,7 +663,9 @@ class PickUp extends MY_Controller {
         //$_POST=array('awbArray'=>array('STF9252413194'));
         // echo json_encode($_POST); exit;
 
-        $shipments = $this->Shipment_model->shipmetsInAwbAll($_POST['awbArray']);
+        
+        
+        $shipments = $this->Shipment_model->shipmetsInAwbAll_dishpacth($_POST['awbArray']);
         // print_r($shipments); die;
         // $valid=array();
         

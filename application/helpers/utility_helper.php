@@ -731,7 +731,7 @@ if (!function_exists('SEND_SMS')) {
         $paramNew = str_replace('= ', '=', $paramNew);
         $paramNew = str_replace(' =', '=', $paramNew);
             
-    //echo $APIURL.'?'. $paramNew;
+    echo $APIURL.'?'. $paramNew;
        file_get_contents($APIURL.'?'. $paramNew);        
        
         return true;
