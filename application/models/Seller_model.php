@@ -64,6 +64,7 @@ class Seller_model extends CI_Model {
     public function count() {
         $conditions = array(
             'super_id' => $this->session->userdata('user_details')['super_id'],
+            'access_fm'=>'Y',
         );
         return $this->db->where($conditions)->from('customer')->count_all_results();
     }
