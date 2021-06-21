@@ -1162,7 +1162,7 @@ class Shipment_model extends CI_Model {
       //  ini_set('display_errors', '1');
 //ini_set('display_startup_errors', '1');
 ///error_reporting(E_ALL);
-      //  print_r($data);
+       
         if(!empty($data['sort_limit']))
         {
           $LimitArr= explode('-', $data['sort_limit']); 
@@ -1255,6 +1255,10 @@ class Shipment_model extends CI_Model {
             if(is_numeric($delivered)){
                 $this->db->where_in('shipment_fm.delivered', $delivered);
             }else{
+                if(isset($data['status_o']) & !empty($data['status_o'])){
+                    $o_status = array($data['status_o']);
+                    $delivered = array_merge($o_status,$delivered);
+                }
                 
                 $this->db->where_in('shipment_fm.code', $delivered);
             }
@@ -3402,8 +3406,25 @@ class Shipment_model extends CI_Model {
         if ($data['frwd_awb_no'] == 1)
             $selectQry .= " shipment_fm.frwd_company_awb AS FORWARD AWB No,";
 
+        if ($data['pl3_pickup_date'] == 1)
+            $selectQry .= " shipment_fm.3pl_pickup_date AS 3PL Pickup Date,";
+
+        if ($data['pl3_close_date'] == 1)
+            $selectQry .= " shipment_fm.3pl_close_date AS 3PL Closed Date,";
+            
+            
+        if ($data['no_of_attempt'] == 1)
+            $selectQry .= " shipment_fm.no_of_attempt AS No Of Attempt,";
+
+//        if ($data['transaction_date'] == 1)
+//            $selectQry .= " DATEDIFF(3pl_close_date,3pl_pickup_date) AS Transaction Day,";
+//            
+        
 
         $selectQry = rtrim($selectQry, ',');
+        
+        
+        //echo $selectQry;die;
         $this->db->select($selectQry);
 
         $this->db->from('shipment_fm');
@@ -3415,7 +3436,7 @@ class Shipment_model extends CI_Model {
         }
 
         $query = $this->db->get();
-       
+        //return $this->db->last_query(); die;
         $delimiter = ",";
         $newline = "\r\n";
 
@@ -3580,6 +3601,15 @@ class Shipment_model extends CI_Model {
         return $data = chr(239) . chr(187) . chr(191) . $this->dbutil->csv_from_result($query, $delimiter, $newline);
     }
 
+
+     public function getStatusIDByName($status_name= NULL){
+        
+        $sql = "SELECT id FROM status_main_cat_fm where main_status='".$status_name."' AND deleted='N' AND status = 'Y' ";
+        
+        $query = $this->db->query($sql);
+        $data = $query->result_array();
+        return $data;        
+    }
 
 
 }

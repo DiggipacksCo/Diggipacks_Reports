@@ -55,7 +55,7 @@
 
                                 <!-- Marketing campaigns -->
                                 <div class="panel panel-flat">
-                                    <div class="panel-heading" dir="ltr">
+                                    <div class="panel-heading">
                                         <h1>
                                             <strong><?=lang('lang_All_Orders');?></strong>
                                             <!--<a  ng-click="exportExcel();" >-->
@@ -87,7 +87,7 @@
                                                         <br>
                                                         <select  id="s_type" name="s_type" ng-model="filterData.s_type" class="selectpicker"  data-width="100%" >
 
-                                                        <option value="AWB"><?=lang('lang_AWB');?></option>
+                                                            <option value="AWB"><?=lang('lang_AWB');?></option>
 <!--                                                            <option value="SKU">SKU</option>-->
 
 
@@ -99,16 +99,7 @@
                                                          <input type="text" id="condition" name="condition" class="form-control" value="<?= $condition; ?>" >
                                                         <?php // endif;  ?> -->
                                                     </div></div>
-                                                <div class="col-md-3">  <div class="form-group" ><strong><?=lang('lang_Status');?>:</strong>
-                                                        <br>
-                                                        <select  id="status" name="status" ng-model="filterData.status" class="selectpicker" multiple data-show-subtext="true" data-live-search="true" data-width="100%" >
-
-                                                            <option value=""><?=lang('lang_Select_Status');?></option>
-                                                            <?php foreach ($status as $status_detail): ?>
-                                                                <option value="<?= $status_detail->code; ?>"><?= $status_detail->main_status; ?></option>
-                                                            <?php endforeach; ?>
-                                                        </select>
-                                                    </div> </div>
+                                                
                                                 <div class="col-md-3"><div class="form-group" ><strong><?=lang('lang_Seller');?>:</strong>
                                                         <br>
                                                         <select  id="seller" name="seller"  ng-model="filterData.seller" multiple data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%" >
@@ -119,7 +110,8 @@
                                                             <?php endforeach; ?>
 
                                                         </select>
-                                                    </div> </div>
+                                                    </div> 
+                                                </div>
                                                 <div class="col-md-3"> <div class="form-group" ><strong><?=lang('lang_Destination');?>:</strong>
                                                         <br>
                                                         <?php
@@ -136,6 +128,8 @@
 
                                                         </select>
                                                     </div> </div>
+                                            </div>
+                                            <div class="col-lg-12" style="padding-left: 20px;padding-right: 20px;">
                                                 <div class="col-md-3"><div class="form-group" ><strong><?=lang('lang_Ref_No');?>:</strong>
                                                         <input  id="booking_id" name="booking_id"  ng-model="filterData.booking_id" class="form-control" placeholder="Enter Ref no."> 
 
@@ -160,14 +154,6 @@
                                                         </select>
                                                     </div> 
                                                 </div>
-                                                <div class="col-md-3"> <div class="form-group" ><strong><?=lang('lang_From');?>:</strong>
-                                                        <input class="form-control date" id="from" name="from" ng-model="filterData.from" class="form-control"> 
-
-                                                    </div> </div>
-                                                <div class="col-md-3"><div class="form-group" ><strong><?=lang('lang_To');?>:</strong>
-                                                        <input class="form-control date" id="to" name="to"  ng-model="filterData.to" class="form-control"> 
-
-                                                    </div></div>
                                                 <div class="col-md-3"><div class="form-group" ><strong><?=lang('lang_Payment_Mode');?>:</strong><br/>
 
                                                         <select  id="mode" name="cc_id"  ng-model="filterData.mode"   class="form-control" data-width="100%" >
@@ -177,8 +163,51 @@
                                                             <option value="CC"><?=lang('lang_CC');?></option>
 
 
+
                                                         </select>
                                                     </div>  </div>
+                                            </div>
+                                            <div class="col-lg-12" style="padding-left: 20px;padding-right: 20px;">
+                                                <div class="col-md-3"> 
+                                                    <div class="form-group" ><strong><?=lang('lang_From');?>:</strong>
+                                                        <input class="form-control date" id="from" name="from" ng-model="filterData.from" class="form-control"> 
+
+                                                    </div> 
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group" ><strong><?=lang('lang_To');?>:</strong>
+                                                        <input class="form-control date" id="to" name="to"  ng-model="filterData.to" class="form-control"> 
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">  <div class="form-group" ><strong><?=lang('lang_Status');?>:</strong>
+                                                        <br>
+                                                        <select  id="status" name="status" ng-model="filterData.status" class="selectpicker" multiple data-show-subtext="true" data-live-search="true" data-width="100%" >
+
+                                                            <option value=""><?=lang('lang_Select_Status');?></option>
+                                                            <?php foreach ($status as $status_detail): 
+                                                                    if($status_detail->main_status == "3PL Updates"){
+                                                                        $status_detail->code = "3PL";
+                                                                    }
+                                                                ?>
+                                                                <option value="<?= $status_detail->code; ?>"><?= $status_detail->main_status; ?></option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </div> 
+                                                </div>
+                                                <div class="col-md-3 hidden other_status">
+                                                    <div class="form-group" ><strong>3PL Other Status:</strong>
+                                                        <br>
+                                                        <select  id="status_o" name="status_other"  ng-model="filterData.status_o"  class="form-control">
+                                                            <option valvalue="">--select--</option>
+                                                            <?php foreach ($status_3pl as $status_detail):  ?>
+                                                                <option value="<?= $status_detail['code']; ?>"><?= $status_detail['sub_status']; ?></option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </div>   
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12" style="padding-left: 20px;padding-right: 20px;">
                                                 <div class="col-md-3"><div class="form-group" ><strong><?=lang('lang_Quantity');?>:</strong>
                                                         <input type="number" class="form-control" id="piece" name="piece"  ng-model="filterData.piece" class="form-control" placeholder="Enter Qauntity"> 
 
@@ -193,45 +222,32 @@
                                                     </div></div>
                                                 <div class="col-md-2" style="margin-top: 20px;"><div class="form-group" >
                                                         <select class="form-control"  ng-model="filterData.sort_limit" ng-change="loadMore(1, 1);">
-
                                                             <option value=""><?=lang('lang_Short');?></option>
-
-
                                                             <option ng-repeat="(key,value) in dropshort" value="{{key}}-{{value}}">{{value}}</option>
-
                                                         </select>
-
                                                     </div></div>
+                                            </div>
+                                            <div class="col-lg-12" style="padding-left: 20px;padding-right: 20px;">
                                                 
                                                  <div class="col-md-2" style="margin-top: 20px;"><div class="form-group" >
                                                         <select class="form-control"  ng-model="filterData.sort_list" ng-change="loadMore(1, 1);">
 
-                                                            <option value=""><?=lang('lang_Short_List');?></option>
+                                                        <option value=""><?=lang('lang_Short_List');?></option>
 
 
-                                                            <option value="NO"><?=lang('lang_Newest_Order');?></option>
-                                                            <option value="OLD"><?=lang('lang_Oldest_Order');?></option>
-                                                            <option value="OBD"><?=lang('lang_Order_By_Date');?></option>
-                                                            
-
+                                                        <option value="NO"><?=lang('lang_Newest_Order');?></option>
+                                                        <option value="OLD"><?=lang('lang_Oldest_Order');?></option>
+                                                        <option value="OBD"><?=lang('lang_Order_By_Date');?></option>
                                                         </select>
 
                                                     </div></div>
                                                 <div class="col-md-8"><div class="form-group" >
                                                         <button  class="btn btn-danger" ng-click="loadMore(1, 1);" ><?=lang('lang_Search');?></button>
-                                                        <button type="button" class="btn btn-success" style="margin-left: 7%"><?=lang('lang_Total');?>  <span class="badge">{{shipData.length}}/{{totalCount}}</span></button>
+                                                        <button type="button" class="btn btn-success" style="margin-left: 7%"><?=lang('lang_Total');?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button>
                                                         
                                                          <?php if (menuIdExitsInPrivilageArray(122) == 'Y') { ?>
-                                                        <button  class="btn btn-danger ml-10" ng-confirm-click="Are you sure want delete Orders?" ng-click="removemultipleorder();" ><?=lang('lang_Delete');?></button>
+                                                        <button  class="btn btn-danger ml-10" ng-confirm-click="Are you sure want delete Orders?" ng-click="removemultipleorder();" >Delete</button>
                                                          <?php } ?>
-
-
-                                                        
-                                                        
-                                                       
-
-
-
                                                     </div>
                                                 </div>
 
@@ -330,8 +346,8 @@
                                                         </a>   
 
                                                         <ul class="dropdown-menu dropdown-menu-right">
-                                                            <li><a href="<?= base_url(); ?>Shipment/edit_view/{{data.id}}"><i class="icon-pencil7"></i><?=lang('lang_Change_Destination');?>  </a></li>    
-                                                            <li><a class="dropdown-item" href="<?= base_url(); ?>awbPrint1/{{data.slip_no}}" target="_blank" style="  word-wrap: break-word;"><i class="fa fa-print fa-fw"></i> <?=lang('lang_Label_A4');?></a> </li>     
+                                                            <li><a href="<?= base_url(); ?>Shipment/edit_view/{{data.id}}"><i class="icon-pencil7"></i> <?=lang('lang_Change_Destination');?> </a></li>    
+                                                            <li><a class="dropdown-item" href="<?= base_url(); ?>awbPrint1/{{data.slip_no}}" target="_blank" style="  word-wrap: break-word;"><i class="fa fa-print fa-fw"></i><?=lang('lang_Label_A4');?> </a> </li>     
                                                             <li><a ng-if="data.frwd_company_awb != ''" class="dropdown-item" href="<?= base_url(); ?>Printpicklist3PL_bulk/{{data.slip_no}}/{{data.frwd_company_id}}" target="_blank"> <i class="fa fa-print fa-fw"></i><?=lang('lang_TPL_AWB');?></a> </li>   
 
                                                                <?php //if (menuIdExitsInPrivilageArray(124) == 'Y') { ?>
@@ -340,7 +356,7 @@
 
                                                             <?php if (menuIdExitsInPrivilageArray(124) == 'Y') { ?>
                                                             <li>
-                                                                <a ng-if="data.code == 'OC' || data.code == 'PG' || data.code == 'AP' || data.code == 'PK'" class="dropdown-item" ng-click="GetStockLocationPopup(data.slip_no);"> <span><i class="fa fa-openid fa-fw"></i> <?=lang('lang_Open_Order');?></span> </a>
+                                                                <a ng-if="data.code == 'OC' || data.code == 'PG' || data.code == 'AP' || data.code == 'PK'" class="dropdown-item" ng-click="GetStockLocationPopup(data.slip_no);"> <span><i class="fa fa-openid fa-fw"></i> <?=lang('lang_Open_Order');?> </span> </a>
                                                             </li> 
                                                             <?php } ?>
 
@@ -377,7 +393,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header bg-danger" style="background-color:<?= DEFAULTCOLOR; ?>;border-color:<?= DEFAULTCOLOR; ?>">
-                            <h6 class="modal-title"><?=lang('lang_Item_Detail');?></h6>
+                            <h6 class="modal-title">Item Detail</h6>
                             <button type="button" class="close" data-dismiss="modal">×</button>
 
                         </div>
@@ -387,7 +403,7 @@
                             <table class="table">
                                 <thead>
                                     <tr>                                      
-                                        <th><?=lang('lang_SKU');?> </th>
+                                    <th><?=lang('lang_SKU');?> </th>
                                     <th><?=lang('lang_QTY');?></th>
                                         <th><?=lang('lang_Shelve_No');?></th>
                                         <th><?=lang('lang_Stock_Location');?></th> 
@@ -441,7 +457,7 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                     <th><?=lang('lang_SKU');?> </th>
+                                    <th><?=lang('lang_SKU');?> </th>
                                          <th><?=lang('lang_Gift_Item');?>  </th>
                                          <th><?=lang('lang_QTY');?></th>
                                     <th><<?=lang('lang_Deducted_Shelve_NO');?></th>
@@ -481,10 +497,8 @@
                                 <div class="col-sm-4">             
                                     <label class="container">
 
-                                        <input type="checkbox" id='but_checkall' value='Check all' ng-model="checkall" ng-click='toggleAll()'/>    <?= lang('lang_SKU'); ?>
+                                        <input type="checkbox" id='but_checkall' value='Check all' ng-model="checkall" ng-click='toggleAll()'/>   <b><?= lang('lang_SelectAll'); ?></b>
                                         <span class="checkmark"></span>
-
-
                                     </label>
                                 </div>
 
@@ -568,13 +582,19 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <label class="container">
-                                            <input type="checkbox" name="Mode" value="Mode"  ng-model="listData2.mode"> <?= lang('lang_Mode'); ?>
+                                            <input type="checkbox" name="Mode" value="Mode"  ng-model="listData2.mode"> <?=lang('lang_Payment_Mode');?>
                                             <span class="checkmark"></span>
                                         </label>
                                     </div>
                                     <div class="col-sm-4">
                                         <label class="container">
                                             <input type="checkbox" name="Status" value="Status"  ng-model="listData2.delivered"> <?= lang('lang_Status'); ?>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="Status_O" value="Status_O"  ng-model="listData2.status_o"> <?= lang('lang_Status'); ?>
                                             <span class="checkmark"></span>
                                         </label>
                                     </div>
@@ -633,7 +653,31 @@
                                     </div>
                                     <div class="col-sm-4">    
                                         <label class="container">
-                                            <input type="checkbox" name="invoice_details" value="invoice_details"  ng-model="listData2.invoice_details"> Invoice Details
+                                            <input type="checkbox" name="invoice_details" value="invoice_details"  ng-model="listData2.invoice_details"> <?=lang('lang_invoice');?> <?=lang('lang_Details');?>
+                                            <span class="checkmark"></span>    
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">    
+                                        <label class="container">
+                                            <input type="checkbox" name="pl3_pickup_date" value="pl3_pickup_date"  ng-model="listData2.pl3_pickup_date"> <?=lang('lang_tpl_Pickup_Date');?>
+                                            <span class="checkmark"></span>    
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="pl3_close_date" value="pl3_close_date"  ng-model="listData2.pl3_close_date"> <?=lang('lang_tpl_Closed_Date');?>
+                                            <span class="checkmark"></span>    
+                                        </label>
+                                    </div>
+<!--                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="transaction_date" value="transaction_date"  ng-model="listData2.transaction_date"> Transaction Date
+                                            <span class="checkmark"></span>    
+                                        </label>
+                                    </div>-->
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="no_of_attempt" value="no_of_attempt"  ng-model="listData2.no_of_attempt"> <?=lang('lang_No_of_Attempt');?>
                                             <span class="checkmark"></span>    
                                         </label>
                                     </div>
@@ -663,8 +707,52 @@
 
 
         </div>
-        <script>
-
+     <script type="text/javascript">
+         
+         $(document).ready(function(){
+             $("#status").change(function(){
+                 var selectedCode = $(this).val();
+                 
+                 if(selectedCode == '3PL'){
+                     $(".other_status").removeClass("hidden");
+                 
+//                     var selectedTxt = '3PL Updates';
+//                     
+//                     $.ajax({
+//                            url: '<?php //echo base_url('Shipment/get_pl_status'); ?>',
+//                            data: {status_name:selectedTxt},
+//                            error: function () {},
+//                            dataType: 'html',
+//                            type: 'POST',
+//                            beforeSend:function(){$("#other_status").addClass("hidden");},
+//                            success: function (data) {
+//                                //alert(data.length)    
+//                                var jsonData = $.parseJSON(data);
+//                                if(jsonData.length >0){
+//                                    var option = "<option value='' >-select-</option>";
+//                                    for(i=0;i<jsonData.length;i++){
+//                                        option += "<option value='"+jsonData[i].code+"' >"+jsonData[i].sub_status+"</option>";
+//                                    }
+//                                    
+//                                    $(".other_status").removeClass("hidden");
+//                                    $("#status_o").html(option);
+//                                }
+////                                if (jsonData.success) {
+////                                    alert('Data updated successfully');
+////                                }
+//                            }
+//
+//                        });
+                     
+                 }else{
+                     $(".other_status").addClass("hidden");
+                 } 
+                
+                
+             });
+             
+         });
+            
 
             // "order": [[0, "asc" ]]
             $('#s_type').on('change', function () {
