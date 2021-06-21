@@ -1377,7 +1377,41 @@ class Manifest extends CourierCompany_pickup {
                             $returnArr['Error_msg'][] = $slipNo . ':' .$error_status;
                         }
                     
-            }elseif ($company == 'SLS'){   
+            } elseif ($company == 'FedEX')
+                    {
+
+                        $responseArray = $this->Ccompany_model->FedEX($ShipArr, $counrierArr, $complete_sku, $box_pieces1,$c_id,$super_id);
+                       //  echo "<pre>" ; print_r($responseArray); //die;
+                        $successres = $responseArray['Code'];
+                        $error_status = $responseArray['description'];
+
+                            if (!empty($successres) && $successres == 1)
+                            {
+                                $client_awb = $responseArray['AirwayBillNumber'];
+                                 
+                                $label_response = $this->Ccompany_model->FedEX_label($client_awb, $counrierArr,$ShipArr);
+                                $pdf_encoded_base64 = $label_response['ReportDoc'];
+                                $pdf_file = base64_decode($pdf_encoded_base64);
+                               
+                                file_put_contents("assets/all_labels/".$slipNo.".pdf", $pdf_file);
+                                $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
+                                
+                                $CURRENT_DATE = date("Y-m-d H:i:s");
+                                $CURRENT_TIME = date("H:i:s");
+
+                                $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                                
+                                $returnArr['successAbw'][] = 'AWB No.' . $slipNo . ' forwarded to SLS';
+                            array_push($succssArray, $slipNo);
+                        }                            
+                            
+                        else
+                        {
+                            $returnArr['responseError'][] = $slipNo . ':' .$error_status;
+                        }
+                    
+                    }
+                    elseif ($company == 'SLS'){   
                         $responseArray = $this->Ccompany_model->SLSArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1,$c_id, $super_id);
                        //  echo "<pre>" ; print_r($responseArray); //die;
                         $successres = $responseArray['status'];
@@ -3914,7 +3948,41 @@ class Manifest extends CourierCompany_pickup {
                             $returnArr['responseError'][] = $slipNo . ':' .$error_status;
                         }
                     
-            }elseif ($company == 'SLS'){   
+            } elseif ($company == 'FedEX')
+                    {
+
+                        $responseArray = $this->Ccompany_model->FedEX($ShipArr, $counrierArr, $complete_sku, $box_pieces1,$c_id,$super_id);
+                       //  echo "<pre>" ; print_r($responseArray); //die;
+                        $successres = $responseArray['Code'];
+                        $error_status = $responseArray['description'];
+
+                            if (!empty($successres) && $successres == 1)
+                            {
+                                $client_awb = $responseArray['AirwayBillNumber'];
+                                 
+                                $label_response = $this->Ccompany_model->FedEX_label($client_awb, $counrierArr,$ShipArr);
+                                $pdf_encoded_base64 = $label_response['ReportDoc'];
+                                $pdf_file = base64_decode($pdf_encoded_base64);
+                               
+                                file_put_contents("assets/all_labels/".$slipNo.".pdf", $pdf_file);
+                                $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
+                                
+                                $CURRENT_DATE = date("Y-m-d H:i:s");
+                                $CURRENT_TIME = date("H:i:s");
+
+                                $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id,$dataArray,$ShipArr,$itemData,$super_id);
+                                $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
+                                $returnArr['successAbw'][] = 'AWB No.' . $slipNo . ' forwarded to SLS';
+                            array_push($succssArray, $slipNo);
+                        }                            
+                            
+                        else
+                        {
+                            $returnArr['responseError'][] = $slipNo . ':' .$error_status;
+                        }
+                    
+                    }
+                    elseif ($company == 'SLS'){   
                         $responseArray = $this->Ccompany_model->SLSArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1,$c_id, $super_id);
                         
                        //  echo "<pre>" ; print_r($responseArray); //die;

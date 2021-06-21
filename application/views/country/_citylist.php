@@ -208,6 +208,12 @@
 
                                                     </td>
                                                       <?php } ?>
+                                                    <?php if (GetCourierCompanyStausActive('FedEX') == 'Y') { ?>
+                                                    <td><input type="text" name="fedex_city" id="fedex_city<?php echo $listdata['id']; ?>" placeholder="FedEX City" value="<?php echo $listdata['fedex_city']; ?>" class="form-control">
+                                                        <br>
+                                                        <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'fedex_city');" value="<?php echo $listdata['id']; ?>">Update</a>
+                                                    </td>
+                                                      <?php } ?>
                                                     
                                                     
                                                     <td><input type="text" name="latitute" id="latitute<?php echo $listdata['id']; ?>" placeholder="Add city" value="<?php echo $listdata['latitute']; ?>" class="form-control">

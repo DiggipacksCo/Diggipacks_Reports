@@ -4683,6 +4683,175 @@ class Ccompany_model extends CI_Model {
             curl_close($curl);
             return  $label_response;
     }
+    public function FedEX(array $ShipArr, array $counrierArr, $complete_sku = null,$box_pieces1 = null,$c_id=null,$super_id=null){
+        
+            $sender_default_city = Getselletdetails_new($super_id);
+            $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+            $sender_address = $sender_default_city['0']['address'];
+            $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
+            $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'fedex_city',$super_id);
+            $currency = site_configTable("default_currency");//"SAR";  
+            
+            $api_url = ($counrierArr['api_url'])."CreateAirwayBill";
+           
+            if (empty($box_pieces1)) {
+                $box_pieces = 1;
+            } else {
+                $box_pieces = $box_pieces1;
+            }
+            
+            if ($ShipArr['weight'] == 0) {
+                $weight = 1;
+            } else {
+                $weight = $ShipArr['weight'];
+            }
+            
+            if ($ShipArr['mode'] == 'COD') {
+                $cod_amount = $ShipArr['total_cod_amt'];
+            } elseif ($ShipArr['mode'] == 'CC') {
+                $cod_amount = 0;
+            }
+            
+                $details= array(
+                "UserName"=>$counrierArr['user_name'],
+                "Password"=> $counrierArr['password'],
+                "AccountNo"=> $counrierArr['courier_account_no'],
+                "AirwayBillData"=> array(
+                "AirWayBillCreatedBy"=>"Test Web User",
+                "CODAmount" =>$cod_amount ,
+                "CODCurrency"=>$currency,
+                "Destination"=>"ALX",
+                "DutyConsigneePay" =>0,
+                "GoodsDescription"=>$complete_sku,
+                "NumberofPeices" =>$box_pieces1,
+                "Origin"=>"CAI",
+                "ProductType"=>"FRE",
+                "ReceiversAddress1"=>$ShipArr['reciever_address'],
+                "ReceiversAddress2"=>$ShipArr['reciever_address'],
+                "ReceiversCity"=>$receiver_city,
+                "ReceiversCompany"=>"Egypt Expresss",
+                "ReceiversContactPerson"=>$ShipArr['reciever_name'],
+                "ReceiversCountry"=>'SA',
+                "ReceiversEmail"=>$ShipArr['reciever_email'],
+                "ReceiversGeoLocation"=>"",
+                "ReceiversMobile"=>$ShipArr['reciever_phone'],
+                "ReceiversPhone"=>$ShipArr['reciever_phone'],
+                "ReceiversPinCode"=>"",
+                "ReceiversProvince"=>"",
+                "ReceiversSubCity"=>"",
+                "SendersAddress1"=>$sender_address,
+                "SendersAddress2"=>$sender_address,
+                "SendersCity"=>$sender_city,
+                "SendersCompany"=>"Egypt Express",
+                "SendersContactPerson"=>"DIGGIPACKS FULFILLMENT - ".$sellername,
+                "SendersCountry"=>'SA',
+                "SendersEmail"=>$ShipArr['sender_email'],
+                "SendersGeoLocation"=>"",
+                "SendersMobile"=>$ShipArr['sender_phone'],
+                "SendersPhone"=>$ShipArr['senderphone'],
+                "SendersPinCode"=>"",
+                "SendersSubCity"=>$sender_city,
+                "ServiceType"=>"FRG",
+                "ShipmentDimension"=>"",
+                "ShipmentInvoiceCurrency"=>"EGP",
+                "ShipmentInvoiceValue" =>0,
+                "ShipperReference"=>$ShipArr['slip_no'],
+                "ShipperVatAccount"=>"",
+                "SpecialInstruction"=>"Confirm Location before Delivery",
+                "Weight" =>$weight
+                ));
+               $details_encode= json_encode($details);
+               
+               if(!empty($receiver_city)){
+                
+                $curl = curl_init();
+
+                curl_setopt_array($curl, array(
+                  CURLOPT_URL =>$api_url,
+                  CURLOPT_RETURNTRANSFER => true,
+                  CURLOPT_ENCODING => '',
+                  CURLOPT_MAXREDIRS => 10,
+                  CURLOPT_TIMEOUT => 0,
+                  CURLOPT_FOLLOWLOCATION => true,
+                  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                  CURLOPT_CUSTOMREQUEST => 'POST',
+                  CURLOPT_POSTFIELDS =>$details_encode,
+                  CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/json'
+                  ),
+                ));
+
+                $response = curl_exec($curl);
+                curl_close($curl);
+                }
+        else 
+        {
+           
+            $response = array('description'=> 'The Receivers City field is required.'); 
+            $response = json_encode($response);  
+        }      
+                  
+                
+                $responseArray = json_decode($response, true);
+                //print_r($responseArray);die;
+                $logresponse = json_encode($response);
+                $successres = $responseArray['Code'];
+
+                if ($successres == 1) 
+                {
+                    $successstatus = "Success";
+                } else {
+                    $successstatus = "Fail";
+                }
+                $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no']);
+                return $responseArray;
+
+            
+            
+
+            }
+            
+        public function FedEX_label($client_awb = null,$counrierArr= null,$ShipArr=null){
+            
+            $api_url = ($counrierArr['api_url'])."AirwayBillPDFFormat";
+            
+            $details= array(
+                
+                        "AccountNo"=>$counrierArr['courier_account_no'],
+                        "AirwayBillNumber"=> $client_awb,
+                        "Country"=>"SA",
+                        "Password"=> $counrierArr['password'],
+                        "RequestUser"=>$ShipArr['sender_name'],
+                        "UserName"=>$counrierArr['user_name']
+                
+            );
+            $label_details = json_encode($details);
+
+                $curl = curl_init();
+
+                curl_setopt_array($curl, array(
+                  CURLOPT_URL => $api_url,
+                  CURLOPT_RETURNTRANSFER => true,
+                  CURLOPT_ENCODING => '',
+                  CURLOPT_MAXREDIRS => 10,
+                  CURLOPT_TIMEOUT => 0,
+                  CURLOPT_FOLLOWLOCATION => true,
+                  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                  CURLOPT_CUSTOMREQUEST => 'POST',
+                  CURLOPT_POSTFIELDS =>$label_details,
+                  CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/json'
+                  ),
+                ));
+
+                $response = curl_exec($curl);
+                
+
+                curl_close($curl);
+                $response_label = json_decode($response, true);
+                return  $response_label;
+                        }
+
     
     
     public function ccNamebYccid($cc_id=null) {

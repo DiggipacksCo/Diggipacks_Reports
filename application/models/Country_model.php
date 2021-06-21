@@ -32,7 +32,7 @@ class Country_model extends CI_Model {
         $this->db->where('status', 'Y');
       
         $this->db->where_in("id",$id);
-        $this->db->select("  'Saudi Arabia' as country,`city`, arabic_name as title, `naqel_city_code`, `state`, `aramex_city`, `samsa_city`, `clex`, `esnad_city`, `zajil`, `barq_city`, `moovo`, `sls`, `safe_arrival`, `saudipost_id`, `aymakan`, `tamex_city`, `alamalkon`, `shipsa_city`, `saee_city`, `labaih`, `quickbox`,".$this->session->userdata('user_details')['super_id']." as super_id ");
+        $this->db->select("  'Saudi Arabia' as country,`city`, arabic_name as title, `naqel_city_code`, `state`, `aramex_city`, `samsa_city`, `clex`, `esnad_city`, `zajil`, `barq_city`, `moovo`, `sls`, `safe_arrival`, `saudipost_id`, `aymakan`, `tamex_city`, `alamalkon`, `shipsa_city`, `saee_city`, `labaih`, `quickbox`, `fedex_city`,".$this->session->userdata('user_details')['super_id']." as super_id ");
         $this->db->from('country_final_master');
        // $this->db->order_by('city','ASC');
        
