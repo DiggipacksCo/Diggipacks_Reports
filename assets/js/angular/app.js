@@ -1310,6 +1310,7 @@ var app = angular.module('fulfill', [])
             $scope.dropshort = {};
             $scope.loadershow = false;
             $scope.filterData.s_type = 'AWB';
+            $scope.filterData.status_o = '';
 
             $scope.listData2 = {
                 "entrydate": false,
@@ -1353,6 +1354,12 @@ var app = angular.module('fulfill', [])
                 "show_code": false,
                 "messenger_name": false,
                 "close_date": false,
+                "status_o": false,
+                "invoice_details": false,
+                "pl3_pickup_date": false,
+                "pl3_close_date": false,
+                //"transaction_date": false,
+                "no_of_attempt": false
             };
 
 
