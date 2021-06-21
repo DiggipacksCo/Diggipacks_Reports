@@ -1400,11 +1400,43 @@ class Manifest extends CourierCompany_pickup {
                                 $CURRENT_TIME = date("H:i:s");
 
                                 $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
-                                
-                                $returnArr['successAbw'][] = 'AWB No.' . $slipNo . ' forwarded to SLS';
+                                $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' : forwarded to FedEX.';
                             array_push($succssArray, $slipNo);
                         }                            
                             
+                        else
+                        {
+                            $returnArr['responseError'][] = $slipNo . ':' .$error_status;
+                        }
+                    
+                    }
+                    elseif ($company== 'MomentsKsa')
+                       {
+                        
+                        $Auth_token=$this->Ccompany_model->Moments_auth($counrierArr); 
+                      
+                        $responseArray = $this->Ccompany_model->MomentsArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$complete_sku,$super_id);  
+                        
+                        $successres = $responseArray['errors'];                         
+                        
+                        $error_status = $responseArray['message'];
+
+                        if (empty($successres))
+                        {
+
+                            $client_awb = $responseArray['TrackingNumber'];
+                            $MomentLabel = $responseArray['printLableUrl'];
+                             
+                            $generated_pdf = file_get_contents($MomentLabel);
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                            $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';                             
+                            $CURRENT_DATE = date("Y-m-d H:i:s");
+                            $CURRENT_TIME = date("H:i:s");                               
+
+                            $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                            $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' : forwarded to MomentsKsa.';
+                            array_push($succssArray, $slipNo);
+                        }                            
                         else
                         {
                             $returnArr['responseError'][] = $slipNo . ':' .$error_status;
@@ -3971,11 +4003,44 @@ class Manifest extends CourierCompany_pickup {
                                 $CURRENT_TIME = date("H:i:s");
 
                                 $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id,$dataArray,$ShipArr,$itemData,$super_id);
-                                $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
-                                $returnArr['successAbw'][] = 'AWB No.' . $slipNo . ' forwarded to SLS';
+                               
+                                $returnArr['successAbw'][] = 'AWB No.' . $slipNo . ' forwarded to FedEX';
                             array_push($succssArray, $slipNo);
                         }                            
                             
+                        else
+                        {
+                            $returnArr['responseError'][] = $slipNo . ':' .$error_status;
+                        }
+                    
+                    }
+                     elseif ($company== 'MomentsKsa')
+                       {
+                        
+                        $Auth_token=$this->Ccompany_model->Moments_auth($counrierArr); 
+                      
+                        $responseArray = $this->Ccompany_model->MomentsArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$complete_sku,$super_id);  
+                        
+                        $successres = $responseArray['errors'];                         
+                        
+                        $error_status = $responseArray['message'];
+
+                        if (empty($successres))
+                        {
+
+                            $client_awb = $responseArray['TrackingNumber'];
+                            $MomentLabel = $responseArray['printLableUrl'];
+                             
+                            $generated_pdf = file_get_contents($MomentLabel);
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                            $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';                             
+                            $CURRENT_DATE = date("Y-m-d H:i:s");
+                            $CURRENT_TIME = date("H:i:s");                               
+
+                            $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id,$dataArray,$ShipArr,$itemData,$super_id);
+                            $returnArr['successAbw'][] = 'AWB No.' . $slipNo . ' forwarded to MomentsKsa';
+                            array_push($succssArray, $slipNo);
+                        }                            
                         else
                         {
                             $returnArr['responseError'][] = $slipNo . ':' .$error_status;
