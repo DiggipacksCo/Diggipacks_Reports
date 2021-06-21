@@ -240,14 +240,14 @@ else echo set_value('name'); ?>" required/>
 
                                             <div class="form-group" >
                                         
-                                            <label>Seller</label>
+                                            <label><?= lang('lang_Seller'); ?></label>
                                             <br>
                                            <?php if (!empty($EditData)) {  echo '<strong> '. $EditData[0]->cust_name. '</strong>'; } else {?>
                                             
                                           
                                                         <select  id="cust_id" name="cust_id" class="form-control"  >
 
-                                                            <option value="">Select Seller</option>
+                                                            <option value=""><?= lang('lang_SelectSeller'); ?></option>
                                                             <?php foreach ($sellers as $seller_detail): ?>
                                                                 <option value="<?= $seller_detail->id; ?>"><?= $seller_detail->name; ?></option>
                                                             <?php endforeach; ?>
@@ -261,7 +261,7 @@ else echo set_value('name'); ?>" required/>
                                                 <label><?= lang('lang_Courier_Company'); ?></label>
                                                 <span id="c_id"></span>
                                                 <select name="c_id" id="courier_id" required class="js-select4 bigdrop"  required > 
-                                                <option value="" selected="selected"> Please select city  </option>
+                                                <option value="" selected="selected"> <?= lang('lang_Please_Select_City'); ?> </option>
 
                                                 <option value="0" ><?= lang('lang_Last_Mile'); ?> </option>
                                                     <?php
@@ -276,30 +276,30 @@ else echo set_value('name'); ?>" required/>
                                                 </select>
                                             </div>
                                             <div class="form-group ">
-                                                <label>Capcity</label>
+                                                <label><?= lang('lang_Capcity'); ?></label>
                                                 <span id="capacity"></span>
                                                <input type="number" name="capacity" class="form-control" min="0"  onChange="updateTextInput(this.value);" value="<?= $EditData[0]->capacity; ?>" required>
                                               </div>  
 
                                               <div class="form-group ">
-                                                <label>Max Weight Range</label>
+                                                <label><?= lang('lang_Max_Weight_Range'); ?></label>
                                                 <span id="max_weight"></span>
                                                <input type="number" name="max_weight" class="form-control" value="<?= $EditData[0]->max_weight; ?>" required>
                                               </div>
                                              
                                               <div class="form-group ">
-                                                <label>Max Weight Range Rate</label>
+                                                <label><?= lang('lang_Max_Weight_Range_Rate'); ?></label>
                                                 <span id="flat_price"></span>
                                                <input type="number" name="flat_price" class="form-control" value="<?= $EditData[0]->flat_price; ?>" required>
                                               </div>
                                                <div class="form-group ">
-                                                <label>Additional Weight Rate</label>
+                                                <label><?= lang('lang_Additional_Weight_Rate'); ?></label>
                                                 <span id="price"></span>
                                                <input type="number" name="price" class="form-control" value="<?= $EditData[0]->price; ?>" required>
                                               </div>
                                               <div class="form-group " style="margin-bottom 50px !important; min-height: 250px;" >  
                                               <div class="form-group ">
-                                                    <label>City </label>&nbsp;<span class="city_error text-danger hidden"> <b>(City Not Found) </b></span>
+                                                    <label> <?= lang('lang_City'); ?></label>&nbsp;<span class="city_error text-danger hidden"> <b>(City Not Found) </b></span>
     </div>  
                                  <div class="subject-info-box-1">
                                     <select multiple="multiple" id='lstBox1'  class="form-control">
@@ -335,8 +335,8 @@ else echo set_value('name'); ?>" required/>
                                     <div class="form-group " >  
                                       
 
-                                              <button class="btn btn-warning" type="button"  id="selectAll">Confirm</button>
-                                            <button type="submit" class="btn btn-primary" name="submit" value="submit">Add New Zone</button>
+                                              <button class="btn btn-warning" type="button"  id="selectAll"><?= lang('lang_Confirm'); ?></button>
+                                            <button type="submit" class="btn btn-primary" name="submit" value="submit"><?= lang('lang_Add_NEW_ZONE'); ?></button>
                                     </div>
                                     </form>
                             </div>

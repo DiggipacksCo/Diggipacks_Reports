@@ -68,16 +68,16 @@
 
                                                 <!-- <div class="panel-body" > -->
                                                 <div class="col-md-3">
-                                                    <div class="form-group" ><strong>AWB No:</strong>
+                                            <div class="form-group" ><strong><?= lang('lang_AWB_No'); ?>:</strong>
                                                         <input type="text" id="slip_no"name="slip_no" ng-model="filterdata.slip_no" class="form-control" placeholder="Enter AWB No."> 
 
                                                     </div>
                                                 </div>
-                                                <div class="col-md-3"> <div class="form-group" ><strong>From:</strong>
+                                        <div class="col-md-3"> <div class="form-group" ><strong><?= lang('lang_From'); ?>:</strong>
                                                         <input class="form-control date" placeholder="From" id="from" name="from" ng-model="filterdata.from">
 
                                                     </div></div>
-                                                <div class="col-md-3"><div class="form-group" ><strong>To:</strong>
+                                        <div class="col-md-3"><div class="form-group" ><strong><?= lang('lang_To'); ?>:</strong>
                                                         <input class="form-control date" placeholder="To" id="to"name="to"  ng-model="filterdata.to" class="form-control"> 
 
                                                     </div></div>
@@ -92,10 +92,10 @@
                                                 
                                            
                                                 <div class="col-md-3">
-                                                    <div class="form-group" ><strong>Picker:</strong>
+                                            <div class="form-group" ><strong><?= lang('lang_Picker'); ?>:</strong>
                                                       
                                                         <select  id="assigned_to" name="assigned_to"  ng-model="filterdata.assigned_to"  class="form-control" data-width="100%" >
-                                                            <option value="">Select Picker</option>
+                                                    <option value=""><?= lang('lang_Select_Picker'); ?></option>
                                                             
                                                             <option ng-repeat="Pdat in pickerArray" value="{{Pdat.id}}">
                                                              {{Pdat.name}}
@@ -108,7 +108,7 @@
                                                 <div class="col-md-5">
                                                     <div class="form-group" >
                                                        
-                                                        <button  class="btn btn-danger" ng-click="Getlistviewpickingview(1, 1);" >Search</button>
+                                                        <button  class="btn btn-danger" ng-click="Getlistviewpickingview(1, 1);" ><?= lang('lang_Search'); ?></button>
                                                     
                                                     
                                                     </div></div>
@@ -131,7 +131,7 @@
                                                                 <th class="head1"  role="columnheader"align="center" style="text-align:center;"><?= lang('lang_SKU_Details'); ?>
                                                                     <table class="table table-striped table-bordered table-hover" >
                                                                         <tr>
-                                                                            <td>Item Image</td>
+                                                                            <td><?= lang('lang_Item_Image'); ?></td>
                                                                             <td><?= lang('lang_SKU'); ?></td>
                                                                             <td><?= lang('lang_Pieces'); ?></td>
                                                                         </tr>

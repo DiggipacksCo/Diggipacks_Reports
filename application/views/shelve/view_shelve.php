@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Inventory</title>
+        <title><?= lang('lang_Inventory'); ?></title>
         <?php $this->load->view('include/file'); ?>
 
 
@@ -45,16 +45,16 @@
                         <!-- Basic responsive table -->
                         <div class="panel panel-flat"  >
                             <!--style="padding-bottom:220px;background-color: lightgray;"-->
-                            <div class="panel-heading">
+                            <div class="panel-heading" dir="ltr">
                                 <!-- <h5 class="panel-title">Basic responsive table</h5> -->
-                                <h1><strong>Shelve Table</strong>
+                                <h1><strong><?= lang('lang_Pallet_Table'); ?></strong>
                                     <!--Shelveviewexportdata <a  ng-click="Shelveviewexportdata();" ><i class="icon-file-excel pull-right" style="font-size: 35px; margin-top:3px;"></i></a>&nbsp;&nbsp;-->
                                     <a onclick="printPage('block1');" ><i class="fa fa-print pull-right" style="font-size: 40px;color:#999;"></i></a>
                                     <a  ng-click="getExcelDetails();" ><i class="icon-file-excel pull-right" style="font-size: 35px; margin-top:3px;"></i></a>&nbsp;&nbsp;
 
 
                                     <select id="exportlimit" class="custom-select pull-right" ng-model="filterData.exportlimit" name="exprort_limit" required="" style="    font-size: 16px;padding: 5px;margin-right: 10px;" >
-                                        <option value="" selected>Select Export Limit</option>
+                                        <option value="" selected><?= lang('lang_select_export_limit'); ?></option>
                                         <option ng-repeat="exdata in dropexport" value="{{exdata.k}}" >{{exdata.j}}-{{exdata.k}}</option>  
 
                                     </select> 
@@ -66,7 +66,7 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header" style="background-color: #f3f5f6;">
-                                            <center>   <h4 class="modal-title" style="color:#000">Select Column to download</h4></center>
+                                            <center>   <h4 class="modal-title" style="color:#000"><?= lang('lang_Select_Column_to_download'); ?></h4></center>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
@@ -77,7 +77,7 @@
                                                 <div class="col-sm-4">             
                                                     <label class="container">
 
-                                                        <input type="checkbox" id='but_checkall' value='checkall' ng-model="checkall" ng-click='toggleAll()'/>    SelectAll
+                                                        <input type="checkbox" id='but_checkall' value='checkall' ng-model="checkall" ng-click='toggleAll()'/>    <?= lang('lang_SelectAll'); ?>
                                                         <span class="checkmark"></span>
 
 
@@ -91,7 +91,7 @@
                                                     
                                                     <div class="col-sm-4">
                                                         <label class="container">
-                                                            <input type="checkbox" name="shelv_no" value="shelv_no"  ng-model="listData2.shelv_no"> Shelv No
+                                                            <input type="checkbox" name="shelv_no" value="shelv_no"  ng-model="listData2.shelv_no"> <?= lang('lang_Shelve_No'); ?>
                                                             <span class="checkmark"></span>
                                                         </label>
                                                     </div>
@@ -101,7 +101,7 @@
                                                 <div class="row" style="padding-left: 40%;padding-top: 10px;">   
 
 
-                                                    <button type="submit" class="btn btn-info pull-left" name="shipment_transfer" ng-click="ViewSlaveExport(listData2, listData1.exportlimit);">Download Excel Report</button>  
+                                                    <button type="submit" class="btn btn-info pull-left" name="shipment_transfer" ng-click="ViewSlaveExport(listData2, listData1.exportlimit);"><?= lang('lang_Download_Excel_Report'); ?></button>  
                                                 </div>
 
                                             </div>
@@ -139,13 +139,13 @@
 
 
                                                                     <td>
-                                                                        <div class="form-group" ><strong>Shelve NO:</strong>
+                                                                        <div class="form-group" ><strong><?= lang('lang_Shelve_No'); ?>:</strong>
                                                                             <input type="text" id="s_type_val" name="s_type_val"  ng-model="filterData.shelve"  class="form-control" placeholder="Shelve No.">
 
                                                                         </div>
                                                                     </td>
                                                                     <td>
-                                                                        <div class="form-group" ><strong>City:</strong>
+                                                                        <div class="form-group" ><strong> <?= lang('lang_City'); ?>:</strong>
                                                                             <br>
                                                                             <?php
                                                                             $destData = getAllDestination();
@@ -154,7 +154,7 @@
                                                                             ?>
                                                                             <select  id="destination" name="destination"  ng-model="filterData.destination" multiple class="selectpicker" data-width="100%" >
 
-                                                                                <option value="">Select Destination</option>
+                                                                                <option value=""><?= lang('lang_Select_Destination'); ?></option>
                                                                                 <?php foreach ($destData as $data): ?>
                                                                                     <option value="<?= $data['id']; ?>"><?= $data['city']; ?></option>
                                                                                 <?php endforeach; ?>
@@ -165,8 +165,8 @@
 
 
 
-                                                                    <td><button type="button" class="btn btn-success" style="margin-left: 7%">Total <span class="badge">{{shipData.length}}/{{totalCount}}</span></button></td>
-                                                                    <td><button  class="btn btn-danger" ng-click="loadMore(1, 1);" >Search</button></td>
+                                                                    <td><button type="button" class="btn btn-success" style="margin-left: 7%"><?= lang('lang_Total'); ?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button></td>
+                                                                    <td><button  class="btn btn-danger" ng-click="loadMore(1, 1);" ><?= lang('lang_Search'); ?></button></td>
 
                                                                 </tr>
 
@@ -201,7 +201,7 @@
                                             <tr>
 <!--                                                <th>Sr.No.</th>-->
 
-                                                <th style="text-align: center;">Shelve No.</th>
+                                                <th style="text-align: center;"><?= lang('lang_Shelve_No'); ?>.</th>
 <!--                                                <th>City</th>-->
 
  <!-- <th>Category</th> -->
@@ -223,7 +223,7 @@
 
                                     </table>
 
-                                    <button ng-hide="shipData.length == totalCount" class="btn btn-info" ng-click="loadMore(count = count + 1, 0);" ng-init="count = 1">Load More</button>
+                                    <button ng-hide="shipData.length == totalCount" class="btn btn-info" ng-click="loadMore(count = count + 1, 0);" ng-init="count = 1"><?= lang('lang_Load_More'); ?></button>
                                 </div>
                                 <hr>
 

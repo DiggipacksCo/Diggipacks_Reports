@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Inventory</title>
+        <title><?=lang('lang_Inventory');?></title>
         <?php $this->load->view('include/file'); ?>
         <script src='https://code.responsivevoice.org/responsivevoice.js'></script>
     </head>
@@ -28,7 +28,7 @@
                         <div class="page-header page-header-default">
                             <div class="page-header-content">
                                 <div class="page-title">
-                                    <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Update Shelve</span> </h4>
+                                    <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold"><?=lang('lang_Update');?> <?=lang('lang_Shelve');?></span> </h4>
                                 </div>
                             </div>
                         </div>
@@ -36,8 +36,8 @@
                         <!-- Content area -->
                         <div class="">
                             <div class="panel panel-flat">
-                                <div class="panel-heading">
-                                    <h5 class="panel-title">Update Shelve Inventory</h5>
+                                <div class="panel-heading" dir="ltr">
+                                    <h5 class="panel-title"><?=lang('lang_Update_Shelve_Inventory');?></h5>
                                     <a  id="btnExport" ><i class="icon-file-excel pull-right" style="font-size: 35px; margin-top:3px;"></i></a> 
                                     <!--<div class="heading-elements">
                                                 <ul class="icons-list">
@@ -85,10 +85,10 @@
 
                                                     <div class="container" ng-if="selectedStockLocationData">
                                                         <ul class="list-unstyled row">
-                                                            <li class="list-item col-sm-2 list-group-item-success "><strong>Stock Location</strong></li>
-                                                            <li class="list-item col-sm-2 list-group-item-warning"><strong>SKU</strong></li>
-                                                            <li class="list-item col-sm-2 list-group-item-danger"><strong>Item</strong></li>
-                                                            <li class="list-item col-sm-2 list-group-item-info"><strong>Quantity</strong></li>
+                                                            <li class="list-item col-sm-2 list-group-item-success "><strong><?=lang('lang_Stock_Location');?></strong></li>
+                                                            <li class="list-item col-sm-2 list-group-item-warning"><strong><?=lang('lang_SKU');?></strong></li>
+                                                            <li class="list-item col-sm-2 list-group-item-danger"><strong><?=lang('lang_Item');?></strong></li>
+                                                            <li class="list-item col-sm-2 list-group-item-info"><strong><?=lang('lang_Quantity');?></strong></li>
                                                         </ul>
                                                         <ul class="list-unstyled row"ng-repeat=" data in selectedStockLocationData" >
                                                             <li class="list-item col-sm-2 list-group-item-success ">{{data.stock_location}}</li>
@@ -98,7 +98,7 @@
                                                         </ul>
                                                     </div>
                                                     <div class="col-lg-6">
-                                                        <div ng-if="completeArray.length > 2" class="alert alert-danger">Please Verify the Packing, Limit Exceed! </div>
+                                                        <div ng-if="completeArray.length > 2" class="alert alert-danger"><?=lang('lang_Please_Verify_the_Packing_Limit_Exceed');?>! </div>
                                                         <div ng-if='warning' class="alert alert-warning">{{warning}} </div>
                                                         <div ng-if='Message' class="alert alert-success">{{Message}} </div>
                                                     </div>
@@ -110,16 +110,16 @@
                                         </div>
                                         <div class="col-md-12">
                                             <div class="panel panel-default">
-                                                <div class="panel-body">List</div>
+                                                <div class="panel-body"><?=lang('lang_List');?></div>
                                             </div>
                                             <table class="table table-striped table-bordered table-hover" id="downloadtable">
                                                 <thead>
                                                     <tr>
-                                                        <th class="head1">Sr.No.</th>
-                                                        <th class="head0">Stock Location.</th>
-                                                        <th class="head1">Item</th>
-                                                        <th class="head0">Shelve</th>
-                                                        <th class="head1">SKU</th>
+                                                    <th class="head1"><?=lang('lang_SrNo');?>.</th>
+                                                        <th class="head0"><?=lang('lang_Stock_Location');?>.</th>
+                                                        <th class="head1"><?=lang('lang_Item');?></th>
+                                                        <th class="head0"><?=lang('lang_Shelve');?></th>
+                                                        <th class="head1"><?=lang('lang_SKU');?></th>  
                                                     </tr>
                                                 </thead>
                                                 <tbody>

@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png');?>" type="image/x-icon">
-  <title>Inventory</title>
+  <title><?=lang('lang_Inventory');?></title>
   <?php $this->load->view('include/file'); ?>
 
 
@@ -44,7 +44,7 @@ echo '<div class="alert alert-success">'.$this->session->flashdata('msg').' <but
             <!--style="padding-bottom:220px;background-color: lightgray;"-->
             <div class="panel-heading">
               <!-- <h5 class="panel-title">Basic responsive table</h5> -->
-              <h1><strong>Warehouse Table</strong></h1>
+              <h1><strong><?=lang('lang_Warehouse_Table');?></strong></h1>
 
               <div class="heading-elements">
                 <ul class="icons-list">
@@ -67,10 +67,10 @@ echo '<div class="alert alert-success">'.$this->session->flashdata('msg').' <but
               <table class="table table-striped table-hover table-bordered dataTable bg-*" id="example">
                 <thead>
                   <tr>
-                    <th>Sr No.</th>
-                    <th>Warehouse Name</th>
-                    <th>City</th>
-                       <th>Action</th>
+                  <th><?=lang('lang_SrNo');?>.</th>
+                    <th><?=lang('lang_Warehouse_Name');?></th>
+                    <th ><?=lang('lang_City');?></th>
+                       <th><?=lang('lang_Action');?></th>
                    
                     
                    
@@ -93,7 +93,7 @@ echo '<div class="alert alert-success">'.$this->session->flashdata('msg').' <but
                             </a>
 
                             <ul class="dropdown-menu dropdown-menu-right">
-                              <li><a href="<?=base_url();?>editWarehouse/<?=$seller->id;?>"><i class="icon-pencil7"></i> Edit </a></li>      
+                              <li><a href="<?=base_url();?>editWarehouse/<?=$seller->id;?>"><i class="icon-pencil7"></i> <?=lang('lang_Edit');?> </a></li>      
                                
                             </ul>
                           </li>

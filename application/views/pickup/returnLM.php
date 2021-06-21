@@ -5,7 +5,7 @@
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png');?>" type="image/x-icon">
-      <title>Inventory</title>
+      <title><?= lang('lang_Inventory'); ?></title>
       <?php $this->load->view('include/file'); ?>
       <script src='https://code.responsivevoice.org/responsivevoice.js'></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
@@ -105,7 +105,7 @@
          <div class="page-header page-header-default">
             <div class="page-header-content">
                <div class="page-title">
-                  <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Return To Fulfilment</span> </h4>
+                  <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold"><?= lang('lang_Return_To_Fulfilment'); ?></span> </h4>
                </div>
             </div>
          </div>
@@ -113,7 +113,7 @@
          <div class="">
             <div class="panel panel-flat">
                <div class="panel-heading">
-                  <h5 class="panel-title">Return To Fulfilment <a href="<?=base_url();?>returnLM" class="btn btn-danger pull-right text-white mt-5">Cancel</a> </h5>
+                  <h5 class="panel-title" dir="ltr"><?= lang('lang_Return_To_Fulfilment'); ?> <a href="<?=base_url();?>returnLM" class="btn btn-danger pull-right text-white mt-5"><?= lang('lang_Cancel'); ?></a> </h5>
                </div>
                <div class="panel-body">
                   <div class="row">
@@ -131,31 +131,31 @@
                               </div>
                               <div class="col-md-3">
                                  <div class="form-group">
-                                    <input type="text" id="" my-enter="scan_awb();" ng-disabled="awbcolmunBtn" ng-model="scan.slip_no"class="form-control" placeHolder='AWB' />
+                                    <input type="text" id="" my-enter="scan_awb();" ng-disabled="awbcolmunBtn" ng-model="scan.slip_no"class="form-control" placeHolder='<?= lang('lang_AWB'); ?>'' />
                                  </div>
                               </div>
                               <div class="col-md-3">
                                  <div class="form-group">
-                                    <input type="text" id="scan_awb" my-enter="packuShip()" ng-model="scan.sku" class="form-control" placeHolder='SKU' />
+                                    <input type="text" id="scan_awb" my-enter="packuShip()" ng-model="scan.sku" class="form-control" placeHolder='<?= lang('lang_SKU'); ?>' />
                                  </div>
                               </div>
                               <div class="col-md-2">
                                  <div class="form-group"  ng-if="completeArray.length>2 ">
-                                    <input type="button" ng-click="finishScan();" ng-disabled="btnfinal" value='Verify'class="btn btn-danger" />
+                                    <input type="button" ng-click="finishScan();" ng-disabled="btnfinal" value='<?= lang('lang_Verify'); ?>''class="btn btn-danger" />
                                  </div>
                                  <div class="form-group" ng-if="completeArray.length<=2">
-                                    <input type="button" ng-click="finishScan();" ng-disabled="btnfinal" value='Verify'class="btn btn-primary" />
+                                    <input type="button" ng-click="finishScan();" ng-disabled="btnfinal" value='<?= lang('lang_Verify'); ?>''class="btn btn-primary" />
                                  </div>
                               </div>
                               <!-- -->
                               <table ng-show="boxshow1"  class="table table-striped table-bordered table-hover">
                               <tr>     
-                              <th>Seller  </th>                                              
-                                        <th>SKU  </th>                                        
-                                        <th>Qty</th>
-                                        <th>Capacity</th>
-                                        <th>Shelve NO</th>
-                                        <th>Stock Location</th> 
+                              <th> <?= lang('lang_Seller'); ?> </th>                                              
+                                        <th><?= lang('lang_SKU'); ?>  </th>                                        
+                                        <th><?= lang('lang_QTY'); ?></th>
+                                        <th><?= lang('lang_Capacity'); ?></th>
+                                        <th><?= lang('lang_Shelve_No'); ?></th>
+                                        <th><?= lang('lang_Stock_Location'); ?></th> 
                                     </tr>
                               <tr ng-repeat="stockdat in LocalItem" > 
                               <td><span class="label label-primary">{{stockdat.seller}}</span> </td>
@@ -189,7 +189,7 @@
                               <p ng-show="boxshow1">&nbsp;</p>
                               <div class="col-md-3" ng-show="boxshow1">
                                  <div class="form-group">
-                                    <label for="primary" class="btn btn-primary">Damage/Missing
+                                    <label for="primary" class="btn btn-primary"><?= lang('lang_Damage'); ?>/<?= lang('lang_Missing'); ?>
                                     <input type="checkbox" ng-model="specialtype.specialpack" id="primary" class="badgebox" name="specialpack" ng-change="Getallspecialpackstatus(specialtype.specialpack);">
                                     <span class="badge">&check;</span></label>
                                  </div>
@@ -199,7 +199,7 @@
                                     <div class="radio">
                                        <label style="font-size: 2em">
                                        <input type="radio" name="specialpacktype" ng-model="specialtype.specialpacktype" ng-change="Getallspecialpackstatus(specialtype.specialpacktype);" value="Damage" checked>
-                                       <span class="cr"><i class="cr-icon fa fa-circle"></i></span> Damage </label>
+                                       <span class="cr"><i class="cr-icon fa fa-circle"></i></span> <?= lang('lang_Damage'); ?> </label>
                                     </div>
                                  </div>
                               </div>
@@ -208,7 +208,7 @@
                                     <div class="radio">
                                        <label style="font-size: 2em">
                                        <input type="radio" ng-model="specialtype.specialpacktype" ng-change="Getallspecialpackstatus(specialtype.specialpacktype);"  name="specialpacktype" value="Mising">
-                                       <span class="cr"><i class="cr-icon fa fa-circle"></i></span> Missing </label>
+                                       <span class="cr"><i class="cr-icon fa fa-circle"></i></span>  <?= lang('lang_Missing'); ?></label>
                                     </div>
                                  </div>
                               </div>
@@ -217,7 +217,7 @@
                                   <div class="col-md-3" >  <div class="form-group"><input class="btn btn-info" type="button" onclick="create_zip1();" value="Export ALL" ></div></div>
                                  -->
                               <div class="col-lg-12">
-                                 <div ng-if="completeArray.length>2" class="alert alert-danger">Please Verify the Packing, Limit Exceed! </div>
+                                 <div ng-if="completeArray.length>2" class="alert alert-danger"> <?= lang('lang_Please_Verify_the_Packing_Limit_Exceed'); ?>! </div>
                                  <div ng-if='warning' class="alert alert-warning">{{warning}} </div>
                                  <div ng-if='Message' class="alert alert-success">{{Message}} </div>
                               </div>

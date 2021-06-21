@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Inventory</title>
+        <title><?=lang('lang_Inventory');?></title>
         <?php $this->load->view('include/file'); ?>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
@@ -41,7 +41,7 @@
                     <!-- Content area -->
                     <div class="content">
                         <div class="panel panel-flat">
-                            <div class="panel-heading"><h1><strong>Add Item Inventory</strong></h1></div>
+                            <div class="panel-heading"><h1><strong><?=lang('lang_Add_Item_Inventory');?></strong></h1></div>
                             <hr>
                             <div class="panel-body">
                                 <?php if ($this->session->flashdata('msg')): ?>
@@ -58,13 +58,13 @@
                                     </div> -->
 
                                     <div class="form-group">
-                                        <label for="wh_id"><strong>Warehouse:</strong></label>
+                                        <label for="wh_id"><strong><?=lang('lang_Warehouse');?>:</strong></label>
                                         <?= GetwherehouseDropShow(set_value('wh_id')); ?>     
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1"><strong>Item SKU#:</strong></label>
+                                        <label for="exampleInputEmail1"><strong><?=lang('lang_Item_SKU');?>:</strong></label>
                                         <select name="sku" id="sku" class="selectpicker" data-show-subtext="true" data-live-search="true" ng-model="filterData.sku"  data-width="100%">
-                                            <option value="">Please select item sku</option>
+                                            <option value=""><?=lang('lang_Please_select_item_sku');?></option>
                                             <?php foreach ($items as $item): ?>
 
                                                 <option value="<?= $item->id ?>">
@@ -78,9 +78,9 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1"><strong>Seller#: </strong></label>
+                                        <label for="exampleInputEmail1"><strong><?=lang('lang_Seller');?>#: </strong></label>
                                         <select name="seller" id="seller" class="selectpicker" data-show-subtext="true" data-live-search="true" ng-model="filterData.seller_id"  ng-change="loadMore();"   data-width="100%">
-                                            <option value="">Please select seller</option>
+                                            <option value=""><?=lang('lang_Please_select_seller');?></option>
                                             <?php
                                             // print_r($sellers);
                                             foreach ($sellers as $seller):
@@ -95,11 +95,11 @@
                                     </div>
                                     <div class="form-group">
                                         <input type="hidden" name="qtycout" id="qtycout" ng-model="showform.qtycout">
-                                        <label for="exampleInputEmail1"><strong>Quantity:</strong></label>
+                                        <label for="exampleInputEmail1"><strong><?=lang('lang_Quantity');?>:</strong></label>
                                         <input  type="number" class="form-control" name='quantity' required ng-model="filterData.quantity" value="1" min="1" id="exampleInputEmail1" ng-blur="loadMore()" >
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputEmail15"><strong>Stock Location:</strong></label>
+                                        <label for="exampleInputEmail15"><strong><?=lang('lang_Stock_Location');?>:</strong></label>
                                         <select name="stock_location[]" id="exampleInputEmail15" ng-model="filterData.stock_location"  class="js-example-basic-multiple bootstrap-select form-control" multiple data-width="100%" ng-change="GetcheckButton();"> 
 
                                             <option ng-repeat="data in shipData" value="{{data.stock_location}}">{{data.stock_location}}</option>
@@ -120,11 +120,11 @@
                                     </div> -->
 
                                     <div class="form-group">
-                                        <label for="expity_date"><strong>Expire Date:</strong></label>
+                                        <label for="expity_date"><strong><?=lang('lang_Expire_Date');?>:</strong></label>
                                         <input  type="text" class="form-control" name='expity_date' ng-model="filterData.expity_date"  id="expity_date"   >
                                     </div>
 
-                                    <button type="button" ng-show="buttonhide" class="btn btn-success" ng-click="GetaddconfirmDatashow()" >Submit</button>
+                                    <button type="button" ng-show="buttonhide" class="btn btn-success" ng-click="GetaddconfirmDatashow()" ><?=lang('lang_Submit');?></button>
 
                                     <div class="modal fade" id="showskuformviewid2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
@@ -133,7 +133,7 @@
 
 
 
-                                                    <h5 class="modal-title" id="exampleModalLabel">Confirm Inventory Order</h5>
+                                                    <h5 class="modal-title" id="exampleModalLabel"><?=lang('lang_Confirm_Inventory_Order');?></h5>
                                                     <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                        <span aria-hidden="true">&times;</span>
                                                      </button>-->
@@ -143,28 +143,28 @@
                                                         <!-- width="170px;" height="200px;" -->
                                                         <tbody >
                                                             <tr style="width: 80%;">
-                                                                <td><strong>item sku:</strong></td>
+                                                                <td><strong><?=lang('lang_item_sku');?>:</strong></td>
                                                                 <td>{{filterData.skuname}}</td>
 
                                                             </tr>
                                                             <tr style="width: 80%;">
-                                                                <td><strong>Seller:</strong></td>
+                                                                <td><strong><?=lang('lang_Seller');?>:</strong></td>
                                                                 <td>{{filterData.seller_name}}</td>
 
                                                             </tr>
                                                             <tr style="width: 80%;">
-                                                                <td><strong>Quantity:</strong></td>
+                                                                <td><strong><?=lang('lang_Quantity');?>:</strong></td>
                                                                 <td>{{filterData.quantity}}</td>
 
                                                             </tr>
 
                                                             <tr style="width: 80%;">
-                                                                <td><strong>Stock Location:</strong></td>
+                                                                <td><strong><?=lang('lang_Stock_Location');?>:</strong></td>
                                                                 <td><span ng-repeat="data in filterData.stock_location">{{data}}<br></span></td>
 
                                                             </tr>
                                                             <tr style="width: 80%;">
-                                                                <td><strong>Expire Date:</strong></td>
+                                                                <td><strong><?=lang('lang_Expire_Date');?>:</strong></td>
                                                                 <td>{{filterData.expity_date}}</td>
 
                                                             </tr>
@@ -173,8 +173,8 @@
                                                     </table>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                                                    <button type="submit" class="btn btn-primary"  >Confirm Order</button>
+                                                    <button type="button" class="btn btn-danger" data-dismiss="modal"><?=lang('lang_Cancel');?></button>
+                                                    <button type="submit" class="btn btn-primary"  ><?=lang('lang_Confirm_Order');?></button>
                                                 </div>
                                             </div>
                                         </div>
