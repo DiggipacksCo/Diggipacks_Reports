@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png');?>" type="image/x-icon">
-<title>Inventory</title>
+<title><?=lang('lang_Inventory');?></title>
 <?php $this->load->view('include/file'); ?>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />  
 
@@ -31,9 +31,9 @@
         <div class="panel panel-flat">
           <div class="panel-heading">
           <?php if(empty($editdata)) {?>
-            <h1><strong>Add Warehouse</strong></h1>
+            <h1><strong><?=lang('lang_Add_Warehouse');?></strong></h1>
             <?php } else {?>
-              <h1><strong>Update Warehouse</strong></h1>
+              <h1><strong><?=lang('lang_Update_Warehouse');?></strong></h1>
             <?php  }?>  
           </div>
           <hr>  
@@ -49,11 +49,11 @@
             <input type="hidden" class="form-control" id="id" name="id" value="<?php if(!empty($editdata))echo $editdata['id']; ?>" required/>
                 
               <fieldset class="scheduler-border">
-                <legend class="scheduler-border">Warehouse Details</legend>   
+                <legend class="scheduler-border"><?=lang('lang_Warehouse_Details');?></legend>   
                 <input type="hidden" name="editid" value="<?php if(!empty($editid)) echo $editid;?>">
                
                 <div class="form-group">
-                  <label>Warehouse Name</label>
+                  <label><?=lang('lang_Warehouse_Name');?></label>
                   <input type="text" class="form-control" id="company" name="name" value="<?php if(!empty($editdata))echo $editdata['name']; ?>" required/>
                 </div>
                 <?php
@@ -66,7 +66,7 @@
                 // print_r($city_ids);
 			          ?>
                  <div class="form-group ">
-                  <label>City</label>  
+                  <label><?=lang('lang_City');?></label>  
                   <span id="city"></span>
                   <select name="city_id[]" class="selectpicker" multiple  data-show-subtext="true" data-live-search="true" required  data-width="100%"> 
                  
@@ -86,9 +86,9 @@
                 
                   
             <?php if(empty($editdata)) {?>
-                  <button type="submit" class="btn btn-primary" name="submit" value="submit">Add New Warehouse</button>
+                  <button type="submit" class="btn btn-primary" name="submit" value="submit"><?=lang('lang_Add_New_Warehouse');?></button>
             <?php } else {?>
-              <button type="submit" class="btn btn-primary" name="submit" value="submit">Update Warehouse</button>   
+              <button type="submit" class="btn btn-primary" name="submit" value="submit"><?=lang('lang_Update_Warehouse');?></button>   
             <?php  }?> 
 
             

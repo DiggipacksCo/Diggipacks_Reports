@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png');?>" type="image/x-icon">
-  <title>Inventory</title>
+  <title><?= lang('lang_Inventory'); ?></title>
   <?php $this->load->view('include/file'); ?>
 <script type="text/javascript" src="<?=base_url();?>assets/js/angular/iteminventory.app.js"></script>
 
@@ -48,9 +48,9 @@
           <!-- Basic responsive table -->
           <div class="panel panel-flat"  >
             <!--style="padding-bottom:220px;background-color: lightgray;"-->
-            <div class="panel-heading">
+            <div class="panel-heading"dir="ltr"
               <!-- <h5 class="panel-title">Basic responsive table</h5> -->
-              <h1><strong>Vehicle Table</strong>
+                                <h1><strong><?= lang('lang_Vehicle_Table'); ?></strong>
               
             
               </h1>
@@ -67,12 +67,12 @@
                     
                       <tr style="width: 80%;">
                       
-                        <td ><div class="form-group" ><strong>Name:</strong>
+                                            <td ><div class="form-group" ><strong><?= lang('lang_Name'); ?>:</strong>
                             <input type="text"  id="name" name="name"  ng-model="filterData.name" class="form-control" placeholder="Enter Name">
                           </div></td>
                           
                           
-                         <td co><button type="button" class="btn btn-success" style="margin-left: 7%">Total <span class="badge">{{shipData.length}}/{{totalCount}}</span></button> <button  class="btn btn-danger" ng-click="loadMore(1,1);" >Search</button></td>
+                                            <td ><button type="button" class="btn btn-success" style="margin-left: 7%"><?= lang('lang_Total'); ?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button> <button  class="btn btn-danger" ng-click="loadMore(1, 1);" ><?= lang('lang_Search'); ?></button></td>
                         
                       </tr>
                       
@@ -84,11 +84,11 @@
               <table class="table table-striped table-hover table-bordered" id="example">
                 <thead>
                   <tr>
-                    <th>Sr.No.</th>
+                                                <th><?= lang('lang_SrNo'); ?>.</th>
                   
-                    <th>Name</th>
+                                                <th><?= lang('lang_Name'); ?></th>
                    
-                    <th>Icon</th>
+                                                <th><?= lang('lang_Icon'); ?></th>
                    
                     <!-- <th>Category</th> -->
                     <th class="text-center" ><i class="icon-database-edit2"></i></th>
@@ -111,8 +111,8 @@
                             </a>
 
                             <ul class="dropdown-menu dropdown-menu-right">
-                              <li><a href="<?=base_url();?>edit_vehicle/{{data.id}}"><i class="icon-pencil7"></i> Edit </a></li>
-                              <li><a href="<?=base_url();?>deleteVehicle/{{data.id}}"><i class="icon-trash-alt"></i> Delete </a></li>
+                                                                <li><a href="<?= base_url(); ?>edit_vehicle/{{data.id}}"><i class="icon-pencil7"></i> <?= lang('lang_Edit'); ?> </a></li>
+                                                                <li><a href="<?= base_url(); ?>deleteVehicle/{{data.id}}"><i class="icon-trash-alt"></i> <?= lang('lang_Delete'); ?></a></li>
                              
                               
                             </ul>
@@ -126,7 +126,7 @@
             
            
            </div>
-           <button ng-hide="shipData.length<100 || shipData.length==totalCount || shipData==0" class="btn btn-info" ng-click="loadMore(count=count+1,0);" ng-init="count=1">Load More</button>
+           <button ng-hide="shipData.length<100 || shipData.length==totalCount || shipData==0" class="btn btn-info" ng-click="loadMore(count=count+1,0);" ng-init="count=1"><?= lang('lang_Load_More'); ?></button>
             <hr>
          </div>
        </div>

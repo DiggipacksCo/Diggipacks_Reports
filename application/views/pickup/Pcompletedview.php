@@ -68,7 +68,7 @@
                                                                 <th class="head1" align="center" style="text-align:center;"><?= lang('lang_SKU_Details'); ?>
                                                                     <table class="table table-striped table-bordered table-hover">
                                                                         <tr>
-                                                                             <td>Item Image</td>
+                                                                             <td><?= lang('lang_Item_Image'); ?></td>
                                                                             <td><?= lang('lang_SKU'); ?></td>
                                                                             <td><?= lang('lang_Pieces'); ?></td>
                                                                         </tr>

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png');?>" type="image/x-icon">
-<title>Inventory</title>
+<title><?=lang('lang_Inventory');?></title>
 <?php $this->load->view('include/file'); ?>
 </head>
 
@@ -27,7 +27,7 @@
       <div class="content">
         <div class="panel panel-flat">
           <div class="panel-heading">
-            <h1><strong>Generate Stock Location</strong></h1>
+            <h1><strong><?=lang('lang_Generate_Stock_Location');?></strong></h1>
           </div>
           <hr>
           <div class="panel-body"> <br>
@@ -35,9 +35,9 @@
              <?php if(!empty(validation_errors())) echo'<div class="alert alert-warning" role="alert"><strong>Warning!</strong> '.validation_errors().'</div>';?>
             <form class="stdform" method="post" action="<?= base_url('generateStock');?>" name="add_ship" enctype="multipart/form-data">
               <div  class="col-md-3">
-                <div class="form-group" ><strong>Seller:</strong> <br>
+                <div class="form-group" ><strong><?=lang('lang_Seller');?>:</strong> <br>
                   <select  id="seller" name="seller"  ng-model="filterData.seller"  class="selectpicker" data-width="100%" >
-                    <option value="">Select Seller</option>
+                    <option value=""><?=lang('lang_Select_Seller');?></option>
                     <?php foreach($sellers as $seller_detail):?>
                     <option value="<?= $seller_detail->id;?>">
                     <?= $seller_detail->name;?>
@@ -48,19 +48,19 @@
               </div>
               
               <div  class="col-md-3">
-                <div class="form-group" ><strong>Location Letters:</strong> <br>
+                <div class="form-group" ><strong><?=lang('lang_Location_Letters');?>:</strong> <br>
                    <input type="text" min="1" maxlength="5" required name="charname" class="form-control"/>
                 </div>
               </div>
               
               <div  class="col-md-4">
-                <div class="form-group" ><strong>Number Of Stock Location:</strong> <br>
+                <div class="form-group" ><strong><?=lang('lang_Number_Of_Stock_Location');?>:</strong> <br>
                   <input type="number" min="1" required name="stockCount" class="form-control"/>
                 </div>
               </div>
               <div  class="col-md-2">
                 <div class="form-group" > <br>
-                  <button type="submit"  class="btn btn-success pull-left">Generate</button>
+                  <button type="submit"  class="btn btn-success pull-left"><?=lang('lang_Generate');?></button>
                 </div>
               </div>
             </form>

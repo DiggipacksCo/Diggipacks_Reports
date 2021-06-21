@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png');?>" type="image/x-icon">
 <script src='https://code.responsivevoice.org/responsivevoice.js'></script>    
-<title>Inventory</title>
+<title><?= lang('lang_Inventory'); ?></title>
 <?php $this->load->view('include/file'); ?>
 
 
@@ -54,7 +54,7 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('something').
               <div class="panel panel-flat">
                 <div class="panel-heading">
                  <h1>
-                  <strong>Dispatch</strong>
+                  <strong><?= lang('lang_Dispatch'); ?></strong>
 <!--
                   <a  ng-click="exportExcel();" ><i class="icon-file-excel pull-right" style="font-size: 35px;"></i></a>
                  <a id="pdf" ><i class="icon-file-pdf pull-right" style="font-size: 35px;color: red;"></i></a>
@@ -73,16 +73,16 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('something').
                   <div class="col-lg-12" >
                       
                     
-                  <div  ng-if="invalidstring" ><div class="alert alert-danger">list of not packed Orders:{{invalidstring}}</div>
-                      <div class="alert alert-warning">Above orders removed automatically!</div>
+                  <div  ng-if="invalidstring" ><div class="alert alert-danger"><?= lang('lang_list_of_not_packed_Orders'); ?>:{{invalidstring}}</div>
+                      <div class="alert alert-warning"> <?= lang('lang_Above_orders_removed_automatically'); ?> !</div>
                   </div> 
-                  <div  ng-if="invalidstringpallet" ><div class="alert alert-danger">list of not added no of pallets: {{invalidstringpallet}}</div>
-                      <div class="alert alert-warning">Above orders removed automatically!</div>
+                  <div  ng-if="invalidstringpallet" ><div class="alert alert-danger"><?= lang('lang_list_of_not_added_no_of_pallets'); ?>: {{invalidstringpallet}}</div>
+                      <div class="alert alert-warning"> <?= lang('lang_Above_orders_removed_automatically'); ?> !</div>
                   </div> 
                   </div>
                  <div class="col-lg-6">
                    
-                <div ng-if="awbArray.length>200" class="alert alert-danger">Please Verify the Packing, Limit Exceed! </div>
+                <div ng-if="awbArray.length>200" class="alert alert-danger"><?= lang('lang_Please_Verify_the_Packing_Limit_Exceed'); ?> ! </div>
                   <div ng-if='warning' class="alert alert-warning">{{warning}} </div>
                   <div ng-if='Message' class="alert alert-success">{{Message}} </div>
                 </div>      
@@ -103,7 +103,7 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('something').
             </div>
               <div class="col-md-2">
             <div class="form-group">
-          <a type="button"  class="btn btn-warning" style=" margin-left: 2%; margin-right: 3%; ">Row Count <span class="badge badge badge-pill badge-success" id="count_val">{{scan.awbArray.length}}</span>	</a>
+          <a type="button"  class="btn btn-warning" style=" margin-left: 2%; margin-right: 3%; "><?= lang('lang_Row_Count'); ?> <span class="badge badge badge-pill badge-success" id="count_val">{{scan.awbArray.length}}</span>	</a>
 			
 				</div>
                        </div>
@@ -111,8 +111,8 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('something').
            
          <div class="form-group">
              <select ng-model="type" class="form-control">
-                 <option value="DL" >Last Mile</option>
-                 <option value="POD" >Deliver</option>
+             <option value="DL" ><?= lang('lang_Last_Mile'); ?></option>
+                 <option value="POD" ><?= lang('lang_Deliver'); ?></option>
              
              </select>
              </div>
@@ -120,8 +120,8 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('something').
             <div class="col-md-4">	
            
          <div class="form-group">
-              <button type"submit" ng-if="scan.awbArray.length>0"  role="button" class="btn btn-primary form-control" >Dispatch</button>	
-             <button type"submit" ng-if="scan.awbArray==null"  role="button" class="btn btn-info form-control" disabled >Dispatch </button>	
+              <button type"submit" ng-if="scan.awbArray.length>0"  role="button" class="btn btn-primary form-control" ><?= lang('lang_Dispatch'); ?></button>	
+             <button type"submit" ng-if="scan.awbArray==null"  role="button" class="btn btn-info form-control" disabled ><?= lang('lang_Dispatch'); ?> </button>	
            
 				 		
             </div>	 </div>	

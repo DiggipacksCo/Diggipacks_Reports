@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Inventory</title>
+        <title><?= lang('lang_Inventory'); ?></title>
         <?php $this->load->view('include/file'); ?>
         <script src="<?=base_url();?>assets/js/angular/stocklocation.js"></script>
 
@@ -47,7 +47,7 @@ if(!empty($type))
                             <!--style="padding-bottom:220px;background-color: lightgray;"-->
                             <div class="panel-heading"> 
                                 <!-- <h5 class="panel-title">Basic responsive table</h5> -->
-                                <h1><strong><?php if($type1=='AS') echo 'Assigned '; else if($type1=='UN') echo 'Unassigned'; else echo 'Show';?> Stock Location </strong>
+                                <h1><strong><?php if($type1=='AS') echo 'Assigned '; else if($type1=='UN') echo 'Unassigned'; else echo 'Show';?> <?= lang('lang_Stock_Location'); ?> </strong>
 <!--                                    <a  ng-click="ExportExcelitemshelve();" ><i class="icon-file-excel pull-right" style="font-size: 35px; margin-top:3px;"></i></a>&nbsp;&nbsp;-->
 
                                     <a onclick="printPage('block1');" ><i class="fa fa-print pull-right" style="font-size: 40px;color:#999;"></i></a>
@@ -66,19 +66,19 @@ if(!empty($type))
                                                             <!-- width="170px;" height="200px;" -->
                                                             <tbody >
                                                                 <tr style="width: 80%;">
-                                                                    <td><div class="form-group" ><strong>Stock Location:</strong>
+                                                <td><div class="form-group" ><strong><?= lang('lang_Stock_Location'); ?>:</strong>
                                                                             <input type="text" id="s_type_val" name="s_type_val"  ng-model="filterData.stock_location"  class="form-control" placeholder="Stock Location">
                                                                         </div></td>
                                                                     <td><select  id="seller" name="seller"  ng-model="filterData.seller_id" multiple  class="selectpicker" data-width="100%" >
-                                                                            <option value="">Select Seller</option>
+                                                        <option value=""><?= lang('lang_SelectSeller'); ?></option>
                                                                             <?php foreach ($sellers as $seller_detail): ?>
                                                                                 <option value="<?= $seller_detail->id; ?>">
                                                                                     <?= $seller_detail->name; ?>
                                                                                 </option>
                                                                             <?php endforeach; ?>
                                                                         </select></td>
-                                                                    <td><button type="button" class="btn btn-success" style="margin-left: 7%">Total <span class="badge">{{shipData.length}}/{{totalCount}}</span></button></td>
-                                                                    <td><button  class="btn btn-danger" ng-click="loadMore(1, 1<?=$type;?>);" >Search</button></td>
+                                                <td><button type="button" class="btn btn-success" style="margin-left: 7%"><?= lang('lang_Total'); ?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button></td>
+                                                <td><button  class="btn btn-danger" ng-click="loadMore(1, 1<?= $type; ?>);" ><?= lang('lang_Search'); ?></button></td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -87,9 +87,9 @@ if(!empty($type))
                                     <table class="table table-striped table-hover table-bordered">
                                         <thead>
                                             <tr>
-                                                <th>Sr.No.</th>
-                                                <th>Stock Location</th>
-                                                <th>Seller</th>
+                                                <th><?= lang('lang_SrNo'); ?>.</th>
+                                                <th><?= lang('lang_Stock_Location'); ?></th>
+                                                <th><?= lang('lang_Seller'); ?></th>
 
 <!-- <th>Category</th> --> 
 
@@ -104,7 +104,7 @@ if(!empty($type))
                                             <td><span class="label label-info">{{data.name}}</span></td>
                                         </tr>
                                     </table>
-                                    <button ng-hide="shipData.length == totalCount" class="btn btn-info" ng-click="loadMore(count = count + 1, 0<?=$type;?>);" ng-init="count = 1">Load More</button>
+                                    <button ng-hide="shipData.length == totalCount" class="btn btn-info" ng-click="loadMore(count = count + 1, 0<?=$type;?>);" ng-init="count = 1"><?= lang('lang_LoadMore'); ?></button>
 
 
 
@@ -119,7 +119,7 @@ if(!empty($type))
                             <thead>
                                 <tr>
 
-                                    <th>Stock Location</th>
+                                    <th><?= lang('lang_Stock_Location'); ?></th>
 
 
 <!-- <th>Category</th> --> 
