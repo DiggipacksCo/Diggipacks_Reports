@@ -3621,3 +3621,18 @@ if(!function_exists('getStatusByCode_fm')){
 
             }
     }
+    
+    
+ if (!function_exists('getallstatusbyid')) {
+
+    function getallstatusbyid($mid = null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        $sql = "SELECT code,sub_status FROM status_category_fm where main_status='$mid'";
+        
+        $query = $ci->db->query($sql);
+        $result = $query->result_array();
+        return $result;
+    }
+
+}   
