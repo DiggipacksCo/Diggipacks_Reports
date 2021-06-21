@@ -732,7 +732,7 @@ class Shipment_model extends CI_Model {
         $this->db->where('shipment_fm.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->from('shipment_fm');
         $this->db->where('shipment_fm.deleted', 'N');
-        $this->db->where('shipment_fm.cod', 'PK');
+        $this->db->where('shipment_fm.code', 'PK');
         
         
 
