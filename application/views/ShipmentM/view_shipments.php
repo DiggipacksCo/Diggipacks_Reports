@@ -304,7 +304,7 @@
                                                 <th><?=lang('lang_No_of_Attempt');?></th>
                                                 <th><?=lang('lang_tpl_Pickup_Date');?></th>
                                                 <th><?=lang('lang_tpl_Closed_Date');?></th>
-                                                <th><?=lang('lang_Transaction_Date');?></th>
+                                                <th><?=lang('lang_Transaction_Days');?></th>
                                                 <th class="text-center" ><i class="icon-database-edit2"></i></th>
                                             </tr>  
                                         </thead>  
@@ -337,7 +337,7 @@
                                             <td>{{data.no_of_attempt}}</td>
                                             <td>{{data.pl3_pickup_date}}</td>
                                             <td>{{data.pl3_closed_date}}</td>
-                                            <td>{{data.transaction_date}}</td>
+                                            <td>{{data.transaction_days}}</td>
                                             <td class="text-center">
                                                 <ul class="icons-list">
                                                     <li class="dropdown">
@@ -669,12 +669,12 @@
                                             <span class="checkmark"></span>    
                                         </label>
                                     </div>
-<!--                                    <div class="col-sm-4">
+                                  <div class="col-sm-4">
                                         <label class="container">
-                                            <input type="checkbox" name="transaction_date" value="transaction_date"  ng-model="listData2.transaction_date"> Transaction Date
+                                            <input type="checkbox" name="transaction_days" value="transaction_days"  ng-model="listData2.transaction_days"> Transaction Days
                                             <span class="checkmark"></span>    
                                         </label>
-                                    </div>-->
+                                    </div>
                                     <div class="col-sm-4">
                                         <label class="container">
                                             <input type="checkbox" name="no_of_attempt" value="no_of_attempt"  ng-model="listData2.no_of_attempt"> <?=lang('lang_No_of_Attempt');?>
