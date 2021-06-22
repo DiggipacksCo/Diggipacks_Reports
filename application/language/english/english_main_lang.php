@@ -24,6 +24,8 @@ $lang['lang_Ticket_Number']="Ticket Number";
 $lang['lang_Subject']="Subject";
 $lang['lang_Update_Date']="Update Date";
 $lang['lang_Status']="Status";
+$lang['lang_Main_status']="Main Status";
+
 $lang['lang_Load_More']="Load More";
 $lang['lang_Please_Enter_Storage_Type']=" Please Enter Storage Type";
 $lang['lang_Ticket_Detail']="Ticket Detail";

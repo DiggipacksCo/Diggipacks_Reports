@@ -1358,7 +1358,7 @@ var app = angular.module('fulfill', [])
                 "invoice_details": false,
                 "pl3_pickup_date": false,
                 "pl3_close_date": false,
-                //"transaction_date": false,
+                "transaction_days": false,
                 "no_of_attempt": false
             };
 
@@ -2215,6 +2215,7 @@ var app = angular.module('fulfill', [])
                 "show_code": false,
                 "messenger_name": false,
                 "close_date": false,
+                "transaction_days": false,
             };
     $scope.slipnosdetails=function(val)
     {
