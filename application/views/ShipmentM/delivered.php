@@ -128,7 +128,7 @@
                                                 <div class="col-md-3"> <div class="form-group" ><strong><?=lang('lang_To');?>:</strong>
                                                                     <input type="date" id="to"name="to"  ng-model="filterData.to" class="form-control">
                                                                 </div></div>
-                                                <div class="col-md-3"> <div class="form-group" ><button type="button" class="btn btn-success" style="margin-left: 7%"><?=lang('lang_Total');?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button>
+                                                <div class="col-md-4"> <div class="form-group" ><button type="button" class="btn btn-success" style="margin-left: 7%"><?=lang('lang_Total');?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button>
                                                            <button  class="btn btn-danger" ng-click="loadMore(1, 1);" ><?=lang('lang_Search');?></button></div></div>
                                                              <div class="col-md-2"><div class="form-group" >
                                                                  <select class="form-control"  ng-model="filterData.sort_limit" ng-change="loadMore(1, 1);">
@@ -282,97 +282,199 @@
                                                 </label>
                                             </div>
 
-                                            <div class="col-md-12 row">    
+                                            <div class="col-md-12 row">
                                                 <div class="col-sm-4">          
                                                     <label class="container">  
-                                                        <input type="checkbox" name="slip_no" value="slip_no"   ng-checked="checkall" ng-model="listData2.slip_no"> <?= lang('lang_AWB_No'); ?>
+                                                        <input type="checkbox" name="Sku" value="Sku"  ng-checked="checkall"  ng-model="listData2.sku"> <?= lang('lang_Sku'); ?>
+                                                        <span class="checkmark"></span>
+                                                    </label>   
+                                                </div>
+                                                <div class="col-sm-4">          
+                                                    <label class="container">  
+                                                        <input type="checkbox" name="Date" value="Date"  ng-checked="checkall"  ng-model="listData2.entrydate"> <?= lang('lang_Date'); ?>
                                                         <span class="checkmark"></span>
                                                     </label>   
                                                 </div>
 
                                                 <div class="col-sm-4">
                                                     <label class="container">
-                                                        <input type="checkbox" name="shippers_ref_no" value="shippers_ref_no"  ng-checked="checkall" ng-model="listData2.shippers_ref_no"> <?= lang('lang_Ref_No'); ?>.
+                                                        <input type="checkbox" name="Reference" value="Reference" ng-checked="checkall"   ng-model="listData2.booking_id"><?= lang('lang_Reference'); ?>
                                                         <span class="checkmark"></span>
                                                     </label>
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <label class="container">
-                                                        <input type="checkbox" name="origin" value="origin"  ng-checked="checkall" ng-model="listData2.origin"> <?= lang('lang_Origin'); ?>
+                                                        <input type="checkbox" name="Shipper_Reference" value="Shipper_Reference" ng-checked="checkall"   ng-model="listData2.shippers_ref_no"> <?= lang('lang_shipper_Refrence'); ?> #
                                                         <span class="checkmark"></span>
                                                     </label>
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <label class="container">
-                                                        <input type="checkbox" name="destination" value="destination"  ng-checked="checkall" ng-model="listData2.destination"> <?= lang('lang_Destination'); ?>
-                                                        <span class="checkmark"></span>
-                                                    </label>
-                                                </div>
-
-
-                                                <div class="col-sm-4">
-                                                    <label class="container">
-                                                        <input type="checkbox" name="reciever_name" value="reciever_name" ng-checked="checkall" ng-model="listData2.reciever_name"> <?= lang('lang_Receiver_Name'); ?>
+                                                        <input type="checkbox" name="AWB" value="AWB" ng-checked="checkall"  ng-model="listData2.slip_no"> <?= lang('lang_AWB_No'); ?>
                                                         <span class="checkmark"></span>
                                                     </label>
                                                 </div>
 
                                                 <div class="col-sm-4">
                                                     <label class="container">
-                                                        <input type="checkbox" name="reciever_address" value="address" ng-checked="checkall" ng-model="listData2.reciever_address"> <?= lang('lang_Receiver_Address'); ?>
-                                                        <span class="checkmark"></span>
-                                                    </label>
-                                                </div>
-                                                <div class="col-sm-4"> 
-                                                    <label class="container">
-                                                        <input type="checkbox" name="phone_no" value="phone_no" ng-checked="checkall" ng-model="listData2.reciever_phone"><?= lang('lang_Receiver_Mobile'); ?>
-                                                        <span class="checkmark"></span>
-                                                    </label>
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <label class="container">
-                                                        <input type="checkbox" name="sku" value="sku"  ng-checked="checkall" ng-model="listData2.sku"> <?= lang('lang_SKU'); ?>
-                                                        <span class="checkmark"></span>
-                                                    </label>
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <label class="container">
-                                                        <input type="checkbox" name="quantity" value="warehouse"  ng-checked="checkall" ng-model="listData2.warehouse">Warehouse
-                                                        <span class="checkmark"></span>
-                                                    </label>   
-                                                </div>
-
-                                                <div class="col-sm-4">
-                                                    <label class="container">
-                                                        <input type="checkbox" name="cod_amount" value="cod_amount"  ng-checked="checkall" ng-model="listData2.total_cod_amt"> <?= lang('lang_COD_Amount'); ?>
-                                                        <span class="checkmark"></span>
-                                                    </label>
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <label class="container">
-                                                        <input type="checkbox" name="weight" value="weight"  ng-checked="checkall" ng-model="listData2.weight"> <?= lang('lang_Weight'); ?>
+                                                        <input type="checkbox" name="Origin" value="Origin" ng-checked="checkall"  ng-model="listData2.origin"> <?= lang('lang_Origin'); ?>
                                                         <span class="checkmark"></span>
                                                     </label>
                                                 </div>
 
                                                 <div class="col-sm-4">
                                                     <label class="container">
-                                                        <input type="checkbox" name="delivered" value="status"  ng-checked="checkall" ng-model="listData2.delivered"> <?= lang('lang_Status'); ?>
+                                                        <input type="checkbox" name="Destination" value="Destination" ng-checked="checkall"  ng-model="listData2.destination"> <?= lang('lang_Destination'); ?>
                                                         <span class="checkmark"></span>
                                                     </label>
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <label class="container">
-                                                        <input type="checkbox" name="seller" value="seller" ng-checked="checkall" ng-model="listData2.cust_id"> <?= lang('lang_Seller'); ?>
+                                                        <input type="checkbox" name="Sender" value="Sender" ng-checked="checkall" ng-model="listData2.sender_name"><?= lang('lang_Sender'); ?>
                                                         <span class="checkmark"></span>
                                                     </label>
                                                 </div>
-                                                <div class="col-sm-4">   
+                                                <div class="col-sm-4">
                                                     <label class="container">
-                                                        <input type="checkbox" name="entrydate" value="entrydate" ng-checked="checkall" ng-model="listData2.entrydate"> <?= lang('lang_Entry_Date'); ?>
+                                                        <input type="checkbox" name="Sender_Address" value="Sender_Address" ng-checked="checkall"  ng-model="listData2.sender_address"> <?= lang('lang_Sender_Address'); ?>
                                                         <span class="checkmark"></span>
                                                     </label>
                                                 </div>
+                                                <div class="col-sm-4">
+                                                    <label class="container">
+                                                        <input type="checkbox" name="Sender_Phone" value="Sender_Phone" ng-checked="checkall"  ng-model="listData2.sender_phone"> <?= lang('lang_Sender_Phone'); ?>
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <label class="container">
+                                                        <input type="checkbox" name="Receiver" value="Receiver" ng-checked="checkall"  ng-model="listData2.reciever_name"> <?= lang('lang_Receiver_Name'); ?>
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label class="container">
+                                                        <input type="checkbox" name="Recevier_Address" value="Recevier_Address" ng-checked="checkall"  ng-model="listData2.reciever_address"> <?= lang('lang_Receiver_Address'); ?>
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <label class="container">
+                                                        <input type="checkbox" name="Receiver_Phone" value="Receiver_Phone" ng-checked="checkall"  ng-model="listData2.reciever_phone"><?= lang('lang_Receiver_Mobile'); ?>
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label class="container">
+                                                        <input type="checkbox" name="Mode" value="Mode" ng-checked="checkall" ng-model="listData2.mode"> <?=lang('lang_Payment_Mode');?>
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label class="container">
+                                                        <input type="checkbox" name="Status" value="Status" ng-checked="checkall" ng-model="listData2.delivered"><?= lang('lang_Main'); ?> <?= lang('lang_Status'); ?>
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label class="container">
+                                                        <input type="checkbox" name="Status_O" value="Status_O" ng-checked="checkall" ng-model="listData2.status_o"> 3PL Status
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label class="container">
+                                                        <input type="checkbox" name="COD_Amount" value="COD_Amount" ng-checked="checkall"  ng-model="listData2.total_cod_amt"> <?= lang('lang_COD_Amount'); ?>
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
+
+
+
+
+                                                <div class="col-sm-4">
+                                                    <label class="container">
+                                                        <input type="checkbox" name="UID_Account" value="UID_Account" ng-checked="checkall" ng-model="listData2.cust_id"> <?= lang('lang_UID_Account'); ?>
+                                                        <span class="checkmark"></span> 
+                                                    </label>
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <label class="container">
+                                                        <input type="checkbox" name="Pieces" value="Pieces" ng-checked="checkall" ng-model="listData2.pieces" > <?= lang('lang_Pieces'); ?>
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label class="container">
+                                                        <input type="checkbox" name="Weight" value="Weight" ng-checked="checkall" ng-model="listData2.weight" > <?= lang('lang_Weight'); ?>
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label class="container">
+                                                        <input type="checkbox" name="Description" value="Description" ng-checked="checkall" ng-model="listData2.status_describtion" > <?= lang('lang_Description'); ?>
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
+                                                <!-- <div class="col-sm-4">
+                                                     <label class="container">
+                                                         <input type="checkbox" name="Forward_through" value="Forward_through"  ng-model="listData2.frwd_throw" > Forward through
+                                                         <span class="checkmark"></span> 
+                                                     </label>
+                                                 </div> -->
+                                                <div class="col-sm-4">    
+                                                    <label class="container">
+                                                        <input type="checkbox" name="Forward_awb" value="Forward_awb" ng-checked="checkall" ng-model="listData2.frwd_awb_no"> <?= lang('lang_Forwarded_AWB_No'); ?>
+                                                        <span class="checkmark"></span>    
+                                                    </label>
+                                                </div>  
+                                                <div class="col-sm-4">    
+                                                    <label class="container">
+                                                        <input type="checkbox" name="transaction_no" value="transaction_no" ng-checked="checkall" ng-model="listData2.transaction_no"> <?= lang('lang_Transaction_Number'); ?>
+                                                        <span class="checkmark"></span>    
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-4">    
+                                                    <label class="container">
+                                                        <input type="checkbox" name="invoice_details" value="invoice_details" ng-checked="checkall"  ng-model="listData2.invoice_details"> <?=lang('lang_invoice');?> <?=lang('lang_Details');?>
+                                                        <span class="checkmark"></span>    
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-4">    
+                                                    <label class="container">
+                                                        <input type="checkbox" name="pl3_pickup_date" value="pl3_pickup_date" ng-checked="checkall" ng-model="listData2.pl3_pickup_date"> <?=lang('lang_tpl_Pickup_Date');?>
+                                                        <span class="checkmark"></span>    
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label class="container">
+                                                        <input type="checkbox" name="pl3_close_date" value="pl3_close_date" ng-checked="checkall" ng-model="listData2.pl3_close_date"> <?=lang('lang_tpl_Closed_Date');?>
+                                                        <span class="checkmark"></span>    
+                                                    </label>
+                                                </div>
+                                              <div class="col-sm-4">
+                                                    <label class="container">
+                                                        <input type="checkbox" name="transaction_days" value="transaction_days" ng-checked="checkall"  ng-model="listData2.transaction_days"> Transaction Days
+                                                        <span class="checkmark"></span>    
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label class="container">
+                                                        <input type="checkbox" name="no_of_attempt" value="no_of_attempt" ng-checked="checkall" ng-model="listData2.no_of_attempt"> <?=lang('lang_No_of_Attempt');?>
+                                                        <span class="checkmark"></span>    
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label class="container">
+                                                        <input type="checkbox" name="cc_name" value="cc_name" ng-checked="checkall"  ng-model="listData2.cc_name"> <?=lang('lang_Forwarded_Company');?>
+                                                        <span class="checkmark"></span>    
+                                                    </label>
+                                                </div>
+
+
 
                                             </div>
                                             <input type="hidden" name="exportlimit" value="exportlimit" ng-model="listData1.exportlimit">   
@@ -380,7 +482,7 @@
                                             <div class="row" style="padding-left: 40%;padding-top: 10px;">   
 
 
-                                                <button type="submit" class="btn btn-info pull-left" name="shipment_transfer" ng-click="transferShipDelivered(listData2, listData1.exportlimit);"><?= lang('تحميل تقرير الاكسل'); ?></button>  
+                                                <button type="submit" class="btn btn-info pull-left" name="shipment_transfer" ng-click="transferShipDelivered(listData2, listData1.exportlimit);"><?= lang('lang_Download_Excel_Report'); ?></button>  
                                             </div>
 
                                         </div>

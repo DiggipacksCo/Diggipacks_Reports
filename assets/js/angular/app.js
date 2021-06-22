@@ -1359,7 +1359,8 @@ var app = angular.module('fulfill', [])
                 "pl3_pickup_date": false,
                 "pl3_close_date": false,
                 "transaction_days": false,
-                "no_of_attempt": false
+                "no_of_attempt": false,
+                "cc_name": false
             };
 
 
