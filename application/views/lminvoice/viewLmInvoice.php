@@ -198,7 +198,7 @@
 				</div>
                      
 				<br>  
-               <button style="margin-top: 3px;" type="submit" class="btn btn-info pull-right"  name="update_linehoul" ng-click="modelClose('payable_invoice_list')"><?=lang('lang_Close');?> </button>     
+               <button style="margin-top: -30px;" type="submit" class="btn btn-info pull-right"  name="update_linehoul" ng-click="modelClose('payable_invoice_list')"><?=lang('lang_Close');?> </button>     
 		</div> 
         
        </div>
@@ -227,7 +227,7 @@
                      
 				<br>
                
-			      <button style="margin-top: 3px;" type="submit" class="btn btn-info pull-right" name="update_linehoul" ng-click="modelClose('payable_invoice_list1')"><?=lang('lang_Close');?> </button>         
+			      <button style="margin-top: -30px;" type="submit" class="btn btn-info pull-right" name="update_linehoul" ng-click="modelClose('payable_invoice_list1')"><?=lang('lang_Close');?> </button>         
 
 					
 			    
@@ -259,7 +259,7 @@
                     </div>
              
                
-				<button style="margin-top: 3px;" type="submit" class="btn btn-info" name="update_linehoul" ng-click="payableInvoice_update(editcodlistArray);"> <?=lang('lang_Update');?></button>  
+				<button style="margin-top: 30px;" type="submit" class="btn btn-info" name="update_linehoul" ng-click="payableInvoice_update(editcodlistArray);"> <?=lang('lang_Update');?></button>  
 					
 			   </div>
            
@@ -276,20 +276,22 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-          
+          <form action="<?=base_url();?>LastmileInvoice/PaymentConfirmUpdaye" method="post" enctype= 'multipart/form-data'>
 			<div class="modal-body">
    					<div class="col-md-8">
                  		<div class="form-group">
                    		 <label><?=lang('lang_Transaction');?></label>
                     		 <input type="file" name="pro_image" ng-files="file" accept="image/*" class="form-control" >
+							 <input type="hidden" name="invoice_no" value="{{editcodlistArray.invoice_no}}">
+							 <input type="hidden" name="cust_id" value="{{editcodlistArray.cust_id}}">
                     	</div>
                     </div>
              
                
-				<button style="margin-top: 3px;" type="submit" class="btn btn-info" name="update_linehoul" ng-click="GetupdatePayment(editcodlistArray)"><?=lang('lang_Update');?></button>  
+				<button style="margin-top: 40px;" type="submit" class="btn btn-info" name="update_linehoul" ><?=lang('lang_Update');?></button>  
 					
 			   </div>
-           
+           </form>
         </div>
     </div>
 </div>

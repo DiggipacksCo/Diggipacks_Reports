@@ -94,24 +94,26 @@ class LastmileInvoice extends MY_Controller {
 
 	public function PaymentConfirmUpdaye()
 {
-	$_POST = json_decode(file_get_contents('php://input'), true);
-	$dataArray=$_POST;
-	// echo json_encode($dataArray);exit;
-		if(!empty($dataArray['image']))
-			{
-			//==========================imageupload===========//
-			  $base64string = $dataArray['image'];
-			$d1='invoice'.mktime(date(h),date(i),date(s),date(m),date(d),date(y)); 
-            $save_Path='assets/invoice_copy/'.$d1.'';  
-			$image_parts = explode(";base64,", $base64string);
-			$image_type_aux = explode("image/", $image_parts[0]);  
-			$image_type = $image_type_aux[1];
-			$image_base64 = base64_decode($image_parts[1]);
-			$imgpath =  $save_Path.time(). '.png';  
-            file_put_contents($imgpath, $image_base64);  
-			
-		   
-			}
+	$dataArray= $this->input->post();
+	
+
+
+	       if (!empty($_FILES['pro_image']['name'])) {
+           $config['upload_path'] = 'assets/invoice_copy/';
+           $config['overwrite'] = TRUE;
+           $config['allowed_types'] = 'jpg|jpeg|png|gif';
+           $config['file_name'] =$d1='invoice'.mktime(date(h),date(i),date(s),date(m),date(d),date(y)); 
+
+           $this->load->library('upload', $config);
+           $this->upload->initialize($config);
+
+           if ($this->upload->do_upload('pro_image')) {
+               $uploadData = $this->upload->data();
+               $imgpath = $config['upload_path'] . '' . $uploadData['file_name'];
+           } 
+       } 
+	
+		
 			//if(!empty($imgpath))
 			{
 				$CURRENT_DATE=date("Y-m-d H:i:s");
@@ -119,13 +121,15 @@ class LastmileInvoice extends MY_Controller {
 				$updateinvoiceAarrayW=array('invoice_no'=>$dataArray['invoice_no'],'cust_id'=>$dataArray['cust_id']);
 				
 				$return1=$this->LastMile_model->GetupdateFinalInvocie($updateinvoiceAarray,$updateinvoiceAarrayW);	
+				
 	
 			}
-			// else
-			// $return=false;
-                   
-                   
-			echo json_encode($return1);
+			$this->session->set_flashdata('msg', 'Successfully updated!');
+
+			
+			redirect(base_url('viewLmInvoice'));
+                 
+			
 }
 
 
@@ -172,6 +176,8 @@ public function payableInvoice_update()
 		$invoiceCheck= $this->LastMile_model->checkInvoiceExist($show_awb_no);
 		
 		$vat=site_configTable('default_service_tax');
+		
+		$bank_fees=getallsellerdatabyID($cust_id,'bank_fees',$this->session->userdata('user_details')['super_id']);
 		$areadyExit=array();
 		foreach($invoiceCheck as $key1=>$val1)
 		{
@@ -187,7 +193,7 @@ public function payableInvoice_update()
 		$shipmentdata= $this->Shipment_model->getawbdataquery($finalArray);
 		$chargeData= $this->LastMile_model->calculateShipCharge($cust_id);
 		$returnData= $this->LastMile_model->calculateReturn($cust_id);
-		//print_r($returnData); exit;
+		//print_r($chargeData); exit;
 		foreach($returnData as $rdata)
 		{
 			if($rdata['name']=='Additional Return')
@@ -206,7 +212,20 @@ public function payableInvoice_update()
 		{
 			if($val['code']=='POD')
 			{
-				$keyCheck = array_search($val['cc_id'], array_column($chargeData, 'cc_id'));
+				foreach($chargeData as $key1=>$val1)
+				{
+					$cityArray=json_decode($val1['city_id'],true);
+					//echo $val['destination'];
+				//echo '<br>'.	in_array($val['destination'],$cityArray); exit;
+					//print_r($cityArray);
+					if($val['frwd_company_id']==$val1['cc_id'] && in_array($val['destination'],$cityArray)==true)
+					{
+					 	 $keyCheck=$key1;
+						//break;	
+					}
+				}
+				
+				//$keyCheck = array_search($val['cc_id'], array_column($chargeData, 'cc_id'));
 				$flat_price=$chargeData[$keyCheck]['price'];
 				$price=$chargeData[$keyCheck]['flat_price'];
 				$max_weight=$chargeData[$keyCheck]['max_weight'];
@@ -260,7 +279,7 @@ public function payableInvoice_update()
 			'qty' => $val['pieces'],
 			'weight' => $val['weight'],
 			'mode' => $val['mode'],
-			
+			'bank_fees'=>$bank_fees,
 			'cod_charge' => '0.00',
 			'return_charge' => $return_charge,
 			'service_charge' => $shipCharge,
@@ -271,10 +290,14 @@ public function payableInvoice_update()
 			'invoice_date' => $date,
 			'super_id' =>  $this->session->userdata('user_details')['super_id']
 			);
+			$where_in[]=array('slip_no'=>$val['slip_no'],'pay_invoice_no'=>$invoiceNo);
 	
 		}
+		
 		if(!empty($invoiceArray))
 		{
+			
+			$this->LastMile_model->updateShipmet($where_in); 
 			$this->LastMile_model->addlmIncoice($invoiceArray);
 		}
 		echo json_encode($invoiceArray );

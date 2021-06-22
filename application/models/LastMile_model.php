@@ -37,13 +37,23 @@ class LastMile_model extends CI_Model {
             return $query->result_array();
         }
     }
+
+	public function updateShipmet($data=array())
+    {
+        
+        $this->db->update_batch('shipment_fm',$data,'slip_no');
+		//echo $this->db->last_query();
+            return true;
+        
+        
+    }
     public function GetupdateFinalInvocie($data=array(),$dataW=array())
     {
         
         $this->db->update('Payable_invoice_fm',$data,$dataW);
        // echo $this->db->last_query(); exit;
-         $this->db->update('shipment_fm',array('pay_invoice_status'=>'YES'),array('pay_invoice_no'=>$dataW['invoice_no'],'cust_id'=>$dataW['cust_id']));
-       // echo $this->db->last_query();
+         $this->db->update('shipment_fm',array('pay_invoice_status'=>'YES','pay_invoice_no'=>$dataW['invoice_no']),array('pay_invoice_no'=>$dataW['invoice_no']));
+  // echo $this->db->last_query(); exit;
         return true;
         
         
@@ -53,7 +63,9 @@ class LastMile_model extends CI_Model {
     {
         $this->db->update('Payable_invoice_fm',$data,$dataW);
         ///echo $this->db->last_query();
-        return $this->db->update('shipment_fm',array('rec_invoice_status'=>'YES'),array('pay_invoice_no'=>$dataW['invoice_no'],'cust_id'=>$dataW['cust_id']));
+		$this->db->update('shipment_fm',array('rec_invoice_status'=>'YES','pay_invoice_no'=>$dataW['invoice_no']),array('pay_invoice_no'=>$dataW['invoice_no']));
+
+        return true;
         
     }
     public function Getpay_edit($id=null)
@@ -208,7 +220,7 @@ class LastMile_model extends CI_Model {
     public function calculateShipCharge($cust_id=null)
     {
 
-        $this->db->select('city_id,price,flat_price,max_weight,cc_id');
+        $this->db->select('city_id,price,flat_price,max_weight,cc_id,city_id');
         $this->db->from('zone_list_customer_fm');
        // $this->db->where('cc_id',$filtr['seller_id']);
         $this->db->where('cust_id',$cust_id);
@@ -219,9 +231,9 @@ class LastMile_model extends CI_Model {
         }
         else
         {
-            $this->db->select('city_id,price,flat_price,max_weight,cc_id');
+            $this->db->select('city_id,price,flat_price,max_weight,cc_id,city_id');
             $this->db->from('zone_list_fm');
-            $this->db->where('cc_id',$filtr['seller_id']);
+            //$this->db->where('cc_id',$filtr['seller_id']);
             $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
            
             $query = $this->db->get();

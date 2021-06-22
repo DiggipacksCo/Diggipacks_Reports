@@ -46,12 +46,31 @@ $logo = Getsite_configData_field('logo'); //$this->site_data->newlogo;
     <!-- Export To Excel -->
    
       <!-- Export To Excel -->
-    
+      <style>
+    #header {
+  display: table-header-group;
+  
+}
+table.report-container {
+    page-break-after:always;
+}
+thead.report-header {
+    display:table-header-group;
+}
+
+#mainC {
+  display: table-row-group;
+}
+
+#footer {
+  display: table-footer-group;
+}
     <style type="text\css" media="print">
 	@media #print
 	{
 	  display: none;
 	}
+
 	</style>
 
       
@@ -73,9 +92,9 @@ $logo = Getsite_configData_field('logo'); //$this->site_data->newlogo;
      
         <table id="print" cellpadding="0"  cellspacing="0" border="0" style="margin:0 auto;"  >
 
-<tr><td colspan="5"></td><td colspan="3" style="text-align:center;"><strong>Tax Invoice - الفاتورة الضريبية</strong></td><td colspan="9"></td></tr>
+<tr><td colspan="6"></td><td colspan="2" style="text-align:center;"><strong>Tax Invoice - الفاتورة الضريبية</strong></td><td colspan="9"></td></tr>
         <tr  >
-      <td colspan="5" style="padding:2%;">
+      <td colspan="6" align="left" >
 			<b>UID Account Number:-&nbsp;<?=GetalldashboardClientField($invoiceData[0]['cust_id'],'uniqueid');?> - رقم الحساب</b><br/> 
 			
 			<b>Customers Name:-&nbsp;<?=GetalldashboardClientField($invoiceData[0]['cust_id'],'company');?> - اسم العميل</b> <br/>
@@ -90,12 +109,12 @@ $logo = Getsite_configData_field('logo'); //$this->site_data->newlogo;
 		  <br/>
 		   <b>Currency:-SAR</b>
 			</td>
-           <td colspan="3" align="center">
+           <td colspan="2" align="center">
     <img src="<?= SUPERPATH . Getsite_configData_field('logo'); ?>" height="50px;"/></td>
-    <td colspan="9">
-      <b align="left"><?=Getsite_configData_field('company_name');?>  – <?=Getsite_configData_field('company_address');?>
+    <td colspan="9" align="left">
+      <b> <?=Getsite_configData_field('company_name');?>  – <?=Getsite_configData_field('company_address');?>
  </b><br/>
-    <b>Vat Id No.:-&nbsp;<?=Getsite_configData_field('vat');?> - الرقم الضريبي </b><br/>
+    <b>Vat Id No.:-&nbsp;<?=Getsite_configData_field('vat');?> - الرقم الضريبي </b><br/>  
     <b>Invoice No:-&nbsp;<?=$invoiceData[0]['invoice_no'];?> - رقم الفاتورة</b><br/>
     <b>Invoice Date:-&nbsp;<?=$invoiceData[0]['invoice_date'];?> - تاريخ الفاتورة</b><br/>
 	<b>Support Email:-&nbsp;<?=Getsite_configData_field('support_email');?> </b>
@@ -113,7 +132,7 @@ $logo = Getsite_configData_field('logo'); //$this->site_data->newlogo;
          
         
           <th>Close Date / تاريخ التوصيل</th>
-		<th>Delivery Attempts</th>	
+		<th>Delivery Attempts / محاولات التسليم</th>	
          
           <th>Origin / المصدر</th>
           <th>Destination / الوجهة</th>
@@ -123,10 +142,10 @@ $logo = Getsite_configData_field('logo'); //$this->site_data->newlogo;
            <th>COD Amount / قيمة التحصيل</th>
           <th>COD fees / رسوم التحصيل</th>
            <th>Return Charge / قيمة الإرجاع</th>     
-          <th>Shipping Service / المجموع الصا ي</th>
-			 <th>Total</th>
-			 <th>VAT</th> 
-			<th>Grand Total</th>
+          <th>Shipping Service / المجموع الصافي</th>
+			 <th>Total / المجموع</th>
+			 <th>VAT / الضريبة</th> 
+			<th>Grand Total / المجموع الكلي</th>
        
         </tr>
 
@@ -225,14 +244,14 @@ $bankFees=$invoiceData[0]['bank'];
     </tr>
     <tr><td align="justify">Less: COD Fees - رسوم التحصيل</td><td align="center">SAR -<?=$total_collect_add;?></td></tr>
 
-    <tr><td align="justify">Less: Shipment Charges - تكل ة توصيل الشحنات</td><td align="center">SAR -<?=$total_service_add;?></td></tr>
+    <tr><td align="justify">Less: Shipment Charges - تكلفة توصيل الشحنات</td><td align="center">SAR -<?=$total_service_add;?></td></tr>
      <tr><td align="justify">Less: Return Charge – رسوم الإرجاع</td><td align="center">SAR -<?=$returnCharges;?></td></tr>
 
     
     <tr><td align="justify">Less: Discount - الخصم</td><td align="center">SAR 0</td></tr>
 
     <tr>
-    <th align="justify">Total Invoice before VAT – اجمالي ال اتورة قبل الضريبة</th><th >SAR -<?=$totalchargeShow;?></th></tr>
+    <th align="justify">Total Invoice before VAT – اجمالي الفاتورة قبل الضريبة</th><th >SAR -<?=$totalchargeShow;?></th></tr>
    <!-- <td>{$vat}</td>-->
     </tr>
     <tr>
@@ -242,9 +261,9 @@ $bankFees=$invoiceData[0]['bank'];
     <td>VAT Amount - قيمة الضريبة</td> <td align="center">SAR -<?=$totalvatShow;?></td>
     </tr>
     <tr>
-    <th align="justify">Total Invoice after VAT - اجمالي ال اتورة بعد الضريبة</th><th >- SAR <?=$totalgrandShow;?></th></tr>
-    <tr><td align="justify">Less: Bank fees – رسوم التحويل البنكي</td><td align="center">- SAR <?=$invoiceData[0]['bank'];?></td></tr>
-   <th align="justify">Amount To be Transfered - اجمالي المبلغ الواجب تحويله</th><th >SAR <?php echo $total_cod_amount-$totalgrandShow-$bankFees; ?></th></tr> 
+    <th align="justify">Total Invoice after VAT - اجمالي الفاتورة  بعد الضريبة</th><th >- SAR <?=$totalgrandShow;?></th></tr>
+    <tr><td align="justify">Less: Bank fees – رسوم التحويل البنكي</td><td align="center">- SAR <?=$invoiceData[0]['bank_fees'];?></td></tr>
+   <th align="justify">Amount To be Transfered - اجمالي المبلغ الواجب تحويله</th><th >SAR <?php echo $total_cod_amount-$totalgrandShow-$invoiceData[0]['bank_fees']; ?></th></tr> 
     </table>
     </td>
     </tr>  
