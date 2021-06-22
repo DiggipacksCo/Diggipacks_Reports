@@ -153,6 +153,12 @@
                                                  <?php if (GetCourierCompanyStausActive('Beez') == 'Y') { ?>
                                                 <th class="head1">Beez </th>
                                             <?php } ?>
+                                            <?php if (GetCourierCompanyStausActive('FedEX') == 'Y') { ?>
+                                                <th class="head1">FedEX </th>
+                                            <?php } ?>
+                                            <?php if (GetCourierCompanyStausActive('MomentsKsa') == 'Y') { ?>
+                                                <th class="head1">MomentsKsa </th>
+                                            <?php } ?>
                                                 
                                                 
 
@@ -369,6 +375,18 @@
                                                         <br>
                                                         <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'beez_city');" value="<?php echo $listdata['id']; ?>">Update</a>
 
+                                                    </td>
+                                                      <?php } ?>
+                                                     <?php if (GetCourierCompanyStausActive('FedEX') == 'Y') { ?>
+                                                    <td><input type="text" name="fedex_city" id="fedex_city<?php echo $listdata['id']; ?>" placeholder="FedEX City" value="<?php echo $listdata['fedex_city']; ?>" class="form-control">
+                                                        <br>
+                                                        <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'fedex_city');" value="<?php echo $listdata['id']; ?>">Update</a>
+                                                    </td>
+                                                      <?php } ?>
+                                                    <?php if (GetCourierCompanyStausActive('MomentsKsa') == 'Y') { ?>
+                                                    <td><input type="text" name="momentsKsa_city" id="momentsKsa_city<?php echo $listdata['id']; ?>" placeholder="momentsKsa city " value="<?php echo $listdata['momentsKsa_city']; ?>" class="form-control">
+                                                        <br>
+                                                        <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'momentsKsa_city');" value="<?php echo $listdata['id']; ?>">Update</a>
                                                     </td>
                                                       <?php } ?>
                                                     
