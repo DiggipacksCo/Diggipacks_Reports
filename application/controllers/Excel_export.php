@@ -1228,17 +1228,16 @@ class Excel_export extends MY_Controller {
             // print_r($columnLoop); die;
                 for ($row = 2; $row <= $highestRow; $row++) {
                     $city = trim($worksheet->getCellByColumnAndRow(0, $row)->getValue()); 
-                    
+                     //echo $city. "<hr />";
                     $oldCityArr = GetCityAllDataByname($city);
-                   // print_r($oldCityArr);
                     $old_id = $oldCityArr['id'];
-                    if ($old_id > 0) {
+                    //if ($old_id > 0) {
                         foreach ($columnLoop as $key99 => $colimn) {
                             $counter = $key99 + 1;
                             $dynmicColumnVal = htmlspecialchars(trim($worksheet->getCellByColumnAndRow($counter, $row)->getValue())); 
-                           
+                           // echo $colimn. "<hr />";
                             $cityArrayName = $this->Country_model->GetCourierCItyNew($old_id, $colimn);
-                           
+                            //print "<pre>"; print_r($cityArrayName); print "<hr>";die;
                             if (!empty($dynmicColumnVal)) {
                                 if ($colimn == 'Ajeek')
                                     $dynmicColumn = 'ajeek_city';
@@ -1288,28 +1287,30 @@ class Excel_export extends MY_Controller {
                                     $dynmicColumn = 'thabit_city';
                                 if ($colimn == 'BurqExpres')
                                     $dynmicColumn = 'burq_city';
+                                if ($colimn == 'Beez')
+                                    $dynmicColumn = 'beez_city';
 
-                                    
+                                
                                  
                                 if (!empty($cityArrayName)) {
                                     $UpdateArray_new[] = array($dynmicColumn => addslashes($dynmicColumnVal), 'id' => $old_id);
                                 } else {
-                                    $UpdateArray[] = array('city' => $colimn, $dynmicColumn => addslashes($dynmicColumnVal), 'super_id' => 
+                                    $UpdateArray[] = array('city' => $city, $dynmicColumn => addslashes($dynmicColumnVal), 'super_id' => 
                                   //  print_r();
                                     $this->session->userdata('user_details')['super_id']);
                                 }
                                 //$returnArr['validrowtate'][] = $row . " " . $colimn;
                             }
                         }
-                    }
+                    //}
                     //  echo '<pre>';
                     // print_r($UpdateArray_new);  
                 }
             }
          //   die;
-            //echo '<pre>'; print_r($UpdateArray_new);   die;
-            //  print_r($UpdateArray);   
-             //die;
+            //echo 'New<pre>'; print_r($UpdateArray_new);  print "<hr/>";
+            //echo '<pre>';   print_r($UpdateArray);   
+            //die;
             if (!empty($UpdateArray)) {
 
                 //die;
