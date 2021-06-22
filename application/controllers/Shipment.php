@@ -4300,7 +4300,8 @@ class Shipment extends MY_Controller {
 
 
 
-        $show_awb_no = $this->input->post('show_awb_no');
+        $show_awb_no = trim($this->input->post('show_awb_no'));
+        //echo $show_awb_no;die;  
         $SlipNos = preg_replace('/\s+/', ',', $show_awb_no);
         $slip_arr = explode(",", $SlipNos);
         $slipData = array_unique($slip_arr);

@@ -180,14 +180,15 @@
 
                                                     </div>
                                                 </div>
-                                                <div class="col-md-3">  <div class="form-group" ><strong><?=lang('lang_Status');?>:</strong>
+                                                <div class="col-md-3">  <div class="form-group" ><strong><?=lang('lang_Main');?>  <?=lang('lang_Status');?>:</strong>
                                                         <br>
                                                         <select  id="status" name="status" ng-model="filterData.status" class="selectpicker" multiple data-show-subtext="true" data-live-search="true" data-width="100%" >
 
                                                             <option value=""><?=lang('lang_Select_Status');?></option>
                                                             <?php foreach ($status as $status_detail): 
                                                                     if($status_detail->main_status == "3PL Updates"){
-                                                                        $status_detail->code = "3PL";
+                                                                        continue;
+                                                                        //$status_detail->code = "3PL";
                                                                     }
                                                                 ?>
                                                                 <option value="<?= $status_detail->code; ?>"><?= $status_detail->main_status; ?></option>
@@ -195,11 +196,11 @@
                                                         </select>
                                                     </div> 
                                                 </div>
-                                                <div class="col-md-3 hidden other_status">
-                                                    <div class="form-group" ><strong>3PL Other Status:</strong>
+                                                <div class="col-md-3 other_status">
+                                                    <div class="form-group" ><strong>3PL Status:</strong>
                                                         <br>
-                                                        <select  id="status_o" name="status_other"  ng-model="filterData.status_o"  class="form-control">
-                                                            <option valvalue="">--select--</option>
+                                                        <select  id="status_o" name="status_other"  ng-model="filterData.status_o"  class="selectpicker"  multiple data-show-subtext="true" data-live-search="true" data-width="100%" >
+                                                            <option value=""><?=lang('lang_Select_Status');?></option>
                                                             <?php foreach ($status_3pl as $status_detail):  ?>
                                                                 <option value="<?= $status_detail['code']; ?>"><?= $status_detail['sub_status']; ?></option>
                                                             <?php endforeach; ?>
@@ -304,7 +305,7 @@
                                                 <th><?=lang('lang_No_of_Attempt');?></th>
                                                 <th><?=lang('lang_tpl_Pickup_Date');?></th>
                                                 <th><?=lang('lang_tpl_Closed_Date');?></th>
-                                                <th><?=lang('lang_Transaction_Days');?></th>
+                                                <th><?=lang('lang_Transaction');?> <?=lang('lang_Day');?></th>
                                                 <th class="text-center" ><i class="icon-database-edit2"></i></th>
                                             </tr>  
                                         </thead>  
@@ -588,13 +589,13 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <label class="container">
-                                            <input type="checkbox" name="Status" value="Status"  ng-model="listData2.delivered"> <?= lang('lang_Status'); ?>
+                                            <input type="checkbox" name="Status" value="Status"  ng-model="listData2.delivered"><?= lang('lang_Main'); ?> <?= lang('lang_Status'); ?>
                                             <span class="checkmark"></span>
                                         </label>
                                     </div>
                                     <div class="col-sm-4">
                                         <label class="container">
-                                            <input type="checkbox" name="Status_O" value="Status_O"  ng-model="listData2.status_o"> <?= lang('lang_Status'); ?>
+                                            <input type="checkbox" name="Status_O" value="Status_O"  ng-model="listData2.status_o"> 3PL Status
                                             <span class="checkmark"></span>
                                         </label>
                                     </div>
@@ -681,6 +682,12 @@
                                             <span class="checkmark"></span>    
                                         </label>
                                     </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="cc_name" value="cc_name"  ng-model="listData2.cc_name"> <?=lang('lang_Forwarded_Company');?>
+                                            <span class="checkmark"></span>    
+                                        </label>
+                                    </div>
 
 
 
@@ -709,51 +716,51 @@
         </div>
      <script type="text/javascript">
          
-         $(document).ready(function(){
-             $("#status").change(function(){
-                 var selectedCode = $(this).val();
-                 
-                 if(selectedCode == '3PL'){
-                     $(".other_status").removeClass("hidden");
-                 
-//                     var selectedTxt = '3PL Updates';
+//         $(document).ready(function(){
+//             $("#status").change(function(){
+//                 var selectedCode = $(this).val();
 //                     
-//                     $.ajax({
-//                            url: '<?php //echo base_url('Shipment/get_pl_status'); ?>',
-//                            data: {status_name:selectedTxt},
-//                            error: function () {},
-//                            dataType: 'html',
-//                            type: 'POST',
-//                            beforeSend:function(){$("#other_status").addClass("hidden");},
-//                            success: function (data) {
-//                                //alert(data.length)    
-//                                var jsonData = $.parseJSON(data);
-//                                if(jsonData.length >0){
-//                                    var option = "<option value='' >-select-</option>";
-//                                    for(i=0;i<jsonData.length;i++){
-//                                        option += "<option value='"+jsonData[i].code+"' >"+jsonData[i].sub_status+"</option>";
-//                                    }
+//                 if(selectedCode == '3PL'){
+//                     $(".other_status").removeClass("hidden");
 //                                    
-//                                    $(".other_status").removeClass("hidden");
-//                                    $("#status_o").html(option);
-//                                }
-////                                if (jsonData.success) {
-////                                    alert('Data updated successfully');
+////                     var selectedTxt = '3PL Updates';
+////                     
+////                     $.ajax({
+////                            url: '<?php //echo base_url('Shipment/get_pl_status'); ?>',
+////                            data: {status_name:selectedTxt},
+////                            error: function () {},
+////                            dataType: 'html',
+////                            type: 'POST',
+////                            beforeSend:function(){$("#other_status").addClass("hidden");},
+////                            success: function (data) {
+////                                //alert(data.length)    
+////                                var jsonData = $.parseJSON(data);
+////                                if(jsonData.length >0){
+////                                    var option = "<option value='' >-select-</option>";
+////                                    for(i=0;i<jsonData.length;i++){
+////                                        option += "<option value='"+jsonData[i].code+"' >"+jsonData[i].sub_status+"</option>";
+////                                    }
+////                                    
+////                                    $(".other_status").removeClass("hidden");
+////                                    $("#status_o").html(option);
 ////                                }
-//                            }
+//////                                if (jsonData.success) {
+//////                                    alert('Data updated successfully');
+//////                                }
+////                            }
+////
+////                        });
 //
-//                        });
+//                 }else{
+//                     $(".other_status").addClass("hidden");
+//                 } 
+//                
+//                
+//             });
+//             
+//         });
                      
-                 }else{
-                     $(".other_status").addClass("hidden");
-                 } 
                 
-                
-             });
-             
-         });
-            
-
             // "order": [[0, "asc" ]]
             $('#s_type').on('change', function () {
 //                if ($('#s_type').val() == "SKU") {
