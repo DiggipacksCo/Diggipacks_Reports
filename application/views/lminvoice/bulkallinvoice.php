@@ -24,29 +24,7 @@ $logo = Getsite_configData_field('logo'); //$this->site_data->newlogo;
         <input class="btn-primary" type="button" onclick="create_zip();"  value="Export to Excel" style="float:;">
  <br />
 	
-
-    
-   
-    <div id="printme" style="100%;" > 
-    
-    
-    <!-- This code is for print button -->
-     <script language="javascript">
-            function printDiv(divName)
-			 {
-                  var printContents = document.getElementById(divName).innerHTML;
-                  var originalContents = document.body.innerHTML;
- 
-                  document.body.innerHTML = printContents;
-                  window.print();
-                  document.body.innerHTML = originalContents;
-            }
-     </script>
-     
-    <!-- Export To Excel -->
-   
-      <!-- Export To Excel -->
-      <style>
+ <style>
     #header {
   display: table-header-group;
   
@@ -64,7 +42,7 @@ thead.report-header {
 
 #footer {
   display: table-footer-group;
-}
+}</style>
     <style type="text\css" media="print">
 	@media #print
 	{
@@ -87,11 +65,34 @@ thead.report-header {
     width:10%;
     }
     </style>
+    
+   
+    <div id="printme" style="100%;" > 
+    
+    
+    <!-- This code is for print button -->
+     <script language="javascript">
+            function printDiv(divName)
+			 {
+
+                  var printContents = document.getElementById(divName).innerHTML;
+                  var originalContents = document.body.innerHTML;
+ 
+                  document.body.innerHTML = printContents;
+                  window.print();
+                  document.body.innerHTML = originalContents;
+            }
+     </script>
+     
+    <!-- Export To Excel -->
+   
+      <!-- Export To Excel -->
+     
    
      <br />
      
-        <table id="print" cellpadding="0"  cellspacing="0" border="0" style="margin:0 auto;"  >
-
+        <table id="print" cellpadding="0"  cellspacing="0" border="1" class="display nowrap" style="margin:0 auto;"  >
+  <thead>
 <tr><td colspan="6"></td><td colspan="2" style="text-align:center;"><strong>Tax Invoice - الفاتورة الضريبية</strong></td><td colspan="9"></td></tr>
         <tr  >
       <td colspan="6" align="left" >
@@ -148,6 +149,7 @@ thead.report-header {
 			<th>Grand Total / المجموع الكلي</th>
        
         </tr>
+		  </thead>
 
      
 	
@@ -236,7 +238,7 @@ $bankFees=$invoiceData[0]['bank'];
       </tbody>
    <tr> 
 <td colspan="17">
-   <table align="left" width="30%">
+   <table align="left" width="30%" border="1">
     
     <tr> <th colspan="2" >Summary - ملخص</th> </tr>
    <tr>
@@ -268,6 +270,11 @@ $bankFees=$invoiceData[0]['bank'];
     </td>
     </tr>  
     </table>
+	
+	
+	</div>
+	</div>
+	</div>
 
       <!-- Export To Excel -->
    <SCRIPT>
