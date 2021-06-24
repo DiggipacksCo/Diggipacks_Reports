@@ -3103,12 +3103,20 @@ class Shipment_model extends CI_Model {
             $selectQry .= " shipment_fm.3pl_close_date AS 3PL Closed Date,";
             
             
-        if ($data['no_of_attempt'] == 1)
-            $selectQry .= " shipment_fm.no_of_attempt AS No Of Attempt,";
-    
-              
-        }
+      
+        if ($data['close_date'] == 1)
+        $selectQry .= " shipment_fm.close_date AS CLOSE DATE,";
 
+        
+    if ($data['no_of_attempt'] == 1)
+        $selectQry .= " shipment_fm.no_of_attempt AS No Of Attempt,";
+
+//        if ($data['transaction_days'] == 1)
+//            $selectQry .= " DATEDIFF(3pl_close_date,3pl_pickup_date) AS Transaction Day,";
+//            
+if ($data['transaction_days'] == 1)
+$selectQry .= " DATEDIFF(3pl_close_date, 3pl_pickup_date) AS transaction_days,";  
+    }
         $selectQry = rtrim($selectQry, ',');
         $this->db->select($selectQry);
 
@@ -3513,7 +3521,9 @@ class Shipment_model extends CI_Model {
 
         if ($data['pl3_close_date'] == 1)
             $selectQry .= " shipment_fm.3pl_close_date AS 3PL Closed Date,";
-            
+            if ($data['close_date'] == 1)
+            $selectQry .= " shipment_fm.close_date AS CLOSE DATE,";
+ 
             
         if ($data['no_of_attempt'] == 1)
             $selectQry .= " shipment_fm.no_of_attempt AS No Of Attempt,";
@@ -3521,8 +3531,8 @@ class Shipment_model extends CI_Model {
 //        if ($data['transaction_days'] == 1)
 //            $selectQry .= " DATEDIFF(3pl_close_date,3pl_pickup_date) AS Transaction Day,";
 //            
- //if ($data['transaction_days'] == 1)
-//$selectQry .= " DATEDIFF(3pl_close_date, 3pl_pickup_date) AS transaction_days,";    
+ if ($data['transaction_days'] == 1)
+$selectQry .= " DATEDIFF(3pl_close_date, 3pl_pickup_date) AS transaction_days,";    
 
         $selectQry = rtrim($selectQry, ',');
         

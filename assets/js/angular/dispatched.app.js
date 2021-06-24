@@ -287,6 +287,58 @@ var app = angular.module('Appdispatched', [])
  $scope.loadershow=false; 
   $scope.filterData.s_type="AWB";
   $scope.filterData.seller="";
+  $scope.listData2 = {
+    "entrydate": false,
+    "booking_id": false,
+    "shippers_ref_no": false,
+    "slip_no": false,
+    "origin": false,
+    "destination": false,
+    "sender_name": false,
+    "sender_address": false,
+    "sender_phone": false,
+    "reciever_name": false,
+    "reciever_address": false,
+    "reciever_phone": false,
+    "mode": false,
+    "delivered": false,
+    "total_cod_amt": false,
+    "cust_id": false,
+    "pieces": false,
+    "weight": false,
+    "status_describtion": false,
+    "frwd_awb_no": false,
+    "transaction_no": false,
+    "pay_Invoice_status": false,
+    "sub_category": false,
+    "onHold_Confirm": false,
+    "onHold_Date": false,
+    "onHold_Reason": false,
+    "shelv_no": false,
+    "schedule_date": false,
+    "time_slot": false,
+    "area_street": false,
+    "area": false,
+    "dest_lat": false,
+    "dest_lng": false,
+    "delever_date": false,
+    "frwd_throw": false,
+    "payable_status": false,
+    "receivable_status": false,
+    "receivable_invoice_no": false,
+    "show_code": false,
+    "messenger_name": false,
+    "close_date": false,
+    "status_o": false,
+    "invoice_details": false,
+    "pl3_pickup_date": false,
+    "pl3_close_date": false,
+    "transaction_days": false,
+    "no_of_attempt": false,
+    "cc_name": false
+};
+
+
  $scope.loadMore=function(page_no,reset)
     {
 		 disableScreen(1);
@@ -409,7 +461,7 @@ var app = angular.module('Appdispatched', [])
 	
 		 $scope.ExportData = {};
     $scope.listData1 = [];
-	$scope.listData2 = {};
+
 	$scope.listDatalist = {};  
     $scope.getExcelDetailsDelivered = function () {
 
@@ -418,30 +470,19 @@ var app = angular.module('Appdispatched', [])
             keyboard: false})
     };
 	
-	$scope.checkAll = function () {
-//alert("Hi");
-        $scope.checkall = true;
-    }
+    $scope.checkall = false;
+    $scope.toggleAll = function () {
+        $scope.checkall = !$scope.checkall;
+        console.log("?dsfsdf");
 
-    $scope.uncheckAll = function () {
-        $scope.checkall = false;
-    }
-	
-	
-	 $scope.checkall = false;
-    $scope.checkAll = function () {
-        if ($scope.checkall === false) {
-            angular.forEach($scope.listData1, function (data) {
-                data.checked = true;
-            });
-            $scope.checkall = true;
-        } else {
-            angular.forEach($scope.listData1, function (data) {
-                data.checked = false;
-            });  
-            $scope.checkall = false;
+        for (var key in $scope.listData2) {
+            $scope.listData2[key] = $scope.checkall;
         }
     };
+
+	
+	
+	 
 	
 	
 	 $scope.transferShipDelivered = function () {   
