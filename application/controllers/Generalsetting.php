@@ -93,7 +93,7 @@ public function addsmssetting($id=null) {
        
         $awb = $_POST['slip_no'];
         $cc_id = $_POST['cc_id'];
-		$status = $_POST['status'];
+        $status = $_POST['status'];
 
         //echo json_encode($_POST);
         // print($exact);
@@ -123,20 +123,13 @@ public function addsmssetting($id=null) {
                 $expoertdropArr[] = array('j' => $j, 'i' => $i);
             }
             $j = $i;
-        }
+        } 
         foreach ($shipments['result'] as $rdata) {
-
-           
-            $shiparray[$ii]['cc_name'] = GetCourCompanynameId($rdata['cc_id'], 'company');
-			$shiparray[$ii]['update_date'] =  date("Y-m-d H:i:s", strtotime('+3 hours', strtotime($rdata['update_date'])));
-        
-
+            $shiparray[$ii]['cc_name'] = GetCCompanyNameById($rdata['cc_id'], 'company');
+            $shiparray[$ii]['update_date'] =  date("Y-m-d H:i:s", strtotime('+3 hours', strtotime($rdata['update_date'])));
             //$shiparray='rith';
             $ii++;
         }
-
-
-
 
         //echo '<pre>';
         //print_r($shiparray);
