@@ -449,7 +449,7 @@ class Manifest extends CourierCompany_pickup {
         
         $counrierArr_table = $this->Ccompany_model->GetdeliveryCompanyUpdateQry($cc_id,$custid=0,$super_id);
         
-        $c_id = $counrierArr_table['id'];
+        $c_id = $counrierArr_table['cc_id'];
         if ($counrierArr_table['type'] == 'test') {
             $user_name = $counrierArr_table['user_name_t'];
             $password = $counrierArr_table['password_t'];
@@ -526,6 +526,7 @@ class Manifest extends CourierCompany_pickup {
             'reciever_email' => $receiverdetails[0]['email'],
             'destination' => $receiverdetails[0]['branch_location'],
         );
+        $complete_sku= $alldetails['sku'];
         $pay_mode = trim($ShipArr['mode']);
         $cod_amount = $ShipArr['total_cod_amt'];
         if ($pay_mode == 'COD') {
@@ -1400,7 +1401,7 @@ class Manifest extends CourierCompany_pickup {
                                 $CURRENT_TIME = date("H:i:s");
 
                                 $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
-                                $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' : forwarded to FedEX.';
+                                $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' Data updated successfully.';
                             array_push($succssArray, $slipNo);
                         }                            
                             
@@ -2976,7 +2977,7 @@ class Manifest extends CourierCompany_pickup {
             $dataArray['mid'] = $uniqueid;
             $counrierArr_table = $this->Ccompany_model->GetdeliveryCompanyUpdateQry($ccID,$cust_id,$super_id);          
             
-            $c_id = $counrierArr_table['id'];
+            $c_id = $counrierArr_table['cc_id'];
                 if ($counrierArr_table['type'] == 'test') {
                     $user_name = $counrierArr_table['user_name_t'];
                     $password = $counrierArr_table['password_t'];
