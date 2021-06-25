@@ -1452,6 +1452,7 @@ $lang['lang_tpl_Closed_Date']="3pl Closed Date";
 $lang['lang_Transaction_Date']="Transaction Date";
 $lang['lang_Open_Order']="Open Order ";
 $lang['lang_Update_Shelve_Inventory']="Update Shelve Inventory";
+$lang['lang_Forwarded_Info']="Forwarded Info";
 
 
 

@@ -1467,6 +1467,8 @@ $lang['lang_Open_Order']="طلب مفتوح ";
 $lang['lang_Update_Shelve_Inventory']="Update Shelve Inventory";
 $lang['lang_Updated_Date']="تاريخ التحديث";
 $lang['lang_Print']="طباعه";
+$lang['lang_User_Logo']="شعار المستخدم";
+$lang['lang_Forwarded_Info']="ارسال الشحن تفاصيل";
 
 $lang['lang_CC']="CC";
 
