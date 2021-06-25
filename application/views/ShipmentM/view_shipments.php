@@ -688,6 +688,12 @@
                                             <span class="checkmark"></span>    
                                         </label>
                                     </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="close_date" value="close_date"  ng-model="listData2.close_date"> <?=lang('lang_close_date');?>
+                                            <span class="checkmark"></span>    
+                                        </label>
+                                    </div>
 
 
 

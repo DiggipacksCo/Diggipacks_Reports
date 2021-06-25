@@ -140,7 +140,7 @@ public function payableInvoice_update()
             $invoice_no = $dataArray['invoice_no'];
 		$CURRENT_DATE=date("Y-m-d H:i:s");
 			 $updateinvoiceAarrayW=array('invoice_no'=>$dataArray['invoice_no'],'cust_id'=>$dataArray['cust_id']);
-			$updateinvoiceAarray=array('receivable_pay_status'=>'Y','receivable_paid_by'=>$this->session->userdata('useridadmin'),'receivable_paid_date'=>$CURRENT_DATE,'rec_voucher'=>$dataArray['rec_voucher']);
+			$updateinvoiceAarray=array('receivable_pay_status'=>'Y','receivable_paid_by'=>$this->session->userdata('user_details')['user_id'],'receivable_paid_date'=>$CURRENT_DATE,'rec_voucher'=>$dataArray['rec_voucher']);
            $res_data=$this->LastMile_model->addInvoiceUpdate($updateinvoiceAarray,$updateinvoiceAarrayW);
             
             //===============================================//
@@ -284,7 +284,8 @@ public function payableInvoice_update()
 			'return_charge' => $return_charge,
 			'service_charge' => $shipCharge,
 			'cod_amount' => $codAmount,
-			'vat' => $vat,
+			'vat' => $val['close_date'],
+			'close_date' => $vat,
 			'invoice_created_by' => $this->session->userdata('user_details')['user_id'],
 			'invoice_created_date' => $date,
 			'invoice_date' => $date,
