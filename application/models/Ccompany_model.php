@@ -4888,16 +4888,15 @@ class Ccompany_model extends CI_Model {
              return $Auth_token;
     
     }
-    public function MomentsArray(array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null, $box_pieces1 = null,$complete_sku=null,$super_id) 
+     public function MomentsArray(array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null, $box_pieces1 = null,$complete_sku=null,$super_id) 
     {
             $sender_default_city = Getselletdetails_new($super_id);
             $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
             $sender_address = $sender_default_city['0']['address'];
-            $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
+            $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city_code', $super_id);
             $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'momentsKsa_city',$super_id);
             $API_URL = $counrierArr['api_url'] . "shipment/create";
-               
-                $currency = "SAR";
+            $currency = "SAR";
                 
                 if (empty($box_pieces1)) {
                 $box_pieces = 1;
@@ -4910,8 +4909,6 @@ class Ccompany_model extends CI_Model {
                 } else {
                 $weight = $ShipArr['weight'];
                 }
-
-
                 if($ShipArr['mode'] == "COD"){
                     $pay_mode = "credit_balance";
                     $cod_amount = $ShipArr['total_cod_amt'];
@@ -4922,8 +4919,8 @@ class Ccompany_model extends CI_Model {
                     $paid = TRUE;
                     $cod_amount = 0;
                 }
+                
 
-               
     
             $sender_data = array(
                         "name"=>"DIGGIPACKS FULFILLMENT - ".$sellername,
@@ -4931,7 +4928,7 @@ class Ccompany_model extends CI_Model {
                         "city_code"=> $sender_city,
                         "address"=>$sender_address,
                         "phone"=> $ShipArr['sender_phone'],
-                        "email"=>  $ShipArr['sender_email']
+                        "email"=> $ShipArr['sender_email']
                     );
                   
     
@@ -4985,18 +4982,14 @@ class Ccompany_model extends CI_Model {
                 ));
 
                 $response = curl_exec($curl);
-
                 curl_close($curl);
             
             $responseArray = json_decode($response, true);
             //print_r($responseArray);die;
-       
             $logresponse =   json_encode($response);  
-            
             $successres = $responseArray['errors'];
-            //print_r($successres);die;
-    
-             if (empty($successres)) 
+            
+            if (empty($successres)) 
                 {
                         $successstatus = "Success";
                 } else {
