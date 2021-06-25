@@ -4892,6 +4892,8 @@ class Ccompany_model extends CI_Model {
     {
             $sender_default_city = Getselletdetails_new($super_id);
             $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+            $senderemail = GetallCutomerBysellerId($ShipArr['cust_id'],'email');
+            $senderphone = GetallCutomerBysellerId($ShipArr['cust_id'],'phone');
             $sender_address = $sender_default_city['0']['address'];
             $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city_code', $super_id);
             $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'momentsKsa_city',$super_id);
@@ -4927,8 +4929,8 @@ class Ccompany_model extends CI_Model {
                         "country_code"=> "SA",
                         "city_code"=> $sender_city,
                         "address"=>$sender_address,
-                        "phone"=> $ShipArr['sender_phone'],
-                        "email"=> $ShipArr['sender_email']
+                        "phone"=>$senderphone,
+                        "email"=> $senderemail
                     );
                   
     
