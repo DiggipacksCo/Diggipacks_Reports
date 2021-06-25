@@ -1434,7 +1434,7 @@ class Manifest extends CourierCompany_pickup {
                             $CURRENT_TIME = date("H:i:s");                               
 
                             $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
-                            $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' : forwarded to MomentsKsa.';
+                            $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' Data updated successfully.';
                             array_push($succssArray, $slipNo);
                         }                            
                         else
@@ -4038,7 +4038,7 @@ class Manifest extends CourierCompany_pickup {
                             $CURRENT_TIME = date("H:i:s");                               
 
                             $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id,$dataArray,$ShipArr,$itemData,$super_id);
-                            $returnArr['successAbw'][] = 'AWB No.' . $slipNo . ' forwarded to MomentsKsa';
+                            $returnArr['successAbw'][] = 'AWB No.' . $slipNo . ' Data updated successfully.';
                             array_push($succssArray, $slipNo);
                         }                            
                         else
