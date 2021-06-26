@@ -84,8 +84,20 @@ class Item_model extends CI_Model {
         if ($this->session->userdata('user_details')['user_type'] != 1) {
             $this->db->where('items_m.wh_id', $this->session->userdata('user_details')['wh_id']);
         }
+        
         if (!empty($data['name']))
             $this->db->where('items_m.name', $data['name']);
+         if (!empty($data['added_by']))
+         {
+             if($data['added_by']=='admin')
+            $this->db->where('items_m.added_by', 0);
+             else
+             {
+                 $this->db->where('items_m.added_by', $data['added_by']); 
+             }
+         }
+        
+        
             if (!empty($data['wh_id']))
             $this->db->where('items_m.wh_id', $data['wh_id']);
 
@@ -108,7 +120,7 @@ class Item_model extends CI_Model {
             $this->db->where('items_m.sku', $data['sku']);
         if (!empty($data['sku_size']))
             $this->db->where('items_m.sku_size', $data['sku_size']);
-        $this->db->select('items_m.`id`, items_m.`sku`, items_m.`name`, items_m.`description`,items_m.`type`,items_m.`wh_id`,  items_m.`sku_size`,items_m.`item_path`,items_m.`less_qty`,items_m.`alert_day`,items_m.`color`,items_m.`length`,items_m.`width`,items_m.`height`,items_m.`weight`,items_m.`expire_block`,storage_id,entry_date');
+        $this->db->select('items_m.`id`, items_m.`sku`, items_m.`name`, items_m.`description`,items_m.`type`,items_m.`wh_id`,  items_m.`sku_size`,items_m.`item_path`,items_m.`less_qty`,items_m.`alert_day`,items_m.`color`,items_m.`length`,items_m.`width`,items_m.`height`,items_m.`weight`,items_m.`expire_block`,storage_id,entry_date,items_m.added_by');
         $this->db->from('items_m');
       //  $this->db->join('storage_table', 'items_m.storage_id = storage_table.id');
         $this->db->order_by('items_m.id', 'DESC');
@@ -133,6 +145,15 @@ class Item_model extends CI_Model {
             $this->db->where('items_m.wh_id', $this->session->userdata('user_details')['wh_id']);
         }
         
+         if (!empty($data['added_by']))
+         {
+             if($data['added_by']=='admin')
+            $this->db->where('items_m.added_by', 0);
+             else
+             {
+                 $this->db->where('items_m.added_by', $data['added_by']); 
+             }
+         }
          if (!empty($data['name']))
             $this->db->where('items_m.name', $data['name']);
             if (!empty($data['wh_id']))
