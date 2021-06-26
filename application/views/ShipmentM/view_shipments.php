@@ -55,7 +55,7 @@
 
                                 <!-- Marketing campaigns -->
                                 <div class="panel panel-flat">
-                                    <div class="panel-heading">
+                                    <div class="panel-heading" dir="ltr">
                                         <h1>
                                             <strong><?=lang('lang_All_Orders');?></strong>
                                             <!--<a  ng-click="exportExcel();" >-->
@@ -197,7 +197,7 @@
                                                     </div> 
                                                 </div>
                                                 <div class="col-md-3 other_status">
-                                                    <div class="form-group" ><strong>3PL Status:</strong>
+                                                    <div class="form-group" ><strong>3PL <?=lang('lang_Status');?>:</strong>
                                                         <br>
                                                         <select  id="status_o" name="status_other"  ng-model="filterData.status_o"  class="selectpicker"  multiple data-show-subtext="true" data-live-search="true" data-width="100%" >
                                                             <option value=""><?=lang('lang_Select_Status');?></option>
@@ -247,7 +247,7 @@
                                                         <button type="button" class="btn btn-success" style="margin-left: 7%"><?=lang('lang_Total');?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button>
                                                         
                                                          <?php if (menuIdExitsInPrivilageArray(122) == 'Y') { ?>
-                                                        <button  class="btn btn-danger ml-10" ng-confirm-click="Are you sure want delete Orders?" ng-click="removemultipleorder();" >Delete</button>
+                                                        <button  class="btn btn-danger ml-10" ng-confirm-click="Are you sure want delete Orders?" ng-click="removemultipleorder();" ><?=lang('lang_Delete');?></button>
                                                          <?php } ?>
                                                     </div>
                                                 </div>

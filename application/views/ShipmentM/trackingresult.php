@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Inventory</title>
+        <title><?=lang('lang_Inventory');?></title>
         <?php $this->load->view('include/file'); ?>
     </head>
 
@@ -35,8 +35,8 @@
 
                                 <!-- Marketing campaigns -->
                                 <div class="panel panel-flat">
-                                    <div class="panel-heading">
-                                      <h1> <strong>Tracking Parcel List</strong>  <a ng-click="getExcelDetails(filterData.exportlimit);" ><i class="icon-file-excel pull-right" style="font-size: 35px;"></i></a> </h1>
+                                    <div class="panel-heading" dir="ltr">
+                                      <h1> <strong><?=lang('lang_Tracking_Parcel_List');?></strong>  <a ng-click="getExcelDetails(filterData.exportlimit);" ><i class="icon-file-excel pull-right" style="font-size: 35px;"></i></a> </h1>
                                     </div>
 
 
@@ -56,13 +56,13 @@
                                     <table class="table table-striped table-hover table-bordered dataTable" id="example" style="width:100%;">
                                         <thead>
                                             <tr>
-                                                <th><b class="size-2">Date</b></th>
-                                                <th><b class="size-2">Origin</b></th>
-                                                <th><b class="size-2">Destination</b></th>
-                                                <th><b class="size-2">Pieces</b></th>
-                                                <th><b class="size-2">Weight</b></th>
-                                                <th><b class="size-2">Status</b></th>
-                                                <th><b class="size-2">Action</b></th>
+                                                <th><b class="size-2"><?=lang('lang_Date');?></b></th>
+                                                <th><b class="size-2"><?=lang('lang_Origin');?></b></th>
+                                                <th><b class="size-2"><?=lang('lang_Destination');?></b></th>
+                                                <th><b class="size-2"><?=lang('lang_Pieces');?></b></th>
+                                                <th><b class="size-2"><?=lang('lang_Weight');?></b></th>
+                                                <th><b class="size-2"><?=lang('lang_Status');?></b></th>
+                                                <th><b class="size-2"><?=lang('lang_Action');?></b></th>
                                             </tr>
                                             <?php
                                             //print_r($shipmentdata);
@@ -109,7 +109,7 @@
                                 <div class="col-sm-4">             
                                     <label class="container">
 
-                                        <input type="checkbox" id='but_checkall' value='Check all' ng-model="checkall" ng-click='toggleAll()'/>   Select All
+                                        <input type="checkbox" id='but_checkall' value='Check all' ng-model="checkall" ng-click='toggleAll()'/>   <?= lang('lang_SelectAll'); ?>
                                         <span class="checkmark"></span>
 
 
@@ -303,13 +303,13 @@
               <table  id="downloadtable">
                                         <thead>
                                             <tr>
-                                                <th><b class="size-2">Date</b></th>
-                                                 <th><b class="size-2">AWB No.</b></th>
-                                                <th><b class="size-2">Origin</b></th>
-                                                <th><b class="size-2">Destination</b></th>
-                                                <th><b class="size-2">Pieces</b></th>
-                                                <th><b class="size-2">Weight</b></th>
-                                                <th><b class="size-2">Status</b></th>
+                                                <th><b class="size-2"><?=lang('lang_Date');?></b></th>
+                                                 <th><b class="size-2"><?=lang('lang_AWB_No');?>.</b></th>
+                                                <th><b class="size-2"><?=lang('lang_Origin');?></b></th>
+                                                <th><b class="size-2"><?=lang('lang_Destination');?></b></th>
+                                                <th><b class="size-2"><?=lang('lang_Pieces');?></b></th>
+                                                <th><b class="size-2"><?=lang('lang_Weight');?></b></th>
+                                                <th><b class="size-2"><?=lang('lang_Status');?></b></th>
                                                
                                             </tr>
                                             <?php

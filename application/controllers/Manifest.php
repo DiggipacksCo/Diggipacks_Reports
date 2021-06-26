@@ -487,7 +487,7 @@ class Manifest extends CourierCompany_pickup {
         $counrierArr['company_type'] = $company_type;
         $counrierArr['create_order_url'] = $create_order_url;
         $counrierArr['auth_token'] = $auth_token;
-
+//echo "<pre>";print_r($counrierArr); die;
         if (!empty($dataArray['mid'])) {
             $shipmentLoopArray = $dataArray['mid'];
             $dataArray['cc_id'] = $dataArray['cc_id'];
@@ -502,7 +502,6 @@ class Manifest extends CourierCompany_pickup {
 
         $box_pieces1 = $alldetails['boxes'];
         $slipNo = $alldetails['uniqueid'];
-
         $box_pieces1 = $dataArray['boxes'];
         
        
@@ -520,13 +519,16 @@ class Manifest extends CourierCompany_pickup {
             'pieces' => $alldetails['boxes'],
             'status_describtion' => $alldetails['sku'],
             'weight' => $alldetails['weight'],
+            'cust_id' => $alldetails['seller_id'],
             'reciever_name' => $receiverdetails[0]['name'],
             'reciever_address' => $receiverdetails[0]['address'],
             'reciever_phone' => $receiverdetails[0]['phone'],
             'reciever_email' => $receiverdetails[0]['email'],
             'destination' => $receiverdetails[0]['branch_location'],
         );
+        
         $complete_sku= $alldetails['sku'];
+        
         $pay_mode = trim($ShipArr['mode']);
         $cod_amount = $ShipArr['total_cod_amt'];
         if ($pay_mode == 'COD') {
@@ -576,7 +578,8 @@ class Manifest extends CourierCompany_pickup {
                                     $returnArr['responseError'][] = $slipNo . ':' . $responseArray['message'].':'.json_encode($responseArray['errors']);
                                     
                             }                                    
-        } else if($company == "Clex"){
+        } 
+        else if($company == "Clex"){
             $response = $this->Ccompany_model->ClexArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1, $c_id, $super_id);
 
             if ($response['data'][0]['cn_id']) {
@@ -1401,7 +1404,7 @@ class Manifest extends CourierCompany_pickup {
                                 $CURRENT_TIME = date("H:i:s");
 
                                 $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
-                                $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' Data updated successfully.';
+                                $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' : forwarded to FedEX.';
                             array_push($succssArray, $slipNo);
                         }                            
                             
@@ -1414,8 +1417,8 @@ class Manifest extends CourierCompany_pickup {
                     elseif ($company== 'MomentsKsa')
                        {
                         
-                        $Auth_token=$this->Ccompany_model->Moments_auth($counrierArr); 
-                      
+                        $Auth_token= $this->Ccompany_model->Moments_auth($counrierArr); 
+                       
                         $responseArray = $this->Ccompany_model->MomentsArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$complete_sku,$super_id);  
                         
                         $successres = $responseArray['errors'];                         
@@ -2977,7 +2980,7 @@ class Manifest extends CourierCompany_pickup {
             $dataArray['mid'] = $uniqueid;
             $counrierArr_table = $this->Ccompany_model->GetdeliveryCompanyUpdateQry($ccID,$cust_id,$super_id);          
             
-            $c_id = $counrierArr_table['cc_id'];
+            $c_id = $counrierArr_table['id'];
                 if ($counrierArr_table['type'] == 'test') {
                     $user_name = $counrierArr_table['user_name_t'];
                     $password = $counrierArr_table['password_t'];
@@ -3029,6 +3032,7 @@ class Manifest extends CourierCompany_pickup {
           //print "<pre>"; print_r($itemData);die;
           //$alldetails = $this->Manifest_model->GetMidDetailsQry(trim($dataArray['mid']));
             $getSkuData = $this->Ccompany_model->GetSkuData($itemData,$dataArray['sellerid']);
+            
             
             $sku_all_names = array();
             $sku_total = 0;
