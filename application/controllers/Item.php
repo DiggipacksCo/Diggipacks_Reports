@@ -327,6 +327,10 @@ class Item extends MY_Controller {
         foreach($newArray as $key=>$val)
         {
             $newArray[$key]['storage_type']=Getallstoragetablefield($val['storage_id'],'storage_type');
+            $newArray[$key]['seller_name']=GetallCutomerBysellerId($val['added_by'],'name');
+            if(empty($newArray[$key]['seller_name']))
+                $newArray[$key]['seller_name']="Admin";
+            
         }
         $dataArray['result'] = $newArray;
         $dataArray['count'] = $result['count'];
