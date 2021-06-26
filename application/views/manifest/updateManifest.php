@@ -108,7 +108,7 @@
                                                             <a class="btn btn-success" ng-show="AddInventoryBtn" ng-confirm-click="Are you sure want Add Inventory?"  confirmed-click="GetSaveReportInventpry();" >Add Inventory </a>
 
 
-
+                                                            <a class="btn btn-success" ng-show="scan.sku  && newCompeleteArr.length<=0"   ng-click="addAllclick();" >Scan All </a>
 
                                                         </div>
 
