@@ -47,7 +47,7 @@ class Pickup_model extends CI_Model {
 
     public function GetskuDetailsRTF($slip_no) {
 
-        
+        $this->db->where('items_m.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('diamention_fm.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('diamention_fm.sku,diamention_fm.piece,diamention_fm.cod,items_m.item_path');
         $this->db->from('diamention_fm');
@@ -190,7 +190,7 @@ class Pickup_model extends CI_Model {
         }
         
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
-       // $this->db->where_in('delivered', array('5', '7'));
+        $this->db->where('deleted', 'N');
         $this->db->where_not_in('code', array('OG', 'OC'));
         $this->db->order_by('slip_no', 'ASC');
         // $this->db->limit($limit, $start);
