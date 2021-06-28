@@ -1447,6 +1447,38 @@ class Manifest extends CourierCompany_pickup {
                         }
                     
                     }
+                    elseif ($company== 'Postagexp')
+                       {
+                        
+                        $Auth_token=$this->Ccompany_model->Postagexp_auth($counrierArr); 
+                      
+                        $responseArray = $this->Ccompany_model->PostagexpArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$complete_sku,$super_id); 
+                        $successres = $responseArray['errors'];                         
+                        $error_status = $responseArray['message'];
+
+                        if (empty($successres))
+                        {
+
+                            $client_awb = $responseArray['TrackingNumber'];
+                            $PostagexpLabel = $responseArray['printLable'];
+                             
+                            $generated_pdf = file_get_contents($PostagexpLabel);
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                            $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';                             
+                            $CURRENT_DATE = date("Y-m-d H:i:s");
+                            $CURRENT_TIME = date("H:i:s");                               
+
+                            $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                            
+                            array_push($succssArray, $slipNo);
+                        }                            
+                        else
+                        {
+                            $returnArr['responseError'][] = $slipNo . ':' .$error_status;
+                        }
+                    
+                    }
+
                     elseif ($company == 'SLS'){   
                         $responseArray = $this->Ccompany_model->SLSArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1,$c_id, $super_id);
                        //  echo "<pre>" ; print_r($responseArray); //die;
@@ -3063,7 +3095,7 @@ class Manifest extends CourierCompany_pickup {
             'sender_phone' =>  $senderdetails[0]['phone'],
             'sender_email' => $senderdetails[0]['email'],
             'origin' => $senderdetails[0]['branch_location'],        
-           
+            'cust_id' => $dataArray['sellerid'],
             'slip_no' => $dataArray['mid'],
             'mode' => 'CC',
             'total_cod_amt' => 0,
@@ -4052,6 +4084,38 @@ class Manifest extends CourierCompany_pickup {
                         }
                     
                     }
+                    elseif ($company== 'Postagexp')
+                       {
+                        
+                        $Auth_token=$this->Ccompany_model->Postagexp_auth($counrierArr); 
+                      
+                        $responseArray = $this->Ccompany_model->PostagexpArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$complete_sku,$super_id); 
+                        $successres = $responseArray['errors'];                         
+                        $error_status = $responseArray['message'];
+
+                        if (empty($successres))
+                        {
+
+                            $client_awb = $responseArray['TrackingNumber'];
+                            $PostagexpLabel = $responseArray['printLable'];
+                             
+                            $generated_pdf = file_get_contents($PostagexpLabel);
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                            $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';                             
+                            $CURRENT_DATE = date("Y-m-d H:i:s");
+                            $CURRENT_TIME = date("H:i:s");                               
+
+                            $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id,$dataArray,$ShipArr,$itemData,$super_id);
+                            
+                            array_push($succssArray, $slipNo);
+                        }                            
+                        else
+                        {
+                            $returnArr['responseError'][] = $slipNo . ':' .$error_status;
+                        }
+                    
+                    }
+
                     elseif ($company == 'SLS'){   
                         $responseArray = $this->Ccompany_model->SLSArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1,$c_id, $super_id);
                         

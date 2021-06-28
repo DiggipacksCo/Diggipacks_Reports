@@ -811,7 +811,73 @@ class CourierCompany_auto extends CI_Controller {
                                     }
                                 
                                 
-                            }elseif ($company_type == 'F')
+                            }  elseif ($company== 'MomentsKsa')
+                       {
+                        
+                        $Auth_token=$this->Ccompany_auto_model->Moments_auth($counrierArr); 
+                      
+                        $responseArray = $this->Ccompany_auto_model->MomentsArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$complete_sku,$super_id); 
+                        
+                        
+                        $successres = $responseArray['errors'];                         
+                        
+                        $error_status = $responseArray['message'];
+
+                        if (empty($successres))
+                        {
+
+                            $client_awb = $responseArray['TrackingNumber'];
+                            $MomentLabel = $responseArray['printLableUrl'];
+                             
+                            $generated_pdf = file_get_contents($MomentLabel);
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                            $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';                             
+                            $CURRENT_DATE = date("Y-m-d H:i:s");
+                            $CURRENT_TIME = date("H:i:s");                               
+
+                            $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                            
+                            array_push($succssArray, $slipNo);
+                        }                            
+                        else
+                        {
+                            $returnArr['responseError'][] = $slipNo . ':' .$error_status;
+                        }
+                    
+                    }elseif ($company== 'Postagexp')
+                       {
+                        
+                        $Auth_token=$this->Ccompany_auto_model->Postagexp_auth($counrierArr); 
+                      
+                        $responseArray = $this->Ccompany_auto_model->PostagexpArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$complete_sku,$super_id); 
+                        
+                        
+                        $successres = $responseArray['errors'];                         
+                        
+                        $error_status = $responseArray['message'];
+
+                        if (empty($successres))
+                        {
+
+                            $client_awb = $responseArray['TrackingNumber'];
+                            $PostagexpLabel = $responseArray['printLable'];
+                             
+                            $generated_pdf = file_get_contents($PostagexpLabel);
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                            $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';                             
+                            $CURRENT_DATE = date("Y-m-d H:i:s");
+                            $CURRENT_TIME = date("H:i:s");                               
+
+                            $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                            
+                            array_push($succssArray, $slipNo);
+                        }                            
+                        else
+                        {
+                            $returnArr['responseError'][] = $slipNo . ':' .$error_status;
+                        }
+                    
+                    }elseif ($company_type == 'F')
                             { // for all fastcoo clients treat as a CC 
                       
                                     if ($company=='Ejack' ) 
