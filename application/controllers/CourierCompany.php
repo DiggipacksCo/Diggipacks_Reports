@@ -1403,6 +1403,37 @@ class CourierCompany extends MY_Controller  {
                         }
                     
                     }
+                    elseif ($company== 'Postagexp')
+                       {
+                        
+                        $Auth_token=$this->Ccompany_model->Postagexp_auth($counrierArr); 
+                      
+                        $responseArray = $this->Ccompany_model->PostagexpArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$complete_sku,$super_id); 
+                        $successres = $responseArray['errors'];                         
+                        $error_status = $responseArray['message'];
+
+                        if (empty($successres))
+                        {
+
+                            $client_awb = $responseArray['TrackingNumber'];
+                            $PostagexpLabel = $responseArray['printLable'];
+                             
+                            $generated_pdf = file_get_contents($PostagexpLabel);
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                            $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';                             
+                            $CURRENT_DATE = date("Y-m-d H:i:s");
+                            $CURRENT_TIME = date("H:i:s");                               
+
+                            $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                            $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
+                            array_push($succssArray, $slipNo);
+                        }                            
+                        else
+                        {
+                            $returnArr['responseError'][] = $slipNo . ':' .$error_status;
+                        }
+                    
+                    }
 
 
                     elseif ($company_type== 'F')

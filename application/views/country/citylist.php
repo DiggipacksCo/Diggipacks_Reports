@@ -159,6 +159,9 @@
                                             <?php if (GetCourierCompanyStausActive('MomentsKsa') == 'Y') { ?>
                                                 <th class="head1">MomentsKsa </th>
                                             <?php } ?>
+                                            <?php if (GetCourierCompanyStausActive('Postagexp') == 'Y') { ?>
+                                                <th class="head1">Postagexp </th>
+                                            <?php } ?>
                                                 
                                                 
 
@@ -389,6 +392,13 @@
                                                         <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'momentsKsa_city');" value="<?php echo $listdata['id']; ?>">Update</a>
                                                     </td>
                                                       <?php } ?>
+                                                    <?php if (GetCourierCompanyStausActive('Postagexp') == 'Y') { ?>
+                                                    <td><input type="text" name="Postagexp_city" id="Postagexp_city<?php echo $listdata['id']; ?>" placeholder="Postagexp city " value="<?php echo $listdata['Postagexp_city']; ?>" class="form-control">
+                                                        <br>
+                                                        <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'Postagexp_city');" value="<?php echo $listdata['id']; ?>">Update</a>
+                                                    </td>
+                                                     <?php } ?>
+                                                    
                                                     
                                                     
                                                     <td><input type="text" name="latitute" id="latitute<?php echo $listdata['id']; ?>" placeholder="LAT" value="<?php echo $listdata['latitute']; ?>" class="form-control">
