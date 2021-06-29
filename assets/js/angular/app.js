@@ -1,4 +1,4 @@
-var app = angular.module('fulfill', [])
+var app = angular.module('fulfill', ['betsol.timeCounter'])
 
 
 
@@ -1421,12 +1421,13 @@ var app = angular.module('fulfill', [])
 
                     if (response.data.result.length > 0) {
                         angular.forEach(response.data.result, function (value) {
-                            //console.log(value.slip_no)
-
+                            console.log(value['3pl_pickup_date'])
+                            value.mydate = new Date(value['3pl_pickup_date']);
+                            //if(value['3pl_pickup_date'])
                             $scope.shipData.push(value);
 
                         });
-                        //console.log( $scope.shipData)
+                        console.log( $scope.shipData)
                         //$scope.$broadcast('scroll.infiniteScrollComplete');
                     } else {
                         $scope.nodata = true
