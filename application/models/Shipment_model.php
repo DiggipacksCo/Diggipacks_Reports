@@ -3002,6 +3002,9 @@ class Shipment_model extends CI_Model {
             $selectQry .= " shipment_fm.3pl_pickup_date AS 3PL Pickup Date,";
             $selectQry .= " shipment_fm.3pl_close_date AS 3PL Closed Date,";
             $selectQry .= " shipment_fm.no_of_attempt AS No Of Attempt,";
+            $selectQry .= " shipment_fm.pay_invoice_no AS Transaction Number,";
+            $selectQry .= " DATEDIFF(3pl_close_date, 3pl_pickup_date) AS transaction_days,";  
+            
             
             
          //   $selectQry .= " (select uniqueid from customer where customer.id=shipment_fm.cust_id) AS UNIQUE_ID ,";
@@ -3024,99 +3027,99 @@ class Shipment_model extends CI_Model {
          
         } else {
             
-        if ($data['slip_no'] == 1)
-            $selectQry .= " shipment_fm.slip_no as AWB_NO, ";
-        
-        if ($data['sku'] == 1)
-            $selectQry .= " shipment_fm.sku as SKU, ";
+                if ($data['slip_no'] == 1)
+                    $selectQry .= " shipment_fm.slip_no as AWB_NO, ";
 
-        if ($data['entrydate'] == 1)
-            $selectQry .= " date(shipment_fm.entrydate) AS ENTRY_DATE,time(shipment_fm.entrydate) AS entry_TIME,";
-        if ($data['booking_id'] == 1)
-            $selectQry .= " shipment_fm.booking_id AS REFRENCE No,";
-        if ($data['shippers_ref_no'] == 1)
-            $selectQry .= " shipment_fm.shippers_ref_no AS SHIPPER REF No,";
+                if ($data['sku'] == 1)
+                    $selectQry .= " shipment_fm.sku as SKU, ";
 
-        if ($data['origin'] == 1) {
-            $selectQry .= " (select city from country where country.id=shipment_fm.origin) AS ORIGIN ,";
-        }
-        
-        if ($data['cc_name'] == 1) {
-            $superID = $this->session->userdata('user_details')['super_id'];
-            $selectQry .= " (select company from courier_company where courier_company.cc_id=shipment_fm.frwd_company_id AND  courier_company.deleted = 'N' AND courier_company.super_id= ".$superID.") AS ForwardedCompany ,";
-        }
-        if ($data['destination'] == 1) {
-            $selectQry .= " (select city from country where country.id=shipment_fm.destination) AS DESTINATION ,";
-            //$this->db->join('country','country.id=shipment_fm.destination');    
-        }
-        if ($data['sender_name'] == 1)
-            $selectQry .= " shipment_fm.sender_name AS SENDER NAME,";
-        if ($data['sender_address'] == 1)
-            $selectQry .= " shipment_fm.sender_address AS SENDER ADDRESS,";
-        if ($data['sender_phone'] == 1)
-            $selectQry .= " shipment_fm.sender_phone AS SENDER PHONE,";
-        if ($data['reciever_name'] == 1)
-            $selectQry .= " shipment_fm.reciever_name AS RECEIVER NAME,";
-        if ($data['reciever_address'] == 1)
-            $selectQry .= " shipment_fm.reciever_address AS RECEIVER ADDRESS,";
-        if ($data['reciever_phone'] == 1)
-            $selectQry .= " shipment_fm.reciever_phone AS RECEIVER PHONE,";
+                if ($data['entrydate'] == 1)
+                    $selectQry .= " date(shipment_fm.entrydate) AS ENTRY_DATE,time(shipment_fm.entrydate) AS entry_TIME,";
+                if ($data['booking_id'] == 1)
+                    $selectQry .= " shipment_fm.booking_id AS REFRENCE No,";
+                if ($data['shippers_ref_no'] == 1)
+                    $selectQry .= " shipment_fm.shippers_ref_no AS SHIPPER REF No,";
 
-            if ($data['invoice_details'] == 1)
-            {
-                $selectQry .= " shipment_fm.pay_invoice_status AS INVOICE PAID,";
-                $selectQry .= " shipment_fm.pay_invoice_no AS INVOICE NUMBER,";
-                $selectQry .= " shipment_fm.rec_invoice_status AS INVOICE PAYMENT RECEIVED ,";
-            }
+                if ($data['origin'] == 1) {
+                    $selectQry .= " (select city from country where country.id=shipment_fm.origin) AS ORIGIN ,";
+                }
+
+                if ($data['cc_name'] == 1) {
+                    $superID = $this->session->userdata('user_details')['super_id'];
+                    $selectQry .= " (select company from courier_company where courier_company.cc_id=shipment_fm.frwd_company_id AND  courier_company.deleted = 'N' AND courier_company.super_id= ".$superID.") AS ForwardedCompany ,";
+                }
+                if ($data['destination'] == 1) {
+                    $selectQry .= " (select city from country where country.id=shipment_fm.destination) AS DESTINATION ,";
+                    //$this->db->join('country','country.id=shipment_fm.destination');    
+                }
+                if ($data['sender_name'] == 1)
+                    $selectQry .= " shipment_fm.sender_name AS SENDER NAME,";
+                if ($data['sender_address'] == 1)
+                    $selectQry .= " shipment_fm.sender_address AS SENDER ADDRESS,";
+                if ($data['sender_phone'] == 1)
+                    $selectQry .= " shipment_fm.sender_phone AS SENDER PHONE,";
+                if ($data['reciever_name'] == 1)
+                    $selectQry .= " shipment_fm.reciever_name AS RECEIVER NAME,";
+                if ($data['reciever_address'] == 1)
+                    $selectQry .= " shipment_fm.reciever_address AS RECEIVER ADDRESS,";
+                if ($data['reciever_phone'] == 1)
+                    $selectQry .= " shipment_fm.reciever_phone AS RECEIVER PHONE,";
+
+                    if ($data['invoice_details'] == 1)
+                    {
+                        $selectQry .= " shipment_fm.pay_invoice_status AS INVOICE PAID,";
+                        $selectQry .= " shipment_fm.pay_invoice_no AS INVOICE NUMBER,";
+                        $selectQry .= " shipment_fm.rec_invoice_status AS INVOICE PAYMENT RECEIVED ,";
+                    }
+
+                if ($data['mode'] == 1)
+                    $selectQry .= " shipment_fm.mode AS RECEIVER MODE,";
+                if ($data['delivered'] == 1) {
+                    $selectQry .= " (select main_status from status_main_cat_fm where status_main_cat_fm.id=shipment_fm.delivered) AS MAINSTATUS,";
+                    //$this->db->join('status_main_cat','status_main_cat.id=shipment_fm.delivery');    
+                }
+                if ($data['status_o'] == 1) {
+                    $selectQry .= " (select sub_status from status_category_fm where status_category_fm.code=shipment_fm.code) AS 3PLSTATUS ,";
+                }
+                if ($data['total_cod_amt'] == 1)
+                    $selectQry .= " shipment_fm.total_cod_amt AS COD AMOUNT,";
+
+
+                if ($data['cust_id'] == 1) {
+                    $selectQry .= " (select uniqueid from customer where customer.id=shipment_fm.cust_id) AS UNIQUE_ID ,";
+                    //$this->db->join('country','country.id=shipment_fm.destination');    
+                }
+                if ($data['pieces'] == 1)
+                    $selectQry .= " shipment_fm.pieces AS ON PIECES,";
+                if ($data['weight'] == 1)
+                    $selectQry .= " shipment_fm.weight AS ON WEIGHT,";
+                if ($data['status_describtion'] == 1)
+                    $selectQry .= " shipment_fm.status_describtion AS DESCRIPTION,";
+
+                if ($data['frwd_awb_no'] == 1)
+                    $selectQry .= " shipment_fm.frwd_company_awb AS FORWARD AWB No,";
+
+                if ($data['pl3_pickup_date'] == 1)
+                    $selectQry .= " shipment_fm.3pl_pickup_date AS 3PL Pickup Date,";
+
+                if ($data['pl3_close_date'] == 1)
+                    $selectQry .= " shipment_fm.3pl_close_date AS 3PL Closed Date,";
+
+
+
+                if ($data['close_date'] == 1)
+                $selectQry .= " shipment_fm.close_date AS CLOSE DATE,";
+
+
+            if ($data['no_of_attempt'] == 1)
+                $selectQry .= " shipment_fm.no_of_attempt AS No Of Attempt,";
             
-        if ($data['mode'] == 1)
-            $selectQry .= " shipment_fm.mode AS RECEIVER MODE,";
-        if ($data['delivered'] == 1) {
-            $selectQry .= " (select main_status from status_main_cat_fm where status_main_cat_fm.id=shipment_fm.delivered) AS MAINSTATUS,";
-            //$this->db->join('status_main_cat','status_main_cat.id=shipment_fm.delivery');    
+            if ($data['transaction_no'] == 1)
+                $selectQry .= " shipment_fm.pay_invoice_no AS Transaction Number,";
+
+            if ($data['transaction_days'] == 1)
+            $selectQry .= " DATEDIFF(3pl_close_date, 3pl_pickup_date) AS transaction_days,";  
         }
-        if ($data['status_o'] == 1) {
-            $selectQry .= " (select sub_status from status_category_fm where status_category_fm.code=shipment_fm.code) AS 3PLSTATUS ,";
-        }
-        if ($data['total_cod_amt'] == 1)
-            $selectQry .= " shipment_fm.total_cod_amt AS COD AMOUNT,";
-
-
-        if ($data['cust_id'] == 1) {
-            $selectQry .= " (select uniqueid from customer where customer.id=shipment_fm.cust_id) AS UNIQUE_ID ,";
-            //$this->db->join('country','country.id=shipment_fm.destination');    
-        }
-        if ($data['pieces'] == 1)
-            $selectQry .= " shipment_fm.pieces AS ON PIECES,";
-        if ($data['weight'] == 1)
-            $selectQry .= " shipment_fm.weight AS ON WEIGHT,";
-        if ($data['status_describtion'] == 1)
-            $selectQry .= " shipment_fm.status_describtion AS DESCRIPTION,";
-
-        if ($data['frwd_awb_no'] == 1)
-            $selectQry .= " shipment_fm.frwd_company_awb AS FORWARD AWB No,";
-
-        if ($data['pl3_pickup_date'] == 1)
-            $selectQry .= " shipment_fm.3pl_pickup_date AS 3PL Pickup Date,";
-
-        if ($data['pl3_close_date'] == 1)
-            $selectQry .= " shipment_fm.3pl_close_date AS 3PL Closed Date,";
-            
-            
-      
-        if ($data['close_date'] == 1)
-        $selectQry .= " shipment_fm.close_date AS CLOSE DATE,";
-
-        
-    if ($data['no_of_attempt'] == 1)
-        $selectQry .= " shipment_fm.no_of_attempt AS No Of Attempt,";
-
-//        if ($data['transaction_days'] == 1)
-//            $selectQry .= " DATEDIFF(3pl_close_date,3pl_pickup_date) AS Transaction Day,";
-//            
-if ($data['transaction_days'] == 1)
-$selectQry .= " DATEDIFF(3pl_close_date, 3pl_pickup_date) AS transaction_days,";  
-    }
         $selectQry = rtrim($selectQry, ',');
         $this->db->select($selectQry);
 
@@ -3531,8 +3534,12 @@ $selectQry .= " DATEDIFF(3pl_close_date, 3pl_pickup_date) AS transaction_days,";
 //        if ($data['transaction_days'] == 1)
 //            $selectQry .= " DATEDIFF(3pl_close_date,3pl_pickup_date) AS Transaction Day,";
 //            
- if ($data['transaction_days'] == 1)
-$selectQry .= " DATEDIFF(3pl_close_date, 3pl_pickup_date) AS transaction_days,";    
+          if($data['transaction_no'] == 1){
+                $selectQry .= " shipment_fm.pay_invoice_no AS Transaction Number,";
+          }
+        
+         if ($data['transaction_days'] == 1)
+        $selectQry .= " DATEDIFF(3pl_close_date, 3pl_pickup_date) AS transaction_days,";    
 
         $selectQry = rtrim($selectQry, ',');
         
