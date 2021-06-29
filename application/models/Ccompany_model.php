@@ -4694,9 +4694,13 @@ class Ccompany_model extends CI_Model {
             $sender_default_city = Getselletdetails_new($super_id);
             $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
             $sender_address = $sender_default_city['0']['address'];
-            $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
+            $senderemail = GetallCutomerBysellerId($ShipArr['cust_id'],'email');
+            $senderphone = GetallCutomerBysellerId($ShipArr['cust_id'],'phone');
+            $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city_code', $super_id);
+            $sendercity = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
             $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'fedex_city',$super_id);
-            $currency = site_configTable("default_currency");//"SAR";  
+            $receivercity = getdestinationfieldshow_auto_array($ShipArr['destination'], 'city',$super_id);
+            $currency = site_configTable("default_currency");//"EGP";  
             
             $api_url = ($counrierArr['api_url'])."CreateAirwayBill";
            
@@ -4723,21 +4727,21 @@ class Ccompany_model extends CI_Model {
                 "Password"=> $counrierArr['password'],
                 "AccountNo"=> $counrierArr['courier_account_no'],
                 "AirwayBillData"=> array(
-                "AirWayBillCreatedBy"=>"Test Web User",
+                "AirWayBillCreatedBy"=>$sellername,
                 "CODAmount" =>$cod_amount ,
                 "CODCurrency"=>$currency,
-                "Destination"=>"ALX",
+                "Destination"=>$receiver_city,
                 "DutyConsigneePay" =>0,
                 "GoodsDescription"=>$complete_sku,
                 "NumberofPeices" =>$box_pieces1,
-                "Origin"=>"CAI",
+                "Origin"=>$sender_city,
                 "ProductType"=>"FRE",
                 "ReceiversAddress1"=>$ShipArr['reciever_address'],
                 "ReceiversAddress2"=>$ShipArr['reciever_address'],
-                "ReceiversCity"=>$receiver_city,
-                "ReceiversCompany"=>"Egypt Expresss",
+                "ReceiversCity"=>$receivercity,
+                "ReceiversCompany"=>"",
                 "ReceiversContactPerson"=>$ShipArr['reciever_name'],
-                "ReceiversCountry"=>'SA',
+                "ReceiversCountry"=>'Egypt',
                 "ReceiversEmail"=>$ShipArr['reciever_email'],
                 "ReceiversGeoLocation"=>"",
                 "ReceiversMobile"=>$ShipArr['reciever_phone'],
@@ -4747,27 +4751,27 @@ class Ccompany_model extends CI_Model {
                 "ReceiversSubCity"=>"",
                 "SendersAddress1"=>$sender_address,
                 "SendersAddress2"=>$sender_address,
-                "SendersCity"=>$sender_city,
-                "SendersCompany"=>"Egypt Express",
+                "SendersCity"=>$sendercity,
+                "SendersCompany"=>$sellername,
                 "SendersContactPerson"=>"DIGGIPACKS FULFILLMENT - ".$sellername,
-                "SendersCountry"=>'SA',
-                "SendersEmail"=>$ShipArr['sender_email'],
+                "SendersCountry"=>'Egypt',
+                "SendersEmail"=>$senderemail,
                 "SendersGeoLocation"=>"",
-                "SendersMobile"=>$ShipArr['sender_phone'],
-                "SendersPhone"=>$ShipArr['senderphone'],
+                "SendersMobile"=>$senderphone,
+                "SendersPhone"=>$senderphone,
                 "SendersPinCode"=>"",
                 "SendersSubCity"=>$sender_city,
                 "ServiceType"=>"FRG",
                 "ShipmentDimension"=>"",
-                "ShipmentInvoiceCurrency"=>"EGP",
+                "ShipmentInvoiceCurrency"=>$currency,
                 "ShipmentInvoiceValue" =>0,
                 "ShipperReference"=>$ShipArr['slip_no'],
                 "ShipperVatAccount"=>"",
-                "SpecialInstruction"=>"Confirm Location before Delivery",
+                "SpecialInstruction"=>"",
                 "Weight" =>$weight
                 ));
                $details_encode= json_encode($details);
-               
+               //print_r($details);die;
                if(!empty($receiver_city)){
                 
                 $curl = curl_init();
