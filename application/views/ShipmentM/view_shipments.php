@@ -306,6 +306,7 @@
                                                 <th><?=lang('lang_tpl_Pickup_Date');?></th>
                                                 <th><?=lang('lang_tpl_Closed_Date');?></th>
                                                 <th><?=lang('lang_Transaction');?> <?=lang('lang_Day');?></th>
+                                                <th>Transaction Timer</th>
                                                 <th class="text-center" ><i class="icon-database-edit2"></i></th>
                                             </tr>  
                                         </thead>  
@@ -339,6 +340,12 @@
                                             <td>{{data.pl3_pickup_date}}</td>
                                             <td>{{data.pl3_closed_date}}</td>
                                             <td>{{data.transaction_days}}</td>
+                                            <td >
+
+                                            <span ng-if="data.delivered==19" bs-time-counter date="data.mydate" direction="'up'">
+      
+                                           <div class="alert alert-success ">{{ days }} days, {{ hours }}:{{ minutes }}:{{ seconds }} </div> </span>
+                                            </td>
                                             <td class="text-center">
                                                 <ul class="icons-list">
                                                     <li class="dropdown">

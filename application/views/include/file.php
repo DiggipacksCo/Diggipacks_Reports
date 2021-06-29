@@ -71,6 +71,9 @@ echo '<html dir="LTR" lang="en">';
 <!-- core JS files -->
 <!-- angular JS files -->
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
+
+<script type="text/javascript" src="<?= base_url('assets/js/timer.js'); ?>"></script>
+
 <link rel="stylesheet"; href="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.css">
 <script src="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.js"></script>
 <script>
@@ -86,6 +89,7 @@ echo '<html dir="LTR" lang="en">';
       console.log("ss");
     }
 </script>
+
 <script type="text/javascript" src="<?= base_url('assets/js/angular/app.js'); ?>"></script>
 <script type="text/javascript" src="<?= base_url('assets/js/angular/shelve.app.js'); ?>"></script>
 <script type="text/javascript" src="<?= base_url('assets/js/angular/templatesCtrl.js'); ?>"></script>
