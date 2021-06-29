@@ -201,7 +201,10 @@
                                                         <br>
                                                         <select  id="status_o" name="status_other"  ng-model="filterData.status_o"  class="selectpicker"  multiple data-show-subtext="true" data-live-search="true" data-width="100%" >
                                                             <option value=""><?=lang('lang_Select_Status');?></option>
-                                                            <?php foreach ($status_3pl as $status_detail):  ?>
+                                                            <?php 
+                                                                foreach ($status_3pl as $status_detail):
+                                                                    if($status_detail['code'] == 'DLM') {continue;}
+                                                            ?>
                                                                 <option value="<?= $status_detail['code']; ?>"><?= $status_detail['sub_status']; ?></option>
                                                             <?php endforeach; ?>
                                                         </select>
