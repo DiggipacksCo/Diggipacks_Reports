@@ -302,7 +302,7 @@ class CourierCompany extends MY_Controller  {
                  
             foreach ($shipmentLoopArray as $key => $slipNo) 
             {
-               // print_r($shipmentLoopArray);exit; 
+              //print_r($shipmentLoopArray);exit; 
              
               
                 $ShipArr=$this->Ccompany_model->GetSlipNoDetailsQry(trim($slipNo),$super_id);
@@ -381,6 +381,7 @@ class CourierCompany extends MY_Controller  {
 			 
                 if(!empty($ShipArr))
                 {
+                  
                     $sku_data = $this->Ccompany_model->Getskudetails_forward($slipNo);
                     $sku_all_names = array();
                     $sku_total = 0;
