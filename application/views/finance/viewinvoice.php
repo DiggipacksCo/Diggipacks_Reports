@@ -71,7 +71,7 @@
 					
 					</td>
 
-					<td colspan="3"style="padding:2%;" ><b align="left">Name Of Company - <?= Getsite_configData_field('company_name'); ?> - اسم الشركة </b>
+					<td colspan="3"style="padding:2%;" ><b align="left">Name Of Company -  اسم الشركة -  <?= Getsite_configData_field('ligal_name'); ?></b>
 
 
 						<br/> <b>Vat Id No.:-&nbsp;<?= Getsite_configData_field('vat'); ?>- الرقم الضريبي </b>

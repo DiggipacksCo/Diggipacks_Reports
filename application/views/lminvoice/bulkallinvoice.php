@@ -113,7 +113,7 @@ thead.report-header {
            <td colspan="2" align="center">
     <img src="<?= SUPERPATH . Getsite_configData_field('logo'); ?>" height="50px;"/></td>
     <td colspan="9" align="left">
-      <b> <?=Getsite_configData_field('company_name');?>  – <?=Getsite_configData_field('company_address');?>
+      <b> <?=Getsite_configData_field('ligal_name');?>  – <?=Getsite_configData_field('company_address');?>
  </b><br/>
     <b>Vat Id No.:-&nbsp;<?=Getsite_configData_field('vat');?> - الرقم الضريبي </b><br/>  
     <b>Invoice No:-&nbsp;<?=$invoiceData[0]['invoice_no'];?> - رقم الفاتورة</b><br/>
