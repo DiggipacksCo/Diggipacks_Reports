@@ -61,12 +61,24 @@ class Shipment extends MY_Controller {
         // for($i=0;$i<count($sellers);$i++){
         // 	$items[$i]=$this->Item_model->find($shipments[$i]->sku);
         // }
+        
+        $status_name = $_POST['status_name'];
+        
+        $data = $this->Shipment_model->getStatusIDByName('3PL Updates');
+        
+        $result = array();
+        if(!empty($data)){
+            $result = getallstatusbyid($data[0]['id']);
+            
+        }
+        //print "<pre>"; print_r($result);die;
         $bulk = array(
             // 'status'=>$status,
             //		'shipments'=>$shipments,
             'sellers' => $sellers,
             'condition' => $condition,
             'status' => $status,
+            'status_3pl' => $result,
                 //'items'=>$items,
                 //'sellers'=>$sellers
         );
@@ -2471,8 +2483,8 @@ class Shipment extends MY_Controller {
         // $search=$this->input->post('tracking_numbers');
         // echo $search;exit;
         $_POST = json_decode(file_get_contents('php://input'), true);
+        //print "<pre>"; print_r($_POST);die;
  
-
         $exact = $_POST['exact']; //date('Y-m-d 00:00:00',strtotime($this->input->post('exact'))); 
         // $exact2 =$this->input->post('exact');//date('Y-m-d 23:59:59',strtotime($this->input->post('exact'))); 
         if ($_POST['s_type'] == 'AWB')
@@ -2493,6 +2505,8 @@ class Shipment extends MY_Controller {
         $destination = $_POST['destination'];
         $booking_id = $_POST['booking_id'];
         $cc_id = $_POST['cc_id'];
+        
+        
         $is_menifest = isset($_POST['is_manifest']) ? $_POST['is_manifest'] : null;
 
         //echo json_encode($_POST);
@@ -4289,7 +4303,8 @@ class Shipment extends MY_Controller {
 
 
 
-        $show_awb_no = $this->input->post('show_awb_no');
+        $show_awb_no = trim($this->input->post('show_awb_no'));
+        //echo $show_awb_no;die;  
         $SlipNos = preg_replace('/\s+/', ',', $show_awb_no);
         $slip_arr = explode(",", $SlipNos);
         $slipData = array_unique($slip_arr);

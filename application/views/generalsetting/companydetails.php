@@ -58,6 +58,11 @@
                                     </div>
 
                                     <div class="form-group">
+                                        <label for="ligal_name"><strong>Legal Name:</strong></label>
+                                        <input type="text" class="form-control" name='ligal_name' id="ligal_name" placeholder="Legal Name" value="<?= $EditData['ligal_name'] ?>">
+                                    </div>
+
+                                    <div class="form-group">
                                         <label for="company_address"><strong><?=lang('lang_Address');?>:</strong></label>
                                         <input type="text" class="form-control" name='company_address' id="company_address" placeholder="Address" value="<?= $EditData['company_address'] ?>">
                                     </div>

@@ -612,8 +612,9 @@ class PickUp extends MY_Controller {
         $_POST = json_decode(file_get_contents('php://input'), true);
         $this->load->model('Templates_model');
         $messageData=$this->Templates_model-> getTempateByStatus(5);
+        // print_r( $messageData); die;
         $shipData = $this->Shipment_model->shipmetsInAwbAll($_POST['awbArray']);
-        // print_r( $shipData);
+         //print_r( $shipData); die;
         foreach( $shipData['result'] as $shData)
         {
 
@@ -663,7 +664,9 @@ class PickUp extends MY_Controller {
         //$_POST=array('awbArray'=>array('STF9252413194'));
         // echo json_encode($_POST); exit;
 
-        $shipments = $this->Shipment_model->shipmetsInAwbAll($_POST['awbArray']);
+        
+        
+        $shipments = $this->Shipment_model->shipmetsInAwbAll_dishpacth($_POST['awbArray']);
         // print_r($shipments); die;
         // $valid=array();
         

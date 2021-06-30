@@ -304,7 +304,7 @@ class CourierCompany extends MY_Controller  {
                  
             foreach ($shipmentLoopArray as $key => $slipNo) 
             {
-               // print_r($shipmentLoopArray);exit; 
+              //print_r($shipmentLoopArray);exit; 
              
               
                 $ShipArr=$this->Ccompany_model->GetSlipNoDetailsQry(trim($slipNo),$super_id);
@@ -383,6 +383,7 @@ class CourierCompany extends MY_Controller  {
 			 
                 if(!empty($ShipArr))
                 {
+                  
                     $sku_data = $this->Ccompany_model->Getskudetails_forward($slipNo);
                     $sku_all_names = array();
                     $sku_total = 0;
@@ -1337,6 +1338,106 @@ class CourierCompany extends MY_Controller  {
                         }
                     
                     }
+                    elseif ($company == 'FedEX')
+                    {
+
+                        $responseArray = $this->Ccompany_model->FedEX($ShipArr, $counrierArr, $complete_sku, $box_pieces1,$c_id,$super_id);
+                       //  echo "<pre>" ; print_r($responseArray); //die;
+                        $successres = $responseArray['Code'];
+                        $error_status = $responseArray['description'];
+
+                            if (!empty($successres) && $successres == 1)
+                            {
+                                $client_awb = $responseArray['AirwayBillNumber'];
+                                 
+                                $label_response = $this->Ccompany_model->FedEX_label($client_awb, $counrierArr,$ShipArr);
+                                $pdf_encoded_base64 = $label_response['ReportDoc'];
+                                $pdf_file = base64_decode($pdf_encoded_base64);
+                               
+                                file_put_contents("assets/all_labels/".$slipNo.".pdf", $pdf_file);
+                                $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
+                                
+                                $CURRENT_DATE = date("Y-m-d H:i:s");
+                                $CURRENT_TIME = date("H:i:s");
+
+                                $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                                $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
+                                $returnArr['successAbw'][] = 'AWB No.' . $slipNo . ' forwarded to SLS';
+                            array_push($succssArray, $slipNo);
+                        }                            
+                            
+                        else
+                        {
+                            $returnArr['responseError'][] = $slipNo . ':' .$error_status;
+                        }
+                    
+                    }
+                    elseif ($company== 'MomentsKsa')
+                       {
+                        
+                        $Auth_token=$this->Ccompany_model->Moments_auth($counrierArr); 
+                      
+                        $responseArray = $this->Ccompany_model->MomentsArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$complete_sku,$super_id); 
+                        
+                        
+                        $successres = $responseArray['errors'];                         
+                        
+                        $error_status = $responseArray['message'];
+
+                        if (empty($successres))
+                        {
+
+                            $client_awb = $responseArray['TrackingNumber'];
+                            $MomentLabel = $responseArray['printLableUrl'];
+                             
+                            $generated_pdf = file_get_contents($MomentLabel);
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                            $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';                             
+                            $CURRENT_DATE = date("Y-m-d H:i:s");
+                            $CURRENT_TIME = date("H:i:s");                               
+
+                            $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                            $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
+                            array_push($succssArray, $slipNo);
+                        }                            
+                        else
+                        {
+                            $returnArr['responseError'][] = $slipNo . ':' .$error_status;
+                        }
+                    
+                    }
+                    elseif ($company== 'Postagexp')
+                       {
+                        
+                        $Auth_token=$this->Ccompany_model->Postagexp_auth($counrierArr); 
+                      
+                        $responseArray = $this->Ccompany_model->PostagexpArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$complete_sku,$super_id); 
+                        $successres = $responseArray['errors'];                         
+                        $error_status = $responseArray['message'];
+
+                        if (empty($successres))
+                        {
+
+                            $client_awb = $responseArray['TrackingNumber'];
+                            $PostagexpLabel = $responseArray['printLable'];
+                             
+                            $generated_pdf = file_get_contents($PostagexpLabel);
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                            $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';                             
+                            $CURRENT_DATE = date("Y-m-d H:i:s");
+                            $CURRENT_TIME = date("H:i:s");                               
+
+                            $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                            $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
+                            array_push($succssArray, $slipNo);
+                        }                            
+                        else
+                        {
+                            $returnArr['responseError'][] = $slipNo . ':' .$error_status;
+                        }
+                    
+                    }
+
 
                     elseif ($company_type== 'F')
                     { // for all fastcoo clients treat as a CC 

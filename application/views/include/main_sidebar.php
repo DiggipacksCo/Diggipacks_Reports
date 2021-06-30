@@ -318,7 +318,8 @@
                     <?php /**/
                     } ?> -->
 
-<?php if (menuIdExitsInPrivilageArray(19) == 'Y') { ?>
+<?php if (menuIdExitsInPrivilageArray(138) == 'Y') { ?>
+                    
                         <li <?php if ($this->uri->segment(2) == 'AddofferGift' || $this->uri->segment(2) == 'giftOffersList' || $this->uri->segment(2) == 'giftOffersList' || $this->uri->segment(2) == 'edit_offer_gift'|| $this->uri->segment(1) == 'picker_setting' ) echo 'class="active"'; ?>> <a href="#"><i class="icon-gift"></i> <span>   <?= lang('lang_Pickers_Management'); ?></span></a>
                             <ul>
 
@@ -333,7 +334,7 @@
                         <li  <?php if ($this->uri->segment(1) == 'pickedcompletedView') echo 'class="active"'; ?>> <a href="<?= base_url('pickedcompletedView'); ?>"></i> <span><?= lang('lang_pickup_completed_list'); ?></span></a> </li>
                     <?php } ?> 
 
-                    <?php if (menuIdExitsInPrivilageArray(48) == 'Y') { ?>
+                    <?php if (menuIdExitsInPrivilageArray(139) == 'Y') { ?>
                                     <!-- <li><a href="<?= base_url(); ?>users" id="layout2"><?= lang('lang_View_All_Users'); ?></a></li> -->
                                      <li><a href="<?= base_url(); ?>picker_setting" id="layout2"><?= lang('lang_Picker_Settings'); ?></a></li>
                         <?php } ?>

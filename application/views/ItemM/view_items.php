@@ -114,8 +114,7 @@
                                             <td ><div class="form-group" ><strong>Storage Capacity:</strong>
                                                     <input type="text"  id="sku_size"name="sku_size"  ng-model="filterData.sku_size" class="form-control" placeholder="Enter Storage Capacity">
                                                 </div></td>
-                                        <tr style="width: 80%;">
-                                            <td ><div class="form-group" ><strong>Storage Type:</strong> <br>
+                                                 <td ><div class="form-group" ><strong>Storage Type:</strong> <br>
                                                     <select  id="storage_id" name="storage_id" ng-model="filterData.storage_id" class="selectpicker" data-width="100%" >
                                                         <option value="">Select Storage Type</option>
 <?php foreach ($StorageType as $storage_detail): ?>
@@ -124,7 +123,9 @@
                                                             </option>
 <?php endforeach; ?>
                                                     </select>
-                                                </div></td>
+                                                     </div></td></tr>
+                                        <tr style="width: 80%;">
+                                           
                                             <td><div class="form-group" ><strong>Warehouse:</strong>
 <?php
 $warehouseArr = Getwarehouse_Dropdata();
@@ -135,6 +136,23 @@ $warehouseArr = Getwarehouse_Dropdata();
                                                             <option value="<?= $storage_detail['id']; ?>">
                                                             <?= $storage_detail['name']; ?>
                                                             </option>
+<?php endforeach; ?>
+                                                    </select>
+
+                                                </div></td>
+                                                 <td><div class="form-group" ><strong>Added By:</strong>
+<?php
+$warehouseArr = Getwarehouse_Dropdata();
+
+?>
+                                                    <select  id="added_by" name="added_by" ng-model="filterData.added_by" class="selectpicker" data-width="100%" >
+                                                        <option value="">Added By</option>
+                                                         <option value="admin">Admin </option>
+                                                        <?php 
+                                                        $sellerdrop=Getallsellerdata();
+                                                        ?>
+                                                            <?php foreach ($sellerdrop as $sdata): ?>
+                                                            <option value="<?= $sdata['id']; ?>"><?= $sdata['name']; ?> </option>
 <?php endforeach; ?>
                                                     </select>
 
@@ -156,6 +174,8 @@ $warehouseArr = Getwarehouse_Dropdata();
                                                     <input class="form-control date" placeholder="To" id="to"name="to"  ng-model="filterData.to" class="form-control"> 
 
                                                 </div></td>
+                                                
+                                                
 
                                             <td co><button type="button" class="btn btn-success" style="margin-left: 7%">Total <span class="badge">{{shipData.length}}/{{totalCount}}</span></button> <button  class="btn btn-danger" ng-click="loadMore(1, 1);" >Search</button></td>
 
@@ -185,6 +205,7 @@ $warehouseArr = Getwarehouse_Dropdata();
                                                 <th>Width</th>
                                                 <th>Height</th>
                                                 <th>Weight (KG)</th>
+                                                <th>Added By</th>
 
 
                                                 <th>Description</th>
@@ -222,6 +243,7 @@ $warehouseArr = Getwarehouse_Dropdata();
                                                 <td>{{data.width}}</td>
                                                 <td>{{data.height}}</td>
                                                 <td>{{data.weight}} </td>
+                                                  <td>{{data.seller_name}} </td>
 
                                                 <td>{{data.description}}</td>
 

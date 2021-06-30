@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Inventory</title>
+        <title><?= lang('lang_Inventory'); ?></title>
         <?php $this->load->view('include/file'); ?>
         <script src="<?= base_url(); ?>assets/js/angular/tods.js"></script>
 
@@ -38,9 +38,9 @@
                         <!-- Basic responsive table -->
                         <div class="panel panel-flat"  >
 
-                            <div class="panel-heading"> 
+                            <div class="panel-heading" dir="ltr"> 
 
-                                <h1><strong> Show Tods </strong>
+                                <h1><strong>  <?= lang('lang_Show_Tod'); ?></strong>
 
 
                                     <a onclick="printPage('block1');" ><i class="fa fa-print pull-right" style="font-size: 40px;color:#999;"></i></a>
@@ -59,8 +59,8 @@
                                     <table class="table table-striped table-hover table-bordered" >
                                         <thead>
                                             <tr>
-                                                <th>Sr.No.</th>
-                                                <th colspan="2" style="text-align: center;">Tod </th>
+                                                <th><?= lang('lang_SrNo'); ?>.</th>
+                                                <th colspan="2" style="text-align: center;"><?= lang('lang_Tod'); ?> </th>
 
                                             </tr>
                                         </thead>
@@ -75,7 +75,7 @@
                                           
                                         </tr>
                                     </table>
-                                    <button ng-hide="shipData.length == totalCount" class="btn btn-info" ng-click="loadMore(count = count + 1, 0<?= $type; ?>);" ng-init="count = 1">Load More</button>
+                                    <button ng-hide="shipData.length == totalCount" class="btn btn-info" ng-click="loadMore(count = count + 1, 0<?= $type; ?>);" ng-init="count = 1"><?= lang('lang_Load_More'); ?></button>
 
 
 
@@ -90,7 +90,7 @@
                             <thead>
                                 <tr>
 
-                                    <th colspan="2" style="text-align: center;">Tod </th>
+                                    <th colspan="2" style="text-align: center;"><?= lang('lang_Tod'); ?> </th>
 
 
 

@@ -723,6 +723,42 @@ class Shipment_model extends CI_Model {
             return $data;
         }
     }
+    
+    public function shipmetsInAwbAll_dishpacth($awb) {
+        if ($this->session->userdata('user_details')['user_type'] != 1) {
+            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
+        }
+        $this->db->select('*');
+        $this->db->where('shipment_fm.super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->from('shipment_fm');
+        $this->db->where('shipment_fm.deleted', 'N');
+        $this->db->where('shipment_fm.code', 'PK');
+        
+        
+
+
+       // if (!empty($awb)) {
+          //  $awb = array_filter($awb);
+
+            $this->db->where_in('slip_no', $awb);
+        //}
+
+
+        $query = $this->db->get();
+
+        //return $this->db->last_query(); die;
+        if ($query->num_rows() > 0) {
+
+            $data['result'] = $query->result_array();
+            $data['count'] = $query->num_rows();
+            return $data;
+            // return $page_no.$this->db->last_query();
+        } else {
+            $data['result'] = array();
+            $data['count'] = 0;
+            return $data;
+        }
+    }
 
     public function get_deducted_shelve_no_details($slip_no) {
 
@@ -1126,7 +1162,7 @@ class Shipment_model extends CI_Model {
       //  ini_set('display_errors', '1');
 //ini_set('display_startup_errors', '1');
 ///error_reporting(E_ALL);
-      //  print_r($data);
+       
         if(!empty($data['sort_limit']))
         {
           $LimitArr= explode('-', $data['sort_limit']); 
@@ -1174,9 +1210,17 @@ class Shipment_model extends CI_Model {
         $this->db->where('shipment_fm.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('shipment_fm.fulfillment', $fulfillment);
         $this->db->where('shipment_fm.deleted', $deleted);
-        $this->db->select('shipment_fm.id,shipment_fm.service_id,shipment_fm.booking_id,shipment_fm.slip_no,diamention_fm.sku,status_main_cat_fm.main_status,diamention_fm.piece,diamention_fm.wieght as wt,diamention_fm.description,diamention_fm.cod,customer.name,customer.company,customer.seller_id,customer.uniqueid,shipment_fm.entrydate,shipment_fm.origin,shipment_fm.destination,shipment_fm.reciever_name,shipment_fm.reciever_address,shipment_fm.reciever_phone,`shipment_fm.sender_name`, `shipment_fm.sender_address`, `shipment_fm.sender_phone`,`shipment_fm.order_type`, `shipment_fm.sender_email`, `shipment_fm.mode`, `shipment_fm.total_cod_amt`,shipment_fm.weight,shipment_fm.pieces,shipment_fm.cust_id,shipment_fm.shippers_ac_no,shipment_fm.frwd_company_awb,shipment_fm.frwd_company_id,shipment_fm.wh_id,shipment_fm.frwd_company_label,shipment_fm.frwd_date,shipment_fm.is_menifest,shipment_fm.code,diamention_fm.free_sku,shipment_fm.total_cod_amt,shipment_fm.no_of_attempt,shipment_fm.3pl_pickup_date,shipment_fm.3pl_close_date');
+        if(!empty($data['status_o'])){
+            $this->db->select('shipment_fm.id,shipment_fm.service_id,shipment_fm.booking_id,shipment_fm.slip_no,diamention_fm.sku,diamention_fm.piece,diamention_fm.wieght as wt,diamention_fm.description,diamention_fm.cod,customer.name,customer.company,customer.seller_id,customer.uniqueid,shipment_fm.entrydate,shipment_fm.origin,shipment_fm.destination,shipment_fm.reciever_name,shipment_fm.reciever_address,shipment_fm.reciever_phone,`shipment_fm.sender_name`, `shipment_fm.sender_address`, `shipment_fm.sender_phone`,`shipment_fm.order_type`, `shipment_fm.sender_email`, `shipment_fm.mode`, `shipment_fm.total_cod_amt`,shipment_fm.weight,shipment_fm.pieces,shipment_fm.cust_id,shipment_fm.shippers_ac_no,shipment_fm.frwd_company_awb,shipment_fm.frwd_company_id,shipment_fm.wh_id,shipment_fm.frwd_company_label,shipment_fm.frwd_date,shipment_fm.is_menifest,shipment_fm.code,diamention_fm.free_sku,shipment_fm.total_cod_amt,shipment_fm.no_of_attempt,shipment_fm.3pl_pickup_date,shipment_fm.3pl_close_date, DATEDIFF(3pl_close_date, 3pl_pickup_date) AS transaction_days,shipment_fm.delivered ');    
+        }else{
+            $this->db->select('shipment_fm.id,shipment_fm.service_id,shipment_fm.booking_id,shipment_fm.slip_no,diamention_fm.sku,status_main_cat_fm.main_status,diamention_fm.piece,diamention_fm.wieght as wt,diamention_fm.description,diamention_fm.cod,customer.name,customer.company,customer.seller_id,customer.uniqueid,shipment_fm.entrydate,shipment_fm.origin,shipment_fm.destination,shipment_fm.reciever_name,shipment_fm.reciever_address,shipment_fm.reciever_phone,`shipment_fm.sender_name`, `shipment_fm.sender_address`, `shipment_fm.sender_phone`,`shipment_fm.order_type`, `shipment_fm.sender_email`, `shipment_fm.mode`, `shipment_fm.total_cod_amt`,shipment_fm.weight,shipment_fm.pieces,shipment_fm.cust_id,shipment_fm.shippers_ac_no,shipment_fm.frwd_company_awb,shipment_fm.frwd_company_id,shipment_fm.wh_id,shipment_fm.frwd_company_label,shipment_fm.frwd_date,shipment_fm.is_menifest,shipment_fm.code,diamention_fm.free_sku,shipment_fm.total_cod_amt,shipment_fm.no_of_attempt,shipment_fm.3pl_pickup_date,shipment_fm.3pl_close_date, DATEDIFF(3pl_close_date, 3pl_pickup_date) AS transaction_days,shipment_fm.delivered ');
+        }
+        
+        
         $this->db->from('shipment_fm');
-        $this->db->join('status_main_cat_fm', 'status_main_cat_fm.id=shipment_fm.delivered');
+        if(empty($data['status_o'])){
+            $this->db->join('status_main_cat_fm', 'status_main_cat_fm.id=shipment_fm.delivered');
+        }
         $this->db->join('diamention_fm', 'diamention_fm.slip_no = shipment_fm.slip_no');
         $this->db->join('customer', 'customer.id=shipment_fm.cust_id');
 
@@ -1208,7 +1252,8 @@ class Shipment_model extends CI_Model {
 //
 //            $this->db->where_in('shipment_fm.delivered', $delivered);
 //        }
-        if (!empty($delivered)) {
+
+        if (!empty($delivered) || !empty($data['status_o'])) {
 
             // print_r($delivered);
             if ($delivered == '1' || $delivered == '4' || $delivered == '5' || $delivered == '7' || $delivered == '8') {
@@ -1216,10 +1261,19 @@ class Shipment_model extends CI_Model {
                     $delivered = array_filter(0, $delivered);
             } else
                 $delivered = array_filter($delivered);
+            
             if(is_numeric($delivered)){
                 $this->db->where_in('shipment_fm.delivered', $delivered);
             }else{
+                if(isset($data['status_o']) & !empty($data['status_o'])){
+                    $o_status = $data['status_o'];
+                    if(!empty($delivered)){
+                    $delivered = array_merge($o_status,$delivered);
+                    }else{
+                        $delivered = $o_status;
+                }
                 
+                }
                 $this->db->where_in('shipment_fm.code', $delivered);
             }
             
@@ -1276,7 +1330,7 @@ class Shipment_model extends CI_Model {
             $this->db->where('diamention_fm.cod', $data['cod']);   
         }
 		
-            $this->db->where('shipment_fm.deleted', 'N');   
+            //$this->db->where('shipment_fm.deleted', 'N');   
 		
 
         if (!empty($seller)) {
@@ -1288,7 +1342,7 @@ class Shipment_model extends CI_Model {
 
 
 
-       // $this->db->order_by('shipment_fm.id', 'desc');
+         $this->db->order_by('shipment_fm.id', 'desc');
 
         // $tempdb = clone $this->db;
 //now we run the count method on this copy
@@ -1299,7 +1353,6 @@ class Shipment_model extends CI_Model {
         $query = $this->db->get();
 
       // echo $this->db->last_query(); die;
-     //  echo $this->db->last_query();     exit;                
 
         if ($query->num_rows() > 0) {
 
@@ -2814,7 +2867,7 @@ class Shipment_model extends CI_Model {
 	
 	
 	
-		 public function alllistexcelDataOrderReturned($data = array(), $filterData = array(),$status=null) {  
+    public function alllistexcelDataOrderReturned($data = array(), $filterData = array(),$status=null) {  
 
         $this->load->dbutil();  
         $this->load->helper('file');
@@ -2829,9 +2882,9 @@ class Shipment_model extends CI_Model {
           $start = ($filterData['exportlimit']-1)*$limit;
           } */
         
-		   $limit = 2000;   
-        $start = $filterData['exportlimit'] - $limit; 
-     
+//        $limit = 2000;   
+//        $start = $filterData['exportlimit'] - $limit; 
+//     
 	 $fulfillment = 'Y';
         $deleted = 'N';
 
@@ -2843,7 +2896,7 @@ class Shipment_model extends CI_Model {
         $this->db->where('shipment_fm.deleted', $deleted);
  
  
-		 $this->db->where('shipment_fm.backorder', 0);
+        $this->db->where('shipment_fm.backorder', 0);
         if (!empty($filterData['exact'])) {
             $this->db->where('DATE(shipment_fm.entrydate)', $filterData['exact']);
         }
@@ -2915,75 +2968,158 @@ class Shipment_model extends CI_Model {
         }
 
         $selectQry = "";
-        if ($data['checked'] == 1) {       
-         
-          
+        if ($data['checked'] == 1) {
+            
+            //$selectQry .= " shipment_fm.slip_no as AWB_NO, ";
             $selectQry .= " shipment_fm.slip_no as AWB_NO, date(shipment_fm.entrydate) AS ENTRY_DATE,";  
-         //   $selectQry .= " (select uniqueid from customer where customer.id=shipment_fm.cust_id) AS UNIQUE_ID ,";
+            $selectQry .= " shipment_fm.booking_id AS REFRENCE No,";
             $selectQry .= " shipment_fm.shippers_ref_no AS SHIPPER REF No,";
             $selectQry .= " (select city from country where country.id=shipment_fm.origin) AS ORIGIN ,";
+            $selectQry .= " shipment_fm.sku AS SKU,";
+            
+            $superID = $this->session->userdata('user_details')['super_id'];
+            $selectQry .= " (select company from courier_company where courier_company.cc_id=shipment_fm.frwd_company_id AND  courier_company.deleted = 'N' AND courier_company.super_id= ".$superID.") AS ForwardedCompany ,";
+            
             $selectQry .= " (select city from country where country.id=shipment_fm.destination) AS DESTINATION ,";
-			$selectQry .= " shipment_fm.reciever_phone AS RECEIVER PHONE,";
+            $selectQry .= " shipment_fm.sender_name AS SENDER NAME,";
+            $selectQry .= " shipment_fm.sender_address AS SENDER ADDRESS,";
+            $selectQry .= " shipment_fm.sender_phone AS SENDER PHONE,";
             $selectQry .= " shipment_fm.reciever_name AS RECEIVER NAME,";
             $selectQry .= " shipment_fm.reciever_address AS RECEIVER ADDRESS,";
-            $selectQry .= " (select main_status from status_main_cat_fm where status_main_cat_fm.id=shipment_fm.delivered) AS STATUS ,";
-			$selectQry .= " (select name from warehouse_category where warehouse_category.id=shipment_fm.wh_id) AS WAREHOUSE ,";
+            $selectQry .= " shipment_fm.reciever_phone AS RECEIVER PHONE,";
+            $selectQry .= " shipment_fm.pay_invoice_status AS INVOICE PAID,";
+            $selectQry .= " shipment_fm.pay_invoice_no AS INVOICE NUMBER,";
+            $selectQry .= " shipment_fm.rec_invoice_status AS INVOICE PAYMENT RECEIVED ,";
+            $selectQry .= " shipment_fm.mode AS RECEIVER MODE,";
+            $selectQry .= " (select main_status from status_main_cat_fm where status_main_cat_fm.id=shipment_fm.delivered) AS MAINSTATUS,";
+            $selectQry .= " (select sub_status from status_category_fm where status_category_fm.code=shipment_fm.code) AS 3PLSTATUS ,";
             $selectQry .= " shipment_fm.total_cod_amt AS COD AMOUNT,";
-            $selectQry .= " shipment_fm.sku AS SKU,";
-			$selectQry .= " (select name from customer where customer.id=shipment_fm.cust_id) AS SELLER ,";
+            $selectQry .= " (select uniqueid from customer where customer.id=shipment_fm.cust_id) AS UNIQUE_ID ,";
             $selectQry .= " shipment_fm.pieces AS ON PIECES,";
-            $selectQry .= " shipment_fm.weight AS ON WEIGHT,";   
-           
+            $selectQry .= " shipment_fm.weight AS ON WEIGHT,";
+            $selectQry .= " shipment_fm.status_describtion AS DESCRIPTION,";
+            $selectQry .= " shipment_fm.frwd_company_awb AS FORWARD AWB No,";
+            $selectQry .= " shipment_fm.3pl_pickup_date AS 3PL Pickup Date,";
+            $selectQry .= " shipment_fm.3pl_close_date AS 3PL Closed Date,";
+            $selectQry .= " shipment_fm.no_of_attempt AS No Of Attempt,";
+            $selectQry .= " shipment_fm.pay_invoice_no AS Transaction Number,";
+            $selectQry .= " DATEDIFF(3pl_close_date, 3pl_pickup_date) AS transaction_days,";  
+            
+            
+            
+         //   $selectQry .= " (select uniqueid from customer where customer.id=shipment_fm.cust_id) AS UNIQUE_ID ,";
+//            $selectQry .= " shipment_fm.shippers_ref_no AS SHIPPER REF No,";
+//            $selectQry .= " (select city from country where country.id=shipment_fm.origin) AS ORIGIN ,";
+//            $selectQry .= " (select city from country where country.id=shipment_fm.destination) AS DESTINATION ,";
+//            $selectQry .= " shipment_fm.reciever_phone AS RECEIVER PHONE,";
+//            $selectQry .= " shipment_fm.reciever_name AS RECEIVER NAME,";
+//            $selectQry .= " shipment_fm.reciever_address AS RECEIVER ADDRESS,";
+//            $selectQry .= " (select main_status from status_main_cat_fm where status_main_cat_fm.id=shipment_fm.delivered) AS STATUS ,";
+//            $selectQry .= " (select name from warehouse_category where warehouse_category.id=shipment_fm.wh_id) AS WAREHOUSE ,";
+//            $selectQry .= " shipment_fm.total_cod_amt AS COD AMOUNT,";
+//            $selectQry .= " shipment_fm.sku AS SKU,";
+//            $selectQry .= " (select name from customer where customer.id=shipment_fm.cust_id) AS SELLER ,";
+//            $selectQry .= " shipment_fm.pieces AS ON PIECES,";
+//            $selectQry .= " shipment_fm.weight AS ON WEIGHT,";
+//            
+            
    
          
         } else {
-            if ($data['slip_no'] == 1)  
-                $selectQry .= " shipment_fm.slip_no as AWB_NO, ";
-          
-            if ($data['entrydate'] == 1)
-                $selectQry .= " date(shipment_fm.entrydate) AS ENTRY_DATE,time(shipment_fm.entrydate) AS entry_TIME,";
-           
-            if ($data['shippers_ref_no'] == 1)
-                $selectQry .= " shipment_fm.booking_id AS SHIPPER REF No,";
-         
-            if ($data['origin'] == 1) {
-                $selectQry .= " (select city from country where country.id=shipment_fm.origin) AS ORIGIN ,";
-                //$selectQry.=" country.city AS ORIGIN,";
-                //$this->db->join('country','country.id=shipment_fm.origin');
-            }
-            if ($data['destination'] == 1) {
-                $selectQry .= " (select city from country where country.id=shipment_fm.destination) AS DESTINATION ,";
-                //$this->db->join('country','country.id=shipment_fm.destination');    
-            }
-           
-            if ($data['reciever_name'] == 1)
-                $selectQry .= " shipment_fm.reciever_name AS RECEIVER NAME,";
-            if ($data['reciever_address'] == 1)
-                $selectQry .= " shipment_fm.reciever_address AS RECEIVER ADDRESS,";
-            if ($data['reciever_phone'] == 1)
-                $selectQry .= " shipment_fm.reciever_phone AS RECEIVER PHONE,";
-            if ($data['sku'] == 1)
-                $selectQry .= " shipment_fm.sku AS SKU,";
-            if ($data['delivered'] == 1) {
-                $selectQry .= " (select main_status from status_main_cat_fm where status_main_cat_fm.id=shipment_fm.delivered) AS STATUS ,";
-                //$this->db->join('status_main_cat','status_main_cat.id=shipment_fm.delivery');    
-            }
-            if ($data['total_cod_amt'] == 1)
-                $selectQry .= " shipment_fm.total_cod_amt AS COD AMOUNT,";
-        
-  
-            if ($data['cust_id'] == 1) {   
-                $selectQry .= " (select name from customer where customer.id=shipment_fm.cust_id) AS SELLER ,";
-                //$this->db->join('country','country.id=shipment_fm.destination');    
-            }      
-          if ($data['warehouse'] == 1)   
-                $selectQry .= " (select name from warehouse_category where warehouse_category.id=shipment_fm.wh_id) AS WAREHOUSE ,";
-            if ($data['weight'] == 1)
-                $selectQry .= " shipment_fm.weight AS ON WEIGHT,";
-    
-              
-        }
+            
+                if ($data['slip_no'] == 1)
+                    $selectQry .= " shipment_fm.slip_no as AWB_NO, ";
 
+                if ($data['sku'] == 1)
+                    $selectQry .= " shipment_fm.sku as SKU, ";
+
+                if ($data['entrydate'] == 1)
+                    $selectQry .= " date(shipment_fm.entrydate) AS ENTRY_DATE,time(shipment_fm.entrydate) AS entry_TIME,";
+                if ($data['booking_id'] == 1)
+                    $selectQry .= " shipment_fm.booking_id AS REFRENCE No,";
+                if ($data['shippers_ref_no'] == 1)
+                    $selectQry .= " shipment_fm.shippers_ref_no AS SHIPPER REF No,";
+
+                if ($data['origin'] == 1) {
+                    $selectQry .= " (select city from country where country.id=shipment_fm.origin) AS ORIGIN ,";
+                }
+
+                if ($data['cc_name'] == 1) {
+                    $superID = $this->session->userdata('user_details')['super_id'];
+                    $selectQry .= " (select company from courier_company where courier_company.cc_id=shipment_fm.frwd_company_id AND  courier_company.deleted = 'N' AND courier_company.super_id= ".$superID.") AS ForwardedCompany ,";
+                }
+                if ($data['destination'] == 1) {
+                    $selectQry .= " (select city from country where country.id=shipment_fm.destination) AS DESTINATION ,";
+                    //$this->db->join('country','country.id=shipment_fm.destination');    
+                }
+                if ($data['sender_name'] == 1)
+                    $selectQry .= " shipment_fm.sender_name AS SENDER NAME,";
+                if ($data['sender_address'] == 1)
+                    $selectQry .= " shipment_fm.sender_address AS SENDER ADDRESS,";
+                if ($data['sender_phone'] == 1)
+                    $selectQry .= " shipment_fm.sender_phone AS SENDER PHONE,";
+                if ($data['reciever_name'] == 1)
+                    $selectQry .= " shipment_fm.reciever_name AS RECEIVER NAME,";
+                if ($data['reciever_address'] == 1)
+                    $selectQry .= " shipment_fm.reciever_address AS RECEIVER ADDRESS,";
+                if ($data['reciever_phone'] == 1)
+                    $selectQry .= " shipment_fm.reciever_phone AS RECEIVER PHONE,";
+
+                    if ($data['invoice_details'] == 1)
+                    {
+                        $selectQry .= " shipment_fm.pay_invoice_status AS INVOICE PAID,";
+                        $selectQry .= " shipment_fm.pay_invoice_no AS INVOICE NUMBER,";
+                        $selectQry .= " shipment_fm.rec_invoice_status AS INVOICE PAYMENT RECEIVED ,";
+                    }
+
+                if ($data['mode'] == 1)
+                    $selectQry .= " shipment_fm.mode AS RECEIVER MODE,";
+                if ($data['delivered'] == 1) {
+                    $selectQry .= " (select main_status from status_main_cat_fm where status_main_cat_fm.id=shipment_fm.delivered) AS MAINSTATUS,";
+                    //$this->db->join('status_main_cat','status_main_cat.id=shipment_fm.delivery');    
+                }
+                if ($data['status_o'] == 1) {
+                    $selectQry .= " (select sub_status from status_category_fm where status_category_fm.code=shipment_fm.code) AS 3PLSTATUS ,";
+                }
+                if ($data['total_cod_amt'] == 1)
+                    $selectQry .= " shipment_fm.total_cod_amt AS COD AMOUNT,";
+
+
+                if ($data['cust_id'] == 1) {
+                    $selectQry .= " (select uniqueid from customer where customer.id=shipment_fm.cust_id) AS UNIQUE_ID ,";
+                    //$this->db->join('country','country.id=shipment_fm.destination');    
+                }
+                if ($data['pieces'] == 1)
+                    $selectQry .= " shipment_fm.pieces AS ON PIECES,";
+                if ($data['weight'] == 1)
+                    $selectQry .= " shipment_fm.weight AS ON WEIGHT,";
+                if ($data['status_describtion'] == 1)
+                    $selectQry .= " shipment_fm.status_describtion AS DESCRIPTION,";
+
+                if ($data['frwd_awb_no'] == 1)
+                    $selectQry .= " shipment_fm.frwd_company_awb AS FORWARD AWB No,";
+
+                if ($data['pl3_pickup_date'] == 1)
+                    $selectQry .= " shipment_fm.3pl_pickup_date AS 3PL Pickup Date,";
+
+                if ($data['pl3_close_date'] == 1)
+                    $selectQry .= " shipment_fm.3pl_close_date AS 3PL Closed Date,";
+
+
+
+                if ($data['close_date'] == 1)
+                $selectQry .= " shipment_fm.close_date AS CLOSE DATE,";
+
+
+            if ($data['no_of_attempt'] == 1)
+                $selectQry .= " shipment_fm.no_of_attempt AS No Of Attempt,";
+            
+            if ($data['transaction_no'] == 1)
+                $selectQry .= " shipment_fm.pay_invoice_no AS Transaction Number,";
+
+            if ($data['transaction_days'] == 1)
+            $selectQry .= " DATEDIFF(3pl_close_date, 3pl_pickup_date) AS transaction_days,";  
+        }
         $selectQry = rtrim($selectQry, ',');
         $this->db->select($selectQry);
 
@@ -2991,12 +3127,15 @@ class Shipment_model extends CI_Model {
         $this->db->where('shipment_fm.status', 'Y');
         $this->db->where('shipment_fm.deleted', 'N');
         $this->db->order_by('shipment_fm.id', 'desc');
-        $this->db->limit($limit, $start);     
+        if (isset($filterData['exportlimit']) && !empty($filterData['exportlimit'] )) {
+            $this->db->limit($filterData['exportlimit'] );
+        }
+        //$this->db->limit($limit, $start);     
         $query = $this->db->get();
-    // echo $this->db->last_query(); die();      
+       //  echo $this->db->last_query(); die();      
         $delimiter = ",";
         $newline = "\r\n";
-        $filename = "filename.csv";   
+        //$filename = "filename.csv";   
 
 
 
@@ -3245,14 +3384,22 @@ class Shipment_model extends CI_Model {
 
         if (!empty($filterData['status'])) {
             $delivered = $filterData['status'];
-            // print_r($delivered);
+            
+            if(is_numeric($delivered)){
             if ($delivered == '1' || $delivered == '4' || $delivered == '5') {
                 if (array_key_exists(0, $delivered))
                     $delivered = array_filter(0, $delivered);
             } else
                 $delivered = array_filter($delivered);
 
-            $this->db->where_in('shipment_fm.delivered', $delivered);
+                $this->db->where_in('shipment_fm.delivered', $delivered);
+             
+            }else{
+                $this->db->where_in('shipment_fm.code', $delivered);
+        }
+        }
+        if (!empty($filterData['status_o'])) {
+            $this->db->where_in('shipment_fm.code', $filterData['status_o']);
         }
 
         if (!empty($filterData['destination'])) {
@@ -3315,8 +3462,11 @@ class Shipment_model extends CI_Model {
 
         if ($data['origin'] == 1) {
             $selectQry .= " (select city from country where country.id=shipment_fm.origin) AS ORIGIN ,";
-            //$selectQry.=" country.city AS ORIGIN,";
-            //$this->db->join('country','country.id=shipment_fm.origin');
+        }
+        
+        if ($data['cc_name'] == 1) {
+            $superID = $this->session->userdata('user_details')['super_id'];
+            $selectQry .= " (select company from courier_company where courier_company.cc_id=shipment_fm.frwd_company_id AND  courier_company.deleted = 'N' AND courier_company.super_id= ".$superID.") AS ForwardedCompany ,";
         }
         if ($data['destination'] == 1) {
             $selectQry .= " (select city from country where country.id=shipment_fm.destination) AS DESTINATION ,";
@@ -3345,8 +3495,11 @@ class Shipment_model extends CI_Model {
         if ($data['mode'] == 1)
             $selectQry .= " shipment_fm.mode AS RECEIVER MODE,";
         if ($data['delivered'] == 1) {
-            $selectQry .= " (select main_status from status_main_cat_fm where status_main_cat_fm.id=shipment_fm.delivered) AS STATUS ,";
+            $selectQry .= " (select main_status from status_main_cat_fm where status_main_cat_fm.id=shipment_fm.delivered) AS MAINSTATUS,";
             //$this->db->join('status_main_cat','status_main_cat.id=shipment_fm.delivery');    
+        }
+        if ($data['status_o'] == 1) {
+            $selectQry .= " (select sub_status from status_category_fm where status_category_fm.code=shipment_fm.code) AS 3PLSTATUS ,";
         }
         if ($data['total_cod_amt'] == 1)
             $selectQry .= " shipment_fm.total_cod_amt AS COD AMOUNT,";
@@ -3366,8 +3519,32 @@ class Shipment_model extends CI_Model {
         if ($data['frwd_awb_no'] == 1)
             $selectQry .= " shipment_fm.frwd_company_awb AS FORWARD AWB No,";
 
+        if ($data['pl3_pickup_date'] == 1)
+            $selectQry .= " shipment_fm.3pl_pickup_date AS 3PL Pickup Date,";
+
+        if ($data['pl3_close_date'] == 1)
+            $selectQry .= " shipment_fm.3pl_close_date AS 3PL Closed Date,";
+            if ($data['close_date'] == 1)
+            $selectQry .= " shipment_fm.close_date AS CLOSE DATE,";
+ 
+            
+        if ($data['no_of_attempt'] == 1)
+            $selectQry .= " shipment_fm.no_of_attempt AS No Of Attempt,";
+
+//        if ($data['transaction_days'] == 1)
+//            $selectQry .= " DATEDIFF(3pl_close_date,3pl_pickup_date) AS Transaction Day,";
+//            
+          if($data['transaction_no'] == 1){
+                $selectQry .= " shipment_fm.pay_invoice_no AS Transaction Number,";
+          }
+        
+         if ($data['transaction_days'] == 1)
+        $selectQry .= " DATEDIFF(3pl_close_date, 3pl_pickup_date) AS transaction_days,";    
 
         $selectQry = rtrim($selectQry, ',');
+        
+        
+        //echo $selectQry;die;
         $this->db->select($selectQry);
 
         $this->db->from('shipment_fm');
@@ -3379,7 +3556,7 @@ class Shipment_model extends CI_Model {
         }
 
         $query = $this->db->get();
-       
+        //return $this->db->last_query(); die;
         $delimiter = ",";
         $newline = "\r\n";
 
@@ -3544,6 +3721,15 @@ class Shipment_model extends CI_Model {
         return $data = chr(239) . chr(187) . chr(191) . $this->dbutil->csv_from_result($query, $delimiter, $newline);
     }
 
+
+     public function getStatusIDByName($status_name= NULL){
+        
+        $sql = "SELECT id FROM status_main_cat_fm where main_status='".$status_name."' AND deleted='N' AND status = 'Y' ";
+        
+        $query = $this->db->query($sql);
+        $data = $query->result_array();
+        return $data;        
+    }
 
 
 }

@@ -422,6 +422,18 @@ if (!function_exists('GetCourCompanynameId')) {
         return $result[$field];
     }
 }
+if (!function_exists('GetCCompanyNameById')) { 
+    function GetCCompanyNameById($id = null, $field = null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        $sql = "SELECT $field FROM courier_company where cc_id='$id' and super_id='".$ci->session->userdata('user_details')['super_id'] . "'";
+        $query = $ci->db->query($sql);
+        // echo   $ci->db->last_query();
+        // die; 
+        $result = $query->row_array();
+        return $result[$field];
+    }
+}
 
 if (!function_exists('GetCourCompanynameIdAll')) {
     function GetCourCompanynameIdAll($id = null) {
@@ -731,7 +743,7 @@ if (!function_exists('SEND_SMS')) {
         $paramNew = str_replace('= ', '=', $paramNew);
         $paramNew = str_replace(' =', '=', $paramNew);
             
-    //echo $APIURL.'?'. $paramNew;
+    echo $APIURL.'?'. $paramNew;
        file_get_contents($APIURL.'?'. $paramNew);        
        
         return true;
@@ -3621,3 +3633,18 @@ if(!function_exists('getStatusByCode_fm')){
 
             }
     }
+    
+    
+ if (!function_exists('getallstatusbyid')) {
+
+    function getallstatusbyid($mid = null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        $sql = "SELECT code,sub_status FROM status_category_fm where main_status='$mid'";
+        
+        $query = $ci->db->query($sql);
+        $result = $query->result_array();
+        return $result;
+    }
+
+}   

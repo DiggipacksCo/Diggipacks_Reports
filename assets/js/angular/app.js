@@ -1,4 +1,4 @@
-var app = angular.module('fulfill', [])
+var app = angular.module('fulfill', ['betsol.timeCounter'])
 
 
 
@@ -1310,6 +1310,7 @@ var app = angular.module('fulfill', [])
             $scope.dropshort = {};
             $scope.loadershow = false;
             $scope.filterData.s_type = 'AWB';
+            $scope.filterData.status_o = '';
 
             $scope.listData2 = {
                 "entrydate": false,
@@ -1353,6 +1354,13 @@ var app = angular.module('fulfill', [])
                 "show_code": false,
                 "messenger_name": false,
                 "close_date": false,
+                "status_o": false,
+                "invoice_details": false,
+                "pl3_pickup_date": false,
+                "pl3_close_date": false,
+                "transaction_days": false,
+                "no_of_attempt": false,
+                "cc_name": false
             };
 
 
@@ -1413,12 +1421,13 @@ var app = angular.module('fulfill', [])
 
                     if (response.data.result.length > 0) {
                         angular.forEach(response.data.result, function (value) {
-                            //console.log(value.slip_no)
-
+                            console.log(value['3pl_pickup_date'])
+                            value.mydate = new Date(value['3pl_pickup_date']);
+                            //if(value['3pl_pickup_date'])
                             $scope.shipData.push(value);
 
                         });
-                        //console.log( $scope.shipData)
+                        console.log( $scope.shipData)
                         //$scope.$broadcast('scroll.infiniteScrollComplete');
                     } else {
                         $scope.nodata = true
@@ -2208,6 +2217,7 @@ var app = angular.module('fulfill', [])
                 "show_code": false,
                 "messenger_name": false,
                 "close_date": false,
+                "transaction_days": false,
             };
     $scope.slipnosdetails=function(val)
     {

@@ -35,9 +35,9 @@
                         ?>
 
                         <!-- Basic responsive table -->
-                        <div class="panel panel-flat" dir="ltr"> 
+                        <div class="panel panel-flat" > 
                             <!--style="padding-bottom:220px;background-color: lightgray;"-->
-                            <div class="panel-heading"> 
+                            <div class="panel-heading" dir="ltr"> 
                                 <!-- <h5 class="panel-title">Basic responsive table</h5> -->
                                 <h1><strong><?= lang('lang_Users_Table'); ?></strong></h1>
                                 <div class="heading-elements">
@@ -49,7 +49,7 @@
                                 </div>
                                 <hr>
                             </div>
-                            <div class="panel-body"dir="rtl" > 
+                            <div class="panel-body"> 
 
 <!-- <input type="text" id="search"  placeholder="Search .." class="form-control">
                                 -->

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png');?>" type="image/x-icon">
-<title>Inventory</title>
+<title><?=lang('lang_Inventory');?></title>
 <?php $this->load->view('include/file'); ?>
 </head>
 
@@ -27,7 +27,7 @@
       <div class="content">
         <div class="panel panel-flat">
           <div class="panel-heading">
-            <h1><strong>Generate TOD</strong></h1>
+            <h1><strong><?=lang('lang_Generate_Tods');?></strong></h1>
           </div>
           <hr>
           <div class="panel-body"> <br>
@@ -37,19 +37,19 @@
              
               
               <div  class="col-md-3">
-                <div class="form-group" ><strong>Start Letters:</strong> <br>
+                <div class="form-group" ><strong><?=lang('lang_Start_Letters');?>:</strong> <br>
                    <input type="text" min="1" maxlength="5" required name="charname" class="form-control" required/>
                 </div>
               </div>
               
               <div  class="col-md-4">
-                <div class="form-group" ><strong>Number Of TOD:</strong> <br>
+                <div class="form-group" ><strong><?=lang('lang_Number_Of_TOD');?>:</strong> <br>
                   <input type="number" min="1" required name="stockCount" class="form-control" required/>
                 </div>
               </div>
               <div  class="col-md-2">
                 <div class="form-group" > <br>
-                  <button type="submit"  class="btn btn-success pull-left">Generate</button>
+                  <button type="submit"  class="btn btn-success pull-left"><?=lang('lang_Generate');?></button>
                 </div>
               </div>
             </form>

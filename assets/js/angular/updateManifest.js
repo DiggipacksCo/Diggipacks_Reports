@@ -262,7 +262,51 @@ var app = angular.module('updateManifest', [])
 
           
         }
-
+        $scope.addAllclick=function ()
+        {
+        
+            $scope.AlltotalCount_shelve = $scope.Menidata.length;
+            $scope.arrayIndexnew1 = $scope.Menidata.findIndex(record => (record.sku === $scope.scan.sku));
+        
+            console.log($scope.arrayIndexnew1);
+            //$scope.AlltotalCount_shelve=$scope.AlltotalCount_shelve+1;
+            // console.log($scope.TotalCountSameTime+"tttttt"+$scope.Menidata[$scope.arrayIndexnew1].total_location);
+            if (parseInt($scope.AlltotalCount_shelve) == $scope.Menidata.length) {
+                console.log("sssssssssss");
+        
+                 angular.forEach($scope.Menidata, function (value, key) {
+        
+                    $scope.Menidata[key].s_status = "completed"
+                    $scope.Menidata[key].l_status = "completed"
+                    $scope.Menidata[key].scaned = value.filled;
+        
+        
+        
+                        });
+                $scope.newCompeleteArr.push({ 'sku': $scope.Menidata[$scope.arrayIndexnew1].sku, 'totalqty': $scope.Menidata[$scope.arrayIndexnew1].totalqty, 'capacity': $scope.Menidata[$scope.arrayIndexnew1].capacity, 'sid': $scope.Menidata[$scope.arrayIndexnew1].sid, 'uid': $scope.Menidata[$scope.arrayIndexnew1].uid, 'shelveNo': $scope.scan.shelve, 'expire_date': $scope.Menidata[$scope.arrayIndexnew1].expire_date, 'wh_id': $scope.Menidata[$scope.arrayIndexnew1].wh_id, 'id': $scope.Menidata[$scope.arrayIndexnew1].id });
+           
+                
+                console.log($scope.newCompeleteArr);
+               // $scope.Menidata[$scope.arrayIndexnew1].shelveNo = $scope.scan.shelve;
+                $scope.ExportBtnShow = true;
+                $scope.AddInventoryBtn = true;
+                $scope.cust_nameBtn = false;
+                $scope.location_nameBtn = true;
+                $scope.shelve_nameBtn = true;
+                $scope.nextBtnShow = true;
+                $scope.sku_nameBtn = true;
+                $scope.Message = null;
+               // $scope.Menidata[$scope.arrayIndexnew1].s_status = "completed"
+                //$('#scan_stocklocation_id').focus();
+        
+                console.log( $scope.Menidata);
+        
+        
+        
+                $scope.warning = 'All Parts Scanned for ' + $scope.Menidata[$scope.arrayIndexnew1].sku;
+                //responsiveVoisce.speak($scope.warning);   
+            }
+        }
 
         $scope.GetCheckShelveNoScan = function () {
 
