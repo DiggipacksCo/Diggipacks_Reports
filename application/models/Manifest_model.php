@@ -282,7 +282,7 @@ class Manifest_model extends CI_Model {
         $this->db->where('pickup_request.deleted','N');
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
 
-        $this->db->select('COUNT(id) as id_count,COUNT(qty) as qtyall,id,uniqueid,sku,qty,assign_to,req_date,pstatus,code,seller_id,on_hold,itemupdated,schedule_date,vehicle_type');
+        $this->db->select('COUNT(id) as id_count,COUNT(qty) as qtyall,id,uniqueid,sku,qty,assign_to,req_date,pstatus,code,seller_id,on_hold,itemupdated,schedule_date,vehicle_type,boxes,pack_type');
         $this->db->from('pickup_request');
         if ($filterarray['seller_id'])
             $this->db->where('seller_id', $filterarray['seller_id']);

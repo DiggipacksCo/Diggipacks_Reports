@@ -1805,6 +1805,16 @@ class Manifest extends CourierCompany_pickup {
         $ii = 0;
         $seller_ids = "";
         foreach ($shipments['result'] as $rdata) {
+            $boxType = '';
+            switch($rdata['pack_type']){
+                case 'P': $boxType = 'Pallet';break;
+                case 'B': $boxType = 'Bins';break;
+                case 'S': $boxType = 'Shelve';break;
+                case 'R': $boxType = 'Room';break;
+                default: //do nothing;
+            }
+            
+            $manifestarray[$ii]['pack_type'] = $boxType;
             if ($ii == 0)
                 $seller_ids = $rdata['seller_id'];
             else
