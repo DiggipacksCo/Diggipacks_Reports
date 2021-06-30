@@ -158,10 +158,12 @@
                                     <!--<th>SKU</th>-->
                                     <th><?=lang('lang_QTY');?></th>  
                                                                                 <!-- <th>Assign To</th> -->  
-                                             <!--<th>Status</th>
-                                             <th>Code</th>-->
-                                                <th><?=lang('lang_Vehicle_type');?></th>
-                                                <th><?=lang('lang_Seller');?></th>
+                                     <!--<th>Status</th>
+                                     <th>Code</th>-->
+                                        <th><?=lang('lang_Vehicle_type');?></th>
+                                        <th><?=lang('lang_Seller');?></th>
+                                        <th><?=lang('lang_Number_Of_Boxes');?></th>
+                                        <th><?=lang('lang_Storage_Type');?></th>
                                     <th><?=lang('lang_Schedule_Date');?></th>
                                     <th><?=lang('lang_Request_Date');?></th>
 
@@ -183,6 +185,8 @@
                                             <td><img ng-if="data.vehicle_type != ''" src="<?= base_url(); ?>{{data.vehicle_type}}" width="65">
                                                 <img ng-if="data.vehicle_type == ''" src="<?= base_url(); ?>assets/nfd.png" width="65"></td>
                                             <td > {{data.seller_id}}</td>
+                                            <td > {{data.boxes}}</td>
+                                            <td > {{data.pack_type}}</td>
                                             <td ><span ng-if="data.schedule_date != ''">{{data.schedule_date}}</span><span ng-if="data.schedule_date == ''">--</span></td>
 
                                             <td > {{data.req_date}}</td>
