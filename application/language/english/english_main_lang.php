@@ -1496,3 +1496,5 @@ $lang['lang_Short_List']="Short List";
 $lang['lang_Oldest_Order']="Oldest Order";
 $lang['lang_Newest_Order']="Newest Order";
 $lang['lang_TPL_AWB']="3PL AWB";
+$lang['lang_Number_Of_Boxes']="No. of Boxes";
+$lang['lang_Storage_Type']="Storage Type";
