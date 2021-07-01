@@ -73,6 +73,50 @@ class Finance_model extends CI_Model {
         //return $this->db->last_query(); 
     }
 
+    public function addInvoiceUpdateDiscountfix($data=array())
+    {
+        $this->db->update('fixrate_invoice',$data,array('invoice_no'=>$data['invoice_no']));
+   //echo $this->db->last_query(); exit;
+	
+        return true;
+        
+    }
+    public function Getpaydynamic_edit($id=null)
+    {
+        $this->db->where('dynamic_invoice.super_id', $this->session->userdata('user_details')['super_id']);
+     $this->db->select('*');
+     $this->db->from('dynamic_invoice'); 
+     //$this->db->where('deleted', 'N');
+     $this->db->where('id', $id);
+    
+    
+     $query = $this->db->get();
+    // return $this->db->last_query(); die; 
+      
+    if($query->num_rows()>0)
+    {
+        return $query->row_array();
+    }
+    }
+
+    public function Getpayfix_edit($id=null)
+    {
+        $this->db->where('fixrate_invoice.super_id', $this->session->userdata('user_details')['super_id']);
+     $this->db->select('*');
+     $this->db->from('fixrate_invoice'); 
+     //$this->db->where('deleted', 'N');
+     $this->db->where('id', $id);
+    
+    
+     $query = $this->db->get();
+    // return $this->db->last_query(); die; 
+      
+    if($query->num_rows()>0)
+    {
+        return $query->row_array();
+    }
+    }
+
    public function invoice_report($filtr = array()) {
         $this->db->group_by('invoice_no'); 
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);

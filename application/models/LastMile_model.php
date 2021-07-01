@@ -59,6 +59,15 @@ class LastMile_model extends CI_Model {
         
     }
 
+	public function addInvoiceUpdateDiscount($data=array())
+    {
+        $this->db->update('Payable_invoice_fm',$data,array('invoice_no'=>$data['invoice_no']));
+   // echo $this->db->last_query(); exit;
+	
+        return true;
+        
+    }
+
     public function addInvoiceUpdate($data=array(),$dataW=array())
     {
         $this->db->update('Payable_invoice_fm',$data,$dataW);

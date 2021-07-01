@@ -11,7 +11,7 @@ var app = angular.module('Appfinance', [])
 		$scope.updteArray={};
 		$scope.setrate={};
 		$scope.data={};
-		  $scope.IsVisible = false;		
+		  $scope.IsVisible = false;		 
 		  $scope.getallseller=function()
 		  {
 			
@@ -213,6 +213,31 @@ $scope.run_shell_fixrate = function ()
 
             }  
 
+			$scope.Getpopoprncustdetaisfix=function(pid,openid,type)
+			{
+			
+			
+			if(type=='one')
+			 
+			 
+			 
+			 $http({
+			  url: "Finance/ShowEditpayfix",
+			  method: "POST",
+			  data: {id:pid}, 
+			  headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+			  
+			}).then(function (results) {
+				console.log(results);
+				   $scope.editcodlistArray=results.data;
+				  });
+			  else
+			  {
+				
+			  }
+				$(openid).modal('show');
+			}
+
             $scope.run_shell_dynamic = function ()
             {	
             	
@@ -229,6 +254,32 @@ $scope.run_shell_fixrate = function ()
                 })
 
             } 
+			$scope.Getpopoprncustdetais=function(pid,openid,type)
+			{
+			
+			
+			if(type=='one')
+			 
+			 
+			 
+			 $http({
+			  url: "Finance/ShowEditpay",
+			  method: "POST",
+			  data: {id:pid}, 
+			  headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+			  
+			}).then(function (results) {
+				console.log(results);
+				   $scope.editcodlistArray=results.data;
+				  });
+			  else
+			  {
+				
+			  }
+				$(openid).modal('show');
+			}
+
+
 //  $scope.getallinvoiceseller=function()
 // 		  {
 // 		  $http({
