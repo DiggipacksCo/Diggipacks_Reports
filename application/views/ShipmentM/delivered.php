@@ -117,7 +117,7 @@
 
                                                                         <option value=""><?=lang('lang_Select_Company');?></option>
                                                                         <?php foreach (GetCourierCompanyDrop() as $data): ?>
-                                                                            <option value="<?= $data['id']; ?>"><?= $data['company']; ?></option>
+                                                                            <option value="<?= $data['cc_id']; ?>"><?= $data['company']; ?></option>
                                                                         <?php endforeach; ?>
 
                                                                     </select>
@@ -178,9 +178,10 @@
                                             <tr>
                                             <th><?=lang('lang_SrNo');?>.
 
-                                    <th><?=lang('lang_Order_Type');?></th>
+                                        <th><?=lang('lang_Order_Type');?></th>
                                         <th><?=lang('lang_AWB_No');?>.</th>
                                         <th><?=lang('lang_Ref_No');?>.</th>
+                                        <th><?=lang('lang_Forwarded_Company');?></th>
                                         <th><?=lang('lang_Destination');?></th>
                                         <th><?=lang('lang_Receiver');?></th>
                                         <th><?=lang('lang_Receiver_Address');?></th>
@@ -202,6 +203,7 @@
 
                                             <td>{{data.slip_no}}</td>
                                             <td>{{data.booking_id}}</td>
+                                            <td>{{data.cc_name}}</td>
                                             <td>{{data.destination}}</td>
                                             <td>{{data.reciever_name}}</td>
                                             <td>{{data.reciever_address}}</td>
