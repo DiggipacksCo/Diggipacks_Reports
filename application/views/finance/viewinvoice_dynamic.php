@@ -92,7 +92,7 @@
 					
 				
 					
-					<th>Outbound Charge</th>
+					<th>Outbound Charge</th> 
 				
 					<th>Cancel Charge </th>
 					<th>Box Charge </th>
@@ -102,7 +102,7 @@
 					<th>Total Wth Vat  </th>
 				</tr>
 				<?php
-					
+					$discount=$invoiceData[0]['discount'];
 					foreach ($invoiceData as $key => $rowData) {
 					  //	$pickup_charge += $rowData['pickup_charge'];
  						$invoice_no = $rowData['invoice_no'];
@@ -185,6 +185,12 @@
 						$TOTALvat    =round( (($TOTAL * 15)/100),2) ;
 						$TOTAL_with_vat  =round( ($TOTAL + $TOTALvat),2);
 					?>
+
+					<?php 
+					$TOTAL = round(($tot + $totalValue['pickup_charge']+$totalValue['storage_charges']+$totalValue['onhold_charges']),2);
+					$TOTALvat    = round((($TOTAL * 15)/100),2) ;
+ 					$TOTAL_with_vat  = round(($TOTAL + $TOTALvat),2);
+					?>
 					<table align="left" width="50%">
 						<tr>
 							<th colspan="2">Summary - ملخص</th>
@@ -265,6 +271,12 @@
 							<td align="justify"> Total Storage Charges</td>
 							<td align="center"><?= $currency; ?>
 								<?=$totalValue['storage_charge'];?>
+							</td>
+						</tr>
+						<tr>
+							<td align="justify"> Discount</td>
+							<td align="center"><?= $currency; ?>
+							- <?=$discount;?>
 							</td>
 						</tr>
 						<tr>

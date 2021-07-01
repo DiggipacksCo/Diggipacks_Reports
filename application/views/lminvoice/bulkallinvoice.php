@@ -156,6 +156,7 @@ thead.report-header {
 		<?php
 
 $bankFees=$invoiceData[0]['bank'];
+$discount=$invoiceData[0]['discount'];
 		$total_cod_amount=0;
 		$total_collect_add=0;
 		$total_service_add=0;
@@ -237,6 +238,14 @@ $bankFees=$invoiceData[0]['bank'];
         </tr> 
       </tbody>
    <tr> 
+   <?php 
+   $totalchargeShow=$totalchargeShow-$discount;
+
+   $totalvatShow=$totalchargeShow*$vatpercentage/100;
+   $totalgrandShow= $totalchargeShow+$totalvatShow;
+   
+
+   ?>
 <td colspan="17">
    <table align="left" width="30%" border="1">
     
@@ -250,7 +259,7 @@ $bankFees=$invoiceData[0]['bank'];
      <tr><td align="justify">Less: Return Charge – رسوم الإرجاع</td><td align="center">SAR -<?=$returnCharges;?></td></tr>
 
     
-    <tr><td align="justify">Less: Discount - الخصم</td><td align="center">SAR 0</td></tr>
+    <tr><td align="justify"> Discount - الخصم</td><td align="center">SAR <?=$discount;?></td></tr>
 
     <tr>
     <th align="justify">Total Invoice before VAT – اجمالي الفاتورة قبل الضريبة</th><th >SAR -<?=$totalchargeShow;?></th></tr>

@@ -182,10 +182,15 @@ thead.report-header {
               <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-menu9"></i> </a>
                 <ul class="dropdown-menu dropdown-menu-right">
                   <li ><a  href="<?=base_url();?>"><i class="icon-money fa fa-money" ></i> <?=lang('lang_Pay');?></a></li>
-                  <li ><a  href="<?=base_url();?>viewinvoice/{{data.invoice_no}}"><i class="icon-eye" ></i>   <?=lang('lang_View_Invoice');?></a></li>
+                  <li ><a  href="<?=base_url();?>viewinvoice/{{data.invoice_no}}" target="_blank"><i class="icon-eye" ></i>   <?=lang('lang_View_Invoice');?></a></li>
+                  <li>
+															<a ng-if="data.discount>0" data-toggle="modal" data-target="#updateLinehoulC51201961561904494" title="DISCOUNT" ng-click="Getpopoprncustdetaisfix(data.id,'#discounted','one');"><i class="fa fa-tag"></i> Discount</a>	
+											  <a ng-if="data.discount<=0" title="DISCOUNT" ng-click="Getpopoprncustdetaisfix(data.id,'#discount','one');"> <i class="fa fa-tag"></i> Discount</a>	
+															 </li>   
+                
                 </ul>
               </li>
-            </ul></td>
+            </ul></td> 
             <td>
               
           </tr>
@@ -197,6 +202,69 @@ thead.report-header {
     <hr>
   </div>
 </div>
+</form>
+<div class="modal" id="discounted" tabindex="-1" role="dialog" aria-labelledby="payable_invoice" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">   
+        <div class="modal-content"> 
+<div class="modal-header">
+                <h5 class="modal-title"  dir="ltr"> <?=lang('lang_Discount');?> #({{editcodlistArray.invoice_no}})</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>   
+            </div>
+		
+       <div class="modal-body">
+   		
+				
+					
+					<div class="col-md-4">
+                 <div class="form-group">  
+                    <label>   {{editcodlistArray.discount}}</label>   
+                
+                    </div></div>
+                     
+				<br>
+            
+					
+			    
+        </div>
+      
+        
+       </div>
+    </div>
+</div>
+
+<div class="modal" id="discount" tabindex="-1" role="dialog" aria-labelledby="payable_invoice" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"  dir="ltr"> <?=lang('lang_Discount');?>#({{editcodlistArray.invoice_no}})</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+          
+			<div class="modal-body">
+   					<div class="col-md-8">
+					   <form action="<?=base_url();?>Finance/discountUpdatefix" method="post" enctype= 'multipart/form-data'>
+                 		<div class="form-group">
+						 <input type="hidden" name="invoice_no" value="{{editcodlistArray.invoice_no}}">
+							 <input type="hidden" name="cust_id" value="{{editcodlistArray.cust_id}}">
+                   		 <label><?=lang('lang_Discount');?>  </label>
+                    	<input type="text" name="discount" class="form-control" ng-model="editcodlistArray.discount" required="">
+                    	</div>
+                    </div>
+             
+               
+				<button style="margin-top: 30px;" type="submit" class="btn btn-info" name="update_linehoul" > <?=lang('lang_Update');?></button>  
+					
+			   </div>
+           </form>
+        </div>
+    </div>
+</div>
+    </div>
+
 <!-- /basic responsive table -->
 <?php $this->load->view('include/footer'); ?>
 </div>

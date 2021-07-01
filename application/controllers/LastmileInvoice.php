@@ -132,6 +132,24 @@ class LastmileInvoice extends MY_Controller {
 			
 }
 
+public function discountUpdate()
+    {
+            
+            $dataArray=$dataArray= $this->input->post();
+			print_r($dataArray);
+            $invoice_no = $dataArray['invoice_no'];
+			$discount = $dataArray['discount'];
+		$CURRENT_DATE=date("Y-m-d H:i:s");
+			 
+		$updateinvoiceAarrayW=array('invoice_no'=>$dataArray['invoice_no'],'cust_id'=>$dataArray['cust_id'],'discount'=>$discount);
+		$res_data=$this->LastMile_model->addInvoiceUpdateDiscount($updateinvoiceAarrayW);
+            
+		$this->session->set_flashdata('msg', 'Discount updated!'); 
+
+			
+		redirect(base_url('viewLmInvoice'));
+    }
+
 
 public function payableInvoice_update()
     {

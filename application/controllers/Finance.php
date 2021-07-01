@@ -632,6 +632,43 @@ public function GettransportReportShowData()
       $this->load->view('finance/newinvoicesview');
 	  
 	 } 
+
+
+	 public function discountUpdate()
+    {
+            
+            $dataArray=$dataArray= $this->input->post();
+			print_r($dataArray);
+            $invoice_no = $dataArray['invoice_no'];
+			$discount = $dataArray['discount'];
+		$CURRENT_DATE=date("Y-m-d H:i:s");
+			 
+		$updateinvoiceAarrayW=array('invoice_no'=>$dataArray['invoice_no'],'cust_id'=>$dataArray['cust_id'],'discount'=>$discount);
+		$res_data=$this->Finance_model->addInvoiceUpdateDiscount($updateinvoiceAarrayW);
+            
+		$this->session->set_flashdata('msg', 'Discount updated!'); 
+
+			
+		redirect(base_url('invoices_dynamic'));
+    }
+
+	public function discountUpdatefix()
+    {
+            
+            $dataArray=$dataArray= $this->input->post();
+			//print_r($dataArray);
+            $invoice_no = $dataArray['invoice_no'];
+			$discount = $dataArray['discount'];
+		$CURRENT_DATE=date("Y-m-d H:i:s");
+			 
+		$updateinvoiceAarrayW=array('invoice_no'=>$dataArray['invoice_no'],'cust_id'=>$dataArray['cust_id'],'discount'=>$discount);
+		$res_data=$this->Finance_model->addInvoiceUpdateDiscountfix($updateinvoiceAarrayW);
+            
+		$this->session->set_flashdata('msg', 'Discount updated!'); 
+
+			
+		redirect(base_url('newinvoicesView'));
+    }
 	 public function GetallNewfinanceInvocieDynamicView(){
 		 
 		// echo "ssssss";  die;
@@ -758,8 +795,20 @@ public function getallinvoicedata()
 		  
 	}
 	
-	
-	
+	public function ShowEditpay(){
+		$_POST = json_decode(file_get_contents('php://input'), true);
+		 $id=$_POST['id'];
+		$returndata=$this->Finance_model->Getpaydynamic_edit($id); 
+		 echo json_encode($returndata);
+	   
+   }
+   public function ShowEditpayfix(){
+	$_POST = json_decode(file_get_contents('php://input'), true);
+	 $id=$_POST['id'];
+	$returndata=$this->Finance_model->Getpayfix_edit($id); 
+	 echo json_encode($returndata);
+   
+}
 	
 	
     public function add_storage($id=null){
