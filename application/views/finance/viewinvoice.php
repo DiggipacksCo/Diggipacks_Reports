@@ -104,6 +104,7 @@
 					<?php
 					// echo '<pre>';
 					// print_r($invoiceData);
+					$discount=$invoiceData[0]['discount'];
 					foreach ($invoiceData as $key => $rowData) {
 					  //	$pickup_charge += $rowData['pickup_charge'];
  						$invoice_no = $rowData['invoice_no'];
@@ -206,15 +207,27 @@
 								<?=$totalValue['special_packing'];?>
 							</td>
 						</tr>
-						
-						
+
 						<tr>
-							<tr>
-							<td align="justify">Total Fees before VAT <?=$invoiceData[0][0]['vat_percent'];?>%  - إجمالي الرسوم قبل ضريبة القيمة المضافة </td>
+							<td align="justify">Discount - الخصم</td>
 							<td align="center"><?= $currency; ?>
-								<?=$TOTAL;?>
+							-	<?=$discount;?>
 							</td>
 						</tr>
+						
+						<?php
+						 $TOTAL= $TOTAL-$discount;
+						 $TOTALvat= round((($TOTAL * 15)/100),2) ;
+						 $TOTAL_with_vat=$TOTAL+ $TOTALvat;
+						?>
+						<tr>
+							<tr>
+							<td align="justify">Total Fees before VAT <?=$invoiceData[0]['vat_percent'];?>%  - إجمالي الرسوم قبل ضريبة القيمة المضافة </td>
+							<td align="center"><?= $currency; ?>
+								<?=$TOTAL?>
+							</td>
+						</tr>
+						
 						<tr>
 							<tr>
 							<td align="justify">Total Vat Fees </td>

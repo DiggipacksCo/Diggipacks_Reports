@@ -161,17 +161,47 @@
 											<td> {{data.cod_paid_date}} </td>  
 											<td>
 											
-											<a ng-if="data.receivable_pay_status=='N'" data-toggle="modal" class="btn btn-danger text-white" data-target="#updateLinehoulC51201961561904494" title="Received" ng-click="Getpopoprncustdetais(data.pid,'#payable_invoice','one');"> <?=lang('lang_Receive');?></a>
-											  <a ng-if="data.receivable_pay_status=='Y'"  class="btn btn-primary text-white"  title="Received"  ng-click="Getpopoprncustdetais(data.pid,'#payable_invoice_list','one');" > <?=lang('lang_Received');?> </a>  
+											<a ng-if="data.receivable_pay_status=='N'" data-toggle="modal" class="btn btn-danger text-white" >  <?=lang('lang_Receive');?></a>	
+											  <a ng-if="data.cod_pay_status!='N'" class="btn btn-primary text-white" title="PAY" > <?=lang('lang_Received2129');?></a>	  
 											  </td><td>
-											 <a ng-if="data.cod_pay_status=='N'" data-toggle="modal" class="btn btn-danger text-white" data-target="#updateLinehoulC51201961561904494" title="PAY" ng-click="Getpopoprncustdetais(data.pid,'#account_detail','one');">  <?=lang('lang_Pay');?></a>	
-											  <a ng-if="data.cod_pay_status!='N'" class="btn btn-primary text-white" title="PAY" ng-click="Getpopoprncustdetais(data.pid,'#payable_invoice_list1','one');"> <?=lang('lang_Paid');?></a>	  
+											 <a ng-if="data.receivable_pay_status=='N'" data-toggle="modal" class="btn btn-danger text-white" >  <?=lang('lang_Pay');?></a>	
+											  <a ng-if="data.cod_pay_status!='N'" class="btn btn-primary text-white" title="PAY" > <?=lang('lang_Paid');?></a>	  
 											   </td><td>
-											<a href="codreceivablePrint/{{data.invoice_no}}" target="_blank" class="btn btn-primary"><?=lang('lang_View');?></a></td>
+										
 
-										 
+											<ul class="icons-list">
+                                                    <li class="dropdown">
+                                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                            <i class="icon-menu9"></i>
+                                                        </a>    
+
+                                                        <ul class="dropdown-menu dropdown-menu-right">
+                                                            <li><a href="<?= base_url(); ?>codreceivablePrint/{{data.invoice_no}}" target="_blank" ><i class="icon-eye"></i> <?=lang('lang_View');?> </a>
+															
+															</li>   
+                                                            <li>
+															<a ng-if="data.receivable_pay_status=='N'" data-toggle="modal" data-target="#updateLinehoulC51201961561904494" title="Received" ng-click="Getpopoprncustdetais(data.pid,'#payable_invoice','one');"><i class="fa fa-money"></i>  <?=lang('lang_Receive');?></a>
+											  <a ng-if="data.receivable_pay_status=='Y'"  title="Received"  ng-click="Getpopoprncustdetais(data.pid,'#payable_invoice_list','one');" > <i class="fa fa-money"></i>  <?=lang('lang_Received');?> </a>  
+															</li>     
+                                                            <li>
+															<a ng-if="data.cod_pay_status=='N'" data-toggle="modal" data-target="#updateLinehoulC51201961561904494" title="PAY" ng-click="Getpopoprncustdetais(data.pid,'#account_detail','one');"><i class="fa fa-file"></i>  <?=lang('lang_Pay');?></a>	
+											  <a ng-if="data.cod_pay_status!='N'" title="PAY" ng-click="Getpopoprncustdetais(data.pid,'#payable_invoice_list1','one');"> <i class="fa fa-file"></i> <?=lang('lang_Paid');?></a>	
+															 </li>  
+
+															 <li>
+															<a ng-if="data.discount>0" data-toggle="modal" data-target="#updateLinehoulC51201961561904494" title="DISCOUNT" ng-click="Getpopoprncustdetais(data.pid,'#discounted','one');"><i class="fa fa-tag"></i> Discount</a>	
+											  <a ng-if="data.discount<=0" title="DISCOUNT" ng-click="Getpopoprncustdetais(data.pid,'#discount','one');"> <i class="fa fa-tag"></i> Discount</a>	
+															 </li>   
+
+                                                             
+
+
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+												</td>
 										   </tr>
-										  </tbody>
+										  </tbody> 
 										</table>
 									  </div>
                                     </div>
@@ -238,6 +268,39 @@
     </div>
 </div>
 
+<div class="modal" id="discounted" tabindex="-1" role="dialog" aria-labelledby="payable_invoice" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">   
+        <div class="modal-content"> 
+<div class="modal-header">
+                <h5 class="modal-title"  dir="ltr"> <?=lang('lang_Discount');?> #({{editcodlistArray.invoice_no}})</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>   
+            </div>
+		
+       <div class="modal-body">
+   		
+				
+					
+					<div class="col-md-4">
+                 <div class="form-group">  
+                    <label>   {{editcodlistArray.discount}}</label>   
+                
+                    </div></div>
+                     
+				<br>
+               
+			      <button style="margin-top: -30px;" type="submit" class="btn btn-info pull-right" name="update_linehoul" ng-click="modelClose('discounted')"><?=lang('lang_Close');?> </button>         
+
+					
+			    
+        </div>
+      
+        
+       </div>
+    </div>
+</div>
+
 
 
 <div class="modal" id="payable_invoice" tabindex="-1" role="dialog" aria-labelledby="payable_invoice" aria-hidden="true">
@@ -263,6 +326,38 @@
 					
 			   </div>
            
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal" id="discount" tabindex="-1" role="dialog" aria-labelledby="payable_invoice" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"  dir="ltr"> <?=lang('lang_Discount');?>#({{editcodlistArray.invoice_no}})</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+          
+			<div class="modal-body">
+   					<div class="col-md-8">
+					   <form action="<?=base_url();?>LastmileInvoice/discountUpdate" method="post" enctype= 'multipart/form-data'>
+                 		<div class="form-group">
+						 <input type="hidden" name="invoice_no" value="{{editcodlistArray.invoice_no}}">
+							 <input type="hidden" name="cust_id" value="{{editcodlistArray.cust_id}}">
+                   		 <label><?=lang('lang_Discount');?>  </label>
+                    	<input type="text" name="discount" class="form-control" ng-model="editcodlistArray.discount" required="">
+                    	</div>
+                    </div>
+             
+               
+				<button style="margin-top: 30px;" type="submit" class="btn btn-info" name="update_linehoul" ng-click="payableInvoice_update(editcodlistArray);"> <?=lang('lang_Update');?></button>  
+					
+			   </div>
+           </form>
         </div>
     </div>
 </div>

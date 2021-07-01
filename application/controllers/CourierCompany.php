@@ -29,6 +29,8 @@ class CourierCompany extends MY_Controller  {
     public function forwardshipments(){
         $this->load->view("ShipmentM/forward_shipments");
     }
+    
+  
 
     public function forwardedshipments() {
         $this->load->view("ShipmentM/forwarded_shipments");
@@ -281,7 +283,7 @@ class CourierCompany extends MY_Controller  {
             $shipmentLoopArray = array_unique($slipData);
         }
     }
-    //print_r($shipmentLoopArray);exit; 
+        //print_r($shipmentLoopArray);exit; 
             $invalid_slipNO=array();
             $succssArray=array();
             if($postData['comment']!=''){
@@ -1685,6 +1687,10 @@ class CourierCompany extends MY_Controller  {
         return $result;
     }
 
+// reverse order 
 
+    public function BulkForwardCompanyReverse(){
+            echo "lnlklkl"; die ; 
+    }
 }
 ?>
