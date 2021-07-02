@@ -7,7 +7,7 @@
 	<div id="contentwrapper" class="contentwrapper">
 		<div class="contenttitle2">
 			<h3>
-		    Invoice detail( <?=$invoiceData[0]['invoice_no'];?>)
+		    Invoice detail( <?=$invoiceDatainfo[0]['invoice_no'];?>)
                     <?php  $currency = site_configTable("default_currency"); // get default currency    ?>
   
       </h3>
@@ -55,12 +55,12 @@
 				<tr>
 
 					<td colspan="4" style="padding:2%;"> 
-						<b>UID Account Number:-&nbsp;<?=GetalldashboardClientField($invoiceData[0]['cust_id'], 'uniqueid');?> - رقم الحساب</b>
-						<br/> <b>Customers Name:-&nbsp;<?=GetalldashboardClientField($invoiceData[0]['cust_id'], 'company');?> - اسم العميل</b>
-						<br/> <b>Address:-&nbsp;<?=GetalldashboardClientField($invoiceData[0]['cust_id'], 'address');?>  - عنوان</b>
-						<br/> <b>Bank Account Number:-<?=GetalldashboardClientField($invoiceData[0]['cust_id'], 'account_number');?> - الحساب البنكي</b>
-						<br/> <b>Account Manager:-<?=GetalldashboardClientField($invoiceData[0]['cust_id'], 'account_manager');?></b>
-							<br/> <b>Vat Id No.:-&nbsp;<?=GetalldashboardClientField($invoiceData[0]['cust_id'], 'vat_no');?>- الرقم الضريبي </b>
+						<b>UID Account Number:-&nbsp;<?=GetalldashboardClientField($invoiceDatainfo[0]['cust_id'], 'uniqueid');?> - رقم الحساب</b>
+						<br/> <b>Customers Name:-&nbsp;<?=GetalldashboardClientField($invoiceDatainfo[0]['cust_id'], 'company');?> - اسم العميل</b>
+						<br/> <b>Address:-&nbsp;<?=GetalldashboardClientField($invoiceDatainfo[0]['cust_id'], 'address');?>  - عنوان</b>
+						<br/> <b>Bank Account Number:-<?=GetalldashboardClientField($invoiceDatainfo[0]['cust_id'], 'account_number');?> - الحساب البنكي</b>
+						<br/> <b>Account Manager:-<?=GetalldashboardClientField($invoiceDatainfo[0]['cust_id'], 'account_manager');?></b>
+							<br/> <b>Vat Id No.:-&nbsp;<?=GetalldashboardClientField($invoiceDatainfo[0]['cust_id'], 'vat_no');?>- الرقم الضريبي </b>
 
 						<br/> <b>Currency:-<?= $currency; ?></b> 
 					</td>
@@ -74,8 +74,8 @@
 						
 						<br/> <b>Vat Id No.:-&nbsp;<?= Getsite_configData_field('vat'); ?>- الرقم الضريبي </b>
 						<br/> <b>IBAN #:-&nbsp;<?=GetalldashboardClientField($invoiceData[0]['cust_id'], 'iban_number');?> </b>
-						<br/> <b>Invoice No:-&nbsp;<?=$invoiceData[0]['invoice_no'];?> - رقم الفاتورة</b>
-						<br/> <b>Invoice Date:-&nbsp;<?=$invoiceData[0]['invoice_date'];?> - تاريخ الفاتورة</b>
+						<br/> <b>Invoice No:-&nbsp;<?=$invoiceDatainfo[0]['invoice_no'];?> - رقم الفاتورة</b>
+						<br/> <b>Invoice Date:-&nbsp;<?=$invoiceDatainfo[0]['invoice_date'];?> - تاريخ الفاتورة</b>
 						<br/><b>Toll Free no :-<?=Getsite_configData_field( 'tollfree_fm');?></b>
 					</td>
 				</tr>
@@ -102,7 +102,7 @@
 					<th>Total Wth Vat  </th>
 				</tr>
 				<?php
-					$discount=$invoiceData[0]['discount'];
+					$discount=$invoiceDatainfo[0]['discount'];
 					foreach ($invoiceData as $key => $rowData) {
 					  //	$pickup_charge += $rowData['pickup_charge'];
  						$invoice_no = $rowData['invoice_no'];

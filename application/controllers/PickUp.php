@@ -680,6 +680,7 @@ class PickUp extends MY_Controller {
         if ($_POST['type'] == 'POD') {
             $code = 'POD';
             $new_status = 7;
+            
             $zidStatus = "delivered";
             $sallaStatus=1723506348;
             $note="تم التوصيل";
