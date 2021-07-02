@@ -2569,7 +2569,7 @@ class Shipment extends MY_Controller {
             }else{
                 $shiparray[$ii]['status'] = $rdata['main_status'];
             }
-
+ 
             if($shiparray[$ii]['code'] == 'POD' && $rdata['frwd_company_id'] == 0){
                 $shiparray[$ii]['cc_name'] = "Diggipacks";
 

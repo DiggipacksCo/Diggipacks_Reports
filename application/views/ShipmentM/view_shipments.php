@@ -312,7 +312,7 @@
                                                 <th>Transaction Timer</th>
                                                 <th class="text-center" ><i class="icon-database-edit2"></i></th>
                                             </tr>  
-                                        </thead>  
+                                        </thead>   
                                         <tr ng-if='shipData != 0' ng-repeat="data in shipData"> 
 
                                             <td>{{$index + 1}} 
