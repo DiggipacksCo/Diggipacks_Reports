@@ -484,10 +484,7 @@ class CourierCompany extends MY_Controller  {
 
                 foreach ($shipmentLoopArray as $key => $slipNo) 
                 {
-
-
-
-                    $ShipArr = $this->Ccompany_model->GetSlipNoDetailsQry(trim($slipNo),$super_id);
+                    $ShipArr = $this->Ccompany_model->GetSlipNoDetailsReverse(trim($slipNo),$super_id);
                     //print_r($ShipArr);exit; 
                     if(!empty($postData['cc_id'])){
                         $courier_id = $postData['cc_id'];
@@ -543,7 +540,8 @@ class CourierCompany extends MY_Controller  {
 
                  // echo "<pre>"; print_r($counrierArr); die; 
 
-                if(!empty($ShipArr) &&($ShipArr['code']=='POD')){
+                    if(!empty($ShipArr) &&($ShipArr['code']=='POD'))
+                    {
                    
                     
                             $sku_data = $this->Ccompany_model->Getskudetails_forward($slipNo);
@@ -623,10 +621,11 @@ class CourierCompany extends MY_Controller  {
                            }
                     
                     }else{
-                        $returnArr['responseError'][]= "shipment status is not Delivered ";
+                        $returnArr['responseError'][]= "Shipment status is not Delivered or Already Forwarded";
                     }
                }
             }
+
         } 
         $return['invalid_slipNO']=$invalid_slipNO;
         $return['Error_msg']=$returnArr['responseError'];

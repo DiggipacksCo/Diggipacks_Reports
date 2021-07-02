@@ -88,6 +88,21 @@ class Ccompany_model extends CI_Model {
         return $query->row_array();
     }
 
+    public function GetSlipNoDetailsReverse($slip_no = null,$super_id=null) {
+
+        $this->db->where('super_id', $super_id);
+
+        $this->db->select('*');
+        $this->db->from('shipment_fm');
+        $this->db->where('shippers_ac_no', $slip_no);
+        $this->db->where('deleted', 'N');
+        $this->db->where('reverse_forwarded', 0);
+        $query = $this->db->get();
+        //echo $this->db->last_query();exit;
+        return $query->row_array();
+    }
+
+
    
 
     public function GetdeliveryCompanyUpdateQry($cc_id = null,$ShipadeliveryArrayrr_custid = null,$super_id=null) {
@@ -243,6 +258,12 @@ class Ccompany_model extends CI_Model {
            'super_id' => $super_id,
            'barq_order_id' => $barq_order_id,
            'reverse_forwarded' => 1,
+           'frwd_date' => $CURRENT_DATE, 
+           'frwd_company_id' => $c_id, 
+           'frwd_company_awb' => trim($client_awb), 
+           'frwd_company_label' => $fastcoolabel, 
+           'forwarded' => 1, 
+           'label_type' => $label_type
        );
        
        //print "<pre>"; print_r($ReverseShipmentArr);die;
@@ -285,18 +306,18 @@ class Ccompany_model extends CI_Model {
    public function GetshipmentAdd_reverse(array $data) {
      
        $this->db->insert('shipment_fm', $data);
-       //$this->db->last_query();
+       $this->db->last_query();
    }
    public function DiamentionalInsert_reverse(array $data) {
      
        $this->db->insert('diamention_fm', $data);
-       //echo $this->db->last_query(); die;
+       echo $this->db->last_query(); die;
    }
 
    public function GetstatuInsert_reverse(array $data) {
 
        $this->db->insert('status_fm', $data);
-      // echo $this->db->last_query();
+      echo $this->db->last_query();
    }
 
 
