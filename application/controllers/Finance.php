@@ -59,8 +59,13 @@ class Finance extends MY_Controller {
 	  		$ItemArray= $return['result'];
 			  $chargesArray=array();
 			  $slipNOCharges=array();
+			  $viewInfo=array();
 		foreach($ItemArray as $key=>$val)
 		 {
+			 if($key==0);
+			 {
+				array_push($viewInfo,$val); 
+			 }
 
 			if($val['portal_charge'] > 0)
 					{
@@ -95,6 +100,7 @@ class Finance extends MY_Controller {
 
 		 $data['totalValue']= $chargesArray;
 		 $data['invoiceData']= $slipNOCharges;
+		 $data['invoiceDatainfo']= $viewInfo;
                  
 		$this->load->view('finance/viewinvoice', $data);
 	 }
@@ -106,10 +112,14 @@ public function ViewinvoiceDynamic($invoiceNo = null){
 			  $chargesArray=array();
 			  $slipNOCharges=array();
 		//	echo '<pre>'; print_r($ItemArray); die;
-			
+		$viewInfo=array();
 		foreach($ItemArray as $key=>$val)
 		 {
-				if($val['portal_charge'] > 0)
+			 if($key==0);
+			 {
+				array_push($viewInfo,$val); 
+			 }
+	if($val['portal_charge'] > 0)
 					{
 						$chargesArray['portal_charge']=$val['portal_charge'];
 					}
@@ -166,7 +176,8 @@ public function ViewinvoiceDynamic($invoiceNo = null){
 
 		 $data['totalValue']= $chargesArray;
 		 $data['invoiceData']= $slipNOCharges;
-		
+		 $data['invoiceDatainfo']= $viewInfo;
+                 
 		$this->load->view('finance/viewinvoice_dynamic', $data);
 	 }
 

@@ -2557,15 +2557,28 @@ class Shipment extends MY_Controller {
             $shiparray[$ii]['origin'] = getdestinationfieldshow($rdata['origin'], 'city');
             $shiparray[$ii]['destination'] = getdestinationfieldshow($rdata['destination'], 'city');
             $shiparray[$ii]['wh_id'] = Getwarehouse_categoryfield($rdata['wh_id'], 'name');
-            $shiparray[$ii]['cc_name'] = GetCourCompanynameId($rdata['frwd_company_id'], 'company');
-            
             $shiparray[$ii]['DispatchDate'] = GetStatusFmTableCodes($rdata['slip_no'],'DL');
+
+
+            
+            
+            
             $status = getStatusByCode_fm($rdata['code']);
             if(!empty($status)){
                 $shiparray[$ii]['status'] = $status;
             }else{
                 $shiparray[$ii]['status'] = $rdata['main_status'];
             }
+
+            if($shiparray[$ii]['code'] == 'POD' && $rdata['frwd_company_id'] == 0){
+                $shiparray[$ii]['cc_name'] = "Diggipacks";
+
+            }
+            else {
+                $shiparray[$ii]['cc_name'] = GetCourCompanynameId($rdata['frwd_company_id'], 'company');
+            }
+
+
             
             $shiparray[$ii]['pl3_pickup_date'] = $rdata['3pl_pickup_date'];
             $shiparray[$ii]['pl3_closed_date'] = $rdata['3pl_close_date'];
