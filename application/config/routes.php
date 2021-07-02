@@ -114,6 +114,7 @@ $route['orderCreated']             = 'Shipment/orderCreated';
 $route['bulkprint']                = 'Shipment/BulkPrintPage';
 $route['Forward_Delivery_Station'] = 'Shipment/ForwardtoDeliveryStation';
 $route['Reverse_Delivery_Station'] = 'Shipment/ReversetoDeliveryStation';
+$route['Reverse_Shipment'] = 'Shipment/ViewReverseShipment';
 
 
 $route['generatePickup']   = 'Shipment/generatePickup';
@@ -318,7 +319,7 @@ $route['bulk_tracking']= 'Shipment/bulk_tracking';
 
 $route['manifestPrint/(:any)'] = 'Manifest/manifestPrint/$1';
 $route['notfound'] = 'Mynotfound';
-
+$route['Reverse_Delivery_Station'] = 'Shipment/ReversetoDeliveryStation';
 //$route['(:any)'] = "Login/$1";
 //$route['auth_user'] = "Login/auth_user";
 //$route['Login/home']="inventory/Login/home";

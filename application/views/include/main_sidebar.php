@@ -57,6 +57,9 @@
                                 <?php if (menuIdExitsInPrivilageArray(81) == 'Y') { ?>
                                     <li><a href="<?= base_url('Reverse_Delivery_Station'); ?>">Reverse Shipment</a></li>
                                 <?php } ?>
+                                <?php if (menuIdExitsInPrivilageArray(81) == 'Y') { ?>
+                                    <li><a href="<?= base_url('Reverse_Shipment'); ?>">View Reverse Shipment</a></li>
+                                <?php } ?>
                                    
                                 <?php if (menuIdExitsInPrivilageArray(30) == 'Y') { ?>
 
