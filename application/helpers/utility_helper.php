@@ -1624,6 +1624,22 @@ if (!function_exists('getalldataitemtablesSKU')) {
     }
 
 }
+
+
+if (!function_exists('checkAwbNumberExits_fm')) {
+
+    function checkAwbNumberExits_fm($awb = null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        $sql = "SELECT count(1) as cnt FROM shipment_fm where slip_no='$awb'";
+        
+        $query = $ci->db->query($sql);
+        $result = $query->row_array();
+        
+        return $result['cnt'];
+    }
+
+}   
 if (!function_exists('GetallCutomerBysellerId')) {
 
     function GetallCutomerBysellerId($id = null, $field = null) {

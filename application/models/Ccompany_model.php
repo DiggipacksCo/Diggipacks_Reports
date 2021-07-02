@@ -163,6 +163,141 @@ class Ccompany_model extends CI_Model {
    }
 
  
+   public function Generate_awb_number_new_fm($super_id = null) {
+    $ci = & get_instance();
+    $ci->load->helper('utility');
+    $random_chars2 = mt_rand(1000000000, 9999999999);
+    $default_format = site_configTable('default_awb_char_fm', $super_id);
+    //echo "d=".$default_format;die;
+    if (empty($default_format)) {
+        $default_format = "FSL";
+    }
+    $generate_awb_no = $default_format . strtoupper($random_chars2);
+    
+    $check = checkAwbNumberExits_fm($generate_awb_no);
+    if ($check == 1) {
+        Generate_awb_number_new_fm();
+    } else {
+        return $generate_awb_no;
+    }
+}
+   
+
+   public function Insert_Reverse_Shipment($sku_data = null, $ShipArr= null, $slipNo = null, $client_awb = null, $CURRENT_TIME = null, $CURRENT_DATE = null, $company = null, $comment = null, $fastcoolabel = null, $c_id = null, $barq_order_id= null) 
+   {
+      $updateArr = array(); 
+      if ($company == 'Esnad')
+      {
+           $label_type = 1;          
+      }
+      elseif ($company == 'Barqfleet')
+      {  
+             $label_type = 0;
+             $barq_order_id = $barq_order_id;                 
+      }      
+      else
+      {
+           $label_type = 0;
+           $barq_order_id = 0;
+         
+      }
+       $super_id = $this->session->userdata('user_details')['super_id'];
+       
+       $new_awb_number = $this->Generate_awb_number_new_fm($super_id);
+       
+       
+       $ReverseShipmentArr = array(
+           'user_id' => $super_id,
+           'shippers_ac_no' => $ShipArr['shippers_ac_no'],
+           'booking_id' => trim($slipNo),
+           'shippers_ref_no' =>  trim($slipNo),
+           'nrd' => 'Parcel',
+           'slip_no' => $new_awb_number,
+           'origin' => $ShipArr['origin'],
+           'destination' => $ShipArr['destination'],
+           'pieces' => ($ShipArr['pieces']>0)?$ShipArr['pieces']:1,
+           'weight' => trim($data['weight']),
+           'volumetric_weight' => trim($data['weight']),
+           'sender_name' => trim($ShipArr['sender_name']),
+           'sender_address' => trim($ShipArr['sender_address']),
+           'sender_phone' => trim($ShipArr['sender_phone']),
+           //'sender_city' =>$ShipArr['origin'],
+           'sender_email' => $ShipArr['sender_email'],
+           'reciever_name' => $ShipArr['reciever_name'],
+           'reciever_address' => addslashes($ShipArr['reciever_address']),
+           'reciever_phone' => $ShipArr['reciever_phone'],
+           //'reciever_city' =>  $ShipArr['destination'],
+           'reciever_email' => $ShipArr['reciever_email'],
+           'status_describtion' => $ShipArr['status_describtion'],
+           'entrydate' => $CURRENT_DATE,
+           'mode' => $ShipArr['mode'],
+           'delivered' => '21',
+           'cust_id' => $ShipArr['cust_id'],
+           //'total_cod_amt' => $data['cod'],
+           //'TotalCOD' => '0',
+           'service_id' => ($ShipArr['service_id']>0)?$ShipArr['service_id']:1,
+           'sku' => $ShipArr['sku'],
+           //'CURRENT_TIME' => $CURRENT_TIME,
+           //'user_type' => 'customer',
+           'fulfillment' => 'Y',   
+           'super_id' => $super_id,
+           'barq_order_id' => $barq_order_id,
+           'reverse_forwarded' => 1,
+       );
+       
+       //print "<pre>"; print_r($ReverseShipmentArr);die;
+       $this->GetshipmentAdd_reverse($ReverseShipmentArr);
+
+       $details = 'Forwarded to ' . $company;
+       $statusArr = array(
+           'slip_no' => $new_awb_number,           
+           'new_status' => 21,
+           'pickup_time' => $CURRENT_TIME,
+           'pickup_date' => $CURRENT_DATE,
+           'Activites' => 'Forward to Delivery Station',
+           'Details' => $details,
+           'entry_date' => $CURRENT_DATE,
+           'user_id' => $this->session->userdata('user_details')['super_id'],
+           'user_type' => 'fulfillment',
+           'comment' => $comment,
+           'code' => 'RPC',
+           'super_id' => $this->session->userdata('user_details')['super_id'],
+       );
+       $this->GetstatuInsert_reverse($statusArr);
+       
+       $diamentionArr = array(
+           'sku'=>$ShipArr['sku'],
+           'description'=>$ShipArr['description'],
+           'booking_id'=>$ShipArr['booking_id'],
+           'slip_no'=>$new_awb_number,
+           'cod'=>$new_awb_number,
+           'piece'=>$new_awb_number,
+           'super_id'=>$new_awb_number,
+           'cust_id'=>$ShipArr['cust_id'],
+           'entry_date'=>date('Y-m-d H:i:s'),
+       );
+       $this->DiamentionalInsert_reverse($diamentionArr);
+       //send_message($slipNo);
+
+       return true;
+   }
+
+   public function GetshipmentAdd_reverse(array $data) {
+     
+       $this->db->insert('shipment_fm', $data);
+       //$this->db->last_query();
+   }
+   public function DiamentionalInsert_reverse(array $data) {
+     
+       $this->db->insert('diamention_fm', $data);
+       //echo $this->db->last_query(); die;
+   }
+
+   public function GetstatuInsert_reverse(array $data) {
+
+       $this->db->insert('status_fm', $data);
+      // echo $this->db->last_query();
+   }
 
 
     public function Update_Manifest_Status($slipNo = null, $client_awb = null, $CURRENT_TIME = null, $CURRENT_DATE = null, $company = null, $comment = null, $fastcoolabel = null, $c_id = null, $barq_order_id= null) 

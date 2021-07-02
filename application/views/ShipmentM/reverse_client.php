@@ -99,11 +99,11 @@
                                                         </select>  
                                                     </div>
                                                 </div>
-                                                <div class="col-md-3">  
+                                                <!--   <div class="col-md-3">  
                                                  <div class="form-group" ><strong>Pieces:</strong>
                                                     <input type="number" min="1" step="any"  id="box_pieces" ng-model="userselected.box_pieces"  class="form-control">
                                                     </div>                                                                    
-                                                  </div>
+                                                  </div>-->
                                                 <div class="col-md-3">  
                                                     <div class="form-group">
                                                         <label>Comment</label><br />

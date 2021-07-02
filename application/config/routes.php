@@ -318,7 +318,7 @@ $route['bulk_tracking']= 'Shipment/bulk_tracking';
 
 $route['manifestPrint/(:any)'] = 'Manifest/manifestPrint/$1';
 $route['notfound'] = 'Mynotfound';
-
+$route['Reverse_Delivery_Station'] = 'Shipment/ReversetoDeliveryStation';
 //$route['(:any)'] = "Login/$1";
 //$route['auth_user'] = "Login/auth_user";
 //$route['Login/home']="inventory/Login/home";
