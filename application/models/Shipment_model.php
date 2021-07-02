@@ -1159,10 +1159,7 @@ class Shipment_model extends CI_Model {
     }
 
     public function filter($awb= null, $sku= null, $delivered= null, $seller= null, $to= null, $from= null, $exact= null, $page_no= null, $destination= null, $booking_id= null, $cc_id = null,$is_menifest = null,$refsno=null,$mobileno=null,$wh_id=null,$data=array()) {
-      //  ini_set('display_errors', '1');
-//ini_set('display_startup_errors', '1');
-///error_reporting(E_ALL);
-       
+
         if(!empty($data['sort_limit']))
         {
           $LimitArr= explode('-', $data['sort_limit']); 
@@ -1238,20 +1235,20 @@ class Shipment_model extends CI_Model {
             $this->db->where($where);
         }
 
-       // $this->db->where('shipment_fm.slip_no','FST5116125078');
+        // $this->db->where('shipment_fm.slip_no','FST5116125078');
 
         // echo $delivered;
-//        if (!empty($delivered)) {
-//
-//            // print_r($delivered);
-//            if ($delivered == '1' || $delivered == '4' || $delivered == '5' || $delivered == '7' || $delivered == '8') {
-//                if (array_key_exists(0, $delivered))
-//                    $delivered = array_filter(0, $delivered);
-//            } else
-//                $delivered = array_filter($delivered);
-//
-//            $this->db->where_in('shipment_fm.delivered', $delivered);
-//        }
+        //        if (!empty($delivered)) {
+        //
+        //            // print_r($delivered);
+        //            if ($delivered == '1' || $delivered == '4' || $delivered == '5' || $delivered == '7' || $delivered == '8') {
+        //                if (array_key_exists(0, $delivered))
+        //                    $delivered = array_filter(0, $delivered);
+        //            } else
+        //                $delivered = array_filter($delivered);
+        //
+        //            $this->db->where_in('shipment_fm.delivered', $delivered);
+        //        }
 
         if (!empty($delivered) || !empty($data['status_o'])) {
 
@@ -1345,7 +1342,203 @@ class Shipment_model extends CI_Model {
          $this->db->order_by('shipment_fm.id', 'desc');
 
         // $tempdb = clone $this->db;
-//now we run the count method on this copy
+        //now we run the count method on this copy
+        // $num_rows = $tempdb->from('shipment_fm')->count_all_results();
+
+        $this->db->limit($limit, $start);
+
+        $query = $this->db->get();
+
+      // echo $this->db->last_query(); die;
+
+        if ($query->num_rows() > 0) {
+
+
+            //$data['excelresult']=$this->filterexcel($awb,$sku,$delivered,$seller,$to,$from,$exact,$page_no,$destination,$booking_id); 
+            $data['result'] = $query->result_array();
+            $data['count'] = $this->shipmCount($awb, $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination, $booking_id, '', $cc_id,$refsno,$mobileno,$wh_id);
+            return $data;
+            // return $page_no.$this->db->last_query();
+        } else {
+            $data['result'] = '';
+            $data['count'] = 0;
+            return $data;
+        }
+    }
+
+    public function filterViewReverse($awb= null, $sku= null, $delivered= null, $seller= null, $to= null, $from= null, $exact= null, $page_no= null, $destination= null, $booking_id= null, $cc_id = null,$is_menifest = null,$refsno=null,$mobileno=null,$wh_id=null,$data=array()) {
+
+        if(!empty($data['sort_limit']))
+        {
+          $LimitArr= explode('-', $data['sort_limit']); 
+          $limit=$LimitArr[1];
+          //$start=$LimitArr[0];
+        }
+        else
+        {
+        $page_no;
+        $limit = 100;
+        if (empty($page_no)) {
+            $start = 0;
+        } else {
+            $start = ($page_no - 1) * $limit;
+        }
+        }
+        
+        if($data['sort_list']=='NO')
+        {
+            $this->db->order_by('shipment_fm.id', 'desc'); 
+        }
+        else if($data['sort_list']=='OLD')
+        {
+             $this->db->order_by('shipment_fm.id', 'asc');
+            
+        }
+        else if($data['sort_list']=='OBD')
+        {
+             $this->db->order_by('shipment_fm.entrydate');
+        }
+        else
+        {
+             $this->db->order_by('shipment_fm.id', 'desc');
+        }
+        /* if(!empty($delivered)){
+          $this->db->where('shipment_fm.delivered', $delivered);
+          } */
+
+        $fulfillment = 'Y';
+        $deleted = 'N';
+        $reverse_forwarded = 1;
+
+        if ($this->session->userdata('user_details')['user_type'] != 1) {
+            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
+        }
+        $this->db->where('shipment_fm.super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->where('shipment_fm.fulfillment', $fulfillment);
+        $this->db->where('shipment_fm.deleted', $deleted);
+        $this->db->where('shipment_fm.reverse_forwarded', $reverse_forwarded);
+        if(!empty($data['status_o'])){
+            $this->db->select('shipment_fm.id,shipment_fm.service_id,shipment_fm.booking_id,shipment_fm.slip_no,diamention_fm.sku,diamention_fm.piece,diamention_fm.wieght as wt,diamention_fm.description,diamention_fm.cod,customer.name,customer.company,customer.seller_id,customer.uniqueid,shipment_fm.entrydate,shipment_fm.origin,shipment_fm.destination,shipment_fm.reciever_name,shipment_fm.reciever_address,shipment_fm.reciever_phone,`shipment_fm.sender_name`, `shipment_fm.sender_address`, `shipment_fm.sender_phone`,`shipment_fm.order_type`, `shipment_fm.sender_email`, `shipment_fm.mode`, `shipment_fm.total_cod_amt`,shipment_fm.weight,shipment_fm.pieces,shipment_fm.cust_id,shipment_fm.shippers_ac_no,shipment_fm.frwd_company_awb,shipment_fm.frwd_company_id,shipment_fm.wh_id,shipment_fm.frwd_company_label,shipment_fm.frwd_date,shipment_fm.is_menifest,shipment_fm.code,diamention_fm.free_sku,shipment_fm.total_cod_amt,shipment_fm.no_of_attempt,shipment_fm.3pl_pickup_date,shipment_fm.3pl_close_date, DATEDIFF(3pl_close_date, 3pl_pickup_date) AS transaction_days,shipment_fm.delivered ');    
+        }else{
+            $this->db->select('shipment_fm.id,shipment_fm.service_id,shipment_fm.booking_id,shipment_fm.slip_no,diamention_fm.sku,status_main_cat_fm.main_status,diamention_fm.piece,diamention_fm.wieght as wt,diamention_fm.description,diamention_fm.cod,customer.name,customer.company,customer.seller_id,customer.uniqueid,shipment_fm.entrydate,shipment_fm.origin,shipment_fm.destination,shipment_fm.reciever_name,shipment_fm.reciever_address,shipment_fm.reciever_phone,`shipment_fm.sender_name`, `shipment_fm.sender_address`, `shipment_fm.sender_phone`,`shipment_fm.order_type`, `shipment_fm.sender_email`, `shipment_fm.mode`, `shipment_fm.total_cod_amt`,shipment_fm.weight,shipment_fm.pieces,shipment_fm.cust_id,shipment_fm.shippers_ac_no,shipment_fm.frwd_company_awb,shipment_fm.frwd_company_id,shipment_fm.wh_id,shipment_fm.frwd_company_label,shipment_fm.frwd_date,shipment_fm.is_menifest,shipment_fm.code,diamention_fm.free_sku,shipment_fm.total_cod_amt,shipment_fm.no_of_attempt,shipment_fm.3pl_pickup_date,shipment_fm.3pl_close_date, DATEDIFF(3pl_close_date, 3pl_pickup_date) AS transaction_days,shipment_fm.delivered ');
+        }
+        
+        
+        $this->db->from('shipment_fm');
+        if(empty($data['status_o'])){
+            $this->db->join('status_main_cat_fm', 'status_main_cat_fm.id=shipment_fm.delivered');
+        }
+        $this->db->join('diamention_fm', 'diamention_fm.slip_no = shipment_fm.slip_no');
+        $this->db->join('customer', 'customer.id=shipment_fm.cust_id');
+
+
+        $this->db->where('shipment_fm.backorder', 0);
+        if (!empty($exact)) {
+            $this->db->where('DATE(shipment_fm.entrydate)', $exact);
+        }
+        $this->db->group_by('diamention_fm.slip_no');
+
+        if (!empty($from) && !empty($to)) {
+            $where = "DATE(shipment_fm.entrydate) BETWEEN '" . $from . "' AND '" . $to . "'";
+
+
+            $this->db->where($where);
+        }
+
+
+        if (!empty($delivered) || !empty($data['status_o'])) {
+
+            // print_r($delivered);
+            if ($delivered == '1' || $delivered == '4' || $delivered == '5' || $delivered == '7' || $delivered == '8') {
+                if (array_key_exists(0, $delivered))
+                    $delivered = array_filter(0, $delivered);
+            } else
+                $delivered = array_filter($delivered);
+            
+            if(is_numeric($delivered)){
+                $this->db->where_in('shipment_fm.delivered', $delivered);
+            }else{
+                if(isset($data['status_o']) & !empty($data['status_o'])){
+                    $o_status = $data['status_o'];
+                    if(!empty($delivered)){
+                    $delivered = array_merge($o_status,$delivered);
+                    }else{
+                        $delivered = $o_status;
+                }
+                
+                }
+                $this->db->where_in('shipment_fm.code', $delivered);
+            }
+            
+        }
+
+        if (!empty($destination)) {
+            $destination = array_filter($destination);
+
+            $this->db->where_in('shipment_fm.destination', $destination);
+        }
+        if (!empty($cc_id)) {
+            $cc_id = array_filter($cc_id);
+
+            $this->db->where_in('shipment_fm.frwd_company_id', $cc_id);
+        }
+
+        if (!empty($awb)) {
+            $this->db->where('shipment_fm.slip_no', $awb);
+        }
+         if (!empty($wh_id)) {
+            $this->db->where('shipment_fm.wh_id', $wh_id);
+        }
+        if (!empty($refsno)) {
+            $this->db->where('shipment.booking_id', $refsno)
+            ->or_where('shipment_fm.frwd_company_awb',$refsno);
+        }
+         if (!empty($mobileno)) {
+            $this->db->where('shipment_fm.reciever_phone', $mobileno);
+        }
+
+        if ((!empty($sku)) || (!empty($data['sku']))) {    
+			$sku=$data['sku']; 
+            $this->db->where('diamention_fm.sku', $sku);
+        }
+        if (($is_menifest == 0 || $is_menifest == 1) && $is_menifest != null) {
+
+            $this->db->where('shipment_fm.is_menifest', $is_menifest);
+        }
+
+        if (!empty($booking_id)) {
+
+            $this->db->where('shipment_fm.booking_id', $booking_id);
+        }
+		
+		if (!empty($data['mode'])) {
+            $this->db->where('shipment_fm.mode', $data['mode']);   
+        }
+		
+		if (!empty($data['piece'])) {
+            $this->db->where('diamention_fm.piece', $data['piece']);   
+        }
+		
+		if (!empty($data['cod'])) {
+            $this->db->where('diamention_fm.cod', $data['cod']);   
+        }
+		
+            //$this->db->where('shipment_fm.deleted', 'N');   
+		
+
+        if (!empty($seller)) {
+            if (sizeof($seller) > 0) {
+                $seller = array_filter($seller);
+                $this->db->where_in('shipment_fm.cust_id', $seller);
+            }
+        }
+
+
+
+         $this->db->order_by('shipment_fm.id', 'desc');
+
+        // $tempdb = clone $this->db;
+        //now we run the count method on this copy
         // $num_rows = $tempdb->from('shipment_fm')->count_all_results();
 
         $this->db->limit($limit, $start);

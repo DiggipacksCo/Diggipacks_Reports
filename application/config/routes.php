@@ -114,6 +114,7 @@ $route['orderCreated']             = 'Shipment/orderCreated';
 $route['bulkprint']                = 'Shipment/BulkPrintPage';
 $route['Forward_Delivery_Station'] = 'Shipment/ForwardtoDeliveryStation';
 $route['Reverse_Delivery_Station'] = 'Shipment/ReversetoDeliveryStation';
+$route['Reverse_Shipment'] = 'Shipment/ViewReverseShipment';
 
 
 $route['generatePickup']   = 'Shipment/generatePickup';

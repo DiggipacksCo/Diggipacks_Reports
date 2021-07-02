@@ -104,6 +104,10 @@ class Shipment extends MY_Controller {
     public function ReversetoDeliveryStation() {
         $this->load->view('ShipmentM/reverse_client');
     }
+    public function ViewReverseShipment() {
+        $this->load->view('ShipmentM/view_reverse_shipments');
+    }
+
 
     public function runshell() {
       $are=  shell_exec('php /var/www/html/diggipack_new/fs_files/auto_assign.php');
@@ -2520,6 +2524,149 @@ class Shipment extends MY_Controller {
         //exit();
        
         $shipments = $this->Shipment_model->filter($awb, $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination, $booking_id, $cc_id, $is_menifest, $refsno, $mobileno, $wh_id, $_POST);
+
+
+        //$shiparrayexcel = $shipmentsexcel['result'];
+        $shiparray = $shipments['result'];
+        //echo json_encode($shipments); die;
+        $ii = 0;
+        $jj = 0;
+
+        $tolalShip = $shipments['count'];
+        $downlaoadData = 2000;
+        $j = 0;
+        for ($i = 0; $i < $tolalShip;) {
+            $i = $i + $downlaoadData;
+            if ($i > 0) {
+                $expoertdropArr[] = array('j' => $j, 'i' => $i);
+            }
+            $j = $i;
+        }
+
+
+
+        $pageShortArr = $this->pageshortDropData($tolalShip);
+        // print_r($pageShortArr); die;
+        foreach ($shipments['result'] as $rdata) {
+            //print "<pre>"; print_r($rdata);die;
+            $expire_data = $this->Shipment_model->GetallexpredataQuery($rdata['seller_id'], $rdata['sku']);
+       
+                $itemtypes = getalldataitemtablesSKU(trim($rdata['sku']), 'type');
+                $shiparray[$ii]['order_type'] = $itemtypes;
+
+                //$shiparray[$ii]['order_type']="";
+          
+            //if($expire_data[$ii]['sku']==$rdata['sku'])
+            $shiparray[$ii]['expire_details'] = $expire_data;
+            $shiparray[$ii]['origin'] = getdestinationfieldshow($rdata['origin'], 'city');
+            $shiparray[$ii]['destination'] = getdestinationfieldshow($rdata['destination'], 'city');
+            $shiparray[$ii]['wh_id'] = Getwarehouse_categoryfield($rdata['wh_id'], 'name');
+            $shiparray[$ii]['DispatchDate'] = GetStatusFmTableCodes($rdata['slip_no'],'DL');
+
+
+            
+            
+            
+            $status = getStatusByCode_fm($rdata['code']);
+            if(!empty($status)){
+                $shiparray[$ii]['status'] = $status;
+            }else{
+                $shiparray[$ii]['status'] = $rdata['main_status'];
+            }
+ 
+            if($shiparray[$ii]['code'] == 'POD' && $rdata['frwd_company_id'] == 0){
+                $shiparray[$ii]['cc_name'] = "Diggipacks";
+
+            }
+            else {
+                $shiparray[$ii]['cc_name'] = GetCourCompanynameId($rdata['frwd_company_id'], 'company');
+            }
+
+
+            
+            $shiparray[$ii]['pl3_pickup_date'] = $rdata['3pl_pickup_date'];
+            $shiparray[$ii]['pl3_closed_date'] = $rdata['3pl_close_date'];
+            
+            $transaction_date = '';
+            if(!empty($rdata['3pl_close_date'])){
+                $pickup_date = new DateTime($rdata['3pl_pickup_date']);
+                $closed_date = new DateTime($rdata['3pl_close_date']);
+                $interval = $pickup_date->diff($closed_date);
+                $transaction_date =  $interval->format('%a days');
+            }
+            
+            $shiparray[$ii]['transaction_date'] = $transaction_date;
+
+            $shiparray[$ii]['wh_ids'] = $rdata['wh_id'];
+            if($rdata['frwd_company_awb'] != ''){ 
+                $track_url = GetCourCompanynameId($rdata['frwd_company_id'], 'company_url');
+                if(!empty($track_url)){
+                    $shiparray[$ii]['frwd_link'] = $track_url.$rdata['frwd_company_awb'];
+                }else{
+                    $shiparray[$ii]['frwd_link'] = '#';
+                }
+                
+            }else{
+                $shiparray[$ii]['frwd_link'] = "#";
+            }
+            
+
+            $shiparray[$ii]['deducted_shelve_no'] = $this->Shipment_model->get_deducted_shelve_no($rdata['slip_no']);
+
+            //$shiparray='rith';
+            $ii++;
+        }
+
+
+
+
+        //echo '<pre>';
+        //print_r($shiparray);
+        //echo json_encode($shiparray);
+        // die;
+        //$dataArray['excelresult'] = $shiparrayexcel;
+        $dataArray['dropexport'] = $expoertdropArr;
+        $dataArray['dropshort'] = $pageShortArr;
+        $dataArray['result'] = $shiparray;
+        $dataArray['count'] = $shipments['count'];
+        //print_r($shipments);
+        //exit();
+        echo json_encode($dataArray);
+    }
+
+    public function filterReverse() {
+        // print("heelo"); 
+        // exit();
+        // $search=$this->input->post('tracking_numbers');
+        // echo $search;exit;
+        $_POST = json_decode(file_get_contents('php://input'), true);
+        //print "<pre>"; print_r($_POST);die;
+ 
+        $exact = $_POST['exact']; //date('Y-m-d 00:00:00',strtotime($this->input->post('exact'))); 
+        // $exact2 =$this->input->post('exact');//date('Y-m-d 23:59:59',strtotime($this->input->post('exact'))); 
+        if ($_POST['s_type'] == 'AWB')
+            $awb = $_POST['s_type_val'];
+        if ($_POST['s_type'] == 'SKU')
+            $sku = $_POST['s_type_val'];
+        if ($_POST['s_type'] == 'REF')
+            $refsno = $_POST['s_type_val'];
+        if ($_POST['s_type'] == 'MOBL')
+            $mobileno = $_POST['s_type_val'];
+            
+        $from = $_POST['from'];
+        $to = $_POST['to'];
+        $wh_id = $_POST['wh_id'];
+        $delivered = $_POST['status'];
+        $seller = $_POST['seller'];
+        $page_no = $_POST['page_no'];
+        $destination = $_POST['destination'];
+        $booking_id = $_POST['booking_id'];
+        $cc_id = $_POST['cc_id'];
+        
+        
+        $is_menifest = isset($_POST['is_manifest']) ? $_POST['is_manifest'] : null;
+
+        $shipments = $this->Shipment_model->filterViewReverse($awb, $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination, $booking_id, $cc_id, $is_menifest, $refsno, $mobileno, $wh_id, $_POST);
 
 
         //$shiparrayexcel = $shipmentsexcel['result'];
