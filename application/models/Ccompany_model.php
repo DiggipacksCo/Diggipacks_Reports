@@ -94,7 +94,7 @@ class Ccompany_model extends CI_Model {
 
         $this->db->select('*');
         $this->db->from('shipment_fm');
-        $this->db->where('shippers_ac_no', $slip_no);
+        $this->db->where('slip_no', $slip_no);
         $this->db->where('deleted', 'N');
         $this->db->where('reverse_forwarded', 0);
         $query = $this->db->get();
@@ -218,16 +218,13 @@ class Ccompany_model extends CI_Model {
       }
        $super_id = $this->session->userdata('user_details')['super_id'];
        
-       $new_awb_number = $this->Generate_awb_number_new_fm($super_id);
-       
-       
        $ReverseShipmentArr = array(
            'user_id' => $super_id,
            'shippers_ac_no' => $ShipArr['shippers_ac_no'],
-           'booking_id' => trim($slipNo),
-           'shippers_ref_no' =>  trim($slipNo),
+           'booking_id' =>  trim($ShipArr['old_slip_no']),
+           'shippers_ref_no' =>  trim($ShipArr['old_slip_no']),
            'nrd' => 'Parcel',
-           'slip_no' => $new_awb_number,
+           'slip_no' => $ShipArr['slip_no'],
            'origin' => $ShipArr['origin'],
            'destination' => $ShipArr['destination'],
            'pieces' => ($ShipArr['pieces']>0)?$ShipArr['pieces']:1,
@@ -266,12 +263,16 @@ class Ccompany_model extends CI_Model {
            'label_type' => $label_type
        );
        
-       //print "<pre>"; print_r($ReverseShipmentArr);die;
+
+    //    print "<pre>"; print_r($ReverseShipmentArr);
+    //    print "<pre>"; print_r($ShipArr);
+       
+    //    die;
        $this->GetshipmentAdd_reverse($ReverseShipmentArr);
 
        $details = 'Forwarded to ' . $company;
        $statusArr = array(
-           'slip_no' => $new_awb_number,           
+           'slip_no' => $ShipArr['slip_no'],           
            'new_status' => 21,
            'pickup_time' => $CURRENT_TIME,
            'pickup_date' => $CURRENT_DATE,
@@ -282,36 +283,38 @@ class Ccompany_model extends CI_Model {
            'user_type' => 'fulfillment',
            'comment' => $comment,
            'code' => 'RPC',
-           'super_id' => $this->session->userdata('user_details')['super_id'],
+           'super_id' => $super_id,
        );
        $this->GetstatuInsert_reverse($statusArr);
-       
-       $diamentionArr = array(
-           'sku'=>$ShipArr['sku'],
-           'description'=>$ShipArr['description'],
-           'booking_id'=>$ShipArr['booking_id'],
-           'slip_no'=>$new_awb_number,
-           'cod'=>$new_awb_number,
-           'piece'=>$new_awb_number,
-           'super_id'=>$new_awb_number,
-           'cust_id'=>$ShipArr['cust_id'],
-           'entry_date'=>date('Y-m-d H:i:s'),
-       );
-       $this->DiamentionalInsert_reverse($diamentionArr);
-       //send_message($slipNo);
 
-       return true;
+       $sku_data = $ShipArr['sku_data'];
+       foreach ($sku_data as $key => $val) {
+        
+        $diamentionArr[] = array(
+            'sku'=>$sku_data[$key]['sku'],
+            'description'=>$sku_data[$key]['description'],
+            'booking_id'=>$ShipArr['booking_id'],
+            'slip_no'=>$ShipArr['slip_no'],
+            'cod'=> 0,
+            'piece'=> $sku_data[$key]['piece'],
+            'super_id'=> $this->session->userdata('user_details')['super_id'],
+            'cust_id'=>$ShipArr['cust_id'],
+            'entry_date'=>date('Y-m-d H:i:s'),
+            );
+        }
+    $this->DiamentionalInsert_reverse($diamentionArr);
+    //    return true;
    }
 
    public function GetshipmentAdd_reverse(array $data) {
      
        $this->db->insert('shipment_fm', $data);
-       $this->db->last_query();
+     echo  $this->db->last_query();
    }
    public function DiamentionalInsert_reverse(array $data) {
      
-       $this->db->insert('diamention_fm', $data);
-       echo $this->db->last_query(); die;
+       $this->db->insert_batch('diamention_fm', $data);
+       echo $this->db->last_query(); 
    }
 
    public function GetstatuInsert_reverse(array $data) {
@@ -3093,7 +3096,7 @@ class Ccompany_model extends CI_Model {
         );
         
         
-     //echo "<pre>"; print_r($param); die;
+    // echo "<pre>"; print_r($param); die;
      
         $paramArray = json_encode($param);
        // echo "<pre>"; print_r($paramArray); die;
