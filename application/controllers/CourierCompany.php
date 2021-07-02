@@ -484,8 +484,9 @@ class CourierCompany extends MY_Controller  {
 
                 foreach ($shipmentLoopArray as $key => $slipNo) 
                 {
+                    
                     $ShipArr = $this->Ccompany_model->GetSlipNoDetailsReverse(trim($slipNo),$super_id);
-                    //print_r($ShipArr);exit; 
+                   // print_r($ShipArr);exit; 
                     if(!empty($postData['cc_id'])){
                         $courier_id = $postData['cc_id'];
                     }else{
@@ -572,6 +573,7 @@ class CourierCompany extends MY_Controller  {
                                     $CashOnDeliveryAmount = NULL;
                                     $services = '';
                             }
+                            $new_awb_number = $this->Ccompany_model->Generate_awb_number_new_fm($super_id);
 
                             $ShipArr = array(
                                 'sender_name' =>  $ShipArr['reciever_name'],
@@ -579,7 +581,7 @@ class CourierCompany extends MY_Controller  {
                                 'sender_phone' =>  $ShipArr['reciever_phone'],
                                 'sender_email' =>  $ShipArr['reciever_email'],
                                 'origin' => $ShipArr['destination']  , 
-                                'slip_no' => $ShipArr['slip_no'],
+                                'slip_no' => $new_awb_number,
                                 'mode' => 'CC',
                                 'total_cod_amt' => $ShipArr['total_cod_amt'],
                                 'pieces' =>  $box_pieces1,
@@ -594,14 +596,16 @@ class CourierCompany extends MY_Controller  {
                                 'reciever_email' => $ShipArr['sender_email'],
                                 'destination' => $ShipArr['origin'],
                                 'sku' => $ShipArr['sku'],
-                                'booking_id' => $ShipArr['booking_id']
+                                'booking_id' => $ShipArr['booking_id'],
+                                'old_slip_no'=> $ShipArr['slip_no'],
+                                'sku_data' => $sku_data
                             );
 
                             //echo "<pre> sdfsd"; print_r($ShipArr); 
 
                             $CURRENT_TIME = date('H:i:s');
                             $CURRENT_DATE = date('Y-m-d H:i:s');
-                           
+                            
                            $ccRetrundata = $this->courierComanyForward($auth_token,$company,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id,$company_type, $c_id, $api_url);
                            
                            if($ccRetrundata['status']==200)
