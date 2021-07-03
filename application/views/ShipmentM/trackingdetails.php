@@ -211,8 +211,8 @@
                                       <table class="table table-striped table-hover table-bordered"  style="width:100%;">
                                         <thead>
                                             <?php
-                                            if ($Shipmentinfo['sender_name '] != '')
-                                                echo' <tr><th><b class="size-2">Sender</b></th><td>' . $Shipmentinfo['sender_name '] . '</td></tr>';
+                                            if ($Shipmentinfo['sender_name'] != '')
+                                                echo' <tr><th><b class="size-2">Sender</b></th><td>' . $Shipmentinfo['sender_name'] . '</td></tr>';
                                             else
                                                  echo' <tr><th><b class="size-2">Sender</b></th><td style="color:grey;">No Info Found</td></tr>';
 
@@ -227,8 +227,8 @@
                                                else
                                                  echo' <tr><th><b class="size-2">Sender Mobile</b></th><td style="color:grey;">No Info Found</td></tr>';
 
-                                            if ($Shipmentinfo['sender_email '] != '')
-                                            echo'<tr><th><b class="size-2">Sender Email</b></th><td>' . ($Shipmentinfo['sender_email  ']) . '</td></tr>';
+                                            if ($Shipmentinfo['sender_email'] != '')
+                                            echo'<tr><th><b class="size-2">Sender Email</b></th><td>' . ($Shipmentinfo['sender_email']) . '</td></tr>';
                                                  else
                                                  echo' <tr><th><b class="size-2">Sender Email</b></th><td style="color:grey;">No Info Found</td></tr>';
 
