@@ -1552,7 +1552,7 @@ class Shipment_model extends CI_Model {
 
             //$data['excelresult']=$this->filterexcel($awb,$sku,$delivered,$seller,$to,$from,$exact,$page_no,$destination,$booking_id); 
             $data['result'] = $query->result_array();
-            $data['count'] = $this->shipmCount($awb, $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination, $booking_id, '', $cc_id,$refsno,$mobileno,$wh_id);
+            $data['count'] = $this->shipmCountReverse($awb, $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination, $booking_id, '', $cc_id,$refsno,$mobileno,$wh_id);
             return $data;
             // return $page_no.$this->db->last_query();
         } else {
@@ -1970,6 +1970,114 @@ class Shipment_model extends CI_Model {
 
             $data = $query->result_array();
             return $query->num_rows();
+            // return $page_no.$this->db->last_query();
+        }
+        return 0;
+    }
+
+    public function shipmCountReverse($awb, $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination, $booking_id, $backorder = null, $cc_id = null,$refsno=null,$mobileno=null,$wh_id=null) {
+
+
+        if ($this->session->userdata('user_details')['user_type'] != 1) {
+            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
+        }
+
+        if (!empty($cc_id)) {
+            $cc_id = array_filter($cc_id);
+
+            $this->db->where_in('shipment_fm.frwd_company_id', $cc_id);
+        }
+
+        $fulfillment = 'Y';
+        $deleted = 'N';
+        $reverse_forwarded = 1 ; 
+        $this->db->where('shipment_fm.super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->where('shipment_fm.fulfillment', $fulfillment);
+        $this->db->where('shipment_fm.deleted', $deleted);
+        $this->db->where('shipment_fm.reverse_forwarded', $reverse_forwarded);
+        $this->db->select('COUNT(shipment_fm.id) as sh_count');
+        $this->db->from('shipment_fm');
+      //  $this->db->join('status_main_cat_fm', 'status_main_cat_fm.id=shipment_fm.delivered');
+        // $this->db->join('diamention_fm', 'diamention_fm.slip_no = shipment_fm.slip_no');
+      //  $this->db->join('customer', 'customer.id=shipment_fm.cust_id');
+
+
+        if (!empty($exact)) {
+            $this->db->where('DATE(shipment_fm.entrydate)', $exact);
+        }
+
+
+        if ($backorder == 'back')
+            $this->db->where('shipment_fm.backorder', 1);
+        else {
+
+
+            $this->db->where('shipment_fm.backorder', 0);
+            // $this->db->where('shipment.reverse_pickup', 0);
+        }
+
+        if (!empty($from) && !empty($to)) {
+            $where = "DATE(shipment_fm.entrydate) BETWEEN '" . $from . "' AND '" . $to . "'";
+
+
+            $this->db->where($where);
+        }
+
+
+
+        if (!empty($delivered)) {
+            if (array_key_exists(0, $delivered)) {
+                $delivered = array_filter(0, $delivered);
+            }
+
+
+            $this->db->where_in('shipment_fm.delivered', $delivered);
+        }
+
+        if (!empty($destination)) {
+            $destination = array_filter($destination);
+
+            $this->db->where_in('shipment_fm.destination', $destination);
+        }
+
+        if (!empty($awb)) {
+            $this->db->where('shipment_fm.slip_no', $awb);
+        }
+        
+        if (!empty($wh_id)) {
+            $this->db->where('shipment_fm.wh_id', $wh_id);
+        }
+         if (!empty($refsno)) {
+            $this->db->where('shipment_fm.booking_id', $refsno);
+        }
+         if (!empty($mobileno)) {
+            $this->db->where('shipment_fm.reciever_phone', $mobileno);
+        }
+
+        /* if(!empty($sku)){
+          $this->db->where('diamention_fm.sku',$sku);
+          } */
+
+        if (!empty($seller)) {
+            $seller = array_filter($seller);
+            $this->db->where_in('shipment_fm.cust_id', $seller);
+        }
+
+        if (!empty($booking_id)) {
+
+            $this->db->where('shipment_fm.booking_id', $booking_id);
+        }
+
+
+        $this->db->order_by('shipment_fm.id', 'desc');
+
+        $query = $this->db->get();
+
+        //echo $this->db->last_query(); die;  
+        if ($query->num_rows() > 0) {
+
+            $data = $query->result_array();
+            return $data[0]['sh_count'];
             // return $page_no.$this->db->last_query();
         }
         return 0;

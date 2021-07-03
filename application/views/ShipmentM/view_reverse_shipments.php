@@ -246,7 +246,7 @@
 
                                                     </div></div>
                                                 <div class="col-md-8"><div class="form-group" >
-                                                        <button  class="btn btn-danger" ng-click="loadMore(1, 1);" ><?=lang('lang_Search');?></button>
+                                                        <button  class="btn btn-danger" ng-click="loadMoreReverse(1, 1);" ><?=lang('lang_Search');?></button>
                                                         <button type="button" class="btn btn-success" style="margin-left: 7%"><?=lang('lang_Total');?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button>
                                                         
                                                          <?php if (menuIdExitsInPrivilageArray(122) == 'Y') { ?>

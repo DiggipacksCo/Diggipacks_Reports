@@ -934,7 +934,9 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                                 $return= array('status'=>201,'error'=> $returnArr); 
                                 return $return;
                             }
-                    }else if($company=='Esnad'){
+                    }
+                    
+                    else if($company=='Esnad'){
                         $esnad_awb_number = Get_esnad_awb($start_awb_sequence, $end_awb_sequence); 
                         $esnad_awb_number = $esnad_awb_number -1;
                         $Auth_token = $counrierArr['auth_token'];                      
