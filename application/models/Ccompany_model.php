@@ -309,18 +309,18 @@ class Ccompany_model extends CI_Model {
    public function GetshipmentAdd_reverse(array $data) {
      
        $this->db->insert('shipment_fm', $data);
-     echo  $this->db->last_query();
+     //echo  $this->db->last_query();
    }
    public function DiamentionalInsert_reverse(array $data) {
      
        $this->db->insert_batch('diamention_fm', $data);
-       echo $this->db->last_query(); 
+       //echo $this->db->last_query(); 
    }
 
    public function GetstatuInsert_reverse(array $data) {
 
        $this->db->insert('status_fm', $data);
-      echo $this->db->last_query();
+     // echo $this->db->last_query();
    }
 
 

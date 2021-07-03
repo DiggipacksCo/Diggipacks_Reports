@@ -896,12 +896,12 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                                     $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
 
                                     //****************************safe arrival label print cURL****************************
-                    $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
-                    return $return;  
-                            }else if($safe_response['status']=='error'){
-                $returnArr['responseError'] = $slipNo . ':' . $safe_response['message'];
-                $return= array('status'=>201,'error'=> $returnArr); 
-                return $return;
+                                    $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                                    return $return;  
+                                    }else if($safe_response['status']=='error'){
+                                    $returnArr['responseError'] = $slipNo . ':' . $safe_response['message'];
+                                    $return= array('status'=>201,'error'=> $returnArr); 
+                                    return $return;
                             }
                             
                     }elseif($company=='Thabit'){
@@ -925,14 +925,14 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                                 file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
                                 $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
                                     //**************************** Thabit label print cURL****************************
-                    $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
-                return $return;  
+                                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                                return $return;  
                                     
-                            }else if($thabit_response['status']=='error'){
-                                
-                    $returnArr['responseError'] = $slipNo . ':' . $thabit_response['status'];
-                    $return= array('status'=>201,'error'=> $returnArr); 
-                return $return;
+                                }else if($thabit_response['status']=='error'){
+
+                                $returnArr['responseError'] = $slipNo . ':' . $thabit_response['status'];
+                                $return= array('status'=>201,'error'=> $returnArr); 
+                                return $return;
                             }
                     }else if($company=='Esnad'){
                         $esnad_awb_number = Get_esnad_awb($start_awb_sequence, $end_awb_sequence); 
@@ -948,9 +948,9 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                                         "Error_Message " => $responseArray['message'],
                                 );
                                 $error_response = json_encode($error_msg);
-                $returnArr['responseError'] = $slipNo . ':' . $responseArray['message'];                
-                $return= array('status'=>201,'error'=> $returnArr); 
-                return $return;
+                                $returnArr['responseError'] = $slipNo . ':' . $responseArray['message'];                
+                                $return= array('status'=>201,'error'=> $returnArr); 
+                                return $return;
                         }
                         if($status == true){
                          
@@ -962,8 +962,8 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                           
                             file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
                             $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf'; 
-            $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
-            return $return;  
+                            $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                            return $return;  
                         }
                         
                     }elseif ($company == 'Barqfleet') {
@@ -971,9 +971,9 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                             $response_array = json_decode($response_ww, TRUE);
                             
                             if ($response_array['code'] != '') {
-                 $returnArr['responseError'] = $slipNo . ':' .$response_array['message'];
-                 $return= array('status'=>201,'error'=> $returnArr); 
-                 return $return;
+                            $returnArr['responseError'] = $slipNo . ':' .$response_array['message'];
+                            $return= array('status'=>201,'error'=> $returnArr); 
+                            return $return;
                                  
                             }else{
                                  $Authorization = $counrierArr['auth_token'];
@@ -999,12 +999,10 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                                 $generated_pdf = file_get_contents($response_label);
                                 file_put_contents("assets/all_labels/$slipNo.pdf", $response_label);
                                 $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
-                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb,'barq_order_id'=>$barq_order_id); 
-                return $return;
+                                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb,'barq_order_id'=>$barq_order_id); 
+                                return $return;
                                 //****************************makdoom label print cURL****************************
-
-
-
+    
                            }
                           
                             //end
@@ -1034,18 +1032,18 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                                 $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
                                 //****************************makdoom label print cURL****************************
 
-                    $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
-                    return $return;  
+                                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                                return $return;  
                               
                             }
-            else
-            {
-                            
-                $returnArr['responseError'] = $slipNo . ':' . 'error found ' ;
-                $return= array('status'=>201,'error'=> $returnArr); 
-                return $return;
-            } 
-            
+                             else
+                            {
+
+                                $returnArr['responseError'] = $slipNo . ':' . 'error found ' ;
+                                $return= array('status'=>201,'error'=> $returnArr); 
+                                return $return;
+                            } 
+
                     }elseif ($company == 'Zajil') {
                             $response = $this->Ccompany_model->ZajilArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$super_id);
                             if (!empty($response['data'])) {
@@ -1057,17 +1055,17 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                                     header("Content-type:application/pdf");
                                     file_put_contents("assets/all_labels/$slipNo.pdf", $label_response);
                                     $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
-                    $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
-                        return $return;  
-                                } else {
-                    $returnArr['responseError'] = $slipNo . ':' . $response['data'][0]['reason'];
-                    $return= array('status'=>201,'error'=> $returnArr); 
-                    return $return;
-                                }
-                            } else {
-                $returnArr['responseError'] = $slipNo . ':' . "invalid details";
-                $return= array('status'=>201,'error'=> $returnArr); 
-                return $return;
+                                    $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                                    return $return;  
+                                    } else {
+                                    $returnArr['responseError'] = $slipNo . ':' . $response['data'][0]['reason'];
+                                    $return= array('status'=>201,'error'=> $returnArr); 
+                                    return $return;
+                                    }
+                                    } else {
+                                    $returnArr['responseError'] = $slipNo . ':' . "invalid details";
+                                    $return= array('status'=>201,'error'=> $returnArr); 
+                                    return $return;
                             }
                             
                     }elseif ($company == 'NAQEL'){
@@ -1148,16 +1146,16 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
 
                                             //****************NAQEL label print cURL****************************
                             
-                             $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
-                             return $return;  
+                                        $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                                        return $return;  
                                         }
-                                }
-                                else
-                                   {
-                       $returnArr['responseError'] = $slipNo . ':' . $awb_array['Message'];
-                       $return= array('status'=>201,'error'=> $returnArr); 
-                       return $return;
-                                   }
+                                        }
+                                        else
+                                        {
+                                        $returnArr['responseError'] = $slipNo . ':' . $awb_array['Message'];
+                                        $return= array('status'=>201,'error'=> $returnArr); 
+                                        return $return;
+                                        }
                         }
                     }elseif ($company == 'Saee'){
 
@@ -1174,14 +1172,14 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
 
                                 //****************************Saee label print cURL****************************
 
-                    $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
-                    return $return;  
+                            $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                            return $return;  
                               
                             }  
                             else {
-                $returnArr['responseError'] = $slipNo . ':' . $response['error'];
-                $return= array('status'=>201,'error'=> $returnArr); 
-                return $return;
+                            $returnArr['responseError'] = $slipNo . ':' . $response['error'];
+                            $return= array('status'=>201,'error'=> $returnArr); 
+                            return $return;
                            }                                     
                     }elseif ($company == 'Smsa'){
                        
@@ -1224,13 +1222,13 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                                         file_put_contents("assets/all_labels/$slipNo.pdf", $savefolder);
 
                                         $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
-                                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
-                                return $return;  
-                                    }
-                                } else {
-                        $returnArr['responseError'] = $slipNo . ':' . $response;
-                        $return= array('status'=>201,'error'=> $returnArr); 
-                        return $return;
+                                        $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                                        return $return;  
+                                        }
+                                    } else {
+                                    $returnArr['responseError'] = $slipNo . ':' . $response;
+                                    $return= array('status'=>201,'error'=> $returnArr); 
+                                    return $return;
                                 }
                             }
                             
@@ -1239,20 +1237,20 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                            
                             if ($response['status'] == 200) {
                                 $client_awb = $response['consignmentNo'];
-                $shipmentLabel_url = $counrierArr['api_url'].'/order/printlabel?consignmentNo='.$client_awb.'&api_key='.$Auth_token;
+                                $shipmentLabel_url = $counrierArr['api_url'].'/order/printlabel?consignmentNo='.$client_awb.'&api_key='.$Auth_token;
 
                                 $generated_pdf = file_get_contents($shipmentLabel_url);
                                 file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
 
                                 $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
-                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
-                return $return;  
+                                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                                return $return;  
                                      
                             } 
-                            else {
-                 $returnArr['responseError'] = $slipNo . ':' . $response['message'];
-                 $return= array('status'=>201,'error'=> $returnArr); 
-                return $return;
+                                else {
+                                $returnArr['responseError'] = $slipNo . ':' . $response['message'];
+                                $return= array('status'=>201,'error'=> $returnArr); 
+                                return $return;
                             }
                             
                     }elseif ($company == 'Clex'){
@@ -1265,33 +1263,34 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                             file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
 
                             $fastcoolabel = base_url()."assets/all_labels/$slipNo.pdf";
-            $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
-            return $return;  
+                            $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                            return $return;  
                                  
-                        } else {
-                            if($response['already_exist'])
-                            {
+                            } else {
+                                if($response['already_exist'])
+                                {
                                 $label_url_new = clex_label_curl($Auth_token, $response['consignment_id'][0]);
                                 $generated_pdf = file_get_contents($label_url_new);
-                               file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                                file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
 
                             $returnArr['responseError'][] = $slipNo . ':' . $response['already_exist'][0]." ".$response['consignment_id'][0];
-                $return= array('status'=>201,'error'=> $returnArr); 
-                    return $return;
+                            $return= array('status'=>201,'error'=> $returnArr); 
+                            return $return;
                             }
-            elseif($response['origin_city']){
-                 $returnArr['responseError'] = $slipNo . ':' . $response['origin_city'][0];
-                 $return= array('status'=>201,'error'=> $returnArr); 
-                return $return;
-            }
-             elseif($response['destination_city']){
-                 $returnArr['responseError'] = $slipNo . ':' . $response['destination_city'][0];
-                 $return= array('status'=>201,'error'=> $returnArr); 
-                return $return;}
+                            elseif($response['origin_city']){
+                                $returnArr['responseError'] = $slipNo . ':' . $response['origin_city'][0];
+                                $return= array('status'=>201,'error'=> $returnArr); 
+                                return $return;
+                            }
+                            elseif($response['destination_city']){
+                                $returnArr['responseError'] = $slipNo . ':' . $response['destination_city'][0];
+                                $return= array('status'=>201,'error'=> $returnArr); 
+                                return $return;}
                             else
-             {   $returnArr['responseError'] = $slipNo . ':' . $response['message'];
-                $return= array('status'=>201,'error'=> $returnArr); 
-                return $return;}
+                            {   
+                                $returnArr['responseError'] = $slipNo . ':' . $response['message'];
+                                $return= array('status'=>201,'error'=> $returnArr); 
+                                return $return;}
                                 
                         }
                         
@@ -1311,130 +1310,124 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                                   $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
                                   
                                 //****************************Saee label print cURL****************************
-                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
-                return $return;
+                                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                                return $return;
 
-                            }  else{
+                                }  else{
                                     
-                    $returnArr['responseError'] = $slipNo . ':' . $response['description'];
-                    $return= array('status'=>201,'error'=> $returnArr); 
-                return $return;
+                                $returnArr['responseError'] = $slipNo . ':' . $response['description'];
+                                $return= array('status'=>201,'error'=> $returnArr); 
+                                return $return;
                                     
                             }
                     }elseif ($company == 'Aymakan'){
                             
-        $Auth_token =$counrierArr['auth_token']; ;
+                            $Auth_token =$counrierArr['auth_token']; ;
 
                             $response = $this->Ccompany_model->AymakanArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1,$complete_sku,$super_id);
                             $responseArray = json_decode($response, true);
 
                             if (empty($responseArray['message'])) 
                             {
-                                 $client_awb = $responseArray['data']['shipping']['tracking_number'];
+                                $client_awb = $responseArray['data']['shipping']['tracking_number'];
                                 $tracking_url= $counrierArr['api_url']."bulk_awb/trackings/";
 
-                $aymakanlabel= $this->Ccompany_model->Aymakan_tracking($client_awb, $tracking_url, $Auth_token);
+                                $aymakanlabel= $this->Ccompany_model->Aymakan_tracking($client_awb, $tracking_url, $Auth_token);
                                 $label= json_decode($aymakanlabel,TRUE);
                                 $mediaData = $label['data']['bulk_awb_url'];
                                 //****************************aymakan arrival label print cURL****************************
-                $generated_pdf = file_get_contents($mediaData);
-                file_put_contents("assets/all_labels/$slipNo.pdf", file_get_contents($generated_pdf));
+                                $generated_pdf = file_get_contents($mediaData);
+                                file_put_contents("assets/all_labels/$slipNo.pdf", file_get_contents($generated_pdf));
                                 $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
 
                                 //****************************aymakan label print cURL****************************
-                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
-                return $return;
-                            }   
-                            else{
+                                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                                return $return;
+                                }   
+                                 else{
                                   
-                    $returnArr['responseError'] = $slipNo . ':' . $responseArray['message'].':'.json_encode($responseArray['errors']);
-                    $return= array('status'=>201,'error'=> $returnArr); 
-                    return $return;
+                                $returnArr['responseError'] = $slipNo . ':' . $responseArray['message'].':'.json_encode($responseArray['errors']);
+                                $return= array('status'=>201,'error'=> $returnArr); 
+                                return $return;
                                     
                             }    
                     
                     }elseif($company == 'Shipsy'){
 						
-                        $response = $this->Ccompany_model->ShipsyArray($ShipArr, $counrierArr, $Auth_token, $box_pieces1,$c_id,$super_id);
-                        
-                        $response_array = json_decode($response, true);
-                        
-                        if($response_array['data'][0]['success']==1){
-                            $client_awb = $response_array['data'][0]['reference_number'];
+                                $response = $this->Ccompany_model->ShipsyArray($ShipArr, $counrierArr, $Auth_token, $box_pieces1,$c_id,$super_id);
+
+                                $response_array = json_decode($response, true);
+
+                                if($response_array['data'][0]['success']==1){
+                                $client_awb = $response_array['data'][0]['reference_number'];
                             
                             //****************************Shipsy label print cURL****************************
                             
-                            $shipsyLabel = $this->Ccompany_model->ShipsyLabelcURL($counrierArr, $client_awb);
-                            
-                            $mediaData = $shipsyLabel;
-                           
-                            file_put_contents("assets/all_labels/$slipNo.pdf", file_get_contents($mediaData));
-                             $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
-                                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
-                                return $return;  
-                                            }else{
-                                                
-                                $returnArr['responseError'] = $slipNo . ':' . $response_array['error']['message'];
-                                $return= array('status'=>201,'error'=> $returnArr); 
-                                return $return;
+                                $shipsyLabel = $this->Ccompany_model->ShipsyLabelcURL($counrierArr, $client_awb);
+
+                                $mediaData = $shipsyLabel;
+
+                                file_put_contents("assets/all_labels/$slipNo.pdf", file_get_contents($mediaData));
+                                    $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+                                    $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                                    return $return;  
+                                    }else{
+
+                                    $returnArr['responseError'] = $slipNo . ':' . $response_array['error']['message'];
+                                    $return= array('status'=>201,'error'=> $returnArr); 
+                                    return $return;
                         }
                         
                     }elseif(trim($company) == 'Shipadelivery'){
                      
-                       $response = $this->Ccompany_model->ShipadeliveryArray($ShipArr, $counrierArr, $Auth_token,$c_id,$super_id); 
-                    
-                        $response_array = json_decode($response,true); 
-                      
-                        if(empty($response_array)){
-           
-                            $returnArr['responseError'] = $slipNo . ':' . 'Receiver City Empty ';
-                            $return= array('status'=>201,'error'=> $returnArr); 
-                            return $return;
-                        }
-                        else{
+                                    $response = $this->Ccompany_model->ShipadeliveryArray($ShipArr, $counrierArr, $Auth_token,$c_id,$super_id); 
 
-                            if($response_array[0]['code']== 0)
-                                {
-                                    $client_awb = $response_array[0]['deliveryInfo']['reference'];
-                                
-                                    $responsepie = $this->Ccompany_model->ShipaDelupdatecURL($counrierArr, $ShipArr, $client_awb ,$box_pieces1,$super_id);
-                                   
-                               
-                                    $responsepieces = json_decode($responsepie, true); 
-                                  
-                                   
-                                         if ($responsepieces['status']=='Success')
-                                         {
-                                            $shipaLabel = $this->Ccompany_model->ShipaDelLabelcURL($counrierArr, $client_awb);
+                                     $response_array = json_decode($response,true); 
 
-                                            header('Content-Type: application/pdf');
+                                     if(empty($response_array)){
 
-                                            file_put_contents("assets/all_labels/$slipNo.pdf", $shipaLabel);
-                                            $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
-                            $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
-                                return $return;  
+                                         $returnArr['responseError'] = $slipNo . ':' . 'Receiver City Empty ';
+                                         $return= array('status'=>201,'error'=> $returnArr); 
+                                         return $return;
+                                     }
+                                     else{
 
-                                         }
-                                          else{
+                                    if($response_array[0]['code']== 0)
+                                        {
+                                            $client_awb = $response_array[0]['deliveryInfo']['reference'];
+                                            $responsepie = $this->Ccompany_model->ShipaDelupdatecURL($counrierArr, $ShipArr, $client_awb ,$box_pieces1,$super_id);
+                                            $responsepieces = json_decode($responsepie, true); 
+                                            if ($responsepieces['status']=='Success')
+                                                {
+                                                    $shipaLabel = $this->Ccompany_model->ShipaDelLabelcURL($counrierArr, $client_awb);
 
-                                $returnArr['responseError']= $slipNo . ':' . $responsepieces['action'];
-                                $return= array('status'=>201,'error'=> $returnArr); 
-                                return $return;
-                                            }
-                                } else{
+                                                    header('Content-Type: application/pdf');
 
-                    $returnArr['responseError'] = $slipNo . ':' . $response_array['info'];                 
-                    $return= array('status'=>201,'error'=> $returnArr); 
-                    return $return;
-                                }
-                            }
+                                                    file_put_contents("assets/all_labels/$slipNo.pdf", $shipaLabel);
+                                                    $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+                                            $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                                            return $return;  
+
+                                                }
+                                                else{
+
+                                            $returnArr['responseError']= $slipNo . ':' . $responsepieces['action'];
+                                            $return= array('status'=>201,'error'=> $returnArr); 
+                                            return $return;
+                                                    }
+                                            } else{
+
+                                            $returnArr['responseError'] = $slipNo . ':' . $response_array['info'];                 
+                                            $return= array('status'=>201,'error'=> $returnArr); 
+                                            return $return;
+                                        }
+                                    }
                                           
                             
                                 
                     }elseif($company == 'Saudi Post'){
                         $response = $this->Ccompany_model->SPArray($ShipArr, $counrierArr,$complete_sku, $Auth_token,$c_id,$box_pieces1,$super_id);
-                        
-                        $response = json_decode($response, true);
+                         $response = json_decode($response, true);
                                         
                         if($response['Items'][0]['Message']=='Success'){
                             $client_awb = $response['Items'][0]['Barcode'];
@@ -1444,27 +1437,27 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                             header('Content-Type: application/pdf');
                             $lableSp=   file_get_contents(base_url().'awbPrint1/'.$slipNo );
                             file_put_contents("assets/all_labels/$slipNo.pdf", $lableSp);
-            $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
-                return $return;  
+                            $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                            return $return;  
                           
                         }else{
                             $errre_response = $response['Items'][0]['Message'];
                             if($errre_response==''){
-                                $errre_response = $response['Message'];
+                            $errre_response = $response['Message'];
                             }
 
-            $returnArr['responseError'] = $slipNo . ':' . $errre_response;
-                $return= array('status'=>201,'error'=> $returnArr); 
-                return $return;
-                        }
-                    }elseif ($company== 'Beez'){
+                            $returnArr['responseError'] = $slipNo . ':' . $errre_response;
+                            $return= array('status'=>201,'error'=> $returnArr); 
+                            return $return;
+                            }
+                            }elseif ($company== 'Beez'){
             
                             $response = $this->Ccompany_model->BeezArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$sku_data,$super_id);  
                             if(isset($response['Message']) && !empty($response['Message'])){
             
-                $returnArr['responseError'] = $slipNo . ':' . $response['Message'];  
-                $return= array('status'=>201,'error'=> $returnArr); 
-                return $return;
+                            $returnArr['responseError'] = $slipNo . ':' . $response['Message'];  
+                            $return= array('status'=>201,'error'=> $returnArr); 
+                            return $return;
                             }else{
                                 
                                 $client_awb = $response;
@@ -1472,11 +1465,11 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                                 $generated_pdf = file_get_contents($url); 
                                 file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
                                 
-                $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
-                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
-                return $return;  
+                                $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
+                                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                                return $return;  
                             }
-    }elseif ($company == 'GLT') {
+                }elseif ($company == 'GLT') {
 
                         $responseArray = $this->Ccompany_model->GLTArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1, $complete_sku,$super_id);
                         $successres = $responseArray['data']['orders'][0]['status'];
@@ -1491,103 +1484,93 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
 
                                 $GltLabel = $this->Ccompany_model->GLT_label($client_awb, $counrierArr, $auth_token);
                                     
-                                 file_put_contents("assets/all_labels/$slipNo.pdf", $GltLabel);                            
-                                 $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
-                 $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
-                 return $return;  
+                                file_put_contents("assets/all_labels/$slipNo.pdf", $GltLabel);                            
+                                $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+                                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                                return $return;  
 
                             }
                             else
                             {
 
-                 $returnArr['responseError'] = $slipNo . ':' . $error_status;  
-                 $return= array('status'=>201,'error'=> $returnArr); 
-                 return $return;
+                            $returnArr['responseError'] = $slipNo . ':' . $error_status;  
+                            $return= array('status'=>201,'error'=> $returnArr); 
+                            return $return;
                             }
                         
                     }
-            elseif($company == 'Tamex')
+                    elseif($company == 'Tamex')
                     {
                         
-                       $response = $this->Ccompany_model->tamexArray($ShipArr, $counrierArr, $complete_sku, $pay_mode,$c_id,$box_pieces1,$super_id);
-                       
-
-                         $responseArray = json_decode($response, true);
+                        $response = $this->Ccompany_model->tamexArray($ShipArr, $counrierArr, $complete_sku, $pay_mode,$c_id,$box_pieces1,$super_id);
+                        $responseArray = json_decode($response, true);
                       
-                      
-                            if ($responseArray['code'] != 0 || empty($response)) {
-                $returnArr['responseError'] = $slipNo . ':' . $responseArray['data'];
-                $return= array('status'=>201,'error'=> $returnArr); 
-                return $return;
+                        if ($responseArray['code'] != 0 || empty($response)) {
+                        $returnArr['responseError'] = $slipNo . ':' . $responseArray['data'];
+                        $return= array('status'=>201,'error'=> $returnArr); 
+                        return $return;
 
-                            } elseif ($responseArray['code'] == 0) {
+                        } elseif ($responseArray['code'] == 0) {
 
-                                  $client_awb = $responseArray['tmxAWB'];
-                                 $API_URL= $counrierArr['api_url'].'print';
+                        $client_awb = $responseArray['tmxAWB'];
+                        $API_URL= $counrierArr['api_url'].'print';
                                 
-                                $generated_pdf = Tamex_label($client_awb, $counrierArr['auth_token'],$API_URL);
-                              
-                                file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                        $generated_pdf = Tamex_label($client_awb, $counrierArr['auth_token'],$API_URL);
+                        file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                        $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
 
-
-                                  $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
-
-                  $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
-                  return $return;                                         
+                        $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                        return $return;                                         
                             }
                     }
                     elseif ($company== 'Fetchr'){ 
                      
-                               $responseData = $this->Ccompany_model->fetchrArray($ShipArr, $counrierArr, $complete_sku, $c_id,$box_pieces1,$super_id);
-                               if($responseData['data'][0]['status'] == 'success')
-                                {
-                                    $client_awb = $responseData['data'][0]['tracking_no'];
-                                    
-                    $label = $responseData['data'][0]['awb_link'];                  
-                                    
-                                    $generated_pdf = file_get_contents($label);
-                                    file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf );
-                                    
-                   $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
-                    $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
-                    return $return;                                         
-                }             
-                else{
+                        $responseData = $this->Ccompany_model->fetchrArray($ShipArr, $counrierArr, $complete_sku, $c_id,$box_pieces1,$super_id);
+                        if($responseData['data'][0]['status'] == 'success')
+                        {
+                        $client_awb = $responseData['data'][0]['tracking_no'];
+                        $label = $responseData['data'][0]['awb_link'];                  
+                        $generated_pdf = file_get_contents($label);
+                        file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf );
+
+                        $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+                        $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                        return $return;                                         
+                    }             
+                    else{
                     $returnArr['responseError'] = $slipNo . ':' . $responseData['data'][0]['message'];
                     $return= array('status'=>201,'error'=> $returnArr); 
                     return $return;
-                }
-
-
-                                 } 
+                    }
+                    } 
                     elseif ($company== 'iMile'){
                         //print "<pre>"; print_r($sku_data);die;
                         $auth_token = $this->Ccompany_model->iMileToken($counrierArr);
                         
                         if(empty($auth_token)){
-            $returnArr['responseError'] = $slipNo . ': Token not genrated';
-            $return= array('status'=>201,'error'=> $returnArr); 
-                return $return;
+                        $returnArr['responseError'] = $slipNo . ': Token not genrated';
+                        $return= array('status'=>201,'error'=> $returnArr); 
+                        return $return;
                         }else{
-                            $response = $this->Ccompany_model->iMileArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$auth_token,$super_id);  
-                            if($response['code'] == 200  && $response['message'] == 'success'){
+                        $response = $this->Ccompany_model->iMileArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$auth_token,$super_id);  
+                        if($response['code'] == 200  && $response['message'] == 'success'){
                                 $client_awb = $response['data']['expressNo'];
                                 $pdf_encoded_base64 = $response['data']['imileAwb'];
                                 $pdf_file = base64_decode($pdf_encoded_base64);
 
                                 file_put_contents("assets/all_labels/".$slipNo.".pdf", $pdf_file);
-                $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
-                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
-                return $return;                                         
-            }             
-            else if($response['code'] == 30001){
-                $returnArr['responseError'] = $slipNo . ': Customer order number repeated error code';
-                $return= array('status'=>201,'error'=> $returnArr); 
-                return $return;
-                            }else{
-                $returnArr['responseError'] = $slipNo . ':' . $response['message'];
-                $return= array('status'=>201,'error'=> $returnArr); 
-                return $return;
+                                $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
+                                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                                return $return;                                         
+                        }             
+                        else if($response['code'] == 30001){
+                                $returnArr['responseError'] = $slipNo . ': Customer order number repeated error code';
+                                $return= array('status'=>201,'error'=> $returnArr); 
+                                return $return;
+                                            }else{
+                                $returnArr['responseError'] = $slipNo . ':' . $response['message'];
+                                $return= array('status'=>201,'error'=> $returnArr); 
+                                return $return;
                             }
                                                
                         }
@@ -1597,38 +1580,122 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                         $counrierArr['user_name'] = $user_name;
                         $counrierArr['password'] = $password;
                         $counrierArr['api_url'] =$api_url;
-                       $Auth_token=$this->Ccompany_model->Wadha_auth($user_name,$password,$api_url); 
+                        $Auth_token=$this->Ccompany_model->Wadha_auth($user_name,$password,$api_url); 
                       
                         $responseArray = $this->Ccompany_model->WadhaArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$super_id);  
-                                            
                         $successres = $responseArray['status'];                          
-                        
-                         $error_status = $responseArray['message'];
+                        $error_status = $responseArray['message'];
 
                         if (!empty($successres) && $successres == 'success')
                         {
 
                             $client_awb = $responseArray['data']['order_number'];
-                             $WadhaLabel = $this->Ccompany_model->Wadha_label($client_awb, $counrierArr, $Auth_token);
-                              $label= json_decode($WadhaLabel,TRUE);
-                              $media_data = $label['data']['value'];                               
+                            $WadhaLabel = $this->Ccompany_model->Wadha_label($client_awb, $counrierArr, $Auth_token);
+                            $label= json_decode($WadhaLabel,TRUE);
+                            $media_data = $label['data']['value'];                               
 
-                             $generated_pdf = file_get_contents($media_data);
-                             file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
-                             $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';                             
-             $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
-                return $return;  
+                            $generated_pdf = file_get_contents($media_data);
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                            $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';                             
+                            $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                            return $return;  
 
+                            }                            
+                            else
+                            {
+
+                            $returnArr['responseError'] = $slipNo . ':' . $error_status;
+                            $return= array('status'=>201,'error'=> $returnArr); 
+                            return $return;
+                            }
+
+                    }elseif ($company == 'FedEX')
+                    {
+
+                        $responseArray = $this->Ccompany_model->FedEX($ShipArr, $counrierArr, $complete_sku, $box_pieces1,$c_id,$super_id);
+                       //  echo "<pre>" ; print_r($responseArray); //die;
+                        $successres = $responseArray['Code'];
+                        $error_status = $responseArray['description'];
+
+                            if (!empty($successres) && $successres == 1)
+                            {
+                                $client_awb = $responseArray['AirwayBillNumber'];
+                                 
+                                $label_response = $this->Ccompany_model->FedEX_label($client_awb, $counrierArr,$ShipArr);
+                                $pdf_encoded_base64 = $label_response['ReportDoc'];
+                                $pdf_file = base64_decode($pdf_encoded_base64);
+                               
+                                file_put_contents("assets/all_labels/".$slipNo.".pdf", $pdf_file);
+                                $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
+                                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                                return $return;
+                        }                            
+                         else
+                        {
+                                $returnArr['responseError'] = $slipNo . ':' .$error_status;
+                                $return= array('status'=>201,'error'=> $returnArr); 
+                                return $return;
+                        }
+                    
+                    }
+                    elseif ($company== 'MomentsKsa')
+                       {
+                        
+                        $Auth_token=$this->Ccompany_model->Moments_auth($counrierArr); 
+                        $responseArray = $this->Ccompany_model->MomentsArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$complete_sku,$super_id); 
+                        $successres = $responseArray['errors'];                         
+                        $error_status = $responseArray['message'];
+
+                        if (empty($successres))
+                        {
+
+                            $client_awb = $responseArray['TrackingNumber'];
+                            $MomentLabel = $responseArray['printLableUrl'];
+                             
+                            $generated_pdf = file_get_contents($MomentLabel);
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                            $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';                             
+                            $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                            return $return;
                         }                            
                         else
                         {
-                
-                $returnArr['responseError'][] = $slipNo . ':' . $error_status;
-                $return= array('status'=>201,'error'=> $returnArr); 
-                return $return;
+                            $returnArr['responseError'] = $slipNo . ':' .$error_status;
+                            $return= array('status'=>201,'error'=> $returnArr); 
+                            return $return;
                         }
+                    
+                    }
+                    elseif ($company== 'Postagexp')
+                       {
+                        
+                        $Auth_token=$this->Ccompany_model->Postagexp_auth($counrierArr); 
+                      
+                        $responseArray = $this->Ccompany_model->PostagexpArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$complete_sku,$super_id); 
+                        $successres = $responseArray['errors'];                         
+                        $error_status = $responseArray['message'];
 
-                    }elseif ($company == 'SLS')
+                        if (empty($successres))
+                        {
+
+                            $client_awb = $responseArray['TrackingNumber'];
+                            $PostagexpLabel = $responseArray['printLable'];
+                             
+                            $generated_pdf = file_get_contents($PostagexpLabel);
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                            $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';                             
+                            $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                            return $return;
+                        }                            
+                        else
+                        {
+                            $returnArr['responseError'] = $slipNo . ':' .$error_status;
+                            $return= array('status'=>201,'error'=> $returnArr); 
+                            return $return;
+                        }
+                    
+                    }
+                    elseif ($company == 'SLS')
                     {
 
                         $responseArray = $this->Ccompany_model->SLSArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1,$c_id,$super_id);
@@ -1644,16 +1711,16 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                                 file_put_contents("assets/all_labels/$slipNo.pdf", $SLSLabel);                            
                                 $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
 
-                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
-                return $return;  
+                                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                                return $return;  
 
                         }                            
                         else
                         {
                     
-                $returnArr['responseError'] = $slipNo . ':' . $error_status;
-                $return= array('status'=>201,'error'=> $returnArr); 
-                return $return;
+                                $returnArr['responseError'] = $slipNo . ':' . $error_status;
+                                $return= array('status'=>201,'error'=> $returnArr); 
+                                return $return;
                     }
 
                         }                            
@@ -1674,21 +1741,18 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                                     $client_awb = $response['awb'];
         
                                     $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
-                    $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
-                    return $return;  
+                                    $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                                    return $return;  
                                             
                                 }
-                else
-                {
+                        else
+                            {
                             
-                    $returnArr['responseError'] = $slipNo . ':' . $response['refrence_id'];
-                    $return= array('status'=>201,'error'=> $returnArr); 
-                    return $return;
-                        }
-
-            
-        }
-
+                                    $returnArr['responseError'] = $slipNo . ':' . $response['refrence_id'];
+                                    $return= array('status'=>201,'error'=> $returnArr); 
+                                    return $return;
+                                }
+                            }
                         else if ($company=='Emdad' )
                         {
                             $response = $this->Ccompany_model->EmdadArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1);
@@ -1701,19 +1765,19 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                                 $client_awb = $response['awb'];
 
                                 $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
-                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
-                return $return;  
+                                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                                return $return;  
                                         
                             }
-            else
-            {
+                            else
+                            {
                         
-                $returnArr['responseError'] = $slipNo . ':' . $response['refrence_id'];
-                $return= array('status'=>201,'error'=> $returnArr); 
-                return $return;
-                        }
+                                $returnArr['responseError'] = $slipNo . ':' . $response['refrence_id'];
+                                $return= array('status'=>201,'error'=> $returnArr); 
+                                return $return;
+                            }
 
-        }
+                        }
 
                         else
                         {
@@ -1731,21 +1795,21 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                                 //****************************fastcoo label print cURL****************************
 
 
-                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
-                return $return;  
-                    
-           }
-            else
-                {
+                                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                                return $return;  
+
+                                }
+                                 else
+                                     {
                 
-                $returnArr['responseError'] = $slipNo . ':' . $responseArray['msg'];  
-                $return= array('status'=>201,'error'=> $returnArr); 
-                return $return;
-                        }
-                    }
+                                $returnArr['responseError'] = $slipNo . ':' . $responseArray['msg'];  
+                                $return= array('status'=>201,'error'=> $returnArr); 
+                                return $return;
+                                            }
+                                        }
     } //end company type F code 
 
-                }
+    }
     }
 
 
