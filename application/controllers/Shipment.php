@@ -2917,6 +2917,7 @@ class Shipment extends MY_Controller {
                 $shiparray[$ii]['destination'] = GetErrorShowShipment($rdata['slip_no'], $rdata['booking_id'], 'destination');
             }
             $shiparray[$ii]['destination_id'] = $rdata['destination'];
+            $shiparray[$ii]['sender_name']= getallsellerdatabyID($rdata['cust_id'],'company',$rdata['super_id']);
             $shiparray[$ii]['total_cod_amt'] = $rdata['total_cod_amt'];
             $shiparray[$ii]['whid'] = $rdata['wh_id'];
                $shiparray[$ii]['cc_name'] = GetCourCompanynameId($rdata['frwd_company_id'], 'company');

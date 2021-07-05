@@ -680,6 +680,28 @@ public function GettransportReportShowData()
 			
 		redirect(base_url('newinvoicesView'));
     }
+
+
+
+	public function payfixinvoice($invoice_no)
+    {
+            
+           //echo $invoice_no;  exit;
+			//print_r($dataArray);
+           
+		$CURRENT_DATE=date("Y-m-d H:i:s");
+			 
+		$updateinvoiceAarrayW=array('invoice_no'=>$invoice_no,'pay_status'=>'Y','pay_date'=>date('Y-m-d'),'pay_update_by'=>$this->session->userdata('user_details')['user_id']);
+		
+		//print_r($updateinvoiceAarrayW); exit;
+		$res_data=$this->Finance_model->addInvoiceUpdateDiscountfix($updateinvoiceAarrayW);
+         
+		$this->session->set_flashdata('msg', $invoice_no.' Invoice Paid!'); 
+
+			
+		redirect(base_url('newinvoicesView'));
+    }
+
 	 public function GetallNewfinanceInvocieDynamicView(){
 		 
 		// echo "ssssss";  die;
@@ -806,6 +828,8 @@ public function getallinvoicedata()
 		  
 	}
 	
+
+
 	public function ShowEditpay(){
 		$_POST = json_decode(file_get_contents('php://input'), true);
 		 $id=$_POST['id'];

@@ -93,7 +93,7 @@ thead.report-header {
      
         <table id="print" cellpadding="0"  cellspacing="0" border="1" class="display nowrap" style="margin:0 auto;"  >
   <thead>
-<tr><td colspan="6"></td><td colspan="2" style="text-align:center;"><strong>Tax Invoice - الفاتورة الضريبية</strong></td><td colspan="9"></td></tr>
+<tr><td colspan="6"></td><td colspan="2" style="text-align:center;"><strong>Tax Invoice - الفاتورة الضريبية</strong></td><td colspan="10"></td></tr>
         <tr  >
       <td colspan="6" align="left" >
 			<b>UID Account Number:-&nbsp;<?=GetalldashboardClientField($invoiceData[0]['cust_id'],'uniqueid');?> - رقم الحساب</b><br/> 
@@ -112,7 +112,7 @@ thead.report-header {
 			</td>
            <td colspan="2" align="center">
     <img src="<?= SUPERPATH . Getsite_configData_field('logo'); ?>" height="50px;"/></td>
-    <td colspan="9" align="left">
+    <td colspan="10" align="left">
       <b> <?=Getsite_configData_field('ligal_name');?>  – <?=Getsite_configData_field('company_address');?>
  </b><br/>
     <b>Vat Id No.:-&nbsp;<?=Getsite_configData_field('vat');?> - الرقم الضريبي </b><br/>  
@@ -130,6 +130,7 @@ thead.report-header {
          
            <th>Ref No. / الرقم المرجعي</th>
 			 <th>Awb No / رقم البوليصة</th>
+       <th>Status / الحالة</th>
          
         
           <th>Close Date / تاريخ التوصيل</th>
@@ -189,6 +190,7 @@ $discount=$invoiceData[0]['discount'];
         <td align="center">'.$counter.'</td>
 		   <td align="center">'.$rowData['refrence_no'].'</td>
         <td align="center">'.$rowData['awb_no'].'</td>
+        <td align="center">'.$rowData['status'].'</td>
         
         
        
@@ -218,7 +220,7 @@ $discount=$invoiceData[0]['discount'];
 		}
 		?>
        <tr> 
-        <td colspan="9" style="text-align:center; ">&nbsp;</td>
+        <td colspan="10" style="text-align:center; ">&nbsp;</td>
    		 <td style="text-align:right; font-size:18px;"><b> Total (SAR)</b>  </td>	
 		
         </td>

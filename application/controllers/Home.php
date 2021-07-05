@@ -16,6 +16,78 @@ class Home extends MY_Controller {
         // $this->user_id = isset($this->session->get_userdata()['user_details'][0]->id)?$this->session->get_userdata()['user_details'][0]->users_id:'1';
     }
 
+    
+    
+    public function Gettemp_update()
+    {
+        die('stop');
+          echo '<pre>';      
+        $data=array('DG1127900240','DG1166111769','DG1170464613','DG1397501955','DG1419755673','DG1536351584','DG1542969792','DG1613370859','DG1659496087','DG1761333252','DG1841767223','DG1907636597','DG1934746455','DG2080203220','DG2230897857','DG2250454375','DG2501409763','DG2764420784','DG2766389940','DG2767604805','DG2826370785','DG2862220071','DG2885866908','DG2905209700','DG2923730886','DG3041036593','DG3261358413','DG3272019343','DG3640920945','DG3704611298','DG3914384216','DG3939771119','DG4106314171','DG4298184044','DG4410749852','DG4540813851','DG4671446633','DG4756040551','DG4838764281','DG5233016711','DG5326438495','DG5352033291','DG5449951396','DG5471864323','DG5508940645','DG5570918603','DG5599228817','DG5678827510','DG6109156183','DG6192998835','DG6241293664','DG6897507612','DG7079828347','DG7103985063','DG7186020895','DG7358857310','DG7365787057','DG7693146539','DG7866136481','DG7915823854','DG8463635135','DG8567832417','DG8607226046','DG8700018534','DG8711280208','DG9362301097','DG9398270434','DG9547036424','DG9609917910','DG9766669126','DG9781433555','DG9823969836','DG9934734411','JDK3001497664','JDK5763185984','JDK5975744565','JDK8984943931');
+    
+          $newArray=array_unique($data);
+//       
+//                $this->db->select('*');
+//                 $this->db->from('inventory_activity');
+//                 $this->db->where_in('inventory_activity.awb_no', $newArray);
+//                 $this->db->where('type','deducted');
+//                 $this->db->where('super_id','5');
+//                 $query = $this->db->get();
+//                 $result = $query->result_array();
+//                 print_r($result);
+//               die;
+      
+        
+        $this->db->select('shipment_fm.slip_no,shipment_fm.cust_id');
+        $this->db->from('shipment_fm');
+        $this->db->where_in('shipment_fm.slip_no', $newArray);
+        $this->db->where('shipment_fm.super_id','5');
+        $this->db->where('shipment_fm.deleted','N');
+        
+         $this->db->group_by('shipment_fm.slip_no');
+       
+        $query = $this->db->get();
+        $result = $query->result_array();
+        
+        foreach($result as $key=>$val)
+        {
+            $newslip=$val['slip_no'];
+             $cust_id=$val['cust_id'];
+           $this->db->select('diamention_fm.piece,diamention_fm.slip_no,diamention_fm.sku,items_m.id as item_sku,items_m.sku_size,item_inventory.quantity,item_inventory.seller_id');
+        $this->db->from('diamention_fm');
+        $this->db->where('diamention_fm.slip_no', $newslip);
+        $this->db->where('diamention_fm.super_id','5');
+        $this->db->where('diamention_fm.deleted','N');
+         $this->db->where('item_inventory.seller_id',$cust_id);
+         $this->db->join('items_m', 'items_m.sku = diamention_fm.sku','left');
+         $this->db->join('item_inventory', 'item_inventory.item_sku = items_m.id','left');
+         $this->db->group_by('item_inventory.item_sku');
+        
+       
+        $query2 = $this->db->get();
+      //  echo $this->db->last_query();
+        $result2 = $query2->result_array();  
+        
+        foreach ($result2 as $row)
+        {
+          $sql="update item_inventory set quantity='".$row['piece']."' where seller_id='".$row['seller_id']."' and super_id=5 and item_sku='".$row['item_sku']."'";
+     
+        
+          
+          //echo $sql."<br>"; 
+        }
+        
+        // print_r($result2);
+            
+        }
+      //  print_r($result);
+        
+        die;
+        
+        
+      
+        
+ print_r($newArray);
+    }
     public function GetgenrateBaarcode($text = null) {
       echo   $has_pass=password_hash('fast@124@2021',PASSWORD_DEFAULT);
         die;

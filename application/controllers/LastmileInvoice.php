@@ -259,21 +259,39 @@ public function payableInvoice_update()
 
 				$shipCharge=$price+($flat_price*$additionalWeight);
 				$return_charge = 0;
+				$status='Delivered';
 		 }else
 			{
-				$pieces=$val['pieces'];
-				if($pieces>$setPiece)
+				foreach($chargeData as $key1=>$val1)
 				{
+					$cityArray=json_decode($val1['city_id'],true);
+					//echo $val['destination'];
+				//echo '<br>'.	in_array($val['destination'],$cityArray); exit;
+					//print_r($cityArray);
+					if($val['frwd_company_id']==$val1['cc_id'] && in_array($val['destination'],$cityArray)==true)
+					{
+					 	 $keyCheck=$key1;
+						//break;	
+					}
+				}
+				
+				//$keyCheck = array_search($val['cc_id'], array_column($chargeData, 'cc_id'));
+				$flat_price=$chargeData[$keyCheck]['price'];
+				$price=$chargeData[$keyCheck]['flat_price'];
+				$max_weight=$chargeData[$keyCheck]['max_weight'];
 
-				$addPcs=$pieces-$setPiece;
+				if($val['weight']>$max_weight)
+				{
+					$additionalWeight=$val['weight']-$max_weight;
 				}
 				else
 				{
-				$addPcs=0;
+					$additionalWeight=0;
 				}
 
-				$return_charge = ($return + ($additionalReturn*$addPcs));
 				$shipCharge=0;
+				$return_charge =$price+($flat_price*$additionalWeight);
+				$status='Return';
 
 			}
 			if($val['mode']=='COD' && $val['code']=='POD')
@@ -296,6 +314,7 @@ public function payableInvoice_update()
 			'refrence_no' => $val['booking_id'],
 			'qty' => $val['pieces'],
 			'weight' => $val['weight'],
+			'status'=>$status,
 			'mode' => $val['mode'],
 			'bank_fees'=>$bank_fees,
 			'cod_charge' => '0.00',

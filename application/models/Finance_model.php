@@ -76,7 +76,7 @@ class Finance_model extends CI_Model {
     public function addInvoiceUpdateDiscountfix($data=array())
     {
         $this->db->update('fixrate_invoice',$data,array('invoice_no'=>$data['invoice_no']));
-   //echo $this->db->last_query(); exit;
+  // echo $this->db->last_query(); exit;
 	
         return true;
         

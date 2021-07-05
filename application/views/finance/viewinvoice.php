@@ -71,7 +71,7 @@
 					
 					</td>
 
-					<td colspan="3"style="padding:2%;" ><b align="left">Name Of Company -  اسم الشركة -  <?= Getsite_configData_field('ligal_name'); ?></b>
+					<td colspan="4"style="padding:2%;" ><b align="left">Name Of Company -  اسم الشركة -  <?= Getsite_configData_field('ligal_name'); ?></b>
 
 
 						<br/> <b>Vat Id No.:-&nbsp;<?= Getsite_configData_field('vat'); ?>- الرقم الضريبي </b>
@@ -94,6 +94,7 @@
 					<th>Weight (Kg)</th>
 					<th>Handling Fees</th>
 					<th>Special Packing </th>
+					<th>Return Charges </th>
 					
 					<th>Cancel Charge </th>
 					<th>Total Without Vat  </th>
@@ -122,7 +123,7 @@
  						$return_charge = $rowData['return_charge'];
  						$handline_fees = $rowData['handline_fees'];
  						$shipping_charge = $rowData['shipping_charge'];
- 						$total_without_vat = round(($handline_fees+$special_packing+$cancel_charge),2);
+ 						$total_without_vat = round(($handline_fees+$special_packing+$cancel_charge+$return_charge),2);
  						$totalvat    = round((($total_without_vat * 15)/100),2) ;
  						$total_with_vat  = round(($total_without_vat + $totalvat),2);
  						 $counter = $key + 1;
@@ -132,7 +133,7 @@
 								<td align="center">' . $rowData['weight'] . '</td>								
 						        <td align="center">' . $rowData['handline_fees'] . '</td>
 						        <td align="center">' . $special_packing . '</td>
-						        							
+						        <td align="center">' . $return_charge . '</td>							
 						        <td align="center">' . $rowData['cancel_charge'] . '</td>							
 						        <td align="center">' . $total_without_vat . '</td>							
 						        <td align="center">' . $totalvat . '</td>							
@@ -145,7 +146,7 @@
 
 					<tr>	
 					<?php  
-					$tot = ($totalValue['handline_fees']+$totalValue['special_packing']); 
+					$tot = ($totalValue['handline_fees']+$totalValue['special_packing']+$totalValue['return_charge']); 
 					 $totvat    = round((($tot * 15)/100),2) ;
  					$tot_with_vat  = round(($tot + $totvat),2);
  					$bank_fees = GetalldashboardClientField($invoiceData[0]['cust_id'], 'bank_fees');
@@ -153,6 +154,7 @@
 					<th colspan="3"> Total Charges</th>					
 					<th><?=$totalValue['handline_fees'];?></th>
 					<th><?=$totalValue['special_packing'];?></th>
+					<th><?=$totalValue['return_charge'];?></th>
 									
 					<th><?=$totalValue['cancel_charge'];?></th>					
 					<th><?=$tot;?></th>					
@@ -202,12 +204,24 @@
 							</td>
 						</tr>
 						<tr>
+							<td align="justify">Total Return Charges</td>
+							<td align="center"><?= $currency; ?>
+								<?=$totalValue['return_charge'];?>
+							</td>
+						</tr>
+						<tr>
 							<td align="justify">Total Special Packages Fees - إجمالي التغليف الخاص للعميل</td>
 							<td align="center"><?= $currency; ?>
 								<?=$totalValue['special_packing'];?>
 							</td>
 						</tr>
-
+						<tr>
+							<tr>
+							<td align="justify">Total Fees before VAT   - إجمالي الرسوم قبل ضريبة القيمة المضافة </td>
+							<td align="center"><?= $currency; ?>
+								<?=$TOTAL?>
+							</td>
+						</tr>
 						<tr>
 							<td align="justify">Discount - الخصم</td>
 							<td align="center"><?= $currency; ?>
@@ -222,7 +236,7 @@
 						?>
 						<tr>
 							<tr>
-							<td align="justify">Total Fees before VAT <?=$invoiceData[0]['vat_percent'];?>%  - إجمالي الرسوم قبل ضريبة القيمة المضافة </td>
+							<td align="justify">Total After Discount  - إجمالي المبالغ بعد الخصم</td>
 							<td align="center"><?= $currency; ?>
 								<?=$TOTAL?>
 							</td>
@@ -241,14 +255,14 @@
 									<?=$TOTAL_with_vat;?>
 								</td>
 							</tr>
-							<tr>
+							<!-- <tr>
 							<td align="justify">Transfer Fees </td>
 							<td align="center"><?= $currency; ?> 	<?=$bank_fees;?></td>
-						</tr>
+						</tr> -->
 							<tr>
 								<th align="justify">Grand Total </th>
 								<th> <?= $currency; ?>
-									<?=$bank_fees + $TOTAL_with_vat;?>
+									<?=$TOTAL_with_vat;?>
 								</th>
 							</tr>
 						<table>
