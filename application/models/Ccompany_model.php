@@ -5348,6 +5348,183 @@ class Ccompany_model extends CI_Model {
         }
     }
 
+    
+    public function Bosta_token_api($courierData =array()){
+        $apiUrl = $courierData['api_url'].'users/login';
+        
+        $curl = curl_init();
+        
+        $request_data = array(
+            "email"=>$courierData['user_name'],
+            "password"=>$courierData['password']
+        );
+        
+        $json_request_params = json_encode($request_data);
+        
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => $apiUrl,
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'POST',
+          CURLOPT_POSTFIELDS =>$json_request_params,
+          CURLOPT_HTTPHEADER => array(
+            'Accept: application/json',
+            'Content-Type: application/json'
+          ),
+        ));
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+        $responseData = json_decode($response,TRUE);
+        return $responseData;
+    }
+    
+    public function BostaArray(array $ShipArr, array $counrierArr,$token= null, $complete_sku = null, $box_pieces1=null,$c_id=null,$super_id=null){
+        
+            $API_URL = $counrierArr['api_url'].'deliveries';
+            
+            $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'bosta_city',$super_id);
+            
+            if(empty($receiver_city)){
+                 $logresponse = "Receiver city empty";
+                $successstatus  = "Fail";
+                $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
+                return array("error"=>true,"data"=>array('message'=>'receiver city empty'));
+            }
+
+            if (empty($box_pieces1)) {
+                $box_pieces = 1;
+            } else {
+                $box_pieces = $box_pieces1;
+            }
+
+            if ($ShipArr['weight'] == 0) {
+                $weight = 1;
+            } else {
+                $weight = $ShipArr['weight'];
+            }
+
+
+            if($ShipArr['mode'] == "COD"){
+                $cod_amount = $ShipArr['total_cod_amt'];
+            }
+            elseif ($ShipArr['mode'] == 'CC'){
+                $cod_amount = 0;
+            }
+
+            if(empty($complete_sku)){
+             $complete_sku = $ShipArr['status_description'];
+
+            }else {
+                $complete_sku =  $complete_sku;
+            }
+        
+        
+        
+        $request_params_array = array(
+            "type"=> 10, //10: Delivery that has two endpoints (pickup and drop off), 15 : Delivery that has one endpoint (cash pickup point).
+            "specs"=> array( 
+                    //"size"=>"SMALL", 
+                    "weight"=>$weight,
+                    "packageDetails"=> array(
+                            "itemsCount"=> $box_pieces, 
+                            "document"=>"Small Box", 
+                            "description"=> $complete_sku 
+                    ) 
+            ), 
+            "notes"=> "DIGGIPACKS FULFILLMENT - Bosta",
+            "cod"=> $cod_amount, 
+            "dropOffAddress"=> array(
+                "city"=> $receiver_city, 
+                "zone"=> "", 
+                "district"=> "", 
+                "firstLine"=> $ShipArr['reciever_address'],
+                "secondLine"=> "",
+                "buildingNumber"=> "", 
+                "floor"=>"", 
+                "apartment"=> "" 
+            ), 
+            "businessReference"=> $ShipArr['slip_no'],
+            "receiver"=> array(
+                    "firstName"=> $ShipArr['reciever_name'],
+                    "lastName"=> "",
+                    "phone"=> "01".remove_phone_format($ShipArr['reciever_phone']), // use  less then 13 chanracter for phone string
+                    "email"=> $ShipArr['reciever_email']
+            )
+        );
+        
+        $json_params = json_encode($request_params_array);
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => $API_URL,
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'POST',
+          CURLOPT_POSTFIELDS =>$json_params,
+          CURLOPT_HTTPHEADER => array(
+            'Accept: application/json',
+            'Content-Type: application/json',
+            'Authorization: '.$token.' ' 
+          ),
+        ));
+
+        $response = curl_exec($curl);
+//        /echo $response;die;
+        curl_close($curl);
+        $responseData = json_decode($response,TRUE);
+        
+        $logresponse =   json_encode($response);  
+        
+        $successres = $responseData['trackingNumber'];
+        //print_r($successres);die;
+        $errorFlag = false;
+        if (!empty($successres)){
+            $successstatus = "Success";
+        }else{
+            $successstatus = "Fail";
+            $errorFlag = TRUE;
+        }
+        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
+        
+        return array("error"=>$errorFlag,'message'=>'','data'=>$responseData);
+    }
+    
+    
+    public function Bosta_Label_api(array $counrierArr, $token = null ,$trackingNumber=null){
+        $API_URL = $counrierArr['api_url']."deliveries/awb?ids=".$trackingNumber;
+        
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => $API_URL,
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'GET',
+          CURLOPT_HTTPHEADER => array(
+            'Accept: application/json',
+            'Content-Type: application/json',
+            'Authorization: '.$token.' ' 
+          ),
+        ));
+        
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        $responseData = json_decode($response,TRUE);
+        return $responseData;
+
+    }
+
 
 }
 
