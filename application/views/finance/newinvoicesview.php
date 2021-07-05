@@ -152,7 +152,9 @@ thead.report-header {
               <th> <?=lang('lang_Created_Date');?></th>
              <th> <?=lang('lang_Pay');?> <?=lang('lang_Status');?></th>
              <th> <?=lang('lang_Pay_Date');?></th>
+             <th> <?=lang('lang_Discount');?></th>
              <th><?=lang('lang_Pay_Updated_By');?> </th>
+             <th> <?=lang('lang_Create_By');?></th>
              <th> <?=lang('lang_Create_By');?></th>
              <th><?=lang('lang_Action');?> </th>
           </tr>
@@ -176,12 +178,14 @@ thead.report-header {
           <td style="width:15%;"> {{data.invoice_date}}</td>
           <td><span ng-if= "data.pay_status=='Y'">Yes</span> <span ng-if= "data.pay_status!='Y'"><?=lang('lang_No');?></span> </td>
           <td style="width:15%;"> {{data.pay_date}}</td>
+
+          <td><span ng-if= "data.discount<=0">NO</span> <span ng-if= "data.discount>0">Yes</span> </td>
           <td style="width:15%;"> <span ng-if= "data.pay_update_by <= 0">NA </span> <span ng-if= "data.pay_update_by>0">{{data.payby}}</span> </td>
           <td> {{data.username}}</td>
           <td class="text-center"><ul class="icons-list">
               <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-menu9"></i> </a>
                 <ul class="dropdown-menu dropdown-menu-right">
-                  <li ><a  href="<?=base_url();?>"><i class="icon-money fa fa-money" ></i> <?=lang('lang_Pay');?></a></li>
+                  <li ng-if="data.pay_status=='N'" ><a  href="<?=base_url();?>Finance/payfixinvoice/{{data.invoice_no}}"><i class="icon-money fa fa-money" ></i> <?=lang('lang_Pay');?></a></li>
                   <li ><a  href="<?=base_url();?>viewinvoice/{{data.invoice_no}}" target="_blank"><i class="icon-eye" ></i>   <?=lang('lang_View_Invoice');?></a></li>
                   <li>
 															<a ng-if="data.discount>0" data-toggle="modal" data-target="#updateLinehoulC51201961561904494" title="DISCOUNT" ng-click="Getpopoprncustdetaisfix(data.id,'#discounted','one');"><i class="fa fa-tag"></i> Discount</a>	
