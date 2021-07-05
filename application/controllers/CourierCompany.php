@@ -1338,8 +1338,8 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                                 $label= json_decode($aymakanlabel,TRUE);
                                 $mediaData = $label['data']['bulk_awb_url'];
                                 //****************************aymakan arrival label print cURL****************************
-                                $generated_pdf = file_get_contents($mediaData);
-                                file_put_contents("assets/all_labels/$slipNo.pdf", file_get_contents($generated_pdf));
+                               // $generated_pdf = file_get_contents($mediaData);
+                                file_put_contents("assets/all_labels/$slipNo.pdf", file_get_contents($mediaData));
                                 $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
 
                                 //****************************aymakan label print cURL****************************
