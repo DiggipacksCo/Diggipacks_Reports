@@ -5328,6 +5328,179 @@ class Ccompany_model extends CI_Model {
                 $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
                 return $responseArray;
     }
+    public function SMSAEgyptArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id) {
+            $sender_default_city = Getselletdetails_new($super_id);
+            $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+            $senderemail = GetallCutomerBysellerId($ShipArr['cust_id'],'email');
+            $senderphone = GetallCutomerBysellerId($ShipArr['cust_id'],'phone');
+            $sender_address = $sender_default_city['0']['address'];
+            $country = getdestinationfieldshow_auto_array($ShipArr['destination'], 'country',$super_id);
+            $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
+            $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'smsa_egypt_city',$super_id);
+        
+        $declared_charge = $ShipArr['total_cod_amt'];
+        $cod_amount = $ShipArr['total_cod_amt'];
+
+        if ($ShipArr['mode'] == 'COD') {
+            $codValue = $cod_amount;
+        } else {
+            $codValue = 0;
+        }
+        if ($complete_sku == '') {
+            $complete_sku = 'Goods';
+        }
+               
+        if(empty($box_pieces1))
+        {
+            $box_pieces = 1;
+        }
+        else
+        {  $box_pieces = $box_pieces1 ; 
+        }
+
+        if($ShipArr['weight']==0)
+        {  
+            $weight= 1;
+        }
+        else { 
+            $weight = $ShipArr['weight'] ; 
+        }
+       
+        $api_url = $counrierArr['api_url'];
+
+       
+        
+    $SMSAXML = '<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <addShip xmlns="http://track.smsaexpress.com/secom/SMSAWebserviceIntl">
+                                        <passKey>' . $counrierArr['auth_token'] . '</passKey>
+                                        <refNo>' . $ShipArr['slip_no'] . '</refNo>
+                                        <sentDate>' . date('d/m/Y') . '</sentDate>
+                                        <idNo>' . $ShipArr['booking_id'] . '</idNo>
+                                        <cName>' . $ShipArr['reciever_name'] . '</cName>
+                                        <cName>' . $ShipArr['reciever_name'] . '</cName>
+                                        <cntry>' . $country . '</cntry>
+                                        <cCity>' . $receiver_city . '</cCity>
+                                        <cZip>' . $ShipArr['sender_zip'] . '</cZip>
+                                        <cPOBox>' . $box_pieces . '</cPOBox>
+                                        <cMobile>' . $ShipArr['reciever_phone'] . '</cMobile>
+                                        <cTel1>' . $ShipArr['reciever_phone'] . '</cTel1>
+                                        <cTel2>' . $ShipArr['reciever_phone'] . '</cTel2>
+                                        <cAddr1>' . $ShipArr['reciever_address'] . '</cAddr1>
+                                        <cAddr2></cAddr2>
+                                        <shipType>DLV</shipType>
+                                        <PCs>' . $box_pieces . '</PCs>
+                                        <cEmail>' . $ShipArr['reciever_email'] . '</cEmail>
+                                        <carrValue>2</carrValue>
+                                        <carrCurr>2</carrCurr>
+                                        <codAmt>' . $codValue . '</codAmt>
+                                        <weight>' . $weight. '</weight>
+                                        <custVal></custVal>
+                                        <custCurr></custCurr>
+                                        <insrAmt></insrAmt>
+                                        <insrCurr></insrCurr>
+                                        <itemDesc>' .  $complete_sku . '</itemDesc>
+                                        <sName>' .$sellername. '</sName>
+                                        <sContact>' . $sellername . '</sContact>
+                                        <sAddr1>' .$sender_address . '</sAddr1>
+                                        <sAddr2>' .$sender_address . '</sAddr2>
+                                        <sCity>' . $sender_city . '</sCity>
+                                        <sPhone>' .$senderphone . '</sPhone>
+                                        <sCntry>' . $country . '</sCntry>
+                                        <prefDelvDate></prefDelvDate>
+                                        <gpsPoints></gpsPoints>
+                                        <vatValue>0</vatValue>
+                                        <harmCode></harmCode>
+                                        </addShip>
+                                        </soap:Body>
+                                        </soap:Envelope>';
+    
+//echo $SMSAXML;die;
+
+        $headers = array(
+            'Content-Type: text/xml; charset=utf-8',
+            'SOAPAction: http://track.smsaexpress.com/secom/SMSAWebserviceIntl/addShip',
+            "Content-length: " . strlen($SMSAXML),
+        );
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+          CURLOPT_URL =>$api_url,
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'POST',
+          CURLOPT_POSTFIELDS =>$SMSAXML,
+          CURLOPT_HTTPHEADER => $headers
+          ));
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+        $check = $response;
+        $respon = trim($check);
+        $respon = str_ireplace(array("soap:", "<?xml version=\"1.0\" encoding=\"utf-8\"?>"), "", $response);
+        $xml2 = new SimpleXMLElement($respon);
+            $again = $xml2;
+            $a = array("qwb" => $again);
+
+            $complicated = ($a['qwb']->Body->addShipResponse->addShipResult[0]);
+
+            if (preg_match('/\bFailed\b/', $complicated)) {
+                $ret = $complicated;
+
+            } 
+             if (empty($ret)) 
+            {
+                $successstatus  = "Success";
+            }else {
+                $successstatus  = "Fail";
+            }
+
+        $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no']);
+
+
+        return $respon;
+    }
+    
+
+    public function SamsaPrintLabel($SMSAAWB, $Passkey, $url) {
+                            $xml = '<?xml version="1.0" encoding="utf-8"?>
+                        <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                          <soap:Body>
+                          <getPDF xmlns="http://track.smsaexpress.com/secom/SMSAWebserviceIntl">
+                          <awbNo>' .$SMSAAWB. '</awbNo>
+                          <passKey>' .$Passkey. '</passKey>
+                        </getPDF>
+                      </soap:Body>
+                    </soap:Envelope>';
+        
+        $headers = array(
+            'SOAPAction: http://track.smsaexpress.com/secom/SMSAWebserviceIntl/getPDF',
+            'Content-Type:  text/xml; charset=utf-8',
+            'Content-length: ' . strlen($xml),
+        );
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => $url,
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => '',
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 0,
+              CURLOPT_FOLLOWLOCATION => true,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => 'POST',
+              CURLOPT_POSTFIELDS =>$xml,
+              CURLOPT_HTTPHEADER =>$headers ));
+        $response = trim(curl_exec($curl));
+        return $response;
+    }
     
     
     public function ccNamebYccid($cc_id=null) {
