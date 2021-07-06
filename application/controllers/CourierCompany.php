@@ -1611,7 +1611,78 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                             return $return;
                             }
 
-                    }elseif ($company == 'FedEX')
+                    }elseif ($company == 'SMSAEgypt'){
+                       
+                            $response = $this->Ccompany_model->SMSAEgyptArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id);
+                           
+                            $xml2 = new SimpleXMLElement($response);
+                            $again = $xml2; //print_r($again);die;
+                            $a = array("qwb" => $again);
+
+                            $complicated = ($a['qwb']->Body->addShipResponse->addShipResult);
+                            //print_r($a);die;
+
+                            if (preg_match('/\bFailed\b/', $complicated)) {
+                                $returnArr['responseError'] = $slipNo . ':' . $complicated;
+                                $return= array('status'=>201,'error'=> $returnArr); 
+                                return $return;
+                            } 
+                            else {
+                                if ($response != 'Bad Request') {
+                                    $xml2 = new SimpleXMLElement($response);
+                                    //echo "<pre>";
+                                    //print_r($xml2);
+                                    $again = $xml2;
+                                    $a = array("qwb" => $again);
+
+                                    $complicated = ($a['qwb']->Body->addShipResponse->addShipResult[0]);
+                                    //print_r($complicated); exit;   
+                                    $abc = array("qwber" => $complicated);
+
+                                    $client_awb = (implode(" ", $abc));
+                                    //print_r($abc);die;
+                                    $newRes = explode('#', $client_awb);
+
+                                          
+                                     if (!empty($newRes[1])) {
+                                        $client_awb = trim($newRes[1]);
+                                    }
+
+                                    $printLabel = $this->Ccompany_model->SamsaPrintLabel($client_awb, $counrierArr['auth_token'], $counrierArr['api_url']);
+ 
+
+                                    $xml_data = new SimpleXMLElement(str_ireplace(array("soap:", "<?xml version=\"1.0\" encoding=\"utf-16\"?>"), "", $printLabel));
+                                    $mediaData = $xml_data->Body->getPDFResponse->getPDFResult[0];
+                                    header('Content-Type:  text/xml; charset=utf-8');
+                                    $img = base64_decode($mediaData);
+
+                                    if (!empty($mediaData)) {
+                                        $savefolder = $img;
+                                       //echo $mediaData;die;
+                                       
+
+                                        file_put_contents("assets/all_labels/$slipNo.pdf", $savefolder);
+
+                                        $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+
+                                        $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                                        return $return; 
+
+                                    } else 
+                                    {
+                                        //array_push($error_array, $slipNo . ':' . $client_awb);
+                                        $returnArr['responseError'] = $slipNo . ':' . $client_awb;
+                                        $return= array('status'=>201,'error'=> $returnArr); 
+                                        //rint_r($return);die;
+                                         return $return;
+                                    }
+                                } else {
+                                    $returnArr['responseError'] = $slipNo . ':' . $response;
+                                    $return= array('status'=>201,'error'=> $returnArr); 
+                                    return $return;
+                                }
+                            }
+                    }    elseif ($company == 'FedEX')
                     {
 
                         $responseArray = $this->Ccompany_model->FedEX($ShipArr, $counrierArr, $complete_sku, $box_pieces1,$c_id,$super_id);

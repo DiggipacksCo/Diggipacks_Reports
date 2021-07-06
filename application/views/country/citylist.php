@@ -162,6 +162,9 @@
                                             <?php if (GetCourierCompanyStausActive('Postagexp') == 'Y') { ?>
                                                 <th class="head1">Postagexp </th>
                                             <?php } ?>
+                                            <?php if (GetCourierCompanyStausActive('SMSAEgypt') == 'Y') { ?>
+                                                <th class="head1">SMSAEgypt</th>
+                                            <?php } ?>
                                                 
                                                 
 
@@ -359,7 +362,7 @@
                                                     </td>
                                                      <?php } ?>
 
- <?php if (GetCourierCompanyStausActive('Alamalkon') == 'Y') { ?>
+                                                    <?php if (GetCourierCompanyStausActive('Alamalkon') == 'Y') { ?>
                                                     <td><input type="text" name="alamalkon_city" id="alamalkon<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['alamalkon']; ?>" class="form-control">
                                                         <br>
                                                         <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'alamalkon');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
@@ -397,6 +400,13 @@
                                                         <br>
                                                         <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'Postagexp_city');" value="<?php echo $listdata['id']; ?>">Update</a>
                                                     </td>
+                                                     <?php } ?>
+                                                    <?php if (GetCourierCompanyStausActive('SMSAEgypt') == 'Y') { ?>
+                                                    <td><input type="text" name="smsa_egypt_city" id="smsa_egypt_city<?php echo $listdata['id']; ?>" placeholder="SMSAEgypt_city" value="<?php echo $listdata['smsa_egypt_city']; ?>" class="form-control">
+                                                            <br>
+                                                            <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'smsa_egypt_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
+
+                                                        </td>
                                                      <?php } ?>
                                                     
                                                     
