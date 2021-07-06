@@ -1723,10 +1723,51 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                                 $returnArr['responseError'] = $slipNo . ':' . $error_status;
                                 $return= array('status'=>201,'error'=> $returnArr); 
                                 return $return;
-                    }
+                         }
 
-                        }                            
-                            
+                       }elseif($company == 'Bosta'){
+                        if(!empty($counrierArr)){
+                                $tokenResponse =  $this->Ccompany_model->Bosta_token_api($counrierArr);
+                                if($tokenResponse['success'] === true){
+                                    $token = $tokenResponse['token'];
+                                    
+                                    $api_response = $this->Ccompany_model->BostaArray($ShipArr, $counrierArr,$token, $complete_sku, $box_pieces1,$c_id,$super_id);
+                                    //print "<pre>"; print_r($api_response);die;
+                                    if($api_response['error'] == FALSE){
+                                         $client_awb = $api_response['data']['_id'];
+                                         $lableInfo =  $this->Ccompany_model->Bosta_Label_api($counrierArr, $token,$client_awb);
+                                         $bostaLabel = '';
+                                         if(!empty($lableInfo['data'])){
+                                            $encoded = base64_decode($lableInfo['data']);
+                                             header('Content-Type: application/pdf');
+                                             file_put_contents("assets/all_labels/$slipNo.pdf", $encoded);
+
+                                            $bostaLabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+                                         }
+                                         
+                                         
+                                         $return= array('status'=>200,'label'=> $bostaLabel,'client_awb'=>$client_awb); 
+                                         return $return;  
+                                    }else{
+                                        $returnArr['responseError'] = $slipNo . ':' .$api_response['data']['message'];
+                                        $return= array('status'=>201,'error'=> $returnArr); 
+                                        return $return;
+                                    }
+                                }else{
+                                    $returnArr['responseError'] = 'Courier Details Not Founds.';
+                                    $return= array('status'=>201,'error'=> $returnArr); 
+                                    return $return;
+                                }
+                                
+                                
+                        }else{
+                            $returnArr['responseError'] = 'Courier Details Not Founds.';
+                            $return= array('status'=>201,'error'=> $returnArr); 
+                            return $return;
+                        }
+                        
+                        
+                    }                           
                     elseif ($company_type== 'F')
                     { // for all fastcoo clients treat as a CC 
                       
