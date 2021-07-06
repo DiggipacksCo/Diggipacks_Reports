@@ -1611,7 +1611,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                             return $return;
                             }
 
-                    }elseif ($company == 'SMSAEgypt'){
+                    }elseif ($company == 'SMSA International'){
                        
                             $response = $this->Ccompany_model->SMSAEgyptArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id);
                            
