@@ -3767,7 +3767,7 @@ class Shipment_model extends CI_Model {
         
         if ($data['cc_name'] == 1) {
             $superID = $this->session->userdata('user_details')['super_id'];
-            $selectQry .= " (select company from courier_company where courier_company.cc_id=shipment_fm.frwd_company_id AND  courier_company.deleted = 'N' AND courier_company.super_id= ".$superID.") AS ForwardedCompany ,";
+            $selectQry .= " (select company from courier_company where courier_company.cc_id=shipment_fm.frwd_company_id AND  courier_company.deleted = 'N' AND courier_company.super_id= ".$superID." limit 1) AS ForwardedCompany ,";
         }
         if ($data['destination'] == 1) {
             $selectQry .= " (select city from country where country.id=shipment_fm.destination) AS DESTINATION ,";

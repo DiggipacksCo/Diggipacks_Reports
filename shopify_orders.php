@@ -143,8 +143,8 @@ if ($query->num_rows > 0) {
         $f_arr = array(
             "fulfillment" => array(
                 "tracking_number" => $awb,
-                "tracking_url" => "https://track.diggipacks.com/" . $awb,
-                "tracking_company" => "",
+                "tracking_url" => "https://track.diggipacks.com/result_detailfm/" . $awb,
+                "tracking_company" => "Diggipacks",
                 "location_id" => $location_id
             )
         );
