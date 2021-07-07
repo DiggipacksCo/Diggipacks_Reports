@@ -3282,12 +3282,14 @@ class Shipment_model extends CI_Model {
             $selectQry .= " (select company from courier_company where courier_company.cc_id=shipment_fm.frwd_company_id AND  courier_company.deleted = 'N' AND courier_company.super_id= ".$superID.") AS ForwardedCompany ,";
             
             $selectQry .= " (select city from country where country.id=shipment_fm.destination) AS DESTINATION ,";
+            $selectQry .= " (select name from customer  where customer.id=shipment_fm.cust_id)  AS SELLER,";
             $selectQry .= " shipment_fm.sender_name AS SENDER NAME,";
             $selectQry .= " shipment_fm.sender_address AS SENDER ADDRESS,";
             $selectQry .= " shipment_fm.sender_phone AS SENDER PHONE,";
             $selectQry .= " shipment_fm.reciever_name AS RECEIVER NAME,";
             $selectQry .= " shipment_fm.reciever_address AS RECEIVER ADDRESS,";
             $selectQry .= " shipment_fm.reciever_phone AS RECEIVER PHONE,";
+            $selectQry .= " (select name from warehouse_category where warehouse_category.id=shipment_fm.wh_id) AS WAREHOUSE ,";
             $selectQry .= " shipment_fm.pay_invoice_status AS INVOICE PAID,";
             $selectQry .= " shipment_fm.pay_invoice_no AS INVOICE NUMBER,";
             $selectQry .= " shipment_fm.rec_invoice_status AS INVOICE PAYMENT RECEIVED ,";
