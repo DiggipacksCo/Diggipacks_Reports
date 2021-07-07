@@ -243,7 +243,7 @@
 						<div id="excelcolumn" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
-                     <div class="modal-header" style="background-color: #f3f5f6;">
+                     <div class="modal-header" style="background-color: <?= DEFAULTCOLOR; ?>;">
                                 <center>   <h4 class="modal-title" style="color:#000"><?=lang('lang_Select_Column_to_download');?></h4></center>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
@@ -360,7 +360,7 @@
                                 <div class="row" style="padding-left: 40%;padding-top: 10px;">   
 
 
-                                    <button type="submit" class="btn btn-info pull-left" name="shipment_transfer" ng-click="transferShip1(listData2, listData1.exportlimit);"><?=lang('تحميل تقرير الاكسل');?></button>  
+                                    <button type="submit" class="btn btn-info pull-left" name="shipment_transfer" ng-click="transferShip1(listData2, listData1.exportlimit);"><?=lang('lang_Download_Excel_Report');?></button>  
                                 </div>
 							
 						</div>
