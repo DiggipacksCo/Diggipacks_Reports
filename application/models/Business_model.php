@@ -50,27 +50,25 @@ class Business_model extends CI_Model {
         return $this->db->last_query();
     }
 
-    public function pickListFilterNotPicked($awb) {
-        
+    public function pickListFilterNotPicked($awb = null) {
+
         if ($this->session->userdata('user_details')['user_type'] != 1) {
             $this->db->where('pickuplist_tbl.wh_id', $this->session->userdata('user_details')['wh_id']);
         }
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->where('pickuplist_tbl.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('pickuplist_tbl.id, pickuplist_tbl.`pickupId`, pickuplist_tbl.`assigned_to`, pickuplist_tbl.`slip_no`, pickuplist_tbl.`origin`, pickuplist_tbl.`destination`, pickuplist_tbl.`reciever_name`, pickuplist_tbl.`reciever_address`, pickuplist_tbl.`reciever_phone`, pickuplist_tbl.`sku`, pickuplist_tbl.`pickup_status`, pickuplist_tbl.`piece`, pickuplist_tbl.`entrydate`, pickuplist_tbl.`pickupDate`,pickuplist_tbl.sender_name,pickuplist_tbl.print_url,pickuplist_tbl.weight');
         $this->db->from('pickuplist_tbl');
-        if (!empty($awb)) {
-            $this->db->where('slip_no', $awb);
-        }
-        $this->db->where('deleted', 'N');
-        if (!empty($sku)) {
-            $this->db->where('sku', $sku);
-        }
-        if (!empty($pickupId)) {
-            $this->db->where('pickupId', $pickupId);
-        }
-        $this->db->where("assigned_to>0");
+        $this->db->join('shipment_fm', 'shipment_fm.slip_no=pickuplist_tbl.slip_no');
 
-        $this->db->where('pickup_status', 'N');
+        $this->db->where('pickuplist_tbl.slip_no', $awb);
+
+        $this->db->where('pickuplist_tbl.deleted', 'N');
+        $this->db->where('shipment_fm.order_type', 'B2B');
+
+
+        $this->db->where("pickuplist_tbl.assigned_to>0");
+
+        $this->db->where('pickuplist_tbl.pickup_status', 'N');
 
         $this->db->order_by('pickuplist_tbl.id', 'ASC');
         // $this->db->limit($limit, $start);

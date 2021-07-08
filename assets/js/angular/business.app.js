@@ -14,7 +14,7 @@ var app = angular.module('BusinessApp', ['betsol.timeCounter'])
             $scope.scan_new.box_no = 1;
             $scope.scan_awb = function () {
                 $('#scan_awb').focus();
-                $scope.packuShip();
+                $scope.packuShip('FT');
             }
             $scope.setFocus = function (id, type)
             {
@@ -56,17 +56,20 @@ var app = angular.module('BusinessApp', ['betsol.timeCounter'])
             }
 
 
-            $scope.packuShip = function () {
+            $scope.packuShip = function (check_type) {
                 $scope.warning = null;
                 $scope.Message = null;
                 $scope.arrayIndexnew = [];
                 $scope.scan.slip_no = $scope.scan.slip_no.toUpperCase()
+               
+                console.log(check_type);
                 $scope.arrayIndex = $scope.awbArray.findIndex(record => record.slip_no.toUpperCase() === $scope.scan.slip_no.toUpperCase());
                 if ($scope.arrayIndex == -1)
                 {
+                   
                     //console.log($scope.scan);
                     $http({
-                        url: "PickUp/packCheck",
+                        url: "Business/packCheck",
                         method: "POST",
                         data: $scope.scan,
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -83,7 +86,7 @@ var app = angular.module('BusinessApp', ['betsol.timeCounter'])
                             $scope.GetremoveBtn = true;
                         }
                         angular.forEach(response.data.result, function (value) {
-                            console.log(value)
+                          //  console.log(value)
 
                             $scope.awbArray.push(value);
                             angular.forEach(JSON.parse(value.sku), function (value1) {
@@ -124,7 +127,7 @@ var app = angular.module('BusinessApp', ['betsol.timeCounter'])
                 //  $scope.completeArray.specialpack=$scope.specialtype.specialpack;
                 //$scope.specialtype.specialpack=true;
                 //$scope.completeArray.push({'specialpack':$scope.specialtype.specialpack,'specialpacktype':$scope.specialtype.specialpacktype});
-                console.log($scope.specialpacktype);
+               // console.log($scope.specialpacktype);
             }
 
 
@@ -266,7 +269,7 @@ var app = angular.module('BusinessApp', ['betsol.timeCounter'])
                     responsiveVoice.speak('Completly Scaned, Please Pack this Order!');
 
                     $scope.nindex = $scope.shipData.findIndex(record => (record.slip_no.toUpperCase() === $scope.checkArray[0].slip_no.toUpperCase()))
-                    console.log($scope.nindex);
+                    //console.log($scope.nindex);
                     // $scope.arrayIndexnew= $scope.shipData.findIndex( record => (record.slip_no ===$scope.scan.slip_no && record.sku ===$scope.scan.sku ))
                     if ($scope.nindex != -1) {
                         $scope.print_url = $scope.shipData[$scope.nindex].print_url
@@ -274,7 +277,7 @@ var app = angular.module('BusinessApp', ['betsol.timeCounter'])
                         $scope.printToCart($scope.print_url);
                     }
                 }
-                console.log($scope.awbArray_print);
+              //  console.log($scope.awbArray_print);
             }
             $scope.printToCart = function (print_url) {
                 // $window.open("//www.tamex.co/", '', '_blank', 'width=600,height=700,scrollbars=no,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
@@ -307,7 +310,7 @@ var app = angular.module('BusinessApp', ['betsol.timeCounter'])
                             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 
                         }).then(function (response) {
-                            console.log(response);
+                           // console.log(response);
 
 //         var d = new Date();
 //    var $a = $("<a>");

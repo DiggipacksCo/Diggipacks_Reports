@@ -32,8 +32,8 @@
                         if ($this->session->flashdata('msg'))
                             echo '<div class="alert alert-success">' . $this->session->flashdata('msg') . ' <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></div>';
 
-                        if ($this->session->flashdata('something'))
-                            echo '<div class="alert alert-warning">' . $this->session->flashdata('something') . ": " . $this->session->flashdata('error') . ' <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></div>';
+                        if ($this->session->flashdata('error'))
+                            echo '<div class="alert alert-warning">'.$this->session->flashdata('error') . ' <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></div>';
                         ?>
 
                         <!-- Dashboard content -->
@@ -42,15 +42,15 @@
                                 <!-- Marketing campaigns -->
                                 <div class="panel panel-flat">
                                     <div class="panel-heading">
-                                        <h1> <strong><?=lang('lang_Bulk_Print');?></strong> </h1>
+                                        <h1> <strong>Forward Remove</strong> </h1>
                                     </div>
                                     <div class="panel-body">
                                         <div class="row"> </div>
-                                        <div class="alert alert-danger"><?=lang('lang_Note');?> <?=lang('lang_Order_Limit_is_Hundred');?></div>
-                                        <form  method="post" action="<?= base_url(); ?>PickUp/BulkPrintAllLabels" target="_blank" >
+                                        <div class="alert alert-danger"><?=lang('lang_Note');?> <?=lang('lang_Order_Limit_is_two_Hundred');?></div>
+                                        <form  method="post" action="<?= base_url(); ?>Shipment/bulk_forward_remove"  >
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <textarea rows="8" id="show_awb_no" name="show_awb_no"  placeholder="<?=lang('lang_Please_Enter_Your_AWB_Number');?>" required class="form-control"></textarea>
+                                                    <textarea rows="8" id="show_awb_no" name="tracking_numbers"  placeholder="<?=lang('lang_Please_Enter_Your_AWB_Number');?>" required class="form-control"></textarea>
                                                 </div>
                                             </div>
                                             
@@ -61,29 +61,17 @@
 
                                                 </div> 
                                             </div> 
-                                            <div class="col-md-2" >
-                                                <div class="form-group">
-
-                                                    <input type="submit" name="print_ready" class="btn btn-primary form-control checkdisable" value="<?=lang('lang_Label_46');?>">	 
-
-                                                </div>
-
-                                               
-
-                                            </div>
+                                            
                                             <div class="col-md-2" >
                                             <div class="form-group">
 
-                                            <input type="submit" name="print_ready" class="btn btn-primary form-control checkdisable" value="<?=lang('lang_Label_A4');?>">	
+                                            <input type="submit" name="track_ready" class="btn btn-primary form-control checkdisable" value="Remove">	
 
                                             </div> 
                                             </div>
-                                            <div class="col-md-3" >
-                                            <div class="form-group">
-                                            <input type="submit" name="3PL PRINT" class="btn btn-primary form-control checkdisable" value="3PL PRINT">	
-                                            </div> 
-                                            </div>
-                                           
+                                            
+                                            
+                                          
                                         </form>
                                     </div>
 
@@ -114,7 +102,7 @@
     for(var no=0;no<items.length;no++){
         lines += Math.ceil(items[no].length/40);    }
         document.getElementById('rowcount').innerHTML =lines;<!---->
-if(parseInt(lines)>100)
+if(parseInt(lines)>200)
 {
   $(".checkdisable").attr("disabled", true);
 }

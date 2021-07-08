@@ -149,14 +149,8 @@
  <div class="">
     <div class="panel panel-flat">
       <div class="panel-heading">
-        <h5 class="panel-title"><?=lang('lang_Order_Packaging');?></h5>
-        <!--<div class="heading-elements">
-                    <ul class="icons-list">
-                        <li><a data-action="collapse"></a></li>
-                        <li><a data-action="reload"></a></li>
-                        <li><a data-action="close"></a></li>
-                    </ul>
-                </div>--> 
+        <h5 class="panel-title"><?=lang('lang_Order_Packaging');?> B2B</h5>
+        
       </div>
       <div class="panel-body">
         <div class="row">
@@ -172,12 +166,7 @@
                              </form></div>
 </div>
                  
-                   
-                 
-                  
-                  
-                  
-                </div>   
+           </div>   
           <div class="col-lg-12">
                
             <div class="panel panel-default">
@@ -209,18 +198,24 @@
               <div class="col-md-2">
                   <div class="form-group">
                  
-                    <input type="text" id="scan_awb" my-enter="packuShip()" ng-model="scan.sku" class="form-control" placeHolder='SKU' />
+                    <input type="text" id="scan_awb" my-enter="packuShip('SK')" ng-model="scan.sku" class="form-control" placeHolder='SKU' />
+                  </div>
+                </div>
+            <div class="col-md-1">
+                  <div class="form-group">
+                 
+                    <input type="text" id="scan_awb_p" my-enter="packuShip('PC')" ng-model="scan.pieces" class="form-control" placeHolder='Pieces' />
                   </div>
                 </div>
            
-            <div class="col-md-2">
+            <div class="col-md-1">
                   <div class="form-group">
                  
                       <input type="text"   ng-model="scan_new.box_no" ng-blur="GetCheckBoxNo();" class="form-control" placeHolder='Box No.' />
                   </div>
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-md-1">
                   <div class="form-group">
                  
                       <input type="float"   ng-model="scan_new.weight" class="form-control" placeHolder='weight' />
@@ -262,16 +257,7 @@
        
         </div></div>
            </div>
-            
-            
-              
-<!--
-                <div class="col-md-3" >  <div class="form-group"> <input class="btn btn-info" type="button" onclick="create_zip();" value="Export Completed" ></div></div>
-                 <div class="col-md-3" >  <div class="form-group"><input class="btn btn-info" type="button" onclick="create_zip1();" value="Export ALL" ></div></div>
--->
-             
-             
-               <div class="col-lg-12">
+     <div class="col-lg-12">
                    
                 <div ng-if="completeArray.length>20" class="alert alert-danger"><?=lang('lang_Please_Verify_the_Packing_Limit_Exceed');?> ! </div>
                   <div ng-if='warning' class="alert alert-warning">{{warning}} </div>
@@ -370,7 +356,7 @@
              <div class="col-lg-12">
                  <div class="row">
                      
-                   <div class="col-md-2" style="padding:15px;" ng-repeat="md_data in SKuMediaArr">
+                     <div class="col-md-2" style="padding:15px;" ng-repeat="md_data in SKuMediaArr" ng-if="SKuMediaArr!=''">
                        <div style="display:inline-block; border:solid 1px #808080; padding:15px" id="GetSkuId{{$index}}">
                 <div>
                     <img class="img-responsive" alt="{{md_data.sku}}" src="{{md_data.item_path}}" width="100" />
@@ -381,13 +367,7 @@
                     <br />
                     <p class="text-justify"></p>
                 </div>
-<!--                <br />
-                
-                <br />-->
-<!--                <div class="btn-ground text-center" style="padding-bottom: 30px">
-                    <button type="button" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> Add</button>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#productmodal1"><i class="fa fa-info"></i> Info</button>
-                </div>-->
+
             </div>
         </div>
                     
@@ -400,75 +380,7 @@
       </div>
     </div>
 </div>
-<style>
-    
-    /*
-** Style Simple Ecommerce Theme for Bootstrap 4
-** Created by T-PHP https://t-php.fr/43-theme-ecommerce-bootstrap-4.html
-*/
-.bloc_left_price {
-    color: #c01508;
-    text-align: center;
-    font-weight: bold;
-    font-size: 150%;
-}
-.category_block li:hover {
-    background-color: #007bff;
-}
-.category_block li:hover a {
-    color: #ffffff;
-}
-.category_block li a {
-    color: #343a40;
-}
-.add_to_cart_block .price {
-    color: #c01508;
-    text-align: center;
-    font-weight: bold;
-    font-size: 200%;
-    margin-bottom: 0;
-}
-.add_to_cart_block .price_discounted {
-    color: #343a40;
-    text-align: center;
-    text-decoration: line-through;
-    font-size: 140%;
-}
-.product_rassurance {
-    padding: 10px;
-    margin-top: 15px;
-    background: #ffffff;
-    border: 1px solid #6c757d;
-    color: #6c757d;
-}
-.product_rassurance .list-inline {
-    margin-bottom: 0;
-    text-transform: uppercase;
-    text-align: center;
-}
-.product_rassurance .list-inline li:hover {
-    color: #343a40;
-}
-.reviews_product .fa-star {
-    color: gold;
-}
-.pagination {
-    margin-top: 20px;
-}
-footer {
-    background: #343a40;
-    padding: 40px;
-}
-footer a {
-    color: #f8f9fa!important
-}
 
- .border {
-    display: inline-block;
-   
-  }
-
-</style>
 <div id="test_print" ></div>
 
 

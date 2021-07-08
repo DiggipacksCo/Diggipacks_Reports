@@ -20,6 +20,17 @@ class Shipment_model extends CI_Model {
        //echo $this->db->last_query(); 
     }
 
+    public function removeForwarding($data=array()) {
+      //  print_r($data); exit;
+      if( !empty($data))
+      {
+        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->where_in('slip_no', $data);
+        $query2 = $this->db->update('shipment_fm',array('frwd_company_id'=>0,'frwd_company_awb'=>'','frwd_company_label'=>'','forwarded'=>0));
+       //echo  $this->db->last_query(); //exit;
+      }
+       
+    }
     public function updateStatus($data) {
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where_in('slip_no', $data['where_in']);
@@ -200,7 +211,8 @@ class Shipment_model extends CI_Model {
   public function getawbdataquery($awbids = array()) {
         // print_r($awbids[0]);
         $awbarray = $awbids;
-
+if(!empty($awbids ))
+{
         $counter = 0;
         $conditions = "";
         foreach ($awbarray as $ids) {
@@ -216,6 +228,7 @@ class Shipment_model extends CI_Model {
         if ($query->num_rows() > 0) {
             return $query->result_array();
         }
+    }
     }
 
 

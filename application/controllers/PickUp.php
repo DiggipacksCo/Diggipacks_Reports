@@ -3023,7 +3023,7 @@ public function awbPickupPrint_bulk_new($awb = array(),$type = null) {
     public function Printpicklist3PL_bulk($slip_no = array(), $frwd_company_id = null) {
 
 		 //print_r($frwd_company_id); exit;  
-        if (!empty($slip_no) && $frwd_company_id != '') {
+        if (!empty($slip_no) ) {
         //   print_r($slip_no); exit;
             return PrintPiclist3PL_bulk($slip_no, $frwd_company_id);
         }
