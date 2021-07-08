@@ -308,7 +308,7 @@ class CourierCompany extends MY_Controller  {
              
               
                 $ShipArr=$this->Ccompany_model->GetSlipNoDetailsQry(trim($slipNo),$super_id);
-                print "<pre>"; print_r($ShipArr);die;
+                //print "<pre>"; print_r($ShipArr);die;
                 if(!empty($postData['cc_id'])){
                     $courier_id = $postData['cc_id'];
                 }
