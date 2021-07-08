@@ -120,6 +120,14 @@
                                                 <div class="col-md-3"> <div class="form-group" ><strong><?=lang('lang_To');?>:</strong>
                                                                     <input type="date" id="to"name="to"  ng-model="filterData.to" class="form-control">
                                                                 </div></div>
+                                                
+                                                   <div class="col-md-2" style="margin-top: 20px;"><div class="form-group" >
+                                                        <select class="form-control"  ng-model="filterData.order_type">
+                                                            <option value="">Order Type</option>
+                                                            <option  value="B2B">B2B</option>
+                                                            <option  value="B2C">B2C</option>
+                                                        </select>
+                                                    </div></div>
                                                 <div class="col-md-4"><div class="form-group" >  <button type="button" class="btn btn-success" style="margin-left: 7%"><?=lang('lang_Total');?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button>
                                                           <button  class="btn btn-danger" ng-click="loadMore(1, 1);" ><?=lang('lang_Search');?></button></div></div>
                                                           

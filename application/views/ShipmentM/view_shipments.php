@@ -224,6 +224,7 @@
                                                         <input class="form-control" type="number" id="cod" name="cod"  ng-model="filterData.cod" class=" " placeholder="Enter COD Amount"> 
 
                                                     </div></div>
+                                              
                                                 <div class="col-md-2" style="margin-top: 20px;"><div class="form-group" >
                                                         <select class="form-control"  ng-model="filterData.sort_limit" ng-change="loadMore(1, 1);">
                                                             <option value=""><?=lang('lang_Short');?></option>
@@ -244,6 +245,14 @@
                                                         <option value="OBD"><?=lang('lang_Order_By_Date');?></option>
                                                         </select>
 
+                                                    </div></div>
+                                                
+                                                    <div class="col-md-2" style="margin-top: 20px;"><div class="form-group" >
+                                                        <select class="form-control"  ng-model="filterData.order_type">
+                                                            <option value="">Order Type</option>
+                                                            <option  value="B2B">B2B</option>
+                                                            <option  value="B2C">B2C</option>
+                                                        </select>
                                                     </div></div>
                                                 <div class="col-md-8"><div class="form-group" >
                                                         <button  class="btn btn-danger" ng-click="loadMore(1, 1);" ><?=lang('lang_Search');?></button>

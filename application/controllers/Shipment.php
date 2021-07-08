@@ -2406,10 +2406,10 @@ class Shipment extends MY_Controller {
         foreach ($shipments['result'] as $rdata) {
 
             $expire_data = $this->Shipment_model->GetallexpredataQuery($rdata['seller_id'], $rdata['sku']);
-            if ($rdata['order_type'] == '') {
-                $itemID = getallitemskubyid($rdata['sku']);
-                $itemtypes = getalldataitemtables($itemID, 'type');
-                $shiparray[$ii]['order_type'] = $itemtypes;
+            if (empty($rdata['order_type'])) {
+//                $itemID = getallitemskubyid($rdata['sku']);
+//                $itemtypes = getalldataitemtables($itemID, 'type');
+                $shiparray[$ii]['order_type'] = 'B2C';
 
                 //$shiparray[$ii]['order_type']="";
             } else
@@ -2552,7 +2552,12 @@ class Shipment extends MY_Controller {
             $expire_data = $this->Shipment_model->GetallexpredataQuery($rdata['seller_id'], $rdata['sku']);
        
                 $itemtypes = getalldataitemtablesSKU(trim($rdata['sku']), 'type');
-                $shiparray[$ii]['order_type'] = $itemtypes;
+                if(!empty($rdata['order_type']))
+                $shiparray[$ii]['order_type'] = $rdata['order_type'];
+                else
+                {
+                   $shiparray[$ii]['order_type'] = 'B2C'; 
+                }
 
                 //$shiparray[$ii]['order_type']="";
           
@@ -2902,6 +2907,14 @@ class Shipment extends MY_Controller {
             //$expire_data=$this->Shipment_model->GetallexpredataQuery($rdata['seller_id'],$rdata['sku']);
             //if($expire_data[$ii]['sku']==$rdata['sku'])
             //$shiparray[$ii]['expire_details']=$expire_data;
+            if(!empty($rdata['order_type']))
+            {
+               $shiparray[$ii]['order_type'] =$rdata['order_type'];
+            }
+            else
+            {
+               $shiparray[$ii]['order_type'] ='B2C'; 
+            }
             $shiparray[$ii]['sku_id'] = getalldataitemtablesBySku($rdata['sku'], 'id');
             //$shiparray[$ii]['origin'] = getdestinationfieldshow($rdata['origin'], 'city');
             $shiparray[$ii]['origin_valid'] = $rdata['origin'];

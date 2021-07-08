@@ -179,6 +179,14 @@
                                                     </div>
                                                 </div>
                                                 
+                                                <div class="col-md-2"><div class="form-group" >
+                                                        <select class="form-control"  ng-model="filterData.order_type">
+                                                            <option value="">Order Type</option>
+                                                            <option  value="B2B">B2B</option>
+                                                            <option  value="B2C">B2C</option>
+                                                        </select>
+                                                    </div></div>
+                                                
                                                  <div class="col-md-2"><div class="form-group" >
                                                         <select class="form-control"  ng-model="filterData.sort_list" ng-change="loadMore(1, 1);">
 
