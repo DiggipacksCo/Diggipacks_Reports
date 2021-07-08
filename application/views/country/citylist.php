@@ -156,6 +156,9 @@
                                             <?php if (GetCourierCompanyStausActive('FedEX') == 'Y') { ?>
                                                 <th class="head1">FedEX </th>
                                             <?php } ?>
+                                            <?php if (GetCourierCompanyStausActive('FedEX') == 'Y') { ?>
+                                                <th class="head1">FedEX City Code</th>
+                                            <?php } ?>
                                             <?php if (GetCourierCompanyStausActive('MomentsKsa') == 'Y') { ?>
                                                 <th class="head1">MomentsKsa </th>
                                             <?php } ?>
@@ -164,6 +167,9 @@
                                             <?php } ?>
                                             <?php if (GetCourierCompanyStausActive('SMSAEgypt') == 'Y') { ?>
                                                 <th class="head1">SMSAEgypt</th>
+                                            <?php } ?>
+                                            <?php if (GetCourierCompanyStausActive('Bosta') == 'Y') { ?>
+                                                <th class="head1">Bosta</th>
                                             <?php } ?>
                                                 
                                                 
@@ -226,7 +232,7 @@
                                                         <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'naqel_city_code');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>  
                                                     </td>
                                                       <?php } ?>
- <?php if (GetCourierCompanyStausActive('Esnad') == 'Y') { ?>
+                                                      <?php if (GetCourierCompanyStausActive('Esnad') == 'Y') { ?>
                                                     <td><input type="text" name="esnad_city_name" id="esnad_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['esnad_city']; ?>" class="form-control">
                                                         <br>
                                                         <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'esnad_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
@@ -370,47 +376,57 @@
                                                     </td>
                                                       <?php } ?>
                                                      <?php if (GetCourierCompanyStausActive('Saudi Post') == 'Y') { ?>
-                                                    <td><input type="text" name="saudipost_id" id="saudipost_id<?php echo $listdata['id']; ?>" placeholder="Saudi Post Id" value="<?php echo $listdata['saudipost_id']; ?>" class="form-control">
+                                                    <td><input type="text" name="saudipost_id" id="saudipost_id<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['saudipost_id']; ?>" class="form-control">
                                                         <br>
                                                         <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'saudipost_id');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
 
                                                     </td>
                                                       <?php } ?>
                                                     <?php if (GetCourierCompanyStausActive('Beez') == 'Y') { ?>
-                                                    <td><input type="text" name="beez_city" id="beez_city<?php echo $listdata['id']; ?>" placeholder="Beez City" value="<?php echo $listdata['beez_city']; ?>" class="form-control">
+                                                    <td><input type="text" name="beez_city" id="beez_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['beez_city']; ?>" class="form-control">
                                                         <br>
-                                                        <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'beez_city');" value="<?php echo $listdata['id']; ?>">Update</a>
+                                                        <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'beez_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
 
                                                     </td>
                                                       <?php } ?>
                                                      <?php if (GetCourierCompanyStausActive('FedEX') == 'Y') { ?>
-                                                    <td><input type="text" name="fedex_city" id="fedex_city<?php echo $listdata['id']; ?>" placeholder="FedEX City" value="<?php echo $listdata['fedex_city']; ?>" class="form-control">
+                                                    <td><input type="text" name="fedex_city" id="fedex_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['fedex_city']; ?>" class="form-control">
                                                         <br>
-                                                        <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'fedex_city');" value="<?php echo $listdata['id']; ?>">Update</a>
+                                                        <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'fedex_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
+                                                    </td>
+                                                      <?php } ?>
+                                                     <?php if (GetCourierCompanyStausActive('FedEX') == 'Y') { ?>
+                                                    <td><input type="text" name="fedex_city_code" id="fedex_city_code<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['fedex_city_code']; ?>" class="form-control">
+                                                        <br>
+                                                        <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'fedex_city_code');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
                                                     </td>
                                                       <?php } ?>
                                                     <?php if (GetCourierCompanyStausActive('MomentsKsa') == 'Y') { ?>
-                                                    <td><input type="text" name="momentsKsa_city" id="momentsKsa_city<?php echo $listdata['id']; ?>" placeholder="momentsKsa city " value="<?php echo $listdata['momentsKsa_city']; ?>" class="form-control">
+                                                    <td><input type="text" name="momentsKsa_city" id="momentsKsa_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['momentsKsa_city']; ?>" class="form-control">
                                                         <br>
-                                                        <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'momentsKsa_city');" value="<?php echo $listdata['id']; ?>">Update</a>
+                                                        <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'momentsKsa_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
                                                     </td>
                                                       <?php } ?>
                                                     <?php if (GetCourierCompanyStausActive('Postagexp') == 'Y') { ?>
-                                                    <td><input type="text" name="Postagexp_city" id="Postagexp_city<?php echo $listdata['id']; ?>" placeholder="Postagexp city " value="<?php echo $listdata['Postagexp_city']; ?>" class="form-control">
+                                                    <td><input type="text" name="Postagexp_city" id="Postagexp_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['Postagexp_city']; ?>" class="form-control">
                                                         <br>
-                                                        <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'Postagexp_city');" value="<?php echo $listdata['id']; ?>">Update</a>
+                                                        <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'Postagexp_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
                                                     </td>
                                                      <?php } ?>
                                                     <?php if (GetCourierCompanyStausActive('SMSAEgypt') == 'Y') { ?>
-                                                    <td><input type="text" name="smsa_egypt_city" id="smsa_egypt_city<?php echo $listdata['id']; ?>" placeholder="SMSAEgypt_city" value="<?php echo $listdata['smsa_egypt_city']; ?>" class="form-control">
+                                                    <td><input type="text" name="smsa_egypt_city" id="smsa_egypt_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['smsa_egypt_city']; ?>" class="form-control">
                                                             <br>
                                                             <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'smsa_egypt_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
 
                                                         </td>
                                                      <?php } ?>
-                                                    
-                                                    
-                                                    
+                                                    <?php if (GetCourierCompanyStausActive('Bosta') == 'Y') { ?>
+                                                    <td><input type="text" name="bosta_city" id="bosta_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['bosta_city']; ?>" class="form-control">
+                                                            <br>
+                                                            <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'bosta_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
+                                                        </td>
+                                                     <?php } ?>
+                                                        
                                                     <td><input type="text" name="latitute" id="latitute<?php echo $listdata['id']; ?>" placeholder="LAT" value="<?php echo $listdata['latitute']; ?>" class="form-control">
                                                         <br>
                                                         <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'latitute');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
