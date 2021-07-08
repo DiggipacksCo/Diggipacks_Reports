@@ -4855,9 +4855,9 @@ class Ccompany_model extends CI_Model {
             $sender_address = $sender_default_city['0']['address'];
             $senderemail = GetallCutomerBysellerId($ShipArr['cust_id'],'email');
             $senderphone = GetallCutomerBysellerId($ShipArr['cust_id'],'phone');
-            $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city_code', $super_id);
-            $sendercity = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
-            $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'fedex_city',$super_id);
+            $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'fedex_city_code', $super_id);
+            $sendercity = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'fedex_city', $super_id);
+            $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'fedex_city_code',$super_id);
             $receivercity = getdestinationfieldshow_auto_array($ShipArr['destination'], 'city',$super_id);
             $currency = site_configTable("default_currency");//"EGP";  
             
@@ -4956,7 +4956,7 @@ class Ccompany_model extends CI_Model {
         else 
         {
            
-            $response = array('description'=> 'The Receivers City field is required.'); 
+            $response = array('Description'=> 'The Receivers City field is required.'); 
             $response = json_encode($response);  
         }      
                   

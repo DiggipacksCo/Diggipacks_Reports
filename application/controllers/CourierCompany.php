@@ -1689,7 +1689,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                         $responseArray = $this->Ccompany_model->FedEX($ShipArr, $counrierArr, $complete_sku, $box_pieces1,$c_id,$super_id);
                        //  echo "<pre>" ; print_r($responseArray); //die;
                         $successres = $responseArray['Code'];
-                        $error_status = $responseArray['description'];
+                        $error_status = $responseArray['Description'];
 
                             if (!empty($successres) && $successres == 1)
                             {
