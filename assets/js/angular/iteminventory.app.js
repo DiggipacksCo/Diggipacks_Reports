@@ -905,7 +905,7 @@ $scope.Items=[];
                                 $scope.invalidSslip_no = response.data.invalid_slipNO;
                                 $scope.Success_msg = response.data.Success_msg;
                                 $scope.Error_msg = response.data.Error_msg;
-                                $scope.responseError = response.data.responseError;
+                                $scope.responseError[0] = response.data.responseError;
                                     setTimeout(function() {
                                      $('.alert-danger').fadeOut();
                                     }, 10000 );

@@ -419,7 +419,9 @@ class Manifest extends CourierCompany_pickup {
             if (!empty($request_return['Success_msg'])) {
                 $return = array('status' => "succ",'Success_msg'=>$request_return['Success_msg']);
             } else {
-                $return = $request_return;
+                //{"Error_msg":"60DC2386A8132:018239975375 Is Invalid Phone Number"}
+                //$return = $request_return;
+                $return = array('status' => "error",'Error_msg'=>$request_return['Error_msg']);
             }
         }
         if ($assign_type == 'D') {
@@ -1506,6 +1508,35 @@ class Manifest extends CourierCompany_pickup {
                                 $returnArr['Error_msg'][] = $slipNo . ':' .$error_status;
                             }
                         
+            }elseif($company == 'Bosta'){
+                    $tokenResponse =  $this->Ccompany_model->Bosta_token_api($counrierArr);
+                    if($tokenResponse['success'] === true){
+                            $token = $tokenResponse['token'];
+                            $api_response = $this->Ccompany_model->BostaArray($ShipArr, $counrierArr,$token, $complete_sku, $box_pieces1,$c_id,$super_id);
+                            if($api_response['error'] == FALSE){
+                                 $client_awb = $api_response['data']['_id'];
+                                 $lableInfo =  $this->Ccompany_model->Bosta_Label_api($counrierArr, $token,$client_awb);
+                                 $bostaLabel = '';
+                                 if(!empty($lableInfo['data'])){
+                                    $encoded = base64_decode($lableInfo['data']);
+                                     header('Content-Type: application/pdf');
+                                     file_put_contents("assets/all_labels/$slipNo.pdf", $encoded);
+
+                                    $bostaLabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+                                 }
+                                 
+                                 $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $bostaLabel, $c_id);
+                                 array_push($succssArray, $slipNo);
+                                 $returnArr['Success_msg'][] = $slipNo . ':Successfully Assigned';
+                                
+                            }else{
+                                $returnArr['Error_msg'] = $slipNo . ':' .$api_response['data']['message'];
+                            }
+                                    
+                    }else{
+                       $returnArr['Error_msg'][] = $slipNo . ':Token Not Genrated'; 
+                    }
+            
             }elseif ($company_type == 'F') { // for all fastcoo clients treat as a CC 
             
                 if ($company=='Ejack' ) 
@@ -2422,10 +2453,10 @@ class Manifest extends CourierCompany_pickup {
     public function GetreturnCourierDropShow() {
         $this->load->model('User_model');
         $PostData = json_decode(file_get_contents('php://input'), true);
-        print "<pre>"; print_r($PostData);die;
+        ///print "<pre>"; print_r($PostData);die;
         $assignuser = $this->User_model->userDropval(9);
         $courierData = GetCourierCompanyDrop();
-        print "<pre>"; print_r($courierData);die;
+        //print "<pre>"; print_r($courierData);die;
         $return = array("assignuser" => $assignuser, "courierData" => $courierData);
         echo json_encode($return);
     }
@@ -4124,9 +4155,41 @@ class Manifest extends CourierCompany_pickup {
                             $returnArr['responseError'][] = $slipNo . ':' .$error_status;
                         }
                     
-                    }
+                    }elseif ($company == 'Bosta'){
+                        
+                            $tokenResponse =  $this->Ccompany_model->Bosta_token_api($counrierArr);
+                            if($tokenResponse['success'] === true){
+                                    $token = $tokenResponse['token'];
+                                    
+                                    $api_response = $this->Ccompany_model->BostaArray($ShipArr, $counrierArr,$token, $complete_sku, $box_pieces1,$c_id,$super_id);
+                                    if($api_response['error'] == FALSE){
+                                         $client_awb = $api_response['data']['_id'];
+                                         $lableInfo =  $this->Ccompany_model->Bosta_Label_api($counrierArr, $token,$client_awb);
+                                         $bostaLabel = '';
+                                         if(!empty($lableInfo['data'])){
+                                            $encoded = base64_decode($lableInfo['data']);
+                                             header('Content-Type: application/pdf');
+                                             file_put_contents("assets/all_labels/$slipNo.pdf", $encoded);
 
-                    elseif ($company == 'SLS'){   
+                                            $bostaLabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+                                         }
+
+                                         $CURRENT_DATE = date("Y-m-d H:i:s");
+                                         $CURRENT_TIME = date("H:i:s");
+
+                                         $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $bostaLabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
+                                         $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' : forwarded to Bosta.';
+                                         array_push($succssArray, $slipNo);
+
+                                    }else{
+                                        $returnArr['responseError'] = $slipNo . ':' .$api_response['data']['message'];
+                                    }
+
+                            }else{
+                               $returnArr['responseError'][] = $slipNo . ':Token Not Genrated'; 
+                            }
+                        
+                    }elseif ($company == 'SLS'){
                         $responseArray = $this->Ccompany_model->SLSArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1,$c_id, $super_id);
                         
                        //  echo "<pre>" ; print_r($responseArray); //die;

@@ -240,7 +240,7 @@ class Ccompany_model extends CI_Model {
            'reciever_phone' => $ShipArr['reciever_phone'],
            //'reciever_city' =>  $ShipArr['destination'],
            'reciever_email' => $ShipArr['reciever_email'],
-           'status_describtion' => $ShipArr['status_describtion'],
+           'status_describtion' => addslashes($ShipArr['status_describtion']),
            'entrydate' => $CURRENT_DATE,
            'mode' => $ShipArr['mode'],
            'delivered' => '21',
@@ -264,7 +264,7 @@ class Ccompany_model extends CI_Model {
        );
        
 
-    //    print "<pre>"; print_r($ReverseShipmentArr);
+     //   print "<pre>"; print_r($ReverseShipmentArr);die;
     //    print "<pre>"; print_r($ShipArr);
        
     //    die;
@@ -309,7 +309,7 @@ class Ccompany_model extends CI_Model {
    public function GetshipmentAdd_reverse(array $data) {
      
        $this->db->insert('shipment_fm', $data);
-     //echo  $this->db->last_query();
+    // echo  $this->db->last_query();
    }
    public function DiamentionalInsert_reverse(array $data) {
      
@@ -379,7 +379,7 @@ class Ccompany_model extends CI_Model {
             foreach($itemData as $itemid){
                 
                 $result = $this->Ccompany_model->get_damage_sku_details($itemid,$dataArray['sellerid']);
-                print "<pre>"; print_r($result);
+                //print "<pre>"; print_r($result);
                 if(is_array($result) && count($result)>0){
                     $updateArr = array(
                         'uniqueid'=>$slipNo,
@@ -5559,9 +5559,8 @@ class Ccompany_model extends CI_Model {
     public function BostaArray(array $ShipArr, array $counrierArr,$token= null, $complete_sku = null, $box_pieces1=null,$c_id=null,$super_id=null){
         
             $API_URL = $counrierArr['api_url'].'deliveries';
-            
+            //print "<pre>"; print_r($ShipArr);die;
             $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'bosta_city',$super_id);
-            
             if(empty($receiver_city)){
                  $logresponse = "Receiver city empty";
                 $successstatus  = "Fail";
@@ -5597,6 +5596,7 @@ class Ccompany_model extends CI_Model {
             }
         
         
+        $reciver_phone_number = str_replace("+", "", $ShipArr['reciever_phone']);
         
         $request_params_array = array(
             "type"=> 10, //10: Delivery that has two endpoints (pickup and drop off), 15 : Delivery that has one endpoint (cash pickup point).
@@ -5606,7 +5606,7 @@ class Ccompany_model extends CI_Model {
                     "packageDetails"=> array(
                             "itemsCount"=> $box_pieces, 
                             "document"=>"Small Box", 
-                            "description"=> $complete_sku 
+                            "description"=> !empty($complete_sku)?$complete_sku:"test" 
                     ) 
             ), 
             "notes"=> "DIGGIPACKS FULFILLMENT - Bosta",
@@ -5625,12 +5625,13 @@ class Ccompany_model extends CI_Model {
             "receiver"=> array(
                     "firstName"=> $ShipArr['reciever_name'],
                     "lastName"=> "",
-                    "phone"=> "01".remove_phone_format($ShipArr['reciever_phone']), // use  less then 13 chanracter for phone string
+                    "phone"=> "01".remove_phone_format($reciver_phone_number), // use  less then 13 chanracter for phone string
                     "email"=> $ShipArr['reciever_email']
             )
         );
         
         $json_params = json_encode($request_params_array);
+         //   echo $json_params;die;
         $curl = curl_init();
         curl_setopt_array($curl, array(
           CURLOPT_URL => $API_URL,

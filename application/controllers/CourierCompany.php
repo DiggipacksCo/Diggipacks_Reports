@@ -251,7 +251,7 @@ class CourierCompany extends MY_Controller  {
     //=========================================//
     
     public function BulkForwardCompanyReady()
-    {
+    { 
       
         $postData = json_decode(file_get_contents('php://input'), true);
         
@@ -308,7 +308,7 @@ class CourierCompany extends MY_Controller  {
              
               
                 $ShipArr=$this->Ccompany_model->GetSlipNoDetailsQry(trim($slipNo),$super_id);
-                
+                print "<pre>"; print_r($ShipArr);die;
                 if(!empty($postData['cc_id'])){
                     $courier_id = $postData['cc_id'];
                 }
@@ -399,7 +399,7 @@ class CourierCompany extends MY_Controller  {
                     
                     $CURRENT_TIME = date('H:i:s');
                     $CURRENT_DATE = date('Y-m-d H:i:s');
-                    
+                   
                    $ccRetrundata= $this->courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id,$company_type,$c_id, $api_url);
                    if($ccRetrundata['status']==200)
                    {
@@ -438,7 +438,6 @@ class CourierCompany extends MY_Controller  {
         
       
         $postData = json_decode(file_get_contents('php://input'), true);
-        
         $CURRENT_TIME = date('H:i:s');
         $CURRENT_DATE = date('Y-m-d H:i:s');
 
@@ -465,7 +464,7 @@ class CourierCompany extends MY_Controller  {
                 $shipmentLoopArray = array_unique($slipData);
             }
         }
-        //print_r($shipmentLoopArray);exit; 
+            //print_r($shipmentLoopArray);exit; 
             $invalid_slipNO=array();
             $succssArray=array();
             if($postData['comment']!=''){
@@ -539,12 +538,13 @@ class CourierCompany extends MY_Controller  {
                     $super_id = $ShipArr['super_id'];
                     $slip_no = $ShipArr['slip_no'];
 
-                 // echo "<pre>"; print_r($counrierArr); die; 
+                  //echo "<pre>"; print_r($ShipArr); die; 
 
-                    if(!empty($ShipArr) &&($ShipArr['code']=='POD'))
+                    if(!empty($ShipArr))
+                    //if(!empty($ShipArr) &&($ShipArr['code']=='POD'))
                     {
                    
-                    
+                            
                             $sku_data = $this->Ccompany_model->Getskudetails_forward($slipNo);
                             $sku_all_names = array();
                             $sku_total = 0;
@@ -574,7 +574,7 @@ class CourierCompany extends MY_Controller  {
                                     $services = '';
                             }
                             $new_awb_number = $this->Ccompany_model->Generate_awb_number_new_fm($super_id);
-
+                            
                             $ShipArr = array(
                                 'sender_name' =>  $ShipArr['reciever_name'],
                                 'sender_address' =>  $ShipArr['reciever_address'],
@@ -601,11 +601,11 @@ class CourierCompany extends MY_Controller  {
                                 'sku_data' => $sku_data
                             );
 
-                            //echo "<pre> sdfsd"; print_r($ShipArr); 
+                            //echo "<pre> sdfsd"; print_r($ShipArr); die;
 
                             $CURRENT_TIME = date('H:i:s');
                             $CURRENT_DATE = date('Y-m-d H:i:s');
-                            
+                           //echo $company;die; 
                            $ccRetrundata = $this->courierComanyForward($auth_token,$company,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id,$company_type, $c_id, $api_url);
                            
                            if($ccRetrundata['status']==200)
@@ -803,6 +803,7 @@ class CourierCompany extends MY_Controller  {
 
 public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id,$company_type,$c_id, $api_url)
 {
+    //print "<pre>"; print_r($ShipArr);die;
     $slipNo =$ShipArr['slip_no'];  
     
     if($company=='Aramex'){

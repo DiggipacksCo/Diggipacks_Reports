@@ -79,10 +79,6 @@ var app = angular.module('AppManifest', [])
             $scope.Error_msg = {};
             $scope.saveassigntodriver = function ()
             {
-
-               
-
-
                 if ($scope.returnUpdate.assign_type == 'D')
                 {
                     $scope.returnUpdate.cc_id = "";
@@ -116,9 +112,9 @@ var app = angular.module('AppManifest', [])
                             if (response.data.status == 'succ')
                             {
                                 alert("Successfully Assign");
-                                $window.location.href = '/showpickuplist';
+                               // $window.location.href = '/showpickuplist';
 
-                                //location.reload();
+                                location.reload();
                             }
                           
                          else
@@ -740,7 +736,6 @@ $scope.data={};
             $scope.Error_msg = {};
             $scope.saveassigntodriver = function ()
             {
-               // location.href = 'showpickuplist';
                 if ($scope.AssignData.assign_type == 'D')
                 {
                     $scope.AssignData.cc_id = "";
@@ -773,12 +768,12 @@ $scope.data={};
                         {
                              if (response.data.status == 'succ')
                             {
-                                $scope.Success_msg = response.data.Success_msg;
+                                $scope.Success_msg[0] = response.data.Success_msg;
                                  location.href = 'showpickuplist';
                             } else
-                            {
+                            { 
                                 //$scope.invalidSslip_no = response.data.invalid_slipNO;
-                                $scope.Error_msg = response.data.Error_msg;
+                                 $scope.Error_msg[0] = response.data.Error_msg;
                                  setTimeout(function() {
                                     $('.alert-danger').fadeOut();
                                     location.reload();
