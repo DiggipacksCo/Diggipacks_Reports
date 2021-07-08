@@ -884,7 +884,7 @@ class Shipment_model extends CI_Model {
         $this->db->where('shipment.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('shipment.deleted', $deleted);
         $this->db->where('diamention.deleted', $deleted);
-        $this->db->select('shipment.id,shipment.frwd_company_awb,shipment.service_id,shipment.booking_id,shipment.slip_no,diamention.sku,status_main_cat.main_status,diamention.piece,diamention.wieght as wt,diamention.description,diamention.cod,customer.name,customer.id as seller_id,customer.uniqueid,shipment.entrydate,shipment.origin,shipment.destination,shipment.reciever_name,shipment.reciever_address,shipment.reciever_phone,`shipment.sender_name`, `shipment.sender_address`, `shipment.sender_phone`, `shipment.sender_email`, `shipment.mode`, `shipment.total_cod_amt`,shipment.weight,shipment.pieces,shipment.cust_id,shipment.shippers_ac_no,shipment.wh_id,shipment.back_reasons,diamention.wh_id as whid,diamention.id as d_id,diamention.free_sku,shipment.total_cod_amt,shipment.frwd_company_id');
+        $this->db->select('shipment.id,shipment.frwd_company_awb,shipment.service_id,shipment.booking_id,shipment.slip_no,diamention.sku,status_main_cat.main_status,diamention.piece,diamention.wieght as wt,diamention.description,diamention.cod,customer.name,customer.id as seller_id,customer.uniqueid,shipment.entrydate,shipment.origin,shipment.destination,shipment.reciever_name,shipment.reciever_address,shipment.reciever_phone,`shipment.sender_name`, `shipment.sender_address`, `shipment.sender_phone`, `shipment.sender_email`, `shipment.mode`, `shipment.total_cod_amt`,shipment.weight,shipment.pieces,shipment.cust_id,shipment.shippers_ac_no,shipment.wh_id,shipment.back_reasons,diamention.wh_id as whid,diamention.id as d_id,diamention.free_sku,shipment.total_cod_amt,shipment.frwd_company_id,shipment.order_type');
         $this->db->from('shipment_fm as shipment');
         $this->db->join('status_main_cat_fm as status_main_cat', 'status_main_cat.id=shipment.delivered');
         $this->db->join('diamention_fm as diamention', '  shipment.slip_no=diamention.slip_no','RIGHT');
@@ -1281,6 +1281,13 @@ class Shipment_model extends CI_Model {
 
             $this->db->where_in('shipment_fm.destination', $destination);
         }
+        
+        if (!empty($data['order_type'])) {
+           if($data['order_type']=='B2B')
+             $this->db->where('shipment_fm.order_type', $data['order_type']);
+           else
+             $this->db->where('shipment_fm.order_type','');  
+        }
         if (!empty($cc_id)) {
             $cc_id = array_filter($cc_id);
 
@@ -1356,7 +1363,7 @@ class Shipment_model extends CI_Model {
 
             //$data['excelresult']=$this->filterexcel($awb,$sku,$delivered,$seller,$to,$from,$exact,$page_no,$destination,$booking_id); 
             $data['result'] = $query->result_array();
-            $data['count'] = $this->shipmCount($awb, $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination, $booking_id, '', $cc_id,$refsno,$mobileno,$wh_id);
+            $data['count'] = $this->shipmCount($awb, $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination, $booking_id, '', $cc_id,$refsno,$mobileno,$wh_id,$data['order_type']);
             return $data;
             // return $page_no.$this->db->last_query();
         } else {
@@ -2083,7 +2090,7 @@ class Shipment_model extends CI_Model {
         return 0;
     }
 
-    public function shipmCount($awb, $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination, $booking_id, $backorder = null, $cc_id = null,$refsno=null,$mobileno=null,$wh_id=null) {
+    public function shipmCount($awb, $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination, $booking_id, $backorder = null, $cc_id = null,$refsno=null,$mobileno=null,$wh_id=null,$order_type=null) {
 
 
         if ($this->session->userdata('user_details')['user_type'] != 1) {
@@ -2129,7 +2136,12 @@ class Shipment_model extends CI_Model {
             $this->db->where($where);
         }
 
-
+        if (!empty($order_type)) {
+           if($order_type=='B2B')
+             $this->db->where('shipment_fm.order_type', $order_type);
+           else
+             $this->db->where('shipment_fm.order_type','');  
+        }
 
         if (!empty($delivered)) {
             if (array_key_exists(0, $delivered)) {

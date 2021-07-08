@@ -148,8 +148,16 @@
                                                                     <input type="date" id="to"name="to"  ng-model="filterData.to" class="form-control"> 
 
                                                                 </div></div>
+                                                 <div class="col-md-2"><div class="form-group" >
+                                                        <select class="form-control"  ng-model="filterData.order_type">
+                                                            <option value="">Order Type</option>
+                                                            <option  value="B2B">B2B</option>
+                                                            <option  value="B2C">B2C</option>
+                                                        </select>
+                                                    </div></div>
                                                 <div class="col-md-3"><div class="form-group" ><button  class="btn btn-danger ml-10" ng-click="loadMore(1, 1);" ><?=lang('lang_Search');?></button>
                                                                 <button type="button" class="btn btn-success ml-10" ><?=lang('lang_Total');?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button></div></div>
+                                                                
                                                                 
                                                                  <div class="col-md-2"><div class="form-group" >
                                                                  <select class="form-control"  ng-model="filterData.sort_limit" ng-change="loadMore(1, 1);">
@@ -162,6 +170,8 @@
                                                                 </select>
                                                            
                                                     </div></div>
+                                                
+                                               
                                                 
                                                 
                                                
@@ -194,6 +204,7 @@
                                         <thead>
                                             <tr>
                                                 <th><?=lang('lang_SrNo');?>. <input type="checkbox" ng-model="selectedAll"  ng-change="selectAll();" /></th>
+                                                 <th><?=lang('lang_Order_Type');?></th>
                                                 <th><?=lang('lang_AWB_No');?>.</th>
                                                 <th><?=lang('lang_Ref_No');?>.</th>
                                                 <th><?=lang('lang_Forward_Company');?></th>
@@ -224,6 +235,8 @@
                                         <tr ng-if='shipData != 0' ng-repeat="data in shipData"> 
 
                                             <td>{{$index + 1}} <input type="checkbox" value="{{data.slip_no}}" check-list='Items' ng-model="data.Selected" ng-click="checkIfAllSelected()" /> </td>
+                                              <td><span class="label label-success" ng-if="data.order_type == 'B2B'">{{data.order_type}}</span>
+                                                <span class="label label-warning" ng-if="data.order_type == 'B2C'">{{data.order_type}}</span></td>
                                             <td>{{data.slip_no}}</td>
                                             <td>{{data.booking_id}}</td>
                                             <td>{{data.cc_name}}</td>

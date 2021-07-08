@@ -130,6 +130,7 @@ $route['OfferOrders_gift']       = 'Offers/GetofferOrderslist_gift';
 $route['pickListFilter']         = 'PickUp/pickListFilter';
 $route['packing']                = 'PickUp/packing';
 $route['packing_tod']            = 'PickUp/packing_tod';
+$route['packing_b2b']                = 'Business/packing_b2b';
 $route['dispatch']               = 'PickUp/dispatch';
 $route['TrackingResult']         = 'Shipment/getshipmenttrackingresult';
 $route['TrackingDetails/(:any)'] = 'Shipment/getshipmentdetailshow/$1';

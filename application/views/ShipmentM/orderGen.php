@@ -159,6 +159,13 @@
 
                                                     </div></div>
                                                 <div class="col-md-2"><div class="form-group" >
+                                                        <select class="form-control"  ng-model="filterData.order_type">
+                                                            <option value="">Order Type</option>
+                                                            <option  value="B2B">B2B</option>
+                                                            <option  value="B2C">B2C</option>
+                                                        </select>
+                                                    </div></div>
+                                                <div class="col-md-2"><div class="form-group" >
                                                         <select class="form-control"  ng-model="filterData.sort_limit" ng-change="loadMore(1, 1);">
 
                                                             <option value=""><?=lang('lang_Short');?></option>
@@ -206,6 +213,7 @@
                                             <tr>
                                                 <th><?=lang('lang_SrNo');?>.
                                                     <input type="checkbox" ng-model="selectedAll"  ng-change="selectAll();" /></th>
+                                                 <th><?=lang('lang_Order_Type');?></th>
                                                     <th><?=lang('lang_AWB_No');?>.</th>
                                                 <th><?=lang('lang_Ref_No');?>.</th>
                                                 <th><?=lang('lang_TPL_company');?></th>
@@ -250,6 +258,8 @@
                                                 <input type="checkbox" ng-if="data.reciever_name != '' && data.reciever_phone != '' && data.origin_valid != 0 && data.destination_valid != 0" value="{{data.slip_no}}" check-list='Items' ng-model="data.Selected" ng-click="checkIfAllSelected()" />
                                                 <input type="checkbox" ng-if="data.reciever_name == '' || data.reciever_phone == '' || data.origin_valid == 0 || data.destination_valid == 0" disabled  /></td>
                                             <!--                  value="{{data.slip_no}}" check-list='Items' ng-model="data.Selected" ng-click="checkIfAllSelected()"-->
+                                            <td><span class="label label-success" ng-if="data.order_type == 'B2B'">{{data.order_type}}</span>
+                                                <span class="label label-warning" ng-if="data.order_type == 'B2C'">{{data.order_type}}</span></td>
                                             <td>{{data.slip_no}}</td>
                                             <td>{{data.booking_id}}</td>
                                             <td>{{data.cc_name}}</td>

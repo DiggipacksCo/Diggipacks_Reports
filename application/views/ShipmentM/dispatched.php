@@ -183,6 +183,13 @@
                                                         </select>
 
                                                     </div></div>
+                                                 <div class="col-md-2" style="margin-top: 20px;"><div class="form-group" >
+                                                        <select class="form-control"  ng-model="filterData.order_type">
+                                                            <option value="">Order Type</option>
+                                                            <option  value="B2B">B2B</option>
+                                                            <option  value="B2C">B2C</option>
+                                                        </select>
+                                                    </div></div>
                                                 
                                                  <div class="col-md-6"><div class="form-group" ><button  class="btn btn-danger ml-10" ng-click="loadMore(1, 1);" ><?=lang('lang_Search');?></button>
                                                         <button type="button" class="btn btn-success ml-10" ><?=lang('lang_Total');?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button>
