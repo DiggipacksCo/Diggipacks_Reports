@@ -31,6 +31,9 @@ class Business extends MY_Controller {
     public function packFinish() {
 
         $_POST = json_decode(file_get_contents('php://input'), true);
+        
+        print_r($_POST); die;
+        
         $dataArray = $_POST;
         $boxArr = $dataArray['boxArr'];
         $SpecialArr = $dataArray['SpecialArr'];
