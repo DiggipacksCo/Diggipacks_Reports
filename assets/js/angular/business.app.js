@@ -83,6 +83,8 @@ var app = angular.module('BusinessApp', ['betsol.timeCounter'])
                             responsiveVoice.speak($scope.warning);
                         } else
                         {
+                            $scope.Message = "AWB Scan";
+                            responsiveVoice.speak($scope.Message);
                             $scope.GetremoveBtn = true;
                         }
                         angular.forEach(response.data.result, function (value) {
@@ -92,7 +94,7 @@ var app = angular.module('BusinessApp', ['betsol.timeCounter'])
                             angular.forEach(JSON.parse(value.sku), function (value1) {
                                 //console.log(value1)
 
-                                $scope.shipData.push({'slip_no': value.slip_no, 'sku': value1.sku, 'piece': value1.piece, 'scaned': 0, 'extra': 0, 'print_url': value.print_url, 'frwd_company_id': value.frwd_company_id, 'frwd_company_awb': value.frwd_company_awb});
+                                $scope.shipData.push({'slip_no': value.slip_no, 'sku': value1.sku, 'piece': value1.piece, 'scaned': 0, 'extra': 0, 'print_url': value.print_url, 'frwd_company_id': value.frwd_company_id, 'frwd_company_awb': value.frwd_company_awb,'pieces':0});
                                 $scope.SKuMediaArr.push({'sku': value1.sku, 'piece': value1.piece, 'item_path': value1.item_path});
 
                                 //$scope.Items.push( 'slip_no: ' +value.slip_no);
@@ -109,9 +111,25 @@ var app = angular.module('BusinessApp', ['betsol.timeCounter'])
 
                     });
                 }
-
+                if(check_type=='PC') 
+                {
                 $scope.scanCheck();
+              
                 $scope.checkComplte($scope.shipData, $scope.scan.slip_no);
+               }
+               else
+               {
+                    $scope.arrayIndexnew = $scope.shipData.findIndex(record => (record.slip_no.toUpperCase() === $scope.scan.slip_no.toUpperCase() && record.sku.toUpperCase() === $scope.scan.sku.toUpperCase()))
+                // $scope.arrayIndexnew= $scope.shipData.findIndex( record => (record.slip_no ===$scope.scan.slip_no && record.sku ===$scope.scan.sku ))
+                if ($scope.arrayIndexnew != -1)
+                {
+                      // alert($scope.shipData[$scope.arrayIndexnew].sku);
+                            $scope.Message = 'Scaned!';
+                            //responsiveVoice.speak($scope.message);    
+                            responsiveVoice.speak('Scaned!');
+                    
+                }
+               }
 
             }
             $scope.packBoxArr = {};
@@ -137,11 +155,13 @@ var app = angular.module('BusinessApp', ['betsol.timeCounter'])
                 // $scope.arrayIndexnew= $scope.shipData.findIndex( record => (record.slip_no ===$scope.scan.slip_no && record.sku ===$scope.scan.sku ))
                 if ($scope.arrayIndexnew != -1)
                 {
+                    
                     if (parseInt($scope.shipData[$scope.arrayIndexnew].scaned) < parseInt($scope.shipData[$scope.arrayIndexnew].piece))
                     {
-                        $scope.shipData[$scope.arrayIndexnew].scaned = parseInt($scope.shipData[$scope.arrayIndexnew].scaned) + 1;
-
-                        if (parseInt($scope.shipData[$scope.arrayIndexnew].scaned) == parseInt($scope.shipData[$scope.arrayIndexnew].piece))
+                      
+                        $scope.shipData[$scope.arrayIndexnew].scaned = parseInt($scope.shipData[$scope.arrayIndexnew].scaned) + parseInt($scope.scan.pieces);
+                        console.log($scope.shipData[$scope.arrayIndexnew].scaned);
+                        if (parseInt($scope.shipData[$scope.arrayIndexnew].scaned)>0)
                         {
 
                             $('#GetSkuId' + $scope.arrayIndexnew).css({"background-color": "green"});
@@ -227,16 +247,19 @@ var app = angular.module('BusinessApp', ['betsol.timeCounter'])
                 });
                 $scope.checkqty = 0;
                 angular.forEach($scope.checkArray, function (value) {
-                    if (value.piece == value.scaned)
+                 //   alert("rrr"+value.pieces);
+                    if (value.scaned>=value.piece)
                     {
+                        console.log("ssssssssss");
                         $scope.checkqty++
                     }
 
 
                 });
+               //alert($scope.checkqty);
                 if ($scope.checkArray.length == $scope.checkqty && $scope.checkqty > 0)
                 {
-                    //alert($scope.scan_new.box_no);
+                    alert("sss");
                     $scope.inxexComp = $scope.completeArray.findIndex(record => (record.slip_no === $scope.scan.slip_no))
                     if ($scope.inxexComp == -1)
                     {
@@ -291,7 +314,8 @@ var app = angular.module('BusinessApp', ['betsol.timeCounter'])
             }
             $scope.finishScan = function ()
             {
-
+                
+                console.log("dd");
                 if ($scope.completeArray.length > 0)
                 {
                     var isconfirm = confirm('Are You sure? after verication you will have to scan sort shipments again.! ');
@@ -299,7 +323,7 @@ var app = angular.module('BusinessApp', ['betsol.timeCounter'])
                     if (isconfirm)
                     {
                         $http({
-                            url: "PickUp/packFinish",
+                            url: "Business/packFinish",
                             method: "POST",
                             data: {
                                 shipData: $scope.completeArray,

@@ -287,7 +287,7 @@
                   <th class="head1"><?=lang('lang_SKU');?>.</th>
                   <th class="head0"><?=lang('lang_Total');?></th> 
                   <th class="head1"><?=lang('lang_Scaned');?></th>
-                  <th class="head0"><?=lang('lang_Extra');?></th>
+<!--                  <th class="head0"><?=lang('lang_Extra');?></th>-->
                     
 <!--                   	  <th class="head1">Remove</th>-->
                   </tr>
@@ -299,12 +299,16 @@
                   <td>{{$index+1}}</td>
                     <td><span class="label label-primary">{{data.slip_no}}</span></td>
                     <td><span class="label label-warning">{{data.sku}}</span></td>
-                   <td ng-if="data.piece>data.scaned"  >  <span class="badge badge badge-pill badge-info" >{{data.piece}}</span></td>
-                    <td ng-if="data.piece==data.scaned"  >  <span class="badge badge badge-pill badge-success" >{{data.piece}}</span></td>
-                    <td ng-if="data.piece>data.scaned" ><span class="badge badge badge-pill badge-danger" >{{data.scaned}}</span></td>
+                    <!--ng-if="data.piece>data.scaned"-->
+                   <td   >  <span class="badge badge badge-pill badge-info" >{{data.piece}}</span></td> 
+                    <!---->
+                    <td   ng-if="data.piece==data.scaned">  <span class="badge badge badge-pill badge-success" >{{data.scaned}}</span></td>
+                      <!---->
+                    <td  ng-if="data.piece>data.scaned"><span class="badge badge badge-pill badge-danger" >{{data.scaned}}</span></td>
+                      <!--data.piece==data.scaned-->
                      <td ng-if="data.piece==data.scaned" ><span class="badge badge badge-pill badge-success" >{{data.scaned}}</span></td>
                      <td ng-if="data.extra>0" ><span class="badge badge badge-pill badge-danger" >{{data.extra}}</span></td>
-                      <td ng-if="data.extra==0" ><span class="badge badge badge-pill badge-warning" >{{data.extra}}</span></td>
+<!--                      <td ng-if="data.extra==0" ><span class="badge badge badge-pill badge-warning" >{{data.extra}}</span></td>-->
                  
 <!--
                     <td><a ng-click="removeData(data.slip_no)">
@@ -356,7 +360,7 @@
              <div class="col-lg-12">
                  <div class="row">
                      
-                     <div class="col-md-2" style="padding:15px;" ng-repeat="md_data in SKuMediaArr" ng-if="SKuMediaArr!=''">
+                     <div class="col-md-2" style="padding:15px;" ng-repeat="md_data in SKuMediaArr|reverse" ng-if="SKuMediaArr!=''">
                        <div style="display:inline-block; border:solid 1px #808080; padding:15px" id="GetSkuId{{$index}}">
                 <div>
                     <img class="img-responsive" alt="{{md_data.sku}}" src="{{md_data.item_path}}" width="100" />
