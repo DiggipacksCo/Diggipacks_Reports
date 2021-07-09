@@ -1953,6 +1953,48 @@ class Shipment extends MY_Controller {
         $this->load->view('ShipmentM/trackingresult', $data);
     }
 
+    public function bulk_forward_remove() {
+        // "sssss"; die;
+        // $status=$this->Shipment_model->allstatus();
+        // 	$shipments = $this->Shipment_model->all();
+//echo "sssssss"; die;
+        $searchids = $this->input->post('tracking_numbers');
+
+
+        $data['traking_awb_no'] = preg_split('/\s+/', trim($searchids));
+        // print_r($data['traking_awb_no']); exit;
+        if(!empty( $data['traking_awb_no']))
+        {
+            $shipmentdata = $this->Shipment_model->getawbdataquery($data['traking_awb_no']);
+            $slipRArray=array();
+          foreach( $shipmentdata as $shData)
+          {
+            $slipRArray[]=$shData['slip_no'];
+          }
+          if(!empty( $slipRArray))
+          {
+            $shipmentdata = $this->Shipment_model->removeForwarding($slipRArray);
+           // print_r( $slipRArray); exit; 
+           $this->session->set_flashdata('msg', 'Forwarding Removed successfully');
+           redirect(base_url() . 'remove_forward');  
+          }else
+          {
+              $this->session->set_flashdata('error', 'Not valid Numbers');
+              redirect(base_url() . 'remove_forward');  
+          }
+
+         
+
+        }
+        else
+        {
+            $this->session->set_flashdata('error', 'Not valid Numbers');
+            redirect(base_url() . 'remove_forward');  
+        }
+       
+       
+    }
+
     public function getshipmenttrackingresultexport() {
         $_POST = json_decode(file_get_contents('php://input'), true);
         $dataArray = $_POST;
@@ -4469,7 +4511,12 @@ class Shipment extends MY_Controller {
          }
         echo json_encode($postData); 
     }
-      public function bulk_tracking() {
+    
+      public function forward_remove() {
+        $this->load->view('ShipmentM/bulk_forward_remove', $bulk);
+    }
+
+    public function bulk_tracking() {
         $this->load->view('ShipmentM/bulk_tracking', $bulk);
     }
     

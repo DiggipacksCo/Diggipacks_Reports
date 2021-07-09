@@ -315,6 +315,7 @@ $route['city_list'] = 'Country/cityList';
 $route['salla'] = 'Salla/add';
 $route['zid/(:any)']   = 'Zid/getOrder/$1';
 $route['bulk_tracking']= 'Shipment/bulk_tracking';
+$route['remove_forward']= 'Shipment/forward_remove';
 
 //===================================================//
 

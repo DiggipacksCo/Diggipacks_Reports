@@ -1261,7 +1261,9 @@ if (!function_exists('PrintPiclist3PL_bulk')) {
         $ci->db->where('super_id', $ci->session->userdata('user_details')['super_id']);
         $ci->db->select('*');
         $ci->db->from('shipment_fm');
-        $ci->db->where_in('slip_no', $slip_nos);
+        $ci->db->group_start();
+        $ci->db->where_in('slip_no', $slip_nos)->or_where_in('frwd_company_awb',$slip_nos);
+        $ci->db->group_end();
         if (!empty($frwd_company_id)) {
             // $ci->db->where('frwd_company_id',$frwd_company_id);
         }
@@ -1270,7 +1272,7 @@ if (!function_exists('PrintPiclist3PL_bulk')) {
         $query = $ci->db->get();
         // echo $ci->db->last_query();die;
         $status_update_data = $query->result_array();
-
+ 
         if (sizeof($status_update_data) > 0) {
             // echo "ssss"; die;
             //print_r($status_update_data); exit;  
