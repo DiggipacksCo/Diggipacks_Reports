@@ -29,13 +29,14 @@ class Business extends MY_Controller {
     }
 
     public function packFinish() {
-
+     
         $_POST = json_decode(file_get_contents('php://input'), true);
-        
-        print_r($_POST); die;
-        
         $dataArray = $_POST;
-        $boxArr = $dataArray['boxArr'];
+
+       $newslipArray=array();
+         $newslipArray_sku=array();
+       
+          $boxArr = $dataArray['boxArr'];
         $SpecialArr = $dataArray['SpecialArr'];
 
         $slip_data = array();
@@ -141,12 +142,10 @@ class Business extends MY_Controller {
         }
 
         //print_r($dataArray['exportData']); die;
+        
+        
+        
 
-        foreach ($slip_data as $awb_data) {
-
-            // echo $slip_data[$key]['slip_no'];exit;
-            //sms_prepared($awb_data);
-        }
         $statusvaluenew = array();
         // echo $dataArray['exportData'][0]['weight'].'//'.$boxArr['weight'];exit;
         if ($dataArray['exportData'][0]['weight'] != $boxArr['weight']) {
@@ -199,8 +198,59 @@ class Business extends MY_Controller {
                 if (!empty($statusvaluenew)) {
                     $this->Status_model->insertStatussingle($statusvaluenew);
                 }
-// 
-                echo json_encode($this->exportExcel($_POST['exportData'], $file_name));
+               
+                 foreach($dataArray['exportData'] as $JJ=>$rows)
+                {
+              
+                 if ($rows['piece'] != $rows['scaned']) {
+                     
+                    $statusvaluenew_piece[$JJ]['user_id'] = $this->session->userdata('user_details')['user_id'];
+                    $statusvaluenew_piece[$JJ]['user_type'] = 'fulfillment';
+                    $statusvaluenew_piece[$JJ]['slip_no'] = $rows['slip_no'];
+                    $statusvaluenew_piece[$JJ]['new_status'] = 4;
+                    $statusvaluenew_piece[$JJ]['code'] = 'PK';
+                    $statusvaluenew_piece[$JJ]['Activites'] = 'Piece updated ';
+                    $statusvaluenew_piece[$JJ]['Details'] = 'SKU '.$rows['sku'].' Piece updated from ' . $rows['piece'] . '  to ' . $rows['scaned'] . '  by ' . getUserNameById($this->session->userdata('user_details')['user_id']);
+                    $statusvaluenew_piece[$JJ]['entry_date'] = date('Y-m-d H:i:s');
+                    $statusvaluenew_piece[$JJ]['super_id'] = $this->session->userdata('user_details')['super_id'];
+
+                   
+                    $update_array_dia=array("piece"=>$rows['scaned']);
+                    $update_array_dia_w=array("sku"=>$rows['sku'],"slip_no"=>$rows['slip_no']);
+                    $this->Business_model->UpdateDiamation($update_array_dia,$update_array_dia_w);
+                    
+
+                 }   
+                 
+                   if(!in_array($rows['slip_no'],$newslipArray))
+                     {
+                        array_push($newslipArray,$rows['slip_no']);
+                        array_push($newslipArray_sku,array('slip_no'=>$rows['slip_no'],'pieces'=>$rows['scaned']));
+                      }
+                     else
+                     {
+                      
+                        $slip_key=array_search($rows['slip_no'], array_column($newslipArray_sku, 'slip_no'));
+                        $newslipArray_sku[$slip_key]['pieces']=$newslipArray_sku[$slip_key]['pieces']+$rows['scaned'];
+                         
+                     }
+                }
+              
+                
+                if(!empty($newslipArray_sku))
+                {
+                $this->Business_model->packOrderNew($newslipArray_sku);
+                }
+                
+                if(!empty($statusvaluenew_piece))
+                {
+                     $this->Business_model->InsertStatusPieceData($statusvaluenew_piece);
+                    
+                }
+                
+                //$this->exportExcel($_POST['exportData'], $file_name)
+
+                echo json_encode();
             }
         }
     }
@@ -211,6 +261,7 @@ class Business extends MY_Controller {
 
         //echo json_encode($_POST);
         $shipments = $this->Business_model->pickListFilterNotPicked($_POST['slip_no']);
+       // print_r($shipments); die;
         $ReturnArray = $shipments['result'];
 
         // print_r( $shipments); exit;
@@ -237,8 +288,10 @@ class Business extends MY_Controller {
                 $ReturnArray[$key]['print_url'] = base_url() . 'assets/all_labels/' . $val['slip_no'] . '.pdf';
             }
         }
+      //  echo "ssss";
+      //echo  count($ReturnArray);
         $return['result'] = $ReturnArray;
-        $return['count'] = 1;
+        $return['count'] =$shipments['count'];
         echo json_encode($return);
     }
 

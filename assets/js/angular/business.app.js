@@ -11,6 +11,8 @@ var app = angular.module('BusinessApp', ['betsol.timeCounter'])
             $scope.shelve = null;
             $scope.PrintBtnallAwb = false;
              $scope.GetremoveBtn = false;
+              $scope.AwbnoButton = false;
+               $scope.skunoButton = false;
             $scope.scan_new.box_no = 1;
             $scope.scan_awb = function () {
                 $('#scan_awb').focus();
@@ -79,10 +81,12 @@ var app = angular.module('BusinessApp', ['betsol.timeCounter'])
                         //$scope.specialtype.specialpacktype="warehouse";
                         if (response.data.count == 0)
                         {
+                             $scope.AwbnoButton = false;
                             $scope.warning = "Order Not available for packing!";
                             responsiveVoice.speak($scope.warning);
                         } else
                         {
+                              $scope.AwbnoButton = true;
                             $scope.Message = "AWB Scan";
                             responsiveVoice.speak($scope.Message);
                             $scope.GetremoveBtn = true;
@@ -94,7 +98,7 @@ var app = angular.module('BusinessApp', ['betsol.timeCounter'])
                             angular.forEach(JSON.parse(value.sku), function (value1) {
                                 //console.log(value1)
 
-                                $scope.shipData.push({'slip_no': value.slip_no, 'sku': value1.sku, 'piece': value1.piece, 'scaned': 0, 'extra': 0, 'print_url': value.print_url, 'frwd_company_id': value.frwd_company_id, 'frwd_company_awb': value.frwd_company_awb,'pieces':0});
+                                $scope.shipData.push({'slip_no': value.slip_no, 'sku': value1.sku, 'piece': value1.piece, 'scaned': 0, 'extra': 0, 'print_url': value.print_url, 'frwd_company_id': value.frwd_company_id, 'frwd_company_awb': value.frwd_company_awb,'pieces':0,'t_piece':value1.piece});
                                 $scope.SKuMediaArr.push({'sku': value1.sku, 'piece': value1.piece, 'item_path': value1.item_path});
 
                                 //$scope.Items.push( 'slip_no: ' +value.slip_no);
@@ -124,6 +128,7 @@ var app = angular.module('BusinessApp', ['betsol.timeCounter'])
                 if ($scope.arrayIndexnew != -1)
                 {
                       // alert($scope.shipData[$scope.arrayIndexnew].sku);
+                      $scope.skunoButton = true;
                             $scope.Message = 'Scaned!';
                             //responsiveVoice.speak($scope.message);    
                             responsiveVoice.speak('Scaned!');
@@ -155,15 +160,20 @@ var app = angular.module('BusinessApp', ['betsol.timeCounter'])
                 // $scope.arrayIndexnew= $scope.shipData.findIndex( record => (record.slip_no ===$scope.scan.slip_no && record.sku ===$scope.scan.sku ))
                 if ($scope.arrayIndexnew != -1)
                 {
+                    console.log(parseInt($scope.scan.pieces)+" >= "+parseInt($scope.shipData[$scope.arrayIndexnew].piece));
                     
-                    if (parseInt($scope.shipData[$scope.arrayIndexnew].scaned) < parseInt($scope.shipData[$scope.arrayIndexnew].piece))
+                    if (parseInt($scope.shipData[$scope.arrayIndexnew].piece) >= parseInt($scope.scan.pieces))
                     {
-                      
+                       //alert("ssssss");
+                      $scope.shipData[$scope.arrayIndexnew].t_piece =  parseInt($scope.scan.pieces);
                         $scope.shipData[$scope.arrayIndexnew].scaned = parseInt($scope.shipData[$scope.arrayIndexnew].scaned) + parseInt($scope.scan.pieces);
-                        console.log($scope.shipData[$scope.arrayIndexnew].scaned);
+                        //console.log($scope.shipData[$scope.arrayIndexnew].scaned);
                         if (parseInt($scope.shipData[$scope.arrayIndexnew].scaned)>0)
                         {
-
+                            $scope.scan.sku = null;
+                            $scope.skunoButton = false;
+                            
+                            $scope.scan.pieces=null;
                             $('#GetSkuId' + $scope.arrayIndexnew).css({"background-color": "green"});
                             $scope.Message = null;
                             // $scope.warning='All Parts Scanned for '+$scope.shipData[$scope.arrayIndexnew].sku;
@@ -184,7 +194,7 @@ var app = angular.module('BusinessApp', ['betsol.timeCounter'])
                         //$scope.shipData[$scope.arrayIndexnew].scaned=parseInt($scope.shipData[$scope.arrayIndexnew].scaned)+1; 
                         $scope.shipData[$scope.arrayIndexnew].extra = parseInt($scope.shipData[$scope.arrayIndexnew].extra) + 1;
                         $scope.Message = null;
-                        $scope.warning = 'Extra Item Scaned';
+                        $scope.warning = 'Please Enter Valid Piece';
                         responsiveVoice.speak($scope.warning);
                         //$scope.warning='Shipment Already scanned';
                         var sound = document.getElementById("audio");
@@ -196,6 +206,7 @@ var app = angular.module('BusinessApp', ['betsol.timeCounter'])
 
                 } else
                 {
+                    $scope.scan.sku = null;
                     if ($scope.scan.sku.length > 0)
                     {
                         $scope.Message = null;
@@ -209,7 +220,7 @@ var app = angular.module('BusinessApp', ['betsol.timeCounter'])
 
 
                 }
-                $scope.scan.sku = null;
+                
             }
             $scope.ShowOtherSkuArr = {};
             $scope.showmedia = false;
@@ -247,19 +258,20 @@ var app = angular.module('BusinessApp', ['betsol.timeCounter'])
                 });
                 $scope.checkqty = 0;
                 angular.forEach($scope.checkArray, function (value) {
-                 //   alert("rrr"+value.pieces);
-                    if (value.scaned>=value.piece)
+                   // alert(value.scaned+"rrr"+value.piece);
+                    if (value.scaned>=value.t_piece)
                     {
-                        console.log("ssssssssss");
+                       // console.log("ssssssssss");
                         $scope.checkqty++
                     }
 
 
                 });
-               //alert($scope.checkqty);
+              // alert($scope.checkqty);
+              // alert($scope.checkArray.length);
                 if ($scope.checkArray.length == $scope.checkqty && $scope.checkqty > 0)
                 {
-                    alert("sss");
+                   // alert("sss");
                     $scope.inxexComp = $scope.completeArray.findIndex(record => (record.slip_no === $scope.scan.slip_no))
                     if ($scope.inxexComp == -1)
                     {
@@ -280,6 +292,7 @@ var app = angular.module('BusinessApp', ['betsol.timeCounter'])
                     }
                     // alert($scope.specialtype.specialpack);
 
+                    $scope.AwbnoButton = false;
                     $scope.warning = null;
                     var soundsuccess = document.getElementById("audioSuccess");
                     soundsuccess.play();

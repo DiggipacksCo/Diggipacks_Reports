@@ -35,7 +35,22 @@ class Business_model extends CI_Model {
         $this->db->update_batch('pickuplist_tbl', $updateArray, 'slip_no');
         return $this->db->last_query();
     }
+    
+     public function UpdateDiamation($data=array(),$data_w=array()) {
 
+         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+         $this->db->where($data_w);
+         $this->db->update('diamention_fm', $data);
+         return $this->db->last_query();
+    }
+
+    
+    public function GetdiamantionData($slip_no=null)
+    {
+        $query=$this->db->query("SELECT sum(piece) as piece FROM `diamention_fm` WHERE slip_no='$slip_no'");
+        $result=$query->row_array();
+        return $result['piece'];
+    }
     public function packOrderNew($updateArray) {
 
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
@@ -49,6 +64,13 @@ class Business_model extends CI_Model {
         $query1 = $this->db->insert_batch('orderinvoicepicking', $data);
         return $this->db->last_query();
     }
+    
+     public function InsertStatusPieceData($data=array()) {
+
+
+       $this->db->insert_batch('status_fm', $data);
+        return $this->db->last_query();
+    }
 
     public function pickListFilterNotPicked($awb = null) {
 
@@ -58,7 +80,7 @@ class Business_model extends CI_Model {
         $this->db->where('pickuplist_tbl.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('pickuplist_tbl.id, pickuplist_tbl.`pickupId`, pickuplist_tbl.`assigned_to`, pickuplist_tbl.`slip_no`, pickuplist_tbl.`origin`, pickuplist_tbl.`destination`, pickuplist_tbl.`reciever_name`, pickuplist_tbl.`reciever_address`, pickuplist_tbl.`reciever_phone`, pickuplist_tbl.`sku`, pickuplist_tbl.`pickup_status`, pickuplist_tbl.`piece`, pickuplist_tbl.`entrydate`, pickuplist_tbl.`pickupDate`,pickuplist_tbl.sender_name,pickuplist_tbl.print_url,pickuplist_tbl.weight');
         $this->db->from('pickuplist_tbl');
-        $this->db->join('shipment_fm', 'shipment_fm.slip_no=pickuplist_tbl.slip_no');
+        $this->db->join('shipment_fm', 'shipment_fm.slip_no=pickuplist_tbl.slip_no','left');
 
         $this->db->where('pickuplist_tbl.slip_no', $awb);
 
