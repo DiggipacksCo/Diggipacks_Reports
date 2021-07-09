@@ -190,7 +190,7 @@
                   <div class="form-group">
                  
                       
-                    <input type="text" id="" my-enter="scan_awb();" ng-model="scan.slip_no"class="form-control" placeHolder='AWB' />
+                      <input type="text" id="" my-enter="scan_awb();" ng-disabled="AwbnoButton" ng-model="scan.slip_no"class="form-control" placeHolder='AWB' />
                   </div>
                 </div>
            <div class="col-md-1" ng-show="GetremoveBtn" >
@@ -198,7 +198,7 @@
               <div class="col-md-2">
                   <div class="form-group">
                  
-                    <input type="text" id="scan_awb" my-enter="packuShip('SK')" ng-model="scan.sku" class="form-control" placeHolder='SKU' />
+                      <input type="text" id="scan_awb" my-enter="packuShip('SK')" ng-disabled="skunoButton" ng-model="scan.sku" class="form-control" placeHolder='SKU' />
                   </div>
                 </div>
             <div class="col-md-1">
@@ -304,10 +304,11 @@
                     <!---->
                     <td   ng-if="data.piece==data.scaned">  <span class="badge badge badge-pill badge-success" >{{data.scaned}}</span></td>
                       <!---->
-                    <td  ng-if="data.piece>data.scaned"><span class="badge badge badge-pill badge-danger" >{{data.scaned}}</span></td>
+                       <td  ng-if="data.piece>data.scaned"><span class="badge badge badge-pill badge-danger" >{{data.scaned}}</span></td>
+                    <td  ng-if="data.piece<data.scaned"><span class="badge badge badge-pill badge-danger" >{{data.scaned}}</span></td>
                       <!--data.piece==data.scaned-->
-                     <td ng-if="data.piece==data.scaned" ><span class="badge badge badge-pill badge-success" >{{data.scaned}}</span></td>
-                     <td ng-if="data.extra>0" ><span class="badge badge badge-pill badge-danger" >{{data.extra}}</span></td>
+<!--                     <td ng-if="data.piece==data.scaned" ><span class="badge badge badge-pill badge-success" >{{data.scaned}}</span></td>-->
+<!--                     <td ng-if="data.extra>0" ><span class="badge badge badge-pill badge-danger" >{{data.extra}}</span></td>-->
 <!--                      <td ng-if="data.extra==0" ><span class="badge badge badge-pill badge-warning" >{{data.extra}}</span></td>-->
                  
 <!--

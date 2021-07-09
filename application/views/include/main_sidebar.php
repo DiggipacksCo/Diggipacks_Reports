@@ -353,7 +353,7 @@
                     } ?>
 
                       <?php if (menuIdExitsInPrivilageArray(9) == 'Y') { ?>
-                        <li <?php if ($this->uri->segment(2) == 'AddofferGift' || $this->uri->segment(2) == 'giftOffersList' || $this->uri->segment(2) == 'giftOffersList' || $this->uri->segment(2) == 'edit_offer_gift' ) echo 'class="active"'; ?>> <a href="#"><i class="icon-gift"></i> <span> <?= lang('lang_Packaging_Management'); ?> </span></a>
+                        <li <?php if ($this->uri->segment(2) == 'AddofferGift' || $this->uri->segment(2) == 'giftOffersList' || $this->uri->segment(2) == 'giftOffersList' || $this->uri->segment(2) == 'edit_offer_gift' || $this->uri->segment(2) == 'packing_b2b' ) echo 'class="active"'; ?>> <a href="#"><i class="icon-gift"></i> <span> <?= lang('lang_Packaging_Management'); ?> </span></a>
                             <ul>
 
                             <!-- <?php if (menuIdExitsInPrivilageArray(9) == 'Y') { ?>
@@ -362,6 +362,10 @@
                         
                          <?php if (menuIdExitsInPrivilageArray(9) == 'Y') { ?>
                         <li <?php if ($this->uri->segment(1) == 'packing') echo 'class="active"'; ?>> <a href="<?= base_url('packing'); ?>"></i> <span><?= lang('lang_Packaging'); ?></span></a> </li>
+                    <?php } ?>
+                        
+                         <?php if (menuIdExitsInPrivilageArray(9) == 'Y') { ?>
+                        <li <?php if ($this->uri->segment(1) == 'packing_b2b') echo 'class="active"'; ?>> <a href="<?= base_url('packing'); ?>"></i> <span><?= lang('lang_Packaging'); ?> B2B</span></a> </li>
                     <?php } ?>
                         
                          <?php if (menuIdExitsInPrivilageArray(9) == 'Y') { ?>
