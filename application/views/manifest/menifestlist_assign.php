@@ -171,6 +171,8 @@
                                                 <th><?= lang('lang_Total_Qty'); ?></th>  
                                                 <th><?= lang('lang_Completed_Qty'); ?></th>  
                                                 <th><?= lang('lang_Pending_Qty'); ?></th>  
+                                                <th>Damage Qty</th>  
+                                                <th>Missing Qty</th>
                                                 <th><?= lang('lang_Drivers'); ?></th>   
                                                 <th><?= lang('lang_TPL_company'); ?></th>  
                                                 <th><?= lang('lang_TPL_AWB'); ?></th> 
@@ -197,10 +199,14 @@
                                             <td>{{$index + 1}}  </td>
                                             <td>{{data.uniqueid}}</td>
                                            <!-- <td><span class="badge badge-info">{{data.sku}}</span></td>-->
-                                            <td width="200"><span class="badge badge-success" title="Total">{{data.qtyall}}</span> <!--&nbsp;<span class="badge badge-danger">2</span>--></td>
-                                             <td width="200"> <span class="badge badge-warning" title="Completed">{{data.complatedqty}}</span> <!--&nbsp;<span class="badge badge-danger">2</span>--></td>
-                                              <td width="200"> <span class="badge badge-danger" title="Pending">{{data.totalqtycount}}</span><!--&nbsp;<span class="badge badge-danger">2</span>--></td>
-                                            <td >{{data.assign_to}}</td>
+                                          
+                                           <td width="200"><span class="badge badge-success" title="Total">{{data.qtyall}}</span> <!--&nbsp;<span class="badge badge-danger">2</span>--></td>
+                                             <td width="200"> <span class="badge badge-warning" title="Completed">{{data.r_qty}}</span> <!--&nbsp;<span class="badge badge-danger">2</span>--></td>
+                                              <td width="200"> <span class="badge badge-danger" title="Pending">{{data.pendingQty}}</span><!--&nbsp;<span class="badge badge-danger">2</span>--></td>
+
+                                              <td width="200"> <span class="badge badge-danger" title="Pending">{{data.d_qty}}</span><!--&nbsp;<span class="badge badge-danger">2</span>--></td>
+                                              <td width="200"> <span class="badge badge-danger" title="Pending">{{data.m_qty}}</span><!--&nbsp;<span class="badge badge-danger">2</span>--></td>
+                                                 <td >{{data.assign_to}}</td>
 
                                             <td >{{data.company_name}}</td>
                                             <td ><a  href="{{data.company_label}}" ng-if="data.company_label != ''"  target="_blank">{{data.company_awb}}</a>
@@ -245,7 +251,7 @@
 
                                                             <li ><a ng-click="Getpickupimgview(data.pickimg);"><i class="icon-eye" ></i><?= lang('lang_Proof_Of_Pickup'); ?></a></li>
 
-                                                              <li ng-if="data.confirmO == 'N' && data.addBtnI == 'N' && data.complatedqty == data.qtyall && data.error == '0'"><a href="<?=base_url();?>updateManifest/{{data.uniqueid}}" ><i class="icon-pencil7"></i><?= lang('lang_Add_Inventory'); ?></a></li>
+ <li ng-if="data.confirmO == 'N' && data.addBtnI == 'N' && data.r_qty>0 && data.error == '0'"><a href="<?=base_url();?>updateManifest/{{data.uniqueid}}" ><i class="icon-pencil7"></i><?= lang('lang_Add_Inventory'); ?></a></li>
                                                             
 <!--                                                              <li ng-if="data.confirmO == 'N' && data.addBtnI == 'N' && data.complatedqty == data.qtyall && data.error == '0'"><a ng-confirm-click="are you sure to add items?" confirmed-click="showconfirmorder_pop(data.uniqueid,data.sid);"  ><i class="icon-pencil7"></i><?= lang('lang_Add_Inventory'); ?></a></li>-->
                                                            
