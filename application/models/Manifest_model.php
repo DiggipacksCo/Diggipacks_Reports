@@ -53,7 +53,7 @@ class Manifest_model extends CI_Model {
         }
 
         $this->db->where('pickup_request.deleted','N');
-        $this->db->select('COUNT(id) as id_count,id,COUNT(qty) as qtyall,id,uniqueid,sku,qty,assign_to,req_date,pstatus,code,seller_id,on_hold,itemupdated,confirmO,pickimg,address,city,3pl_awb,3pl_name,3pl_label,3pl_date,boxes,description,return_type,staff_id,vehicle_type,assign_date');
+        $this->db->select('COUNT(id) as id_count,id,SUM(qty) as qtyall,SUM(missing_qty) as m_qty,SUM(damage_qty) as d_qty,,SUM(received_qty) as r_qty,id,uniqueid,sku,qty,assign_to,req_date,pstatus,code,seller_id,on_hold,itemupdated,confirmO,pickimg,address,city,3pl_awb,3pl_name,3pl_label,3pl_date,boxes,description,return_type,staff_id,vehicle_type,assign_date');
         $this->db->from('pickup_request');
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         if ($this->session->userdata('user_details')['user_type'] == 9)
@@ -67,7 +67,7 @@ class Manifest_model extends CI_Model {
             $this->db->where('assign_to', $filterarray['driverid']);
         if ($filterarray['manifestid'])
             $this->db->where('uniqueid', $filterarray['manifestid']);
-        $this->db->where_in('pstatus', array(5, 2));
+       // $this->db->where_in('pstatus', array(5, 2));
         $this->db->group_by('uniqueid');
 
         // print_r($filterarray);
@@ -81,7 +81,7 @@ class Manifest_model extends CI_Model {
         //$this->db->order_by('id', 'desc');
         $this->db->limit($limit, $start);
         $query = $this->db->get();
-        //echo $this->db->last_query(); die;
+       // echo $this->db->last_query(); die;
 
         if ($query->num_rows() > 0) {
 
@@ -178,7 +178,7 @@ class Manifest_model extends CI_Model {
         if ($filterarray['manifestid'])
             $this->db->where('uniqueid', $filterarray['manifestid']);
 
-            $this->db->where_in('pstatus', array(5, 2));
+           // $this->db->where_in('pstatus', array(5, 2));
        // $this->db->where('pstatus', 5);
        // $this->db->group_by('uniqueid');
         $this->db->order_by('id', 'ASC');
@@ -207,7 +207,7 @@ class Manifest_model extends CI_Model {
         }
         $this->db->where('pickup_request.deleted','N');
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
-        $this->db->select('COUNT(id) as id_count,COUNT(qty) as qtyall,id,uniqueid,sku,qty,assign_to,req_date,pstatus,code,seller_id,on_hold,itemupdated,address,city,3pl_awb,3pl_name,3pl_label,3pl_date,boxes,description,manifest_type');
+        $this->db->select('COUNT(id) as id_count,SUM(qty) as qtyall,id,uniqueid,sku,qty,assign_to,req_date,pstatus,code,seller_id,on_hold,itemupdated,address,city,3pl_awb,3pl_name,3pl_label,3pl_date,boxes,description,manifest_type');
         $this->db->from('pickup_request');
         //if($this->session->userdata('user_details')['user_type']==)
         if ($filterarray['seller_id'])
@@ -282,7 +282,7 @@ class Manifest_model extends CI_Model {
         $this->db->where('pickup_request.deleted','N');
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
 
-        $this->db->select('COUNT(id) as id_count,COUNT(qty) as qtyall,id,uniqueid,sku,qty,assign_to,req_date,pstatus,code,seller_id,on_hold,itemupdated,schedule_date,vehicle_type,boxes,pack_type');
+        $this->db->select('COUNT(id) as id_count,id,SUM(qty) as qtyall,SUM(missing_qty) as m_qty,SUM(damage_qty) as d_qty,,SUM(received_qty) as r_qty,id,uniqueid,sku,qty,assign_to,req_date,pstatus,code,seller_id,on_hold,itemupdated,schedule_date,vehicle_type,boxes,pack_type');
         $this->db->from('pickup_request');
         if ($filterarray['seller_id'])
             $this->db->where('seller_id', $filterarray['seller_id']);
@@ -366,7 +366,7 @@ class Manifest_model extends CI_Model {
         }
         if ($data['type'] == 'DM') {
             //   $this->db->group_by('sku','code');
-            $this->db->where_in('code', array('MSI', 'DI'));
+           // $this->db->where_in('code', array('MSI', 'DI'));
         }
 
         $this->db->order_by('id', 'desc');
@@ -440,6 +440,14 @@ class Manifest_model extends CI_Model {
             return true;
         } else
             return false;
+    }
+
+    public function ManifestDMUpdate($data = array(), $id = null) {
+
+            $query = $this->db->update('pickup_request', $data, array('id' => $id));
+            echo $this->db->last_query(); die; 
+            return true;
+       
     }
 
     public function getpickedupupdatestatus($data = array(), $id = null) {
@@ -719,11 +727,11 @@ class Manifest_model extends CI_Model {
         $this->db->where('pickup_request.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('items_m.super_id', $this->session->userdata('user_details')['super_id']);
 
-        $this->db->select('count(pickup_request.id) as qty ,pickup_request.sku,items_m.item_path');
+        $this->db->select('SUM(pickup_request.qty-pickup_request.damage_qty-pickup_request.missing_qty) as qty ,pickup_request.sku,items_m.item_path,pickup_request.id as o_id');
         $this->db->from('pickup_request');
         $this->db->join('items_m', 'items_m.sku=pickup_request.sku');
         $this->db->where('pickup_request.uniqueid', $mid);
-        $this->db->where_not_in('pickup_request.code', array('DI', 'MSI', 'RI'));
+       // $this->db->where_not_in('pickup_request.code', array('DI', 'MSI', 'RI'));
         $this->db->group_by('pickup_request.sku');
         $query2 = $this->db->get();
 
@@ -733,12 +741,13 @@ class Manifest_model extends CI_Model {
     public function GetUpdateStaffAssignQry($data = array(), $mid = null) {
         return $this->db->update('pickup_request', $data, array('uniqueid' => $mid));
 
-        echo $this->db->last_query();
+       // echo $this->db->last_query();
     }
 
     public function GetManifestUpdateDamageMissiing($data = array()) {
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
-        return $this->db->update_batch('pickup_request', $data, 'id');
+         $this->db->update_batch('pickup_request', $data, 'id');
+       //  echo $this->db->last_query();
     }
 
     public function GetallstockLocation_bk($sid = null, $limit = null, $stockArr = array(), $shelveLimit = 0, $totalsku_size = 0, $skuid = null, $otherMatchInventory = array()) {

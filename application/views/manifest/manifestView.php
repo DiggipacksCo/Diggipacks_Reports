@@ -10,7 +10,7 @@
         <script type="text/javascript" src="<?= base_url(); ?>assets/js/angular/manifest.app.js"></script>
     </head>
 
-    <body ng-app="AppManifest" >
+    <body ng-app="AppManifest" > 
 
         <?php $this->load->view('include/main_navbar'); ?>
 
@@ -117,6 +117,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <!-- /dashboard content -->
                         <!-- Basic responsive table -->
                         <div class="panel panel-flat" >
@@ -132,9 +133,11 @@
                                                 <th>Sr.No.<br><input type="checkbox" ng-model="selectedAll"  ng-change="selectAll();" /></th>
                                                 <th>Manifest ID</th>
                                                 <th>Item Image</th>
+                                               
                                                 <th>SKU</th>  
                                                 <th>QTY</th>  
-
+                                                <th>Damage Qty</th>
+                                                <th>Missing Qty</th>
                                                 <th>Expire Date</th>
                                                 <th>Status</th>
                                                 <th>Code</th>
@@ -159,6 +162,8 @@
                                             </td>
                                             <td>{{data.sku}}</td>
                                             <td>{{data.qty}}</td>
+                                            <td><span class="badge badge-danger"  ng-if="data.editdamage==0"  ng-click="shipData[$index].editdamage=1">{{data.damage_qty}}</span><input type="number"  ng-if="data.editdamage==1" ng-model="shipData[$index].damage_qty" ng-blur="shipData[$index].editdamage=0" string-to-number max="{{data.qty}}"></td>
+                                            <td><span class="badge badge-warning"  ng-if="data.editmissing==0"  ng-click="shipData[$index].editmissing=1"  >{{data.missing_qty}}</span> <input type="number" ng-if="data.editmissing==1" value="shipData[$index].missing_qty" ng-model="shipData[$index].missing_qty" ng-blur="shipData[$index].editmissing=0" string-to-number max="{{data.qty}}"> </td>
                                             <td>{{data.expire_date}}</td>
                                             <td>{{data.pstatus}}</td>
                                             <td>{{data.code}}</td>
@@ -169,8 +174,12 @@
                                             <td ng-if="data.on_hold == 'Y'"><span class="badge badge-success"> Yes</span></td>
                                             <td ng-if="data.itemupdated == 'N'"><span class="badge badge-danger"> NO</span></td>
                                             <td ng-if="data.itemupdated == 'Y'"><span class="badge badge-success"> Yes</span></td>
-                                            <td ng-if="data.code == 'PU'"><select name="notfoundstatus" class="form-control" ng-model="UpdateData.upstatus" ng-change="getUpdatenotfoundStatus(data.id);"><option value="">Select Status</option><option value="MSI">Missing Item</option><option value="DI">Damage Item</option></select></td>
-                                            <td ng-if="data.code != 'PU'">--</td>
+
+                                            <td ng-if="data.code!='MSI' &&  data.code!='DI'" > <button  class="btn btn-success" ng-click="savedata($index)" >Save</button></td>
+                                            <td  ng-if="data.code=='MSI' ||  data.code=='DI'" > <button  class="btn btn-danger"  >Saved</button></td>
+
+                                            <!-- <td ng-if="data.code == 'PU'"><select name="notfoundstatus" class="form-control" ng-model="UpdateData.upstatus" ng-change="getUpdatenotfoundStatus(data.id);"><option value="">Select Status</option><option value="MSI">Missing Item</option><option value="DI">Damage Item</option></select></td>
+                                            <td ng-if="data.code != 'PU'">--</td> -->
                                         </tr>
 
                                     </table>

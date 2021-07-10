@@ -1398,7 +1398,7 @@ if (!function_exists('GetManifestInventroyUpdateQty')) {
     function GetManifestInventroyUpdateQty($uid, $sid, $sku) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT count(id) as tqty FROM `pickup_request` WHERE `uniqueid`='$uid' and code='RI' and seller_id='$sid' and sku='$sku' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT received_qty as tqty FROM `pickup_request` WHERE `uniqueid`='$uid' and code='RI' and seller_id='$sid' and sku='$sku' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
 
         $query = $ci->db->query($sql);
         $row = $query->row_array();

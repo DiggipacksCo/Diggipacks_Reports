@@ -90,8 +90,8 @@ class Manifest extends CourierCompany_pickup {
             else
                 $manifestarray[$ii]['error'] = 0;
             //$stockLocation[]=$this->Manifest_model->GetallstockLocation($rdata['seller_id']);
-            $manifestarray[$ii]['totalqtycount'] = $this->Manifest_model->getManifestReceviedUpdatesCount($rdata);
-            $manifestarray[$ii]['complatedqty'] = $this->Manifest_model->getManifestReceviedUpdatesCountComp($rdata);
+            $manifestarray[$ii]['pendingQty'] =$rdata['qtyall'] - $rdata['r_qty']-$rdata['m_qty']-$rdata['d_qty'] ;
+            $manifestarray[$ii]['complatedqty'] =$rdata['r_qty'] ;
             $manifestarray[$ii]['sid'] = $rdata['seller_id'];
             if ($ii == 0)
                 $seller_ids = $rdata['seller_id'];
@@ -262,6 +262,9 @@ class Manifest extends CourierCompany_pickup {
 
             $manifestarray[$ii]['item_path'] = getalldataitemtablesSKU($rdata['sku'], 'item_path');
 
+            $manifestarray[$ii]['editdamage'] =0;
+            $manifestarray[$ii]['editmissing'] =0;
+
 
             $manifestarray[$ii]['pstatus'] = GetpickupStatus($rdata['pstatus']);
             if ($rdata['seller_id'] > 0)
@@ -388,7 +391,39 @@ class Manifest extends CourierCompany_pickup {
         ob_end_clean();
         return $response = array('op' => 'ok', 'file_name' => $file_name, 'file' => "data:application/vnd.ms-excel;base64," . base64_encode($xlsData));
     }
+    
 
+
+    function updateMissingDamage() {
+        $_POST = json_decode(file_get_contents('php://input'), true);
+        $dataArray = $_POST;
+        $id = $dataArray['id'];
+        $missing_qty = $dataArray['missing_qty'];
+        $damage_qty = $dataArray['damage_qty'];
+        $sku = $dataArray['skuno'];
+
+       
+        if($missing_qty>0)
+        {
+        $code='MSI';
+        $pstatus=3;
+        }
+
+        if($damage_qty>0)
+
+        {
+        $code='DI';
+        $pstatus = 4;
+        }
+      
+        $updateArray = array('missing_qty' =>  $missing_qty, 'code'=>$code,'pstatus' => $pstatus, 'damage_qty' => $damage_qty, 'id' =>$id);
+        $result = $this->Manifest_model->ManifestDMUpdate($updateArray, $id);
+        echo json_encode($result); die;
+        if ($result == true)
+            echo json_encode(array('success' => 'successfully Updated'));
+        else
+            echo json_encode(array('error' => 'Please Enter Valid SKU No.'));
+    }
     function getupdateManifestStatus() {
         $_POST = json_decode(file_get_contents('php://input'), true);
         $dataArray = $_POST;
@@ -1786,18 +1821,20 @@ class Manifest extends CourierCompany_pickup {
         foreach ($dataArray as $key => $val) {
             $updateArray[$key]['code'] = 'RI';
             $updateArray[$key]['pstatus'] = 2;
-            $updateArray[$key]['sku'] = $val['sku'];
-            $newUpdateArray = array(
-                'code' => 'RI',
-                'pstatus' => 2,
-            );
-            $updateArray_w = array('uniqueid' => $uniqueid, 'seller_id' => $seller_id, 'code' => $code, 'pstatus' => $pstatus, 'sku' => $val['sku']);
-            $this->Manifest_model->getManifestReceviedUpdates_new_single($newUpdateArray, $updateArray_w, $val['scan']);
+            $updateArray[$key]['received_qty'] =  $val['scan'];
+            $updateArray[$key]['id'] =  $val['o_id'];
+            
+           
+            
         }
-        $return = true;
+
+          //print_r($updateArray); die;
+       
         if (!empty($updateArray)) {
-            $return = true;
-            // $return= $this->Manifest_model->getManifestReceviedUpdates_new($updateArray, $updateArray_w);
+          
+            
+            $this->Manifest_model->GetManifestUpdateDamageMissiing($updateArray);
+            return true;
         }
 
         echo json_encode($return);
@@ -2861,13 +2898,14 @@ class Manifest extends CourierCompany_pickup {
                 }
 
                 if ($first_out == 'N') {
-                    
+                   // echo 'if'; exit;
                     $dataNew=$locations;
 
                    
                     foreach ($dataNew as $val2) {
                         if($val2['id']>0 )
                         {  
+                             
                            $activitiesArr1=array(); 
                            $preData= $this->Manifest_model-> getPreQuantity($val2['id']);
                            $newQty=($val2['filled']+$preData['quantity']);
@@ -2894,7 +2932,7 @@ class Manifest extends CourierCompany_pickup {
                         }
                         else
                         {
-                                                    
+                                           
                             $data[] = array(
                                 'itype' => $item_type,
                                 'item_sku' => $skuid,
@@ -2917,6 +2955,7 @@ class Manifest extends CourierCompany_pickup {
                     }
                     else
                     {
+                      
                         if ($qty > 0) {
                             if ($sku_size >= $qty)
                                 $locationLimit = 1;
@@ -2966,7 +3005,7 @@ class Manifest extends CourierCompany_pickup {
                     $skuQtyArray[] = $sku; 
                 }
                
-              
+             // print_r($data); exit;
 
                     $manifestUpdate[] = array(
                         'sku' => $sku,
