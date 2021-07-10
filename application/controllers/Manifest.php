@@ -1455,6 +1455,7 @@ class Manifest extends CourierCompany_pickup {
                         $Auth_token=$this->Ccompany_model->Postagexp_auth($counrierArr); 
                       
                         $responseArray = $this->Ccompany_model->PostagexpArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$complete_sku,$super_id); 
+                        
                         $successres = $responseArray['errors'];                         
                         $error_status = $responseArray['message'];
 
@@ -1473,6 +1474,7 @@ class Manifest extends CourierCompany_pickup {
                             $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
                             
                             array_push($succssArray, $slipNo);
+                            $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' Data updated successfully.';
                         }                            
                         else
                         {
@@ -3053,7 +3055,8 @@ class Manifest extends CourierCompany_pickup {
             $dataArray['mid'] = $uniqueid;
             $counrierArr_table = $this->Ccompany_model->GetdeliveryCompanyUpdateQry($ccID,$cust_id,$super_id);          
             
-            $c_id = $counrierArr_table['id'];
+                $c_id = $counrierArr_table['cc_id'];
+            
                 if ($counrierArr_table['type'] == 'test') {
                     $user_name = $counrierArr_table['user_name_t'];
                     $password = $counrierArr_table['password_t'];
@@ -3104,8 +3107,9 @@ class Manifest extends CourierCompany_pickup {
           }
           //print "<pre>"; print_r($itemData);die;
           //$alldetails = $this->Manifest_model->GetMidDetailsQry(trim($dataArray['mid']));
+
             $getSkuData = $this->Ccompany_model->GetSkuData($itemData,$dataArray['sellerid']);
-            
+            //print "<pre>"; print_r($getSkuData);die;
             
             $sku_all_names = array();
             $sku_total = 0;
@@ -3152,18 +3156,28 @@ class Manifest extends CourierCompany_pickup {
             
             );
           
+            //$complete_sku= $alldetails['sku'];
+            
+            $pay_mode = trim($ShipArr['mode']);
+            $cod_amount = $ShipArr['total_cod_amt'];
+            if ($pay_mode == 'COD') {
+                    $pay_mode = 'P';
+                    $CashOnDeliveryAmount = array("Value" => $cod_amount,
+                            "CurrencyCode" => site_configTable("default_currency"));
+                    $services = 'CODS';
+            } elseif ($pay_mode == 'CC') {
+                    $pay_mode = 'P';
+                    $CashOnDeliveryAmount = NULL;
+                    $services = '';
+            }
+          
             //print "<pre>"; print_r($ShipArr);die;
             if($company=='Aramex'){
                 $params = $this->Ccompany_model->AramexArray($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id);
                 $dataJson = json_encode($params);
-                
                 $headers = array("Content-type:application/json");
-                
                 $url = $api_url;
-                
-                 $awb_array = $this->Ccompany_model->AxamexCurl($url, $headers, $dataJson,$c_id,$ShipArr);
-                 
-                
+                $awb_array = $this->Ccompany_model->AxamexCurl($url, $headers, $dataJson,$c_id,$ShipArr);
                 $check_error = $awb_array['HasErrors'];
 
 
@@ -4115,14 +4129,13 @@ class Manifest extends CourierCompany_pickup {
                             $CURRENT_TIME = date("H:i:s");                               
 
                             $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id,$dataArray,$ShipArr,$itemData,$super_id);
-                            $returnArr['successAbw'][] = 'AWB No.' . $slipNo . ' Data updated successfully.';
+                            $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' Data updated successfully.';
                             array_push($succssArray, $slipNo);
                         }                            
                         else
                         {
                             $returnArr['responseError'][] = $slipNo . ':' .$error_status;
                         }
-                    
                     }
                     elseif ($company== 'Postagexp')
                        {
@@ -4146,7 +4159,7 @@ class Manifest extends CourierCompany_pickup {
                             $CURRENT_TIME = date("H:i:s");                               
 
                             $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id,$dataArray,$ShipArr,$itemData,$super_id);
-                            
+                            $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' : forwarded to Postagexp.';
                             array_push($succssArray, $slipNo);
                         }                            
                         else

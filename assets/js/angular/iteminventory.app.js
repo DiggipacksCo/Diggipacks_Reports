@@ -897,7 +897,7 @@ $scope.Items=[];
                             if (response.data.status == 'succ')
                             {
                                 //alert("Data updated successfully.");
-                                $scope.Success_msg = response.data.Success_msg;
+                                $scope.Success_msg[0] = response.data.Success_msg;
                                 location.reload();
                             } else
                             {
@@ -909,13 +909,11 @@ $scope.Items=[];
                                     setTimeout(function() {
                                      $('.alert-danger').fadeOut();
                                     }, 10000 );
-
                             }
                         } else
                         {
                             alert("try again");
                         }
-
                     });
                     disableScreen(0);
                     $scope.loadershow = false;

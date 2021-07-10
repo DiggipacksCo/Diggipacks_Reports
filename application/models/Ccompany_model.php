@@ -348,7 +348,7 @@ class Ccompany_model extends CI_Model {
     }
 
     public function GetSkuData($itemData = array(),$sellerID= array()){
-        $sql = "SELECT items_m.sku, inventory_damage.quantity  FROM `inventory_damage` JOIN items_m ON items_m.id=inventory_damage.item_sku WHERE inventory_damage.id  IN (".implode(',',$itemData).") and inventory_damage.seller_id=".$sellerID." and inventory_damage.return_update='N' and items_m.super_id=1";
+        $sql = "SELECT items_m.sku, inventory_damage.quantity  FROM `inventory_damage` JOIN items_m ON items_m.id=inventory_damage.item_sku WHERE inventory_damage.id  IN (".implode(',',$itemData).") and inventory_damage.seller_id=".$sellerID." and inventory_damage.return_update='N' and items_m.super_id=".$this->session->userdata('user_details')['super_id']." ";
         $ci = & get_instance();
         $ci->load->database();
         $query = $ci->db->query($sql);
@@ -358,7 +358,7 @@ class Ccompany_model extends CI_Model {
     }
     
     public function get_damage_sku_details($itemID,$sellerID){
-        $sql = "SELECT items_m.sku, inventory_damage.quantity FROM `inventory_damage` JOIN items_m ON items_m.id=inventory_damage.item_sku WHERE inventory_damage.id=".$itemID."   and inventory_damage.seller_id=".$sellerID." and inventory_damage.return_update='N' and items_m.super_id=1 and inventory_damage.status_type='Damage' ";
+        $sql = "SELECT items_m.sku, inventory_damage.quantity FROM `inventory_damage` JOIN items_m ON items_m.id=inventory_damage.item_sku WHERE inventory_damage.id=".$itemID."   and inventory_damage.seller_id=".$sellerID." and inventory_damage.return_update='N' and items_m.super_id=".$this->session->userdata('user_details')['super_id']." and inventory_damage.status_type='Damage' ";
         $ci = & get_instance();
         $ci->load->database();
         $query = $ci->db->query($sql);
@@ -3787,6 +3787,13 @@ class Ccompany_model extends CI_Model {
         $Receiver_name = $ShipArr['reciever_name'];
         $Receiver_email = $ShipArr['reciever_email'];
         $Receiver_phone = $ShipArr['reciever_phone'];
+        if(!empty($Receiver_phone)) { 
+            if(strpos($Receiver_phone, '+') !== false){
+                $Receiver_phone = str_replace("+","",$Receiver_phone);
+            }
+            
+            
+        }
         $Receiver_address = $ShipArr['reciever_address'];
         if (empty($Receiver_address)) {
             $Receiver_address = 'N/A';
@@ -3877,7 +3884,7 @@ class Ccompany_model extends CI_Model {
                 )
             );
         $params = json_encode($requestArray);
-        //echo $params;die;
+       // echo $params;die;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $apiUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
@@ -5311,8 +5318,8 @@ class Ccompany_model extends CI_Model {
 
                 curl_close($curl);
             
-            $responseArray = json_decode($response, true);
-            //print_r($responseArray);die;
+            $responseArray = json_decode($response, TRUE);
+            //print "<pre>"; print_r($responseArray);die;
        
             $logresponse =   json_encode($response);  
             
@@ -5325,7 +5332,7 @@ class Ccompany_model extends CI_Model {
                 } else {
                         $successstatus = "Fail";
                 }
-                $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
+            $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no']);
                 return $responseArray;
     }
     public function SMSAEgyptArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id) {
