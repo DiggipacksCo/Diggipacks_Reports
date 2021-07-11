@@ -416,7 +416,7 @@ class CourierCompany extends MY_Controller  {
                    {
                     //echo'<pre>'; print_r($ccRetrundata);
                     $returnArr['responseError'][]= $ccRetrundata['error']['responseError'];
-                    
+                     
                    }
           
                 }
