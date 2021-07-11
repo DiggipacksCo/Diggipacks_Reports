@@ -1229,6 +1229,9 @@ if (!function_exists('PrintPiclist3PL')) {
             }
             else if (GetCourCompanynameIdbulkprint($frwd_company_id, 'company') == 'Barqfleet' || GetCourCompanynameIdbulkprint($frwd_company_id, 'company') == 'GLT' ) {
                 $pdf = new FPDI('P', 'mm', array(110, 160));
+            }
+            else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Bosta') {
+                $pdf = new FPDI('P', 'mm', array(170, 160));
             } else {
                 $pdf = new FPDI('P', 'mm', array(102, 160));
             }
@@ -1267,6 +1270,7 @@ if (!function_exists('PrintPiclist3PL_bulk')) {
         if (!empty($frwd_company_id)) {
             // $ci->db->where('frwd_company_id',$frwd_company_id);
         }
+        $frwd_company_id=
         $ci->db->order_by('shipment_fm.id', 'ASC');
         // $this->db->limit($limit, $start);
         $query = $ci->db->get();
@@ -1281,6 +1285,7 @@ if (!function_exists('PrintPiclist3PL_bulk')) {
             $fileArray = array();
             $checkIds = array();
             foreach ($status_update_data as $key => $val) {
+                $frwd_company_id=$val['frwd_company_id'];
                 array_push($checkIds, $val['frwd_company_id']);
                 if ($val['label_type'] == 1) {
                     $awb_no = $val['frwd_company_awb'];
@@ -1327,6 +1332,9 @@ if (!function_exists('PrintPiclist3PL_bulk')) {
             }
             else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Barqfleet' || GetCourCompanynameId($frwd_company_id, 'company') == 'GLT' ) {
                 $pdf = new FPDI('P', 'mm', array(110, 160));
+            }
+            else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Bosta') {
+                $pdf = new FPDI('P', 'mm', array(170, 160));
             } else {
                 $pdf = new FPDI('P', 'mm', array(102, 160));
             }
