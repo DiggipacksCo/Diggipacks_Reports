@@ -37,70 +37,13 @@ class ItemInventory_model extends CI_Model {
         //print_r($data); die;
         foreach ($data as $rdata) {
 
-            $array = array('item_sku' => $rdata['item_sku'], 'seller_id' => $rdata['seller_id'], 'expity_date' => $rdata['expity_date'], 'stock_location' => $rdata['stock_location'], 'wh_id' => $rdata['wh_id']);
-            $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
-            $this->db->where($array);
-            $query = $this->db->get('item_inventory');
-            //echo $this->db->last_query(); 
-
-            if ($query->num_rows() == 1) {
-
-                // echo "tttt"; die;
-                $status = "Quantity Increase";
-                $previous_data = $query->result()[0];
-                $item_previous_quantity = $previous_data->quantity;
-                //print_r($data['quantity']);
-                $item_new_quantity = $rdata['quantity'];
-                $item_updated_quantity = $item_previous_quantity + $item_new_quantity;
-             
-                    $new_data = array('quantity' => $item_updated_quantity, 'stock_location' => $data['stock_location'], 'shelve_no' => $data['shelve_no']);
-              
-
-                $item_inventory_history[] = array(
-                    'item_sku' => $data['item_sku'],
-                    'item_previous_quantity' => $item_previous_quantity,
-                    'item_new_quantity' => $item_updated_quantity,
-                    'update_date' => date("Y/m/d h:i:sa"),
-                    'seller_id' => $data['seller_id'],
-                    'status' => $status
-                );
-
-                if ($type == 'transfer')
-                    $activitiesType = 'transfer';
-                else if ($type == 'return')
-                    $activitiesType = 'return';
-                else if ($type == 'delete')
-                    $activitiesType = 'delete';
-                else
-                    $activitiesType = 'Update';
-
-                if (empty($data['shelve_no'])) {
-                    $data['shelve_no'] = "";
-                }
-                if (!empty($rdata['awb_no'])) {
-                    $activitiesArr = array('exp_date' => $data['expity_date'], 'st_location' => $data['stock_location'], 'item_sku' => $data['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $data['seller_id'], 'qty' => $item_updated_quantity, 'p_qty' => $item_previous_quantity, 'qty_used' => $rdata['quantity'], 'type' => $activitiesType, 'entrydate' => date("Y-m-d h:i:s"), 'awb_no' => $rdata['awb_no'], 'super_id' => $this->session->userdata('user_details')['super_id'], 'shelve_no' => $data['shelve_no']);
-                } else {
-                    $activitiesArr = array('exp_date' => $data['expity_date'], 'st_location' => $data['stock_location'], 'item_sku' => $data['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $data['seller_id'], 'qty' => $item_updated_quantity, 'p_qty' => $item_previous_quantity, 'qty_used' => $rdata['quantity'], 'type' => $activitiesType, 'entrydate' => date("Y-m-d h:i:s"), 'super_id' => $this->session->userdata('user_details')['super_id'], 'shelve_no' => $data['shelve_no']);
-                }
-                GetAddInventoryActivities($activitiesArr);
-
-                $this->db->where($array);
-                return $this->db->update('item_inventory', $new_data);
-
-
-
-                //print_r($this->db->update('item_inventory',$new_data));      
-                //echo '</pre>';
-                //exit();
-                //return  $query->result();
-            } else {
+    
                 //echo "sssss"; die;
 
                 $status = "Recently Added";
-                if (!empty($rdata['shelve_no']))
+             
                     $array_added[] = array('item_sku' => $rdata['item_sku'], 'seller_id' => $rdata['seller_id'], 'expity_date' => $rdata['expity_date'], 'stock_location' => $rdata['stock_location'], 'quantity' => $rdata['quantity'], 'itype' => $rdata['itype'], 'shelve_no' => $rdata['shelve_no'], 'wh_id' => $rdata['wh_id'], 'super_id' => $this->session->userdata('user_details')['super_id']);
-                else
-                    $array_added[] = array('item_sku' => $rdata['item_sku'], 'seller_id' => $rdata['seller_id'], 'expity_date' => $rdata['expity_date'], 'stock_location' => $rdata['stock_location'], 'quantity' => $rdata['quantity'], 'itype' => $rdata['itype'], 'wh_id' => $rdata['wh_id'], 'super_id' => $this->session->userdata('user_details')['super_id']);
+               
                 //print_r($data);
                 //echo "ddd"; die;
 
@@ -133,18 +76,24 @@ class ItemInventory_model extends CI_Model {
 
                     $activitiesArr[] = array('exp_date' => $rdata['expity_date'], 'st_location' => $rdata['stock_location'], 'item_sku' => $rdata['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $rdata['seller_id'], 'qty' => $rdata['quantity'], 'p_qty' => 0, 'qty_used' => $rdata['quantity'], 'type' => $activitiesType, 'entrydate' => date("Y-m-d h:i:s"), 'super_id' => $this->session->userdata('user_details')['super_id'], 'shelve_no' => $rdata['shelve_no']);
                 }
-            }
+            
         }
         // echo '<pre>';
-        ///print_r($activitiesArr); die;
+        // print_r($array_added); die;
         if (!empty($item_inventory_history)) {
             // $this->db->insert('item_inventory_history',$item_inventory_history);
         }
 
         if (!empty($item_inventory_history2) && !empty($array_added)) {
             // $this->db->insert_batch('item_inventory_history',$item_inventory_history2);
-            $this->db->insert_batch('item_inventory', $array_added);
+            // $this->db->insert_batch('item_inventory', $array_added);
+            // echo $this->db->last_query(); die;
+           if( $this->db->insert_batch('item_inventory', $array_added))
+           {
+          
             $this->db->insert_batch('inventory_activity', $activitiesArr);
+           }
+            
             //echo $this->db->last_query(); die;
             //GetAddInventoryActivities($activitiesArr);
         }
