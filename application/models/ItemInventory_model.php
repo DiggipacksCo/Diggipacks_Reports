@@ -52,10 +52,9 @@ class ItemInventory_model extends CI_Model {
                 //print_r($data['quantity']);
                 $item_new_quantity = $rdata['quantity'];
                 $item_updated_quantity = $item_previous_quantity + $item_new_quantity;
-                if (!empty($data['shelve_no']))
+             
                     $new_data = array('quantity' => $item_updated_quantity, 'stock_location' => $data['stock_location'], 'shelve_no' => $data['shelve_no']);
-                else
-                    $new_data = array('quantity' => $item_updated_quantity, 'stock_location' => $data['stock_location']);
+              
 
                 $item_inventory_history[] = array(
                     'item_sku' => $data['item_sku'],
