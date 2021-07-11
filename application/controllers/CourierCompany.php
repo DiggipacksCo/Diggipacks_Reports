@@ -420,7 +420,12 @@ class CourierCompany extends MY_Controller  {
                    }
           
                 }
-               
+                else
+                   {
+                    //echo'<pre>'; print_r($ccRetrundata);
+                    $returnArr['responseError'][]= "Shipment id already forwarded in another courier company";
+                    
+                   }
            }
         }
         } 
@@ -871,7 +876,73 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                                         return $return;
                                 }
                             }
-                    }elseif($company=='Safearrival'){
+                    }
+                    elseif($company=='Aramex International')
+                    {
+                        $params = $this->Ccompany_model->AramexArrayAdvance($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id);
+                        $dataJson = json_encode($params);
+                        // print "<pre>"; print_r($dataJson); 
+                        $headers = array("Content-type:application/json");
+                        $url = $api_url;                        
+                        $awb_array = $this->Ccompany_model->AxamexCurl($url, $headers, $dataJson,$c_id,$ShipArr);
+                        // print "<pre>"; print_r($awb_array); //die;
+
+                        $check_error = $awb_array['HasErrors'];
+                        if($check_error == 'false') {
+                             $main_result = $awb_array['Shipments']['ProcessedShipment'];
+                            $Check_inner_error = $main_result['HasErrors'];
+                           
+                            if ($Check_inner_error == 'false') {
+                                    $client_awb = $main_result['ID'];
+                                    $awb_label = $main_result['ShipmentLabel']['LabelURL'];                                  
+                                    $generated_pdf = file_get_contents($awb_label);
+                                    $encoded = base64_decode($generated_pdf);
+                                
+                                    file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                                     $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+                                     $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                                    return $return;
+                            }
+                        }
+                        else if ($check_error == 'true' || $check_error == TRUE) {
+                            
+                                if (empty($awb_array['Shipments'])) {
+                                        $error_response = $awb_array['Notifications']['Notification'];
+                                        $error_response = json_encode($error_response);
+                                        //array_push($error_array, $slipNo . ':' . $error_response);
+                                        $returnArr['responseError']= $slipNo . ':' . $error_response;
+                                        $return= array('status'=>201); 
+                                        return $return;  
+                                } else {
+                                        if ($awb_array['Shipments']['ProcessedShipment']['Notifications']['Notification']['Message'] == '') {
+                                             
+                                                foreach ($awb_array['Shipments']['ProcessedShipment']['Notifications']['Notification'] as $error_response) {
+                                                    //echo $error_response['Message'];die;
+                                                    //print "<pre>"; print_r($error_response);die;
+                                                   // array_push($error_array, $slipNo . ':' . $error_response['Message']);
+                                                    $returnArr['responseError'] = $slipNo . ':' . $error_response['Message'];
+                                                    //$return= array('status'=>201); 
+                                                    $return= array('status'=>201,'error'=> $returnArr); 
+                                                    return $return;  
+                                                }
+                                        } else {
+                                                $error_response = $awb_array['Shipments']['ProcessedShipment']['Notifications']['Notification']['Message'];
+                                                
+                                                $error_response = json_encode($error_response);
+                                              //  array_push($error_array, $slipNo . ':' . $error_response);
+                                                $returnArr['responseError']= $slipNo . ':' . $error_response;
+                                                $return= array('status'=>201,'error'=> $returnArr); 
+                                                 return $return;  
+                                        }
+                                }
+
+                                $return= array('status'=>201,'error'=> $returnArr); 
+                                return $return;
+
+                        } 
+                    }  
+                    
+                    elseif($company=='Safearrival'){
                         
                             $charge_items=array();
                              $Auth_response = SafeArrival_Auth_cURL($counrierArr);  
