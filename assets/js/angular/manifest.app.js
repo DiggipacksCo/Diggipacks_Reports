@@ -60,7 +60,7 @@ var app = angular.module('AppManifest', [])
                     //$scope.SeachSkuList = response.data;
 
                     angular.forEach(response.data, function (value) {
-                        $scope.SeachSkuList.push({'qty': value.qty, 'sku': value.sku, 'scan': 0, 'item_path': value.item_path, 'id': $scope.MupdateData.id, 'mid': $scope.MupdateData.mid, 'ptqy': $scope.MupdateData.ptqy, 'cqty': $scope.MupdateData.cqty, 'tqty': $scope.MupdateData.tqty, 'seller_id': $scope.MupdateData.seller_id, 'status': 'pending', 'newtotal': 0});
+                        $scope.SeachSkuList.push({'qty': value.qty, 'sku': value.sku, 'scan': 0, 'item_path': value.item_path, 'id': $scope.MupdateData.id, 'mid': $scope.MupdateData.mid, 'ptqy': $scope.MupdateData.ptqy, 'cqty': $scope.MupdateData.cqty, 'tqty': $scope.MupdateData.tqty, 'seller_id': $scope.MupdateData.seller_id, 'status': 'pending', 'newtotal': 0,'o_id':value.o_id});
 
                     });
 
@@ -1056,6 +1056,7 @@ $scope.data={};
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 
                 }).then(function (response) {
+                    console.log(response);
                     $scope.totalCount = response.data.count;
                     if (response.data.result.length > 0) {
                         angular.forEach(response.data.result, function (value) {
@@ -1110,7 +1111,26 @@ $scope.data={};
 
             };
 
+            
 
+
+            $scope.savedata = function (id)
+            {
+                console.log(id);
+                $scope.shipData[id];
+                console.log( $scope.shipData[id]);
+                $http({
+                    url: SITEAPP_PATH+ "Manifest/updateMissingDamage",
+                    method: "POST",
+                    data: $scope.shipData[id] ,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+
+                }).then(function (response) {
+                     alert("Successfully Updated");
+                       // location.reload();
+
+                });
+            }
 
             $scope.GetUpdateMissingdamageAll = function (type)
             {
@@ -1244,3 +1264,16 @@ $scope.data={};
                     }
                 };
             }])
+            .directive('stringToNumber', function() {
+                return {
+                  require: 'ngModel',
+                  link: function(scope, element, attrs, ngModel) {
+                    ngModel.$parsers.push(function(value) {
+                      return '' + value;
+                    });
+                    ngModel.$formatters.push(function(value) {
+                      return parseFloat(value);
+                    });
+                  }
+                };
+              });
