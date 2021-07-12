@@ -1469,6 +1469,20 @@ $lang['lang_Updated_Date']="تاريخ التحديث";
 $lang['lang_Print']="طباعه";
 $lang['lang_User_Logo']="شعار المستخدم";
 $lang['lang_Forwarded_Info']="ارسال الشحن تفاصيل";
+$lang['lang_No_of_Attempts']="عدد محاولات ";
+$lang['lang_Forwarded_Date']="ارسال الشحن التاريخ";
+$lang['lang_Forwarded']="ارسال الشحن ";
+$lang['lang_Change']="تغير ";
+$lang['lang_remove_forwarding']="Remove Forwarding";
+$lang['lang_Reverse_Shipment']="Reverse Shipment";
+$lang['lang_View_Reverse_Shipment']="View Reverse Shipment";
+$lang['lang_Forward_Remove']="Forward Remove";
+$lang['lang_Remove']="remove";
+$lang['lang_Reverse_Shipment_Delivery_Station']="Reverse Shipment Delivery Station";
+$lang['lang_Transaction_Timer']="Transaction Timer";
+$lang['lang_Added_By']="Added By";
+$lang['lang_Admin']="Admin";
+$lang['lang_you_can_reverse_twenty_shipments']="you can Reverse 20 shipments";
 
 $lang['lang_CC']="CC";
 

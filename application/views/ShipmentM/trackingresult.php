@@ -65,6 +65,7 @@
                                                 <th><b class="size-2"><?=lang('lang_Action');?></b></th>
                                             </tr>
                                             <?php
+                                              $lang_View_detail=lang('lang_View_detail');	
                                             //print_r($shipmentdata);
                                             if (!empty($shipmentdata)) {
                                                 foreach ($shipmentdata as $awbdata) {
@@ -77,7 +78,7 @@
                                                         <td>' . $awbdata['weight'] . 'Kg</td>
                                                         <td>' . getallmaincatstatus($awbdata['delivered'], 'main_status') . '</td>
 
-                                                        <td><a href="' . base_url() . 'TrackingDetails/' . $awbdata['id'] . '" class="btn btn-primary" target="_black">View Details</a></td>
+                                                        <td><a href="' . base_url() . 'TrackingDetails/' . $awbdata['id'] . '" class="btn btn-primary" target="_black">'.$lang_View_detail.'</a></td>
 
                                                         </tr>';
                                                 }
