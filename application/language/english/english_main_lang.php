@@ -1453,16 +1453,22 @@ $lang['lang_Transaction_Date']="Transaction Date";
 $lang['lang_Open_Order']="Open Order ";
 $lang['lang_Update_Shelve_Inventory']="Update Shelve Inventory";
 $lang['lang_Forwarded_Info']="Forwarded Info";
+$lang['lang_Payment_Date']="Payment Date";
+$lang['lang_Forwarded_Date']="Forwarded Date";
+$lang['lang_Forwarded']="Forwarded";
+$lang['lang_Reverse_Shipment']="Reverse Shipment";
+$lang['lang_View_Reverse_Shipment']="View Reverse Shipment";
 
 
 
-$lang['lang_FAQ']="FAQ";
-$lang['lang_FAQ']="FAQ";
-$lang['lang_FAQ']="FAQ";
-$lang['lang_FAQ']="FAQ";
-$lang['lang_FAQ']="FAQ";
-$lang['lang_FAQ']="FAQ";
-$lang['lang_FAQ']="FAQ";
+$lang['lang_remove_forwarding']="Remove Forwarding";
+$lang['lang_Forward_Remove']="Forward Remove";
+$lang['lang_Remove']="remove";
+$lang['lang_Reverse_Shipment_Delivery_Station']="Reverse Shipment Delivery Station";
+$lang['lang_Transaction_Timer']="Transaction Timer";
+$lang['lang_Added_By']="Added By";
+$lang['lang_Admin']="Admin";
+$lang['lang_you_can_reverse_twenty_shipments']="you can Reverse 20 shipments";
 $lang['lang_FAQ']="FAQ";
 $lang['lang_FAQ']="FAQ";
 

@@ -42,7 +42,7 @@
                                 <!-- Marketing campaigns -->
                                 <div class="panel panel-flat">
                                     <div class="panel-heading">
-                                        <h1> <strong>Forward Remove</strong> </h1>
+                                        <h1> <strong><?=lang('lang_Forward_Remove');?></strong> </h1>
                                     </div>
                                     <div class="panel-body">
                                         <div class="row"> </div>
@@ -65,7 +65,7 @@
                                             <div class="col-md-2" >
                                             <div class="form-group">
 
-                                            <input type="submit" name="track_ready" class="btn btn-primary form-control checkdisable" value="Remove">	
+                                            <input type="submit" name="track_ready" class="btn btn-primary form-control checkdisable" value="<?=lang('lang_Remove');?>">	
 
                                             </div> 
                                             </div>

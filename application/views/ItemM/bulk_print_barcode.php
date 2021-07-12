@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Inventory</title>
+        <title><?=lang('lang_Inventory');?></title>
         <?php $this->load->view('include/file'); ?>
     </head>
 
@@ -42,11 +42,11 @@
                                 <!-- Marketing campaigns -->
                                 <div class="panel panel-flat">
                                     <div class="panel-heading">
-                                        <h1> <strong>Print SKU Barcode</strong> </h1>
+                                        <h1> <strong><?=lang('lang_PrintSKUBarcode');?></strong> </h1>
                                     </div>
                                     <div class="panel-body">
                                         <div class="row"> </div>
-                                        <div class="alert alert-danger">Note: SKU Limit is 50</div>
+                                        <div class="alert alert-danger"><?=lang('lang_Note');?>: <?=lang('lang_SKU_Limit_is_fifty');?></div>
                                         <form  method="post" action="<?= base_url(); ?>Item/BulkPrintSKU" target="_blank"  >
                                             <div class="col-md-12">
                                                 <div class="form-group">
@@ -63,7 +63,7 @@
                                             <div class="col-md-2" >
                                                 <div class="form-group">
                                                     <select name="seller_id" class="form-control" id="seller_id" required="">
-                                                        <option value="">Please Select Seller</option>
+                                                        <option value=""><?=lang('lang_Select_Seller');?></option>
                                                         <?php
                                                         $seller_arr = Getallsellerdata();
                                                         foreach ($seller_arr as $val)
@@ -86,7 +86,7 @@
                                             <div class="col-md-2" >
                                                 <div class="form-group">
 
-                                                    <input type="submit" name="print_ready" class="btn btn-primary form-control checkdisable" value="Print Barcode">	
+                                                    <input type="submit" name="print_ready" class="btn btn-primary form-control checkdisable" value="<?=lang('lang_Print_Barcode');?>">	
 
                                                 </div> 
                                             </div> 

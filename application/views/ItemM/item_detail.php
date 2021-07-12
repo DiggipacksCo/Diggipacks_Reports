@@ -9,7 +9,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Inventory</title>
+        <title><?=lang('lang_Inventory');?></title>
         <?php $this->load->view('include/file'); ?>
 
 
@@ -38,7 +38,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <!-- Content area -->
                     <div class="content">
                         <div class="panel panel-flat">
-                            <div class="panel-heading"><h1><strong>Edit Item</strong></h1>
+                            <div class="panel-heading"><h1><strong><?=lang('lang_EditItem');?></strong></h1>
                             </div>
                             <hr>
                             <div class="panel-body">
@@ -63,12 +63,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     ?>
                                     
                                        <div class="form-group" >
-                                        <label for="name"><strong>Expire Block:</strong></label>
+                                        <label for="name"><strong><?=lang('lang_Inventory');?>:</strong></label>
                                         <select id="expire_block" name="expire_block" class="form-control" data-width="100%" required>
                                             
 
-                                            <option value="Y" <?=$chek_expire_block1;?>>Yes</option>
-                                            <option value="N" <?=$chek_expire_block2;?>>No</option>
+                                            <option value="Y" <?=$chek_expire_block1;?>><?=lang('lang_Yes');?></option>
+                                            <option value="N" <?=$chek_expire_block2;?>><?=lang('lang_No');?></option>
 
                                         </select>
 
@@ -80,13 +80,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         <input  type="hidden"  name='id' value='<?= $item->id; ?>' disabled  class="form-control">
                                     </div>
                                     <div class="form-group">
-                                        <label for="wh_id"><strong>Warehouse:</strong></label>
+                                        <label for="wh_id"><strong><?=lang('lang_warehouse');?>:</strong></label>
                                         <?= GetwherehouseDropShow($item->wh_id); ?>     
                                     </div>
                                     <div class="form-group">
-                                        <label for="name"><strong>Storage Type:</strong></label>
+                                        <label for="name"><strong><?=lang('lang_StorageType');?>:</strong></label>
                                         <select id="storage_id" name="storage_id" class="bootstrap-select"  data-width="100%" required>
-                                            <option value="">Select Storage Type</option>
+                                            <option value=""><?=lang('lang_SelectStorageType');?></option>
                                             <?php
                                             if (!empty($StorageArray)) {
                                                 foreach ($StorageArray as $rdata) {
@@ -104,39 +104,39 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                                     <div class="form-group">
 
-                                        <label for="exampleInputEmail1"><strong>Name:</strong></label>
-                                        <input type="text" class="form-control" name='name' value="<?= $item->name; ?>" id="exampleInputEmail1" placeholder="Name" required>
+                                        <label for="exampleInputEmail1"><strong><?=lang('lang_Name');?>:</strong></label>
+                                        <input type="text" class="form-control" name='name' value="<?= $item->name; ?>" id="exampleInputEmail1" placeholder="<?=lang('lang_Name');?>" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1"><strong>Sku#:</strong></label>
-                                        <input type="text" class="form-control" name='sku'  value="<?= $item->sku; ?>" id="exampleInputEmail1" placeholder="Sku#" required>
+                                        <label for="exampleInputEmail1"><strong><?=lang('lang_Sku');?> #:</strong></label>
+                                        <input type="text" class="form-control" name='sku'  value="<?= $item->sku; ?>" id="exampleInputEmail1" placeholder="<?=lang('lang_Sku');?> #" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="sku"><strong>Capacity:</strong></label>
-                                        <input type="text" class="form-control" name='sku_size'  id="sku_size" placeholder="Capacity" ng-model="item.sku_size" value="<?= $item->sku_size; ?>" required>
+                                        <label for="sku"><strong><?=lang('lang_Capacity');?>:</strong></label>
+                                        <input type="text" class="form-control" name='sku_size'  id="sku_size" placeholder="<?=lang('lang_Capacity');?>" ng-model="item.sku_size" value="<?= $item->sku_size; ?>" required>
 
                                     </div>
                                     
                                      <div class="form-group">
-                                    <label for="less_qty"><strong>Less Quantity:</strong></label>
-                                    <input type="number" class="form-control" name='less_qty' id="less_qty" placeholder="Less Quantity" ng-model="item.less_qty" value="<?= $item->less_qty; ?>" required>
+                                    <label for="less_qty"><strong><?=lang('lang_Less_Quantity');?>:</strong></label>
+                                    <input type="number" class="form-control" name='less_qty' id="less_qty" placeholder="<?=lang('lang_Less_Quantity');?>" ng-model="item.less_qty" value="<?= $item->less_qty; ?>" required>
                                    
                                 </div>
                                  <div class="form-group">
-                                    <label for="alert_day"><strong>Expiry days:</strong></label>
-                                    <input type="number" class="form-control" name='alert_day' id="alert_day" placeholder="Expiry days" ng-model="item.alert_day" value="<?= $item->alert_day; ?>" required>
+                                    <label for="alert_day"><strong><?=lang('lang_Expiry_Days');?>:</strong></label>
+                                    <input type="number" class="form-control" name='alert_day' id="alert_day" placeholder="<?=lang('lang_Expiry_Days');?>" ng-model="item.alert_day" value="<?= $item->alert_day; ?>" required>
                                   
                                 </div>
                                 
                                   
                                 <div class="form-group">
-                                    <label for="alert_day"><strong>Color:</strong></label>
+                                    <label for="alert_day"><strong><?=lang('lang_Color');?>:</strong></label>
                                     <div class="input-group myColorPicker">
                                         <?php
                                         if($item->color!=''){
                                         ?>
                                         <span class="input-group-addon myColorPicker-preview" style="background-color: <?= $item->color; ?>;" onClick="Getchangcolor();"></span>
-                                        <?php } else { ?>  <span class="input-group-addon myColorPicker-preview" style="background-color:blank;" onClick="Getchangcolor();">Change</span><?php  } ?>
+                                        <?php } else { ?>  <span class="input-group-addon myColorPicker-preview" style="background-color:blank;" onClick="Getchangcolor();"><?=lang('lang_Color');?></span><?php  } ?>
                                         <input type="text" class="form-control" name="color" value="<?= $item->color; ?>" onkeypress="Getchangcolor();">
 					</div>
                                    
@@ -144,37 +144,37 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="alert_day"><strong>Length:</strong></label>
-                                    <input type="number" class="form-control" name='length' id="length" placeholder="Length" value="<?= $item->length; ?>">
+                                    <label for="alert_day"><strong><?=lang('lang_Length');?>:</strong></label>
+                                    <input type="number" class="form-control" name='length' id="length" placeholder="<?=lang('lang_Length');?>" value="<?= $item->length; ?>">
                                    
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="alert_day"><strong>Width:</strong></label>
-                                    <input type="number" class="form-control" name='width' id="width" placeholder="Width" value="<?= $item->width; ?>" >
+                                    <label for="alert_day"><strong><?=lang('lang_Width');?>:</strong></label>
+                                    <input type="number" class="form-control" name='width' id="width" placeholder="<?=lang('lang_Width');?>" value="<?= $item->width; ?>" >
                                    
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="alert_day"><strong>Height:</strong></label>
-                                    <input type="number" class="form-control" name='height' id="height" placeholder="Height" value="<?=$item->height;?>">
+                                    <label for="alert_day"><strong><?=lang('lang_Height');?>:</strong></label>
+                                    <input type="number" class="form-control" name='height' id="height" placeholder="<?=lang('lang_Height');?>" value="<?=$item->height;?>">
                                    
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="alert_day"><strong>Weight:</strong></label>
-                                    <input type="float" class="form-control" name='weight' id="weight" placeholder="Weight" value="<?=$item->weight;?>">
+                                    <label for="alert_day"><strong><?=lang('lang_Weight');?>:</strong></label>
+                                    <input type="float" class="form-control" name='weight' id="weight" placeholder="<?=lang('lang_Weight');?>" value="<?=$item->weight;?>">
                                    
                                 </div>
 
 
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1"><strong>Description:</strong></label>
-                                        <textarea rows="5" id="description" name="description" class="form-control" placeholder="Description" required><?= $item->description; ?></textarea>
+                                        <label for="exampleInputEmail1"><strong><?=lang('lang_Description');?>:</strong></label>
+                                        <textarea rows="5" id="description" name="description" class="form-control" placeholder="<?=lang('lang_Description');?>" required><?= $item->description; ?></textarea>
 
                                     </div>
                                     <div class="form-group">
-                                        <label for="description"><strong>Item Image:</strong></label>
+                                        <label for="description"><strong><?=lang('lang_Item_Image');?>:</strong></label>
                                         <input type="file" id="item_path" name="item_path"  class="form-control" ng-model="item.item_path">
                                         <input type="hidden" class="form-control" name='old_item_path'  id="old_item_path" value="<?= $item->item_path; ?>">
 
@@ -183,7 +183,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 
-                                    <button type="submit" class="btn btn-primary pull-right">Edit</button>
+                                    <button type="submit" class="btn btn-primary pull-right"> <?=lang('lang_Edit');?></button>
                                 </form>
 
                             </div>
