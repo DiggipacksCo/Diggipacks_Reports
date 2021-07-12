@@ -143,7 +143,7 @@
 
                                                             <option value=""><?=lang('lang_Select_Company');?></option>
                                                             <?php foreach (GetCourierCompanyDrop() as $data): ?>
-                                                                <option value="<?= $data['id']; ?>"><?= $data['company']; ?></option>
+                                                                <option value="<?= $data['cc_id']; ?>"><?= $data['company']; ?></option>
                                                             <?php endforeach; ?>
 
                                                         </select>
