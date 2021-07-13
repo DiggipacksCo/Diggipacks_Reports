@@ -55,14 +55,14 @@
                                     <li><a href="<?= base_url('bulk_tracking'); ?>"><?= lang('lang_bulk_track'); ?></a></li>
                                 <?php } ?>
                                 <?php if (menuIdExitsInPrivilageArray(137) == 'Y') { ?>
-                                    <li><a href="<?= base_url('remove_forward'); ?>">Remove Forwarding</a></li>
+                                    <li><a href="<?= base_url('remove_forward'); ?>"><?= lang('lang_remove_forwarding'); ?></a></li>
                                 <?php } ?>
 
                                 <?php if (menuIdExitsInPrivilageArray(81) == 'Y') { ?>
-                                    <li><a href="<?= base_url('Reverse_Delivery_Station'); ?>">Reverse Shipment</a></li>
+                                    <li><a href="<?= base_url('Reverse_Delivery_Station'); ?>"><?= lang('lang_Reverse_Shipment'); ?></a></li>
                                 <?php } ?>
                                 <?php if (menuIdExitsInPrivilageArray(81) == 'Y') { ?>
-                                    <li><a href="<?= base_url('Reverse_Shipment'); ?>">View Reverse Shipment</a></li>
+                                    <li><a href="<?= base_url('Reverse_Shipment'); ?>"><?= lang('lang_View_Reverse_Shipment'); ?></a></li>
                                 <?php } ?>
                                    
                                 <?php if (menuIdExitsInPrivilageArray(30) == 'Y') { ?>

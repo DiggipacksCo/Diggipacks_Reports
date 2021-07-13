@@ -50,8 +50,10 @@
                                 <div class="table-responsive" style="padding-bottom:20px;" > 
                                     <!--style="background-color: green;"-->
                                     <?php
+
+                                   $lang_Tracking_Result_for_AWB=lang('lang_Tracking_Result_for_AWB');	
                                     if (!empty($traking_awb_no))
-                                        echo 'Tracking Result for AWB#<b>' . implode(',', $traking_awb_no) . '</b>';
+                                        echo ''.$lang_Tracking_Result_for_AWB.'#      <b>' . implode(',', $traking_awb_no) . '</b>';
                                     ?>
                                     <table class="table table-striped table-hover table-bordered dataTable" id="example" style="width:100%;">
                                         <thead>
