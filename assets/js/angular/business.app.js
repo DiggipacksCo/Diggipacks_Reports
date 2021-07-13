@@ -162,7 +162,7 @@ var app = angular.module('BusinessApp', ['betsol.timeCounter'])
                 {
                     console.log(parseInt($scope.scan.pieces)+" >= "+parseInt($scope.shipData[$scope.arrayIndexnew].piece));
                     
-                    if (parseInt($scope.shipData[$scope.arrayIndexnew].piece) >= parseInt($scope.scan.pieces))
+                    if (parseInt($scope.shipData[$scope.arrayIndexnew].piece) == parseInt($scope.scan.pieces))
                     {
                        //alert("ssssss");
                       $scope.shipData[$scope.arrayIndexnew].t_piece =  parseInt($scope.scan.pieces);

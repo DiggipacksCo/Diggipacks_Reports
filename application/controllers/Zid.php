@@ -105,20 +105,20 @@ class Zid extends CI_Controller {
 
                   
                    
-                    if($check_booking_id['code']=='POD')
-                    {
+                    // if($check_booking_id['code']=='POD')
+                    // {
                        
-                    // if(!empty($check_booking_id['frwd_company_label']))
-                    // $lable=$check_booking_id['frwd_company_label'];
-                    // else
-                    // $lable='https://api.fastcoo-tech.com/API/print/'.$check_booking_id['slip_no'];
+                    // // if(!empty($check_booking_id['frwd_company_label']))
+                    // // $lable=$check_booking_id['frwd_company_label'];
+                    // // else
+                    // // $lable='https://api.fastcoo-tech.com/API/print/'.$check_booking_id['slip_no'];
 
 
-                    // $trackingurl=makeTrackUrl($check_booking_id['cc_id'],$check_booking_id['frwd_company_awb']);
+                    // // $trackingurl=makeTrackUrl($check_booking_id['cc_id'],$check_booking_id['frwd_company_awb']);
                   
                     
-                    updateZidStatus($booking_id, $manager_token, 'delivered', $check_booking_id['slip_no'], $lable, $trackingurl);
-                    }
+                    // updateZidStatus($booking_id, $manager_token, 'delivered', $check_booking_id['slip_no'], $lable, $trackingurl);
+                    // }
                     echo $booking_id . ' Exist<br>';
 
                 } else {
@@ -129,7 +129,7 @@ class Zid extends CI_Controller {
                     
                    
                  
-                    if ($result1['order']['order_status']['code'] == $customers['zid_status'] &&  trim($result1['order']['shipping']['method']['name']) ==  trim($deliveryOption) ) 
+                    if ($result1['order']['order_status']['code'] == $customers['zid_status'] && ( trim($result1['order']['shipping']['method']['name']) ==  trim($deliveryOption) || trim($result1['order']['shipping']['method']['name'])=='DIGGIPACKS' ) ) 
                     {
                    
                         $weight = 0;

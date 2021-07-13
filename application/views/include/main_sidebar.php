@@ -365,7 +365,7 @@
                     <?php } ?>
                         
                          <?php if (menuIdExitsInPrivilageArray(9) == 'Y') { ?>
-                        <li <?php if ($this->uri->segment(1) == 'packing_b2b') echo 'class="active"'; ?>> <a href="<?= base_url('packing'); ?>"></i> <span><?= lang('lang_Packaging'); ?> B2B</span></a> </li>
+                        <li <?php if ($this->uri->segment(1) == 'packing_b2b') echo 'class="active"'; ?>> <a href="<?= base_url('packing_b2b'); ?>"></i> <span><?= lang('lang_Packaging'); ?> B2B</span></a> </li>
                     <?php } ?>
                         
                          <?php if (menuIdExitsInPrivilageArray(9) == 'Y') { ?>
