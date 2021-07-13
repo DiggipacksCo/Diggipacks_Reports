@@ -217,7 +217,7 @@ class Business extends MY_Controller {
                    
                     $update_array_dia=array("piece"=>$rows['scaned']);
                     $update_array_dia_w=array("sku"=>$rows['sku'],"slip_no"=>$rows['slip_no']);
-                    $this->Business_model->UpdateDiamation($update_array_dia,$update_array_dia_w);
+                   // $this->Business_model->UpdateDiamation($update_array_dia,$update_array_dia_w);
                     
 
                  }   
@@ -239,7 +239,7 @@ class Business extends MY_Controller {
                 
                 if(!empty($newslipArray_sku))
                 {
-                $this->Business_model->packOrderNew($newslipArray_sku);
+               // $this->Business_model->packOrderNew($newslipArray_sku);
                 }
                 
                 if(!empty($statusvaluenew_piece))
