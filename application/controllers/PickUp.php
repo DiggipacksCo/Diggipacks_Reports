@@ -880,6 +880,8 @@ if(!empty( $salatoken))
 
                 $slip_data[$key]['code'] = 'RTC';
                 $slip_data[$key]['delivered'] = '8';
+                $slip_data[$key]['close_date'] =date('Y-m-d H:i:s'); ;
+
 
                 $SkudataArray = Getallskudatadetails($data['slip_no']);
                 foreach ($SkudataArray as $UPdata) {
