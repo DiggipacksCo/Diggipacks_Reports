@@ -4563,6 +4563,84 @@ class Shipment extends MY_Controller {
         echo json_encode($response);
     }
 
+     public function ViewShipmentMapping(){
+        
+        $this->load->view('ShipmentM/view_shipment_mapping');
+    }
+    
+    public function filterMapping(){
+  
+        $_POST = json_decode(file_get_contents('php://input'), true);
+        
+ 
+        
+        $page_no = $_POST['page_no'];
+        $cc_id = $_POST['cc_id'];
+        
+        $mappingData = $this->Shipment_model->filterViewMApping($page_no, $cc_id, $_POST);
+        
+        
+        $maparray = array();
+        $i=0;
+        foreach ($mappingData['result'] as $rdata) {
+            $maparray[$i] = $rdata;
+            $maparray[$i]['cc_name'] = GetCourCompanynameId($rdata['cc_id'], 'company');
+            $maparray[$i]['status'] = ($rdata['status']==1)?'Active':'De-Active';
+            $i++;
+        }
+
+        $dataArray['result'] = $maparray;
+        $dataArray['count'] = $mappingData['count'];
+        //print_r($shipments);
+        //exit();
+        echo json_encode($dataArray);
+    }
+    
+    public function addNewMapping(){
+        $this->load->view('ShipmentM/add_shipment_mapping');
+    }
+    
+    public function saveMapping(){
+        $postData = json_decode(file_get_contents('php://input'), true);
+        $returnArr = array();
+        if(empty($postData['cc_id'])){
+            $returnArr['responseError'][] = 'Please select Company Name';
+        }
+        if(empty($postData['map_data'])){
+            $returnArr['responseError'][] = 'Please enter Mapping Data';
+        }
+        if(!empty($returnArr)){
+            echo json_encode($returnArr); exit;
+        }
+        $dataCount = $this->Shipment_model->checkMappingCompany($postData);
+        if($dataCount >0){
+            $returnArr['responseError'][] = 'This Company already have mapping';
+            echo json_encode($returnArr); exit;
+        }
+        
+        $this->Shipment_model->saveMappingData($postData);
+        $returnArr = array('status' => "succ","Success_msg"=>'Mapping saved successfully');
+        echo json_encode($returnArr); exit;
+    }
+    
+    public function updateMapping(){
+        
+        $postData = $_REQUEST;
+        if(!empty($postData['cc_id']) && $postData['map_data']){
+            $id = $postData['id'];
+            unset($postData['id']);
+            $this->Shipment_model->updateMappingData($postData,$id);   
+            redirect(base_url().'shipment_mapping');
+        }
+        
+    }
+    
+    public function edit_mapping_view($id){
+        
+        $data['mapdata'] = $this->Shipment_model->getMappingData($id);
+        $this->load->view('ShipmentM/edit_shipment_mapping',$data);
+    }
+    
 }
 
 ?>

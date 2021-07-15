@@ -1386,6 +1386,94 @@ if(!empty($awbids ))
         }
     }
 
+        public function filterViewMApping($page_no = null, $cc_id=null, $data= array()){
+        if(!empty($data['sort_limit'])){
+            $LimitArr= explode('-', $data['sort_limit']); 
+            $limit=$LimitArr[1];
+        }else{
+            $page_no;
+            $limit = 100;
+            if(empty($page_no)) {
+                $start = 0;
+            } else {
+                $start = ($page_no - 1) * $limit;
+            }
+        }
+        
+        $this->db->where('shipment_mapping_fm.super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->from('shipment_mapping_fm');
+        if (!empty($cc_id)) {
+            $cc_id = array_filter($cc_id);
+            $this->db->where_in('shipment_mapping_fm.cc_id', $cc_id);
+        }
+        
+        $this->db->order_by('shipment_mapping_fm.id', 'desc');
+        $this->db->limit($limit, $start);
+
+        $query = $this->db->get();
+        //echo $this->db->last_query();die;
+        if ($query->num_rows() > 0) {
+            $data['result'] = $query->result_array();
+            $data['count'] = $this->mappingCount($cc_id);
+            return $data;
+        } else {
+            $data['result'] = '';
+            $data['count'] = 0;
+            return $data;
+        }
+        
+    }
+    
+    public function mappingCount($cc_id=null){
+        
+        if (!empty($cc_id)) {
+            $cc_id = array_filter($cc_id);
+
+            $this->db->where_in('shipment_mapping_fm.cc_id', $cc_id);
+        }
+        $this->db->select('count(1) as cnt');
+        $this->db->where('shipment_mapping_fm.super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->from('shipment_mapping_fm');
+        $query = $this->db->get();
+        $data = $query->row_array();
+        return $data['cnt'];
+        // return $page_no.$this->db->last_query();
+    }
+    
+    public function checkMappingCompany($data){
+        
+        $this->db->select('count(1) as cnt');
+        $this->db->from('shipment_mapping_fm');
+        $this->db->where('cc_id',$data['cc_id']);
+        $this->db->where('super_id',$this->session->userdata('user_details')['super_id']);
+        $query = $this->db->get();
+        
+        $data = $query->row_array();
+        return $data['cnt'];
+    }
+    public function saveMappingData($data){
+        $data_array = array('cc_id'=>$data['cc_id'],'map_data'=>$data['map_data'],'super_id'=>$this->session->userdata('user_details')['super_id']);
+        $this->db->insert('shipment_mapping_fm', $data_array);
+        //echo $this->db->last_query();   
+    }
+    
+    public function getMappingData($id){
+        $this->db->select('*');
+        $this->db->from('shipment_mapping_fm');
+        $this->db->where('id',$id);
+        $this->db->where('super_id',$this->session->userdata('user_details')['super_id']);
+        $query = $this->db->get();
+        
+        $data = $query->row_array();
+        return $data;
+        
+    }
+    
+    public function updateMappingData($data = array(),$id){
+        $this->db->update('shipment_mapping_fm', $data, array('id' => $id));
+    }
+    
+  
     public function filterViewReverse($awb= null, $sku= null, $delivered= null, $seller= null, $to= null, $from= null, $exact= null, $page_no= null, $destination= null, $booking_id= null, $cc_id = null,$is_menifest = null,$refsno=null,$mobileno=null,$wh_id=null,$data=array()) {
 
         if(!empty($data['sort_limit']))

@@ -115,6 +115,9 @@ $route['bulkprint']                = 'Shipment/BulkPrintPage';
 $route['Forward_Delivery_Station'] = 'Shipment/ForwardtoDeliveryStation';
 $route['Reverse_Delivery_Station'] = 'Shipment/ReversetoDeliveryStation';
 $route['Reverse_Shipment'] = 'Shipment/ViewReverseShipment';
+$route['shipment_mapping'] = 'Shipment/ViewShipmentMapping';
+$route['add_new_mapping'] = 'Shipment/addNewMapping';
+$route['update_mapping'] = 'Shipment/updateMapping';
 
 
 $route['generatePickup']   = 'Shipment/generatePickup';
