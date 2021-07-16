@@ -64,7 +64,7 @@
                                 <?php if (menuIdExitsInPrivilageArray(81) == 'Y') { ?>
                                     <li><a href="<?= base_url('Reverse_Shipment'); ?>"><?= lang('lang_View_Reverse_Shipment'); ?></a></li>
                                 <?php } ?>
-                                   
+                                    <li><a href="<?= base_url('shipment_mapping'); ?>">Shipment Mapping</a></li>
                                 <?php if (menuIdExitsInPrivilageArray(30) == 'Y') { ?>
 
                                     <li class="navigation-divider"></li>

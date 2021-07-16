@@ -1901,11 +1901,78 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
                 });
             }
         })
+        
+.controller('shipment_mapping', function ($scope, $http, $window) {
+            $scope.filterData = {};
+            $scope.mappingData = [];
+            $scope.responseError = {};
+            $scope.Success_msg = {};
+            $scope.loadMore = function (page_no, reset)
+            {
+                console.log(page_no);
+                // console.log($scope.selectedData);    
+                $scope.filterData.page_no = page_no;
+                if (reset == 1)
+                {
+                    $scope.mappingData = [];
+                }
+
+                $http({
+                    url: "Shipment/filterMapping",
+                    method: "POST",
+                    data: $scope.filterData,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+
+                }).then(function (response) {
+                    console.log(response.data.result)
+                    $scope.totalCount = response.data.count;
+                    if (response.data.result.length > 0) {
+                        angular.forEach(response.data.result, function (value) {
+                            //console.log(value.slip_no)
+
+                            $scope.mappingData.push(value);
+
+                        });
+                        //console.log( $scope.shipData)
+                        //$scope.$broadcast('scroll.infiniteScrollComplete');
+                    } else {
+                        $scope.nodata = true
+                    }
 
 
 
+                })
 
 
+            };
+            $scope.addNewMapping = function ()
+            {
+                $window.location.href = "add_new_mapping";
+            };
+            $scope.viewAlMapping = function ()
+            {
+                $window.location.href = "shipment_mapping";
+            };
+            $scope.saveMappingData = function(){
+                 $http({
+                    url: "Shipment/saveMapping",
+                    method: "POST",
+                    data: $scope.filterData,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+
+                }).then(function (response) {
+                    
+                    if(response.data.status == 'succ'){
+                        $scope.Success_msg[0] = response.data.Success_msg;
+                    }else{
+                        $scope.responseError = response.data.responseError;
+                        setTimeout(function() {
+                         $('.alert-danger').fadeOut();
+                        }, 10000 );
+                    }
+                })
+            };
+        })
         .controller('pickupList', function ($scope, $http, $window, Excel, $timeout) {
             $scope.AssignData = {};
             $scope.filterData = {};
