@@ -43,6 +43,7 @@
             <?php if($this->session->flashdata('err_msg')!=''){echo '<div class="alert alert-warning" role="alert">'.$this->session->flashdata('err_msg').'.</div>';}?>
             <form action="<?= base_url('Seller/add');?>" method="post"  name="add_customer" enctype="multipart/form-data">
              
+                
               <fieldset class="scheduler-border">
                 <legend class="scheduler-border"><?=lang('lang_Profile_Details');?></legend>
                 

@@ -68,8 +68,9 @@ echo '<div class="alert alert-success">'.$this->session->flashdata('msg').' <but
               <table class="table table-striped table-hover table-bordered dataTable bg-*" id="example">
                 <thead>
                   <tr>
+                      
                                                 <th><?= lang('lang_SrNo'); ?>.</th>
-                                                <th>B2B</th>
+                                                <th>User Type</th>
                                                 <th><?= lang('lang_secret_key'); ?></th>
                                                 <th><?= lang('lang_Name'); ?></th>
                                                 <th><?= lang('lang_Company_name'); ?></th>

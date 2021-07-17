@@ -98,6 +98,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         
                                         
                                        
+                                        
                                         ?>
                                          <div class="form-group radiosection">
                       <label for="u_type"><strong>User Type B2B:</strong></label><br>
