@@ -1714,6 +1714,45 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                             return $return;
                             }
 
+                    } elseif ($company == 'MMCCO')
+                    {
+                       // print_r($counrierArr);die;
+                        $Auth_token=$this->Ccompany_model->MMCCO_auth($counrierArr['user_name'],$counrierArr['password'],$counrierArr['api_url']);
+                      
+                        $responseArray = $this->Ccompany_model->MMCCOArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$super_id);  
+                        //   echo "<br><br><pre>";
+                          // print_r($responseArray); DIE;
+
+                        $successres = $responseArray['status'];                         
+                        
+                         $error_status = $responseArray['message'];
+
+                        if (!empty($successres) && $successres == 'success')
+                        {
+
+                            $client_awb = $responseArray['data']['order_number'];
+                            $MMCCOLabel = $this->Ccompany_model->MMCCO_label($client_awb, $counrierArr, $Auth_token);
+                            $label= json_decode($MMCCOLabel,TRUE);
+                            $media_data = $label['data']['value'];                               
+
+                            $generated_pdf = file_get_contents($media_data);
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                            $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';                             
+                            $CURRENT_DATE = date("Y-m-d H:i:s");
+                            $CURRENT_TIME = date("H:i:s");                               
+
+                            $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                            return $return;  
+
+                            }                            
+                            else
+                            {
+
+                            $returnArr['responseError'] = $slipNo . ':' . $error_status;
+                            $return= array('status'=>201,'error'=> $returnArr); 
+                            return $return;
+                            }
+                    
                     }elseif ($company == 'SMSA International'){
                        
                             $response = $this->Ccompany_model->SMSAEgyptArray($sellername,$ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id);
