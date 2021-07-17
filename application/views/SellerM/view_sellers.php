@@ -69,6 +69,7 @@ echo '<div class="alert alert-success">'.$this->session->flashdata('msg').' <but
                 <thead>
                   <tr>
                                                 <th><?= lang('lang_SrNo'); ?>.</th>
+                                                <th>B2B</th>
                                                 <th><?= lang('lang_secret_key'); ?></th>
                                                 <th><?= lang('lang_Name'); ?></th>
                                                 <th><?= lang('lang_Company_name'); ?></th>
@@ -87,6 +88,7 @@ echo '<div class="alert alert-success">'.$this->session->flashdata('msg').' <but
                     <?php foreach($sellers as $seller): ?>
                       <tr>
                       <td> <?= $sr;?></td>
+                       <td><?= $seller->u_type; ?></td>
 					            <td> <?= $seller->secret_key; ?></td>    
                       <td><a href="<?= site_url('Seller/report_view/'.$seller->id);?>"><?= $seller->name; ?></a></td>
                       

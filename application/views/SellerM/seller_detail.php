@@ -18,7 +18,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <style type="text/css">
 .form-group.radiosection {
     display: inline-block;
-    width: 24%;
+    width: 19%;
 }
 </style>
     </head>
@@ -88,11 +88,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         else {
                                             $checkfirst_out1 = 'checked="checked"';
                                         } 
+                                       // echo '//'.$customer['u_type'].'//';
+                                        if ($customer['u_type'] == 'B2B') {
+                                            $checku_type = 'checked="checked"';
+                                        }
+                                        else {
+                                            $checku_type1 = 'checked="checked"';
+                                        } 
                                         
                                         
                                        
                                         ?>
-                                        
+                                         <div class="form-group radiosection">
+                      <label for="u_type"><strong>User Type B2B:</strong></label><br>
+                      <input type="radio" name="u_type" id="u_type" value="B2B" <?=$checku_type;?>> Yes <input type="radio" name="u_type" id="u_type"  value="B2C" <?=$checku_type1;?>> No      
+                  </div>
                                         <div class="form-group radiosection">
                                             <label for="auto_forward"><strong> <?= lang('lang_Auto_Forwarding'); ?>:</strong></label><br>
                                         

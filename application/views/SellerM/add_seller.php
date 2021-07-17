@@ -13,7 +13,7 @@
 <style type="text/css">
 .form-group.radiosection {
     display: inline-block;
-    width: 24%;
+    width: 19%;
 }
 </style>
 </head>
@@ -46,6 +46,10 @@
               <fieldset class="scheduler-border">
                 <legend class="scheduler-border"><?=lang('lang_Profile_Details');?></legend>
                 
+                 <div class="form-group radiosection">
+                      <label for="u_type"><strong>User Type B2B:</strong></label><br>
+                      <input type="radio" name="u_type" id="u_type" value="B2B"> Yes <input type="radio" name="u_type" id="u_type" checked="checked" value="B2C"> No      
+                  </div>
                  <div class="form-group radiosection">
                       <label for="access_lm"><strong><?=lang('lang_Access_LM');?>:</strong></label><br>
                       <input type="radio" name="access_lm" id="access_lm" value="Y">  <?= lang('lang_Yes'); ?> <input type="radio" name="access_lm" id="access_lm" checked="" value="N">  <?= lang('lang_No'); ?>                      
