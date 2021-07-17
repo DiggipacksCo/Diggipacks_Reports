@@ -45,7 +45,7 @@
                                 <?php if (menuIdExitsInPrivilageArray(101) == 'Y') { ?>
                                     <li><a href="<?= base_url('forwardshipments'); ?>"><?= lang('lang_Manual_Forward3PL'); ?></a></li>
                                 <?php } ?>
-                                <?php if (menuIdExitsInPrivilageArray(102) == 'Y') { ?>
+                                <?php if (menuIdExitsInPrivilageArray(141) == 'Y') { ?>
                                     <li><a href="<?= base_url('cancelOrder'); ?>"><?= lang('lang_Cancelling_orders3PL'); ?></a></li>
                                 <?php } ?>
                                 <?php if (menuIdExitsInPrivilageArray(82) == 'Y') { ?>
@@ -486,7 +486,7 @@
                                 <?php if (menuIdExitsInPrivilageArray(54) == 'Y') { ?>
                                     <li><a href="<?= base_url('view_storage'); ?>"><?= lang('lang_All_Storage_Types'); ?></a></li>
                                 <?php } ?>
-                                <?php //if (menuIdExitsInPrivilageArray(82) == 'Y')
+                                <?php if (menuIdExitsInPrivilageArray(141) == 'Y')
                                     { ?>
                                     <li><a href="<?= base_url('cancelOrder'); ?>"><?= lang('lang_Cancel_Order'); ?></a></li>
                                 <?php } ?>
