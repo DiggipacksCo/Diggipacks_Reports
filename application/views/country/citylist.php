@@ -171,6 +171,9 @@
                                             <?php if (GetCourierCompanyStausActive('Bosta') == 'Y') { ?>
                                                 <th class="head1">Bosta</th>
                                             <?php } ?>
+                                            <?php if (GetCourierCompanyStausActive('MMCCO') == 'Y') { ?>
+                                                <th class="head1">MMCCO</th>
+                                            <?php } ?>
                                                 
                                                 
 
@@ -424,6 +427,12 @@
                                                     <td><input type="text" name="bosta_city" id="bosta_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['bosta_city']; ?>" class="form-control">
                                                             <br>
                                                             <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'bosta_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
+                                                        </td>
+                                                     <?php } ?>
+                                                    <?php if (GetCourierCompanyStausActive('MMCCO') == 'Y') { ?>
+                                                    <td><input type="text" name="MMCCO_city" id="MMCCO_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['MMCCO_city']; ?>" class="form-control">
+                                                            <br>
+                                                            <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'MMCCO_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
                                                         </td>
                                                      <?php } ?>
                                                         
