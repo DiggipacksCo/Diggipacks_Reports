@@ -289,6 +289,7 @@ class Seller extends MY_Controller {
         $data['city_drp'] = $this->Seller_model->fetch_all_cities();
         $data['customer'] = $this->Seller_model->edit_view_customerdata($id);
 
+        
         $this->load->view('SellerM/seller_detail', $data);
     }
 
