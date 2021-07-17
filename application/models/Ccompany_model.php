@@ -4315,6 +4315,8 @@ class Ccompany_model extends CI_Model {
     {
                 $sender_default_city = Getselletdetails_new($super_id);
                 $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+                $selleremail = GetallCutomerBysellerId($ShipArr['cust_id'],'email');
+                $sellerphone = GetallCutomerBysellerId($ShipArr['cust_id'],'phone');
                 $sender_address = $sender_default_city['0']['address'];
                 $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
                 $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'MMCCO_city',$super_id);
@@ -4355,7 +4357,7 @@ class Ccompany_model extends CI_Model {
             $sender_data = array(
                     'address_type' => 'residential',
                     'name' => "DIGGIPACKS FULFILLMENT - ".$sellername,
-                    'email' => $ShipArr['sender_email'],
+                    'email' => $selleremail,
                     'apartment'=> 221,
                     'building' => 'B',
                     'street' => $sender_address,
@@ -4367,7 +4369,7 @@ class Ccompany_model extends CI_Model {
                     ),
                     
         
-                        'phone' =>$ShipArr['sender_phone'],
+                        'phone' =>$sellerphone,
                         );
                     
         
