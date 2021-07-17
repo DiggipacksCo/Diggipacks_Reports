@@ -260,6 +260,7 @@ class Ccompany_model extends CI_Model {
            'frwd_company_awb' => trim($client_awb), 
            'frwd_company_label' => $fastcoolabel, 
            'forwarded' => 1, 
+           'code' => 'RPC', 
            'label_type' => $label_type
        );
        
@@ -449,7 +450,7 @@ class Ccompany_model extends CI_Model {
         $sender_default_city= Getselletdetails_new($super_id);
         $sender_address = $sender_default_city['0']['address'];
         $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
-        $sender_name = "DIGGIPACKS FULFILLMENT-". $ShipArr['sender_name'];
+        $sender_name =  $ShipArr['sender_name'];
 
         $reciever_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'aramex_city',$super_id);       
         $C_code = getdestinationfieldshow_auto_array($ShipArr['destination'], 'aramex_country_code',$super_id);
@@ -709,7 +710,7 @@ class Ccompany_model extends CI_Model {
         $sender_default_city= Getselletdetails_new($super_id);
         $sender_address = $sender_default_city['0']['address'];
         $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
-        $sender_name = "DIGGIPACKS FULFILLMENT-". $ShipArr['sender_name'];
+        $sender_name =  $ShipArr['sender_name'];
         $reciever_city = $this->getdestinationfieldshow_auto_array($ShipArr['destination'], 'aramex_city',$super_id);
         $date = (int) microtime(true) * 1000;
         
@@ -985,10 +986,11 @@ class Ccompany_model extends CI_Model {
        
     }
 
-    public function SafeArray(array $ShipArr, array $counrierArr, $complete_sku = null, $Auth_token = null, $c_id = null,$box_pieces1=null,$super_id = null) {
+    public function SafeArray($sellername = null ,array $ShipArr, array $counrierArr, $complete_sku = null, $Auth_token = null, $c_id = null,$box_pieces1=null,$super_id = null) {
         //print "<pre>"; print_r($ShipArr);die;
         $sender_default_city = Getselletdetails_new($super_id);
-        $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+        $sellername = $sellername   ;  
+
         $sender_address = $sender_default_city['0']['address'];
         $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'safe_arrival',$super_id);
@@ -1017,7 +1019,7 @@ class Ccompany_model extends CI_Model {
 
         $sender_data = array(
             "address_type" => "residential",
-            "name" => "DIGGIPACKS FULFILLMENT - ".$sellername,
+            "name" => $sellername,
             "email" => $ShipArr['sender_email'],
             "street" => $sender_address,
             "city" => array(
@@ -1102,12 +1104,12 @@ class Ccompany_model extends CI_Model {
         return $response;
     }
 
-    public function ThabitArray(array $ShipArr, array $counrierArr, $complete_sku = null, $Auth_token = null, $c_id = null,$box_pieces1=null,$super_id = null) 
+    public function ThabitArray($sellername = null ,array $ShipArr, array $counrierArr, $complete_sku = null, $Auth_token = null, $c_id = null,$box_pieces1=null,$super_id = null) 
     {
       
         
         $sender_default_city = Getselletdetails_new($super_id);
-        $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+        // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
         $sender_address = $sender_default_city['0']['address'];
         $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'safe_arrival',$super_id);
@@ -1135,7 +1137,7 @@ class Ccompany_model extends CI_Model {
 
         $sender_data = array(
             "address_type" => "residential",
-            "name" => "DIGGIPACKS FULFILLMENT - ".$sellername,
+            "name" => $sellername,
             "email" => $ShipArr['sender_email'],
             "street" => html_entity_decode($sender_address),
             "city" => array(
@@ -1224,7 +1226,7 @@ class Ccompany_model extends CI_Model {
         $sender_default_city= Getselletdetails_new($super_id);
         $sender_address = $sender_default_city['0']['address'];
         $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
-        $sender_name = "DIGGIPACKS FULFILLMENT-". $ShipArr['sender_name'];
+        $sender_name = $ShipArr['sender_name'];
         $receiver_cityID = getdestinationfieldshow_auto_array($ShipArr['destination'], 'esnad_city_code',$super_id);
 
         $declared_charge = $ShipArr['total_cod_amt'];
@@ -1346,9 +1348,9 @@ class Ccompany_model extends CI_Model {
 }
 
 
-    public function LabaihArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1, $c_id,$super_id) {
+    public function LabaihArray($sellername = null ,$ShipArr, $counrierArr, $complete_sku, $box_pieces1, $c_id,$super_id) {
         $sender_default_city = Getselletdetails_new($super_id);
-        $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+        // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
         $sender_address = $sender_default_city['0']['address'];
         $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'labaih',$super_id);
@@ -1423,7 +1425,7 @@ class Ccompany_model extends CI_Model {
             'consigneeFlatFloor' => '',
             'consigneeLatLong' => $lattitute,
             'consigneeSplInstructions' => $ShipArr['status_describtion'],
-            'store' => "DIGGIPACKS FULFILLMENT - ".$sellername, 
+            'store' => $sellername, 
             'shipperName' => $senderData['company_name'],
             'shipperMobile' => $senderData['phone'],
             'shipperEmail' => $senderData['email'],
@@ -1476,9 +1478,9 @@ class Ccompany_model extends CI_Model {
 
 
     }
-    public function ClexArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1, $c_id,$super_id) {
+    public function ClexArray($sellername = null ,$ShipArr, $counrierArr, $complete_sku, $box_pieces1, $c_id,$super_id) {
         $sender_default_city = Getselletdetails_new($super_id);
-        $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+        // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
         $sender_address = $sender_default_city['0']['address'];
         $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'clex',$super_id);
@@ -1520,7 +1522,7 @@ class Ccompany_model extends CI_Model {
             'primary_service' => 'delivery',
             'secondary_service' => '',
             'item_value' => '',
-            'consignor' => "DIGGIPACKS FULFILLMENT - ".$sellername,
+            'consignor' => $sellername,
             'consignor_email' => $ShipArr['sender_email'],
             'origin_city' => $sender_city,
             'origin_area_new' => '',
@@ -1587,9 +1589,9 @@ class Ccompany_model extends CI_Model {
         return $response_array;
     }
 
-    public function AjeekArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1, $c_id,$super_id) {
+    public function AjeekArray($sellername = null ,$ShipArr, $counrierArr, $complete_sku, $box_pieces1, $c_id,$super_id) {
         $sender_default_city = Getselletdetails_new($super_id);
-        $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+        // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
         $sender_address = $sender_default_city['0']['address'];
         $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'ajeek_city',$super_id);
@@ -1929,10 +1931,10 @@ class Ccompany_model extends CI_Model {
         return 0;
     }
 
-    public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sku = null, $pay_mode = null, $CashOnDeliveryAmount = null, $services = null, $c_id = null,$box_pieces1=null,$super_id) {
+    public function BarqfleethArray($sellername = null ,array $ShipArr, array $counrierArr, $complete_sku = null, $pay_mode = null, $CashOnDeliveryAmount = null, $services = null, $c_id = null,$box_pieces1=null,$super_id) {
        
         $sender_default_city = Getselletdetails_new($super_id);
-        $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+        // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
         $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'city',$super_id);
         $lat = getdestinationfieldshow_auto_array($ShipArr['origin'], 'latitute',$super_id);
@@ -2004,7 +2006,7 @@ class Ccompany_model extends CI_Model {
             "hub_code" => "FASTCOO",
             "merchant_order_id" => $ShipArr['slip_no'],
             "customer_details" => array(
-                "first_name" => "DIGGIPACKS FULFILLMENT - ".$sellername,
+                "first_name" => $sellername,
                 "last_name" => "",
                 "country" => "Saudi Arabia",
                 "city" => $receiver_city,
@@ -2062,10 +2064,10 @@ class Ccompany_model extends CI_Model {
         $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
         return $response_ww;
     }
-    public function ZajilArray($ShipArr, $counrierArr, $complete_sku, $c_id,$box_pieces1,$super_id) {
+    public function ZajilArray($sellername = null ,$ShipArr, $counrierArr, $complete_sku, $c_id,$box_pieces1,$super_id) {
         
         $sender_default_city = Getselletdetails_new($super_id);
-        $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+        // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
         $sender_address = $sender_default_city['0']['address'];
         $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'zajil',$super_id);
@@ -2122,7 +2124,7 @@ class Ccompany_model extends CI_Model {
                     'is_risk_surcharge_applicable' => true,
                     'origin_details' =>
                             array(
-                                'name' => "DIGGIPACKS FULFILLMENT - ".$sellername,
+                                'name' => $sellername,
                                 'phone' => $ShipArr['sender_phone'],
                                 'alternate_phone' => '',
                                 'address_line_1' => $sender_address,
@@ -2178,10 +2180,10 @@ class Ccompany_model extends CI_Model {
         return $response_array;
     }
 
-   public function MakdoonArray(array $ShipArr, array $counrierArr, $complete_sku = null, $Auth_token = null, $c_id = null,$box_pieces1=null,$super_id) {
+   public function MakdoonArray($sellername = null ,array $ShipArr, array $counrierArr, $complete_sku = null, $Auth_token = null, $c_id = null,$box_pieces1=null,$super_id) {
        
         $sender_default_city = Getselletdetails_new($super_id);
-        $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+        // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
         $sender_address = $sender_default_city['0']['address'];
         $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'makhdoom',$super_id);
@@ -2209,7 +2211,7 @@ class Ccompany_model extends CI_Model {
 
         $sender_data = array(
             "address_type" => "residential",
-            "name" => "DIGGIPACKS FULFILLMENT - ".$sellername,
+            "name" => $sellername,
             "email" => $ShipArr['sender_email'],
             'apartment' => '',
             'building' => '',
@@ -2305,7 +2307,7 @@ class Ccompany_model extends CI_Model {
         $sender_default_city= Getselletdetails_new($super_id);
         $sender_address = $sender_default_city['0']['address'];
         $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
-        $sender_name = "DIGGIPACKS FULFILLMENT-". $ShipArr['sender_name'];
+        $sender_name = $ShipArr['sender_name'];
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'saee_city',$super_id);
         $lat = getdestinationfieldshow_auto_array($ShipArr['origin'], 'latitute',$super_id);
         $lang = getdestinationfieldshow_auto_array($ShipArr['origin'], 'longitute',$super_id);
@@ -2398,11 +2400,11 @@ class Ccompany_model extends CI_Model {
         $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
         return $response;
     }
-    public function AymakanArray(array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null,$box_pieces1,$complete_sku=null,$super_id) {
+    public function AymakanArray($sellername = null ,array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null,$box_pieces1,$complete_sku=null,$super_id) {
 
    
         $sender_default_city = Getselletdetails_new($super_id);
-        $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+        // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
         $sender_address = $sender_default_city['0']['address'];
         $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'aymakan',$super_id);
@@ -2462,7 +2464,7 @@ class Ccompany_model extends CI_Model {
             "delivery_country" => 'SA',
             "delivery_phone" => $ShipArr['reciever_phone'],
             "delivery_description" =>$complete_sku,
-            "collection_name" => "DIGGIPACKS FULFILLMENT - ".$sellername,
+            "collection_name" => $sellername,
             "collection_address" => $sender_address,
             "collection_email" => $ShipArr['sender_email'],
             "collection_city" => $sender_city,
@@ -2533,10 +2535,10 @@ class Ccompany_model extends CI_Model {
             return $response;
     }
 
-    public function SMSAArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id) {
+    public function SMSAArray($sellername = null ,$ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id) {
         
         $sender_default_city = Getselletdetails_new($super_id);
-        $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+        // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
         $sender_address = $sender_default_city['0']['address'];
         $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'samsa_city',$super_id);
@@ -2602,7 +2604,7 @@ class Ccompany_model extends CI_Model {
                   <insrCurr>3</insrCurr>
                   <itemDesc>' .  $complete_sku . '</itemDesc>
                   <sName>' .$store . '</sName>
-                  <sContact>' . "DIGGIPACKS FULFILLMENT - ".$sellername . '</sContact>
+                  <sContact>' .$sellername . '</sContact>
                   <sAddr1>' . $sender_address . '</sAddr1>
                   <sAddr2></sAddr2>
                   <sCity>' . $sender_city . '</sCity>
@@ -2725,11 +2727,11 @@ class Ccompany_model extends CI_Model {
 
     //Naqel Start
 
- public function NaqelArray(array $ShipArr, array $counrierArr, $complete_sku = null, $box_pieces1 = null, $Auth_token = null, $c_id = null,$super_id) 
+ public function NaqelArray($sellername = null ,array $ShipArr, array $counrierArr, $complete_sku = null, $box_pieces1 = null, $Auth_token = null, $c_id = null,$super_id) 
  {  //print "<pre>"; print_r($ShipArr);die;
      
            $sender_default_city = Getselletdetails_new($super_id);
-           $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+        //    $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
            $sender_address = $sender_default_city['0']['address'];
            $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
            $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'naqel_city_code',$super_id);
@@ -2780,7 +2782,7 @@ class Ccompany_model extends CI_Model {
                                     </tem:ClientAddress>
 
                                     <tem:ClientContact>
-                                        <tem:Name>' . "DIGGIPACKS FULFILLMENT - ".$sellername . '</tem:Name>
+                                        <tem:Name>' . $sellername . '</tem:Name>
                                         <tem:Email>' . $ShipArr['sender_email'] . '</tem:Email>
                                         <tem:PhoneNumber>'.$ShipArr['sender_phone'] . '</tem:PhoneNumber>
                                         <tem:MobileNo>' . $ShipArr['sender_phone'] . '</tem:MobileNo>
@@ -2865,11 +2867,11 @@ class Ccompany_model extends CI_Model {
             
 
     }
-    public function ShipsyArray(array $ShipArr, array $counrierArr, $complete_sku = null, $box_pieces1 = null, $c_id = null,$super_id) {
+    public function ShipsyArray($sellername = null ,array $ShipArr, array $counrierArr, $complete_sku = null, $box_pieces1 = null, $c_id = null,$super_id) {
         //print_r($ShipArr);exit;
         
         $sender_default_city = Getselletdetails_new($super_id);
-        $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+        // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
         $sender_address = $sender_default_city['0']['address'];
         $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'shipsy_city',$super_id);
@@ -2923,7 +2925,7 @@ class Ccompany_model extends CI_Model {
                                             "is_risk_surcharge_applicable" => 1,
                                             "origin_details" => Array
                                                 (
-                                                    "name" => "DIGGIPACKS FULFILLMENT - ".$sellername,
+                                                    "name" => $sellername,
                                                     "phone" => $ShipArr['sender_phone'],
                                                     "alternate_phone" => '',
                                                     "address_line_1" =>$sender_address,
@@ -3041,10 +3043,10 @@ class Ccompany_model extends CI_Model {
         
     }
     
-    public function ShipadeliveryArray(array $ShipArr, array $counrierArr, $auth_token = null, $c_id = null,$super_id=null) {
+    public function ShipadeliveryArray($sellername = null ,array $ShipArr, array $counrierArr, $auth_token = null, $c_id = null,$super_id=null) {
 
          $sender_default_city = Getselletdetails_new($super_id);         
-         $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');  
+        //  $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');  
          $sender_address = $sender_default_city['0']['address'];
          $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
          $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'shipsa_city',$super_id);
@@ -3071,7 +3073,7 @@ class Ccompany_model extends CI_Model {
         $number = str_replace(' ', '', $number);
         
         $Sender = array(
-            'name' =>  "DIGGIPACKS FULFILLMENT - ".$sellername,
+            'name' =>  $sellername,
             'address' => $sender_address,
             'phone' => $ShipArr['sender_phone'],
             'email' => $ShipArr['sender_email'],
@@ -3235,10 +3237,10 @@ class Ccompany_model extends CI_Model {
         return $response;
     }
                             
-    public function SPArray(array $ShipArr, array $counrierArr, $complete_sku = null,$Auth_token=null, $c_id = null,$box_pieces1=null,$super_id){
+    public function SPArray($sellername = null ,array $ShipArr, array $counrierArr, $complete_sku = null,$Auth_token=null, $c_id = null,$box_pieces1=null,$super_id){
         
         $sender_default_city = Getselletdetails_new($super_id);
-        $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+        // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
         $sender_address = $sender_default_city['0']['address'];
         $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
          $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'saudipost_id',$super_id);
@@ -3326,7 +3328,7 @@ class Ccompany_model extends CI_Model {
             "RequestTypeId"=> 1,
             "CustomerName"=> $ShipArr['reciever_name'],
             "CustomerMobileNumber"=> $ShipArr['reciever_phone'],
-            "SenderName"=>"DIGGIPACKS FULFILLMENT - ".$sellername,
+            "SenderName"=>$sellername,
             "SenderMobileNumber"=> $ShipArr['sender_phone'],
             "Items"=> array(array(
                 "ReferenceId"=> $ShipArr['slip_no'],
@@ -3402,10 +3404,10 @@ class Ccompany_model extends CI_Model {
 
 
 //Naqel ends 
-    public function EmdadArray($ShipArr, $counrierArr, $complete_sku, $c_id,$box_pieces1,$super_id) 
+    public function EmdadArray($sellername = null ,$ShipArr, $counrierArr, $complete_sku, $c_id,$box_pieces1,$super_id) 
     { 
         $sender_default_city = Getselletdetails_new($super_id);
-        $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+        // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
         $sender_address = $sender_default_city['0']['address'];
         $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'emdad_city',$super_id);
@@ -3450,7 +3452,7 @@ class Ccompany_model extends CI_Model {
         // this is prodect name (column name: status_describtion
 
         $ajoul_booking_id = $ShipArr['booking_id'];
-        $s_name = "DIGGIPACKS FULFILLMENT - ".$sellername;
+        $s_name =$sellername;
         $s_address = $sender_address;
         $s_zip = $ShipArr['sender_zip'];
         $s_phone = $ShipArr['sender_phone'];
@@ -3494,11 +3496,11 @@ class Ccompany_model extends CI_Model {
         return $response;
     }
 
-    public function Ejack($ShipArr, $counrierArr, $complete_sku, $c_id,$box_pieces1,$super_id) 
+    public function Ejack($sellername = null ,$ShipArr, $counrierArr, $complete_sku, $c_id,$box_pieces1,$super_id) 
     {
 
         $sender_default_city = Getselletdetails_new($super_id);
-        $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+        // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
         $sender_address = $sender_default_city['0']['address'];
         $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'city',$super_id);
@@ -3544,7 +3546,7 @@ class Ccompany_model extends CI_Model {
         // this is prodect name (column name: status_describtion
 
         $ajoul_booking_id = $ShipArr['booking_id'];
-        $s_name = "DIGGIPACKS FULFILLMENT - ".$sellername;
+        $s_name = $sellername;
         $s_address = $sender_address;
         $s_zip = $ShipArr['sender_zip'];
         $s_phone = $ShipArr['sender_phone'];
@@ -3587,10 +3589,10 @@ class Ccompany_model extends CI_Model {
         return $responsedata;
     }
 
-    public function fastcooArray(array $ShipArr, array $counrierArr, $complete_sku = null, $Auth_token = null, $c_id = null,$box_pieces1 = null,$super_id=null) {
+    public function fastcooArray($sellername = null ,array $ShipArr, array $counrierArr, $complete_sku = null, $Auth_token = null, $c_id = null,$box_pieces1 = null,$super_id=null) {
       
         $sender_default_city = Getselletdetails_new($super_id);
-        $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+        // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
         $sender_address = $sender_default_city['0']['address'];
         $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'city',$super_id);
@@ -3649,7 +3651,7 @@ class Ccompany_model extends CI_Model {
                     "origin" => $sender_city,
                     "destination" => $receiver_city,
                     "service" => 3,
-                    "sender_name" => "DIGGIPACKS FULFILLMENT - ".$sellername,
+                    "sender_name" => $sellername,
                     "sender_address" =>$sender_address,
                     "sender_phone" =>  $ShipArr['sender_phone'],
                     "sender_email" => $ShipArr['sender_email'],
@@ -3914,11 +3916,11 @@ class Ccompany_model extends CI_Model {
         
         return $responseArray;
     }
-    public function GLTArray(array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null, $box_pieces1 = null, $complete_sku = null,$super_id = null) 
+    public function GLTArray($sellername = null ,array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null, $box_pieces1 = null, $complete_sku = null,$super_id = null) 
     {
         
             $sender_default_city = Getselletdetails_new($super_id);
-            $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+            // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
             $sender_address = $sender_default_city['0']['address'];
             $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
             $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'GLT',$super_id);
@@ -3968,7 +3970,7 @@ class Ccompany_model extends CI_Model {
             'codAmount' => $cod_amount,
             'paymentType' => $ShipArr['mode'],
             'clientComments' => 'none',
-            'sender' => "DIGGIPACKS FULFILLMENT - ".$sellername,
+            'sender' => $sellername,
             "senderInformation" => $senderdata,
             'value' => $cod_amount,
             'customer' => $receiverdata,
@@ -4056,10 +4058,10 @@ class Ccompany_model extends CI_Model {
         }
 
 
-    public function WadhaArray(array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null, $box_pieces1 = null,$super_id=null) 
+    public function WadhaArray($sellername = null ,array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null, $box_pieces1 = null,$super_id=null) 
         {
                 $sender_default_city = Getselletdetails_new($super_id);
-                $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+                // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
                 $sender_address = $sender_default_city['0']['address'];
                 $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
                 $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'Wadha',$super_id);
@@ -4092,7 +4094,7 @@ class Ccompany_model extends CI_Model {
         
                 $sender_data = array(
                     'address_type' => 'residential',
-                    'name' => "DIGGIPACKS FULFILLMENT - ".$sellername,
+                    'name' => $sellername,
                     'email' => $ShipArr['sender_email'],
                     'apartment'=> 221,
                     'building' => 'B',
@@ -4313,10 +4315,10 @@ class Ccompany_model extends CI_Model {
         return $token;
     }
     
-    public function iMileArray(array $ShipArr, array $counrierArr, $complete_sku = null, $c_id = null,$box_pieces1 = null,$auth_token = null,$super_id = null) 
+    public function iMileArray($sellername = null ,array $ShipArr, array $counrierArr, $complete_sku = null, $c_id = null,$box_pieces1 = null,$auth_token = null,$super_id = null) 
     {   
         $sender_default_city = Getselletdetails($super_id);
-        $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+        // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
         $sender_address = $sender_default_city['0']['address'];
         
         $apiUrl = $counrierArr['api_url']."client/order/createOrder";
@@ -4440,10 +4442,10 @@ class Ccompany_model extends CI_Model {
         return $responseArray;
         
     }
-    public function fetchrArray(array $ShipArr, array $counrierArr, $complete_sku = null , $c_id = null,$box_pieces1,$super_id = null) 
+    public function fetchrArray($sellername = null ,array $ShipArr, array $counrierArr, $complete_sku = null , $c_id = null,$box_pieces1,$super_id = null) 
     {
         $sender_default_city = Getselletdetails_new($super_id);
-        $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+        // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
         $sender_address = $sender_default_city['0']['address'];
         $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'fetchr_city',$super_id);
@@ -4594,11 +4596,11 @@ class Ccompany_model extends CI_Model {
 
     }
 
-    public function tamexArray(array $ShipArr, array $counrierArr, $complete_sku = null, $Auth_token = null,$c_id=null,$box_pieces1=null,$super_id=null) 
+    public function tamexArray($sellername = null ,array $ShipArr, array $counrierArr, $complete_sku = null, $Auth_token = null,$c_id=null,$box_pieces1=null,$super_id=null) 
     {
 
         $sender_default_city = Getselletdetails_new($super_id);
-        $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+        // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
         $sender_address = $sender_default_city['0']['address'];
         $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'tamex_city',$super_id);
@@ -4706,10 +4708,10 @@ class Ccompany_model extends CI_Model {
         }
     }
     
-    public function SLSArray(array $ShipArr, array $counrierArr, $complete_sku = null,$box_pieces1 = null,$c_id=null,$super_id=null) 
+    public function SLSArray($sellername = null ,array $ShipArr, array $counrierArr, $complete_sku = null,$box_pieces1 = null,$c_id=null,$super_id=null) 
     {
         $sender_default_city = Getselletdetails_new($super_id);
-        $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+        // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
         $sender_address = $sender_default_city['0']['address'];
         $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'sls',$super_id);
@@ -4746,8 +4748,8 @@ class Ccompany_model extends CI_Model {
             
            
             $details = array(
-                'account_number'=>"DIGGIPACKS FULFILLMENT - ".$sellername,
-                'requested_by'=> "DIGGIPACKS FULFILLMENT - ".$sellername,
+                'account_number'=>$sellername,
+                'requested_by'=>$sellername,
                 'collection_name'=> $ShipArr['sender_name'],
                 'collection_contact'=>'Majd',
                 'collection_street1'=> $sender_address,
@@ -4855,10 +4857,10 @@ class Ccompany_model extends CI_Model {
             curl_close($curl);
             return  $label_response;
     }
-    public function FedEX(array $ShipArr, array $counrierArr, $complete_sku = null,$box_pieces1 = null,$c_id=null,$super_id=null){
+    public function FedEX($sellername = null ,array $ShipArr, array $counrierArr, $complete_sku = null,$box_pieces1 = null,$c_id=null,$super_id=null){
         
             $sender_default_city = Getselletdetails_new($super_id);
-            $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+            // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
             $sender_address = $sender_default_city['0']['address'];
             $senderemail = GetallCutomerBysellerId($ShipArr['cust_id'],'email');
             $senderphone = GetallCutomerBysellerId($ShipArr['cust_id'],'phone');
@@ -4919,7 +4921,7 @@ class Ccompany_model extends CI_Model {
                 "SendersAddress2"=>$sender_address,
                 "SendersCity"=>$sendercity,
                 "SendersCompany"=>$sellername,
-                "SendersContactPerson"=>"DIGGIPACKS FULFILLMENT - ".$sellername,
+                "SendersContactPerson"=>$sellername,
                 "SendersCountry"=>'Egypt',
                 "SendersEmail"=>$senderemail,
                 "SendersGeoLocation"=>"",
@@ -5064,10 +5066,10 @@ class Ccompany_model extends CI_Model {
              return $Auth_token;
     
     }
-     public function MomentsArray(array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null, $box_pieces1 = null,$complete_sku=null,$super_id) 
+     public function MomentsArray($sellername = null ,array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null, $box_pieces1 = null,$complete_sku=null,$super_id) 
     {
             $sender_default_city = Getselletdetails_new($super_id);
-            $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+            // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
             $senderemail = GetallCutomerBysellerId($ShipArr['cust_id'],'email');
             $senderphone = GetallCutomerBysellerId($ShipArr['cust_id'],'phone');
             $sender_address = $sender_default_city['0']['address'];
@@ -5101,7 +5103,7 @@ class Ccompany_model extends CI_Model {
 
     
             $sender_data = array(
-                        "name"=>"DIGGIPACKS FULFILLMENT - ".$sellername,
+                        "name"=>$sellername,
                         "country_code"=> "SA",
                         "city_code"=> $sender_city,
                         "address"=>$sender_address,
@@ -5213,10 +5215,10 @@ class Ccompany_model extends CI_Model {
              return $Auth_token;
     
     }
-     public function PostagexpArray(array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null, $box_pieces1 = null,$complete_sku=null,$super_id= null) 
+     public function PostagexpArray($sellername = null ,array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null, $box_pieces1 = null,$complete_sku=null,$super_id= null) 
     {
             $sender_default_city = Getselletdetails_new($super_id);
-            $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+            // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
             $senderemail = GetallCutomerBysellerId($ShipArr['cust_id'],'email');
             $senderphone = GetallCutomerBysellerId($ShipArr['cust_id'],'phone');
             $sender_address = $sender_default_city['0']['address'];
@@ -5256,7 +5258,7 @@ class Ccompany_model extends CI_Model {
                 }
     
             $sender_data = array(
-                        "name"=>"DIGGIPACKS FULFILLMENT - ".$sellername,
+                        "name"=>$sellername,
                         "country_code"=> "SA",
                         "city_code"=> $sender_city,
                         "address"=>  $sender_address,
@@ -5335,9 +5337,9 @@ class Ccompany_model extends CI_Model {
             $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no']);
                 return $responseArray;
     }
-    public function SMSAEgyptArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id) {
+    public function SMSAEgyptArray($sellername = null ,$ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id) {
             $sender_default_city = Getselletdetails_new($super_id);
-            $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+            // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
             $senderemail = GetallCutomerBysellerId($ShipArr['cust_id'],'email');
             $senderphone = GetallCutomerBysellerId($ShipArr['cust_id'],'phone');
             $sender_address = $sender_default_city['0']['address'];

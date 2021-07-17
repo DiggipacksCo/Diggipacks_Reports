@@ -166,8 +166,19 @@ class Seller extends MY_Controller {
                 $order_status = $this->input->post('order_status');
             }
 
+            
+            $u_type=$this->input->post('name');
+            if($u_type=='B2B')
+            {
+                $u_type="B2B";
+            }
+            else
+            {
+              $u_type="B2C";  
+            }
             $secret_key = implode('-', str_split(substr(strtolower(md5(microtime() . rand(1000, 9999))), 0, 30), 6)) . $seller_id;
             $customer_info = array(
+                'u_type'=>$u_type,
                 'name' => $this->input->post('name'),
                 'uniqueid' => $unique_acc_mp,
                 'seller_id' => 0,
@@ -346,11 +357,19 @@ class Seller extends MY_Controller {
 
 
         //echo $path_upload_contact; die;
-
-
+$u_type = $this->input->post('u_type');
+     if($u_type=='B2B')
+            {
+                $u_type="B2B";
+            }
+            else
+            {
+              $u_type="B2C";  
+            }
         $first_out = $this->input->post('first_out');
         if (!empty($this->input->post('password'))) {
             $customer_info = array(
+                  'u_type' => $u_type,
                 'name' => $this->input->post('name'),
                 'account_number' => $this->input->post('account_number'),
                 'phone' => $this->input->post('phone1'),
@@ -387,6 +406,7 @@ class Seller extends MY_Controller {
             );
         } else {
             $customer_info = array(
+                   'u_type' => $u_type,
                 'name' => $this->input->post('name'),
                 'account_number' => $this->input->post('account_number'),
                 'company' => $this->input->post('company'),
@@ -422,11 +442,12 @@ class Seller extends MY_Controller {
             );
         }
 
-        //echo "<pre>";print_r($this->input->post());exit();
+       // echo "<pre>";print_r($customer_info);exit();
         // $this->Seller_model->edit($id, $data);
         $this->Seller_model->edit_custimer($id, $customer_info);
         $this->session->set_flashdata('msg', $this->input->post('name') . '   has been updated successfully');
         redirect('Seller');
+        
     }
 
     public function report_view($id = null) {

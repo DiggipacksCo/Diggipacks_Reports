@@ -399,8 +399,37 @@ class CourierCompany extends MY_Controller  {
                     
                     $CURRENT_TIME = date('H:i:s');
                     $CURRENT_DATE = date('Y-m-d H:i:s');
+
+                    $ShipArr = array(
+                        'sender_name' =>   $ShipArr['sender_name'],
+                        'sender_address' => $ShipArr['sender_address'],
+                        'sender_phone' =>  $ShipArr['sender_phone'],
+                        'sender_email' =>  $ShipArr['sender_email'],
+                        'origin' => $ShipArr['origin']  , 
+                        'slip_no' => $ShipArr['slip_no'],
+                        'mode' => 'CC',
+                        'total_cod_amt' => $ShipArr['total_cod_amt'],
+                        'pieces' =>  $box_pieces1,
+                        'status_describtion' => $complete_sku,
+                        'weight' => $ShipArr['weight'],
+                        'shippers_ac_no' => $ShipArr['shippers_ac_no'],
+                        'cust_id' => $ShipArr['cust_id'],
+                        'service_id' => $ShipArr['service'],
+                        'reciever_name' => $ShipArr['reciever_name'],
+                        'reciever_address' =>   $ShipArr['reciever_address'],
+                        'reciever_phone' =>  $ShipArr['reciever_phone'],
+                        'reciever_email' => $ShipArr['reciever_email'],
+                        'destination' => $ShipArr['destination'],
+                        'sku' => $ShipArr['sku'],
+                        'booking_id' => $ShipArr['booking_id'],
+                        'old_slip_no'=> $ShipArr['slip_no'],
+                        'sku_data' => $sku_data
+                    );
+
+                    $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company'); 
+                    $sellername = "DIGGIPACKS FULFILLMENT- ".$sellername;
                    
-                   $ccRetrundata= $this->courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id,$company_type,$c_id, $api_url);
+                   $ccRetrundata= $this->courierComanyForward($sellername, $Auth_token,$company,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id,$company_type,$c_id, $api_url);
                    if($ccRetrundata['status']==200)
                    {
                     $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $ccRetrundata['client_awb'], $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $ccRetrundata['label'],$c_id, $api_url);
@@ -607,11 +636,13 @@ class CourierCompany extends MY_Controller  {
                             );
 
                             //echo "<pre> sdfsd"; print_r($ShipArr); die;
+                            $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company'); 
+                            $sellername = "DIGGIPACKS FULFILLMENT- ".$sellername;
 
                             $CURRENT_TIME = date('H:i:s');
                             $CURRENT_DATE = date('Y-m-d H:i:s');
                            //echo $company;die; 
-                           $ccRetrundata = $this->courierComanyForward($auth_token,$company,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id,$company_type, $c_id, $api_url);
+                           $ccRetrundata = $this->courierComanyForward($sellername,$auth_token,$company,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id,$company_type, $c_id, $api_url);
                            
                            if($ccRetrundata['status']==200)
                            {
@@ -806,13 +837,13 @@ class CourierCompany extends MY_Controller  {
 
 
 
-public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id,$company_type,$c_id, $api_url)
+public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id,$company_type,$c_id, $api_url)
 {
     //print "<pre>"; print_r($ShipArr);die;
     $slipNo =$ShipArr['slip_no'];  
     
     if($company=='Aramex'){
-                            $params = $this->Ccompany_model->AramexArray($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id);
+                            $params = $this->Ccompany_model->AramexArray($sellername,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id);
                             
 
                             $dataJson = json_encode($params);
@@ -879,7 +910,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                     }
                     elseif($company=='Aramex International')
                     {
-                        $params = $this->Ccompany_model->AramexArrayAdvance($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id);
+                        $params = $this->Ccompany_model->AramexArrayAdvance($sellername,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id);
                         $dataJson = json_encode($params);
                         // print "<pre>"; print_r($dataJson); 
                         $headers = array("Content-type:application/json");
@@ -949,7 +980,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
 
                             $responseArray = json_decode($Auth_response, true);                      
                             $Auth_token = $responseArray['data']['id_token'];   						
-                            $response = $this->Ccompany_model->SafeArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1,$super_id);
+                            $response = $this->Ccompany_model->SafeArray($sellername,$ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1,$super_id);
                             $safe_response = json_decode($response, true);                     
 
                             if ($safe_response['status'] == 'success') {
@@ -982,7 +1013,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                             $Auth_response = Thabit_Auth_cURL($counrierArr);
                             $responseArray = json_decode($Auth_response, true);                      
                             $Auth_token = $responseArray['data']['id_token'];
-                            $response = $this->Ccompany_model->ThabitArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1,$super_id);
+                            $response = $this->Ccompany_model->ThabitArray($sellername,$ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1,$super_id);
                             $thabit_response = json_decode($response, true);   
                             if ($thabit_response['status'] == 'success' ) {
                                 $thabit_order_ID = $thabit_response['data']['id'];
@@ -1012,7 +1043,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                         $esnad_awb_number = Get_esnad_awb($start_awb_sequence, $end_awb_sequence); 
                         $esnad_awb_number = $esnad_awb_number -1;
                         $Auth_token = $counrierArr['auth_token'];                      
-                        $response = $this->Ccompany_model->EsnadArray($ShipArr, $counrierArr, $esnad_awb_number, $complete_sku, $Auth_token,$c_id,$box_pieces1,$super_id);                      
+                        $response = $this->Ccompany_model->EsnadArray($sellername,$ShipArr, $counrierArr, $esnad_awb_number, $complete_sku, $Auth_token,$c_id,$box_pieces1,$super_id);                      
                         $responseArray = json_decode($response, true); 
                         
                         $status = $responseArray['success'];
@@ -1041,7 +1072,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                         }
                         
                     }elseif ($company == 'Barqfleet') {
-                            $response_ww = $this->Ccompany_model->BarqfleethArray($ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services,$c_id,$box_pieces1,$super_id);
+                            $response_ww = $this->Ccompany_model->BarqfleethArray($sellername,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services,$c_id,$box_pieces1,$super_id);
                             $response_array = json_decode($response_ww, TRUE);
                             
                             if ($response_array['code'] != '') {
@@ -1086,7 +1117,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                             $responseArray = json_decode($Auth_response, true);
                             $Auth_token = $responseArray['data']['id_token'];
 
-                            $response =$this->Ccompany_model->MakdoonArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1,$super_id);
+                            $response =$this->Ccompany_model->MakdoonArray($sellername,$ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1,$super_id);
 
                             $safe_response = json_decode($response, true);
      
@@ -1119,7 +1150,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                             } 
 
                     }elseif ($company == 'Zajil') {
-                            $response = $this->Ccompany_model->ZajilArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$super_id);
+                            $response = $this->Ccompany_model->ZajilArray($sellername,$ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$super_id);
                             if (!empty($response['data'])) {
                                 $success = $response['data'][0]['success'];
                                 if ($response['status'] == 'OK' && $success == true) {
@@ -1143,7 +1174,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                             }
                             
                     }elseif ($company == 'NAQEL'){
-                        $awb_array = $this->Ccompany_model->NaqelArray($ShipArr,$counrierArr, $complete_sku,$box_pieces1, $Auth_token,$c_id,$super_id);
+                        $awb_array = $this->Ccompany_model->NaqelArray($sellername,$ShipArr,$counrierArr, $complete_sku,$box_pieces1, $Auth_token,$c_id,$super_id);
                         $HasError = $awb_array['HasError'];
                         $error_message = $awb_array['Message'];
                         
@@ -1233,7 +1264,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                         }
                     }elseif ($company == 'Saee'){
 
-                             $response = $this->Ccompany_model->SaeeArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1,$super_id);
+                             $response = $this->Ccompany_model->SaeeArray($sellername, $counrierArr, $Auth_token,$c_id,$box_pieces1,$super_id);
                              $safe_response =  $response; 
                             if ($safe_response['success'] == 'true') 
                             {
@@ -1257,7 +1288,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                            }                                     
                     }elseif ($company == 'Smsa'){
                        
-                            $response = $this->Ccompany_model->SMSAArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id);
+                            $response = $this->Ccompany_model->SMSAArray($sellername,$ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id);
                             
                             $xml2 = new SimpleXMLElement($response);
                             $again = $xml2;
@@ -1307,7 +1338,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                             }
                             
                     }elseif ($company == 'Labaih'){       
-                            $response = $this->Ccompany_model->LabaihArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id);
+                            $response = $this->Ccompany_model->LabaihArray($sellername,$ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id);
                            
                             if ($response['status'] == 200) {
                                 $client_awb = $response['consignmentNo'];
@@ -1329,7 +1360,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                             
                     }elseif ($company == 'Clex'){
                             
-                        $response = $this->Ccompany_model->ClexArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id);
+                        $response = $this->Ccompany_model->ClexArray($sellername,$ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id);
                         if ($response['data'][0]['cn_id']) {
                             $client_awb = $response['data'][0]['cn_id'];
                              $label_url_new = clex_label_curl($Auth_token, $client_awb);
@@ -1370,7 +1401,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                         
                     }elseif ($company == 'Ajeek'){
                             
-                            $response = $this->Ccompany_model->AjeekArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id);
+                            $response = $this->Ccompany_model->AjeekArray($sellername,$ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id);
                             if ($response['contents']['order_id']) {
                                  $response['contents']['order_id'];
                                  $Auth_token = $counrierArr['auth_token'];
@@ -1398,7 +1429,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                             
                             $Auth_token =$counrierArr['auth_token']; ;
 
-                            $response = $this->Ccompany_model->AymakanArray($ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1,$complete_sku,$super_id);
+                            $response = $this->Ccompany_model->AymakanArray($sellername,$ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1,$complete_sku,$super_id);
                             $responseArray = json_decode($response, true);
 
                             if (empty($responseArray['message'])) 
@@ -1428,7 +1459,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                     
                     }elseif($company == 'Shipsy'){
 						
-                                $response = $this->Ccompany_model->ShipsyArray($ShipArr, $counrierArr, $Auth_token, $box_pieces1,$c_id,$super_id);
+                                $response = $this->Ccompany_model->ShipsyArray($sellername, $counrierArr, $Auth_token, $box_pieces1,$c_id,$super_id);
 
                                 $response_array = json_decode($response, true);
 
@@ -1454,7 +1485,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                         
                     }elseif(trim($company) == 'Shipadelivery'){
                      
-                                    $response = $this->Ccompany_model->ShipadeliveryArray($ShipArr, $counrierArr, $Auth_token,$c_id,$super_id); 
+                                    $response = $this->Ccompany_model->ShipadeliveryArray($sellername,$ShipArr, $counrierArr, $Auth_token,$c_id,$super_id); 
 
                                      $response_array = json_decode($response,true); 
 
@@ -1469,7 +1500,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                                     if($response_array[0]['code']== 0)
                                         {
                                             $client_awb = $response_array[0]['deliveryInfo']['reference'];
-                                            $responsepie = $this->Ccompany_model->ShipaDelupdatecURL($counrierArr, $ShipArr, $client_awb ,$box_pieces1,$super_id);
+                                            $responsepie = $this->Ccompany_model->ShipaDelupdatecURL($sellername,$counrierArr, $ShipArr, $client_awb ,$box_pieces1,$super_id);
                                             $responsepieces = json_decode($responsepie, true); 
                                             if ($responsepieces['status']=='Success')
                                                 {
@@ -1500,7 +1531,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                             
                                 
                     }elseif($company == 'Saudi Post'){
-                        $response = $this->Ccompany_model->SPArray($ShipArr, $counrierArr,$complete_sku, $Auth_token,$c_id,$box_pieces1,$super_id);
+                        $response = $this->Ccompany_model->SPArray($sellername,$ShipArr, $counrierArr,$complete_sku, $Auth_token,$c_id,$box_pieces1,$super_id);
                          $response = json_decode($response, true);
                                         
                         if($response['Items'][0]['Message']=='Success'){
@@ -1526,7 +1557,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                             }
                             }elseif ($company== 'Beez'){
             
-                            $response = $this->Ccompany_model->BeezArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$sku_data,$super_id);  
+                            $response = $this->Ccompany_model->BeezArray($sellername,$ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$sku_data,$super_id);  
                             if(isset($response['Message']) && !empty($response['Message'])){
             
                             $returnArr['responseError'] = $slipNo . ':' . $response['Message'];  
@@ -1545,7 +1576,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                             }
                 }elseif ($company == 'GLT') {
 
-                        $responseArray = $this->Ccompany_model->GLTArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1, $complete_sku,$super_id);
+                        $responseArray = $this->Ccompany_model->GLTArray($sellername,$ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1, $complete_sku,$super_id);
                         $successres = $responseArray['data']['orders'][0]['status'];
                         $error_status = $responseArray['data']['orders'][0]['msg'];
 
@@ -1576,7 +1607,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                     elseif($company == 'Tamex')
                     {
                         
-                        $response = $this->Ccompany_model->tamexArray($ShipArr, $counrierArr, $complete_sku, $pay_mode,$c_id,$box_pieces1,$super_id);
+                        $response = $this->Ccompany_model->tamexArray($sellername,$ShipArr, $counrierArr, $complete_sku, $pay_mode,$c_id,$box_pieces1,$super_id);
                         $responseArray = json_decode($response, true);
                       
                         if ($responseArray['code'] != 0 || empty($response)) {
@@ -1599,7 +1630,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                     }
                     elseif ($company== 'Fetchr'){ 
                      
-                        $responseData = $this->Ccompany_model->fetchrArray($ShipArr, $counrierArr, $complete_sku, $c_id,$box_pieces1,$super_id);
+                        $responseData = $this->Ccompany_model->fetchrArray($sellername,$ShipArr, $counrierArr, $complete_sku, $c_id,$box_pieces1,$super_id);
                         if($responseData['data'][0]['status'] == 'success')
                         {
                         $client_awb = $responseData['data'][0]['tracking_no'];
@@ -1626,7 +1657,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                         $return= array('status'=>201,'error'=> $returnArr); 
                         return $return;
                         }else{
-                        $response = $this->Ccompany_model->iMileArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$auth_token,$super_id);  
+                        $response = $this->Ccompany_model->iMileArray($sellername,$ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$auth_token,$super_id);  
                         if($response['code'] == 200  && $response['message'] == 'success'){
                                 $client_awb = $response['data']['expressNo'];
                                 $pdf_encoded_base64 = $response['data']['imileAwb'];
@@ -1656,7 +1687,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                         $counrierArr['api_url'] =$api_url;
                         $Auth_token=$this->Ccompany_model->Wadha_auth($user_name,$password,$api_url); 
                       
-                        $responseArray = $this->Ccompany_model->WadhaArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$super_id);  
+                        $responseArray = $this->Ccompany_model->WadhaArray($sellername,$ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$super_id);  
                         $successres = $responseArray['status'];                          
                         $error_status = $responseArray['message'];
 
@@ -1685,7 +1716,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
 
                     }elseif ($company == 'SMSA International'){
                        
-                            $response = $this->Ccompany_model->SMSAEgyptArray($ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id);
+                            $response = $this->Ccompany_model->SMSAEgyptArray($sellername,$ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id);
                            
                             $xml2 = new SimpleXMLElement($response);
                             $again = $xml2; //print_r($again);die;
@@ -1757,7 +1788,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                     }    elseif ($company == 'FedEX')
                     {
 
-                        $responseArray = $this->Ccompany_model->FedEX($ShipArr, $counrierArr, $complete_sku, $box_pieces1,$c_id,$super_id);
+                        $responseArray = $this->Ccompany_model->FedEX($sellername,$ShipArr, $counrierArr, $complete_sku, $box_pieces1,$c_id,$super_id);
                        //  echo "<pre>" ; print_r($responseArray); //die;
                         $successres = $responseArray['Code'];
                         $error_status = $responseArray['Description'];
@@ -1787,7 +1818,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                        {
                         
                         $Auth_token=$this->Ccompany_model->Moments_auth($counrierArr); 
-                        $responseArray = $this->Ccompany_model->MomentsArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$complete_sku,$super_id); 
+                        $responseArray = $this->Ccompany_model->MomentsArray($sellername,$ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$complete_sku,$super_id); 
                         $successres = $responseArray['errors'];                         
                         $error_status = $responseArray['message'];
 
@@ -1816,7 +1847,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                         
                         $Auth_token=$this->Ccompany_model->Postagexp_auth($counrierArr); 
                       
-                        $responseArray = $this->Ccompany_model->PostagexpArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$complete_sku,$super_id); 
+                        $responseArray = $this->Ccompany_model->PostagexpArray($sellername,$ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$complete_sku,$super_id); 
                         $successres = $responseArray['errors'];                         
                         $error_status = $responseArray['message'];
 
@@ -1843,7 +1874,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                     elseif ($company == 'SLS')
                     {
 
-                        $responseArray = $this->Ccompany_model->SLSArray($ShipArr, $counrierArr, $complete_sku, $box_pieces1,$c_id,$super_id);
+                        $responseArray = $this->Ccompany_model->SLSArray($sellername,$ShipArr, $counrierArr, $complete_sku, $box_pieces1,$c_id,$super_id);
                        //  echo "<pre>" ; print_r($responseArray); //die;
                         $successres = $responseArray['status'];
                         $error_status = json_encode($responseArray);
@@ -1874,7 +1905,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                                 if($tokenResponse['success'] === true){
                                     $token = $tokenResponse['token'];
                                     
-                                    $api_response = $this->Ccompany_model->BostaArray($ShipArr, $counrierArr,$token, $complete_sku, $box_pieces1,$c_id,$super_id);
+                                    $api_response = $this->Ccompany_model->BostaArray($sellername,$ShipArr, $counrierArr,$token, $complete_sku, $box_pieces1,$c_id,$super_id);
                                     //print "<pre>"; print_r($api_response);die;
                                     if($api_response['error'] == FALSE){
                                          $client_awb = $api_response['data']['_id'];
@@ -1917,7 +1948,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                         
                         if ($company=='Ejack' ) 
                         {
-                                $response = $this->Ccompany_model->Ejack($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$super_id);
+                                $response = $this->Ccompany_model->Ejack($sellername,$ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$super_id);
                                 $response = json_decode($response, true);
                                 if($response['error']=='')
                                 {
@@ -1941,7 +1972,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
                             }
                         else if ($company=='Emdad' )
                         {
-                            $response = $this->Ccompany_model->EmdadArray($ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1);
+                            $response = $this->Ccompany_model->EmdadArray($sellername,$ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1);
                             $response = json_decode($response, true);
                             if($response['error']=='')
                             {
@@ -1967,7 +1998,7 @@ public function courierComanyForward($Auth_token,$company,$ShipArr, $counrierArr
 
                         else
                         {
-                            $response = $this->Ccompany_model->fastcooArray($ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1,$super_id);
+                            $response = $this->Ccompany_model->fastcooArray($sellername,$ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1,$super_id);
                             $responseArray = json_decode($response, true);     
                             if($responseArray['status']==200) 
                             {  
