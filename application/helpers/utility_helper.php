@@ -439,7 +439,7 @@ if (!function_exists('GetCourCompanynameIdAll')) {
     function GetCourCompanynameIdAll($id = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT company,company_url FROM courier_company where cc_id='$id' and super_id='".$ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT company,company_url,auth_token,api_url FROM courier_company where cc_id='$id' and super_id='".$ci->session->userdata('user_details')['super_id'] . "'";
         $query = $ci->db->query($sql);
         // echo   $ci->db->last_query();
         // die; 
@@ -1287,17 +1287,36 @@ if (!function_exists('PrintPiclist3PL_bulk')) {
             foreach ($status_update_data as $key => $val) {
                 $frwd_company_id=$val['frwd_company_id'];
                 array_push($checkIds, $val['frwd_company_id']);
+                $awb_no = $val['frwd_company_awb'];
+                $slip_no = $val['slip_no'];
                 if ($val['label_type'] == 1) {
-                    $awb_no = $val['frwd_company_awb'];
+                  
 
-                    if (!file_exists("assets/all_labels/$awb_no.pdf") || filesize("assets/all_labels/$awb_no.pdf") <= 0) {
-                        //echo "ssssssss"; 
-                        $generated_pdf = file_get_contents($val['frwd_company_label']);
+                    if (!file_exists("assets/all_labels/$slip_no.pdf") || filesize("assets/all_labels/$slip_no.pdf") <= 0) 
+                    {
+                      
+                          $generated_pdf = file_get_contents($val['frwd_company_label']);
                         $encoded = base64_decode($generated_pdf);
                         //header('Content-Type: application/pdf');
-                        file_put_contents("assets/all_labels/$awb_no.pdf", $generated_pdf);
+                        file_put_contents("assets/all_labels/$slip_no.pdf", $generated_pdf); 
+                       
+                        
                     }
                 }
+                else
+                {
+                    $awb_no = $val['frwd_company_awb'];
+                // echo   '/var/www/html/diggipack_new/demofulfillment/assets/all_labels/'.$slip_no.'.pdf'; exit;
+                    if (!file_exists("assets/all_labels/$slip_no.pdf") || filesize("assets/all_labels/$slip_no.pdf") <= 0) {
+                    // echo "ssssssss";  exit;
+                       if(GetCourCompanynameId($frwd_company_id, 'company') == 'Shipadelivery')
+                       {header('Content-Type: application/pdf');
+                        $shipalable= ShipaDelLabelcURL($frwd_company_id,$awb_no);   
+                      
+                        file_put_contents("assets/all_labels/".$slip_no.".pdf", $shipalable);
+                       }
+                }
+            }
 
                 // $filePath='https://demosony.fastcoo-solutions.com/fm/assets/all_labels/SOF7362389516.pdf';
                 $filePath = '/var/www/html/diggipack_new/demofulfillment/assets/all_labels/' . $status_update_data[$key]['slip_no'] . '.pdf';
@@ -1377,6 +1396,31 @@ if (!function_exists('GetcheckConditionsAddInventory')) {
         return $row['itemupdated'];
     }
 
+}
+ function ShipaDelLabelcURL(array $cc_id, $client_awb = null) 
+{
+
+    $counrierArr=GetCourCompanynameIdAll($cc_id);
+
+    $cURL12 = $counrierArr['api_url'].'/'.$client_awb."/pdf?apikey=".$counrierArr['auth_token']."&template=sticker-6x4&copies=1";
+  
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => $cURL12,
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => '',
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 0,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => 'GET',
+    ));
+
+    $response = curl_exec($curl);
+
+    curl_close($curl);
+    return $response;
 }
 if (!function_exists('getusertypedropdown')) {
 
