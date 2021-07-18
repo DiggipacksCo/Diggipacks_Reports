@@ -399,13 +399,18 @@ class CourierCompany extends MY_Controller  {
                     
                     $CURRENT_TIME = date('H:i:s');
                     $CURRENT_DATE = date('Y-m-d H:i:s');
-
+                    $sender_default_city = Getselletdetails_new($super_id);
+                    // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+                    $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company'); 
+                    $sellername = "DIGGIPACKS FULFILLMENT- ".$sellername;
+                    $sender_address = $sender_default_city['0']['address'];
+                    
                     $ShipArr = array(
-                        'sender_name' =>   $ShipArr['sender_name'],
-                        'sender_address' => $ShipArr['sender_address'],
+                        'sender_name' =>  $sellername,
+                        'sender_address' => $sender_address,
                         'sender_phone' =>  $ShipArr['sender_phone'],
                         'sender_email' =>  $ShipArr['sender_email'],
-                        'origin' => $ShipArr['origin']  , 
+                        'origin' => $sender_default_city['0']['branch_location'] , 
                         'slip_no' => $ShipArr['slip_no'],
                         'mode' => 'CC',
                         'total_cod_amt' => $ShipArr['total_cod_amt'],
@@ -426,8 +431,7 @@ class CourierCompany extends MY_Controller  {
                         'sku_data' => $sku_data
                     );
 
-                    $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company'); 
-                    $sellername = "DIGGIPACKS FULFILLMENT- ".$sellername;
+                
                    
                    $ccRetrundata= $this->courierComanyForward($sellername, $Auth_token,$company,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id,$company_type,$c_id, $api_url);
                    if($ccRetrundata['status']==200)
@@ -636,8 +640,8 @@ class CourierCompany extends MY_Controller  {
                             );
 
                             //echo "<pre> sdfsd"; print_r($ShipArr); die;
-                            $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company'); 
-                            $sellername = "DIGGIPACKS FULFILLMENT- ".$sellername;
+                            $sellername = $ShipArr['reciever_name']; 
+                           // $sellername = "DIGGIPACKS FULFILLMENT- ".$sellername;
 
                             $CURRENT_TIME = date('H:i:s');
                             $CURRENT_DATE = date('Y-m-d H:i:s');
@@ -1487,8 +1491,10 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                      
                                     $response = $this->Ccompany_model->ShipadeliveryArray($sellername,$ShipArr, $counrierArr, $Auth_token,$c_id,$super_id); 
 
+                                 // $response='[{"id":"JDK5372304412","code":0,"info":"Success","deliveryInfo":{"reference":"SD002543238","codeStatus":"orderCreatedinNetSuite","startTime":"NA","endTime":"NA","expectedTime":"NA"}}]';
                                      $response_array = json_decode($response,true); 
-
+                       // print_r( $response_array);
+                     
                                      if(empty($response_array)){
 
                                          $returnArr['responseError'] = $slipNo . ':' . 'Receiver City Empty ';
@@ -1499,9 +1505,10 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
 
                                     if($response_array[0]['code']== 0)
                                         {
+                                           // echo 'xxx';exit;
                                             $client_awb = $response_array[0]['deliveryInfo']['reference'];
                                             $responsepie = $this->Ccompany_model->ShipaDelupdatecURL($sellername,$counrierArr, $ShipArr, $client_awb ,$box_pieces1,$super_id);
-                                            $responsepieces = json_decode($responsepie, true); 
+                                            $responsepieces = json_decode($responsepie, true);  
                                             if ($responsepieces['status']=='Success')
                                                 {
                                                     $shipaLabel = $this->Ccompany_model->ShipaDelLabelcURL($counrierArr, $client_awb);
@@ -1556,7 +1563,8 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                             return $return;
                             }
                             }elseif ($company== 'Beez'){
-            
+                                // error_reporting(-1);
+                                // ini_set('display_errors', 1);
                             $response = $this->Ccompany_model->BeezArray($sellername,$ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$sku_data,$super_id);  
                             if(isset($response['Message']) && !empty($response['Message'])){
             
