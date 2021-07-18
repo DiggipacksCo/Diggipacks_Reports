@@ -385,6 +385,9 @@
                             <?php if (menuIdExitsInPrivilageArray(10) == 'Y') { ?>
                         <li  <?php if ($this->uri->segment(1) == 'dispatch') echo 'class="active"'; ?>> <a href="<?= base_url('dispatch'); ?>"></i> <span><?= lang('lang_Dispatching'); ?></span></a> </li>
                     <?php } ?>
+                    <?php if (menuIdExitsInPrivilageArray(10) == 'Y') { ?>
+                        <li  <?php if ($this->uri->segment(1) == 'dispatch_b2b') echo 'class="active"'; ?>> <a href="<?= base_url('dispatch_b2b'); ?>"></i> <span><?= lang('lang_Dispatching'); ?> B2B</span></a> </li>
+                    <?php } ?>
                          <?php if (menuIdExitsInPrivilageArray(10) == 'Y') { ?>
                         <li  <?php if ($this->uri->segment(1) == 'dispatch3pl') echo 'class="active"'; ?>> <a href="<?= base_url('dispatch3pl'); ?>"></i> <span> <?= lang('lang_Dispatch_To_tpl'); ?></span></a> </li>
                     <?php } ?>
