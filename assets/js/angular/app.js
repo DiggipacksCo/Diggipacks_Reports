@@ -415,6 +415,133 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
 
         })
 
+        .controller('dispatch_b2b', function ($scope, $http, $interval, $window) {
+            $scope.shipData = [];
+            $scope.completeShip = [];
+            $scope.scan = {};
+            $scope.invalid = [];
+            $scope.awbArray = [];
+            $scope.shelve = null;
+            $scope.type = 'DL';
+            $scope.scan_awb = function () {
+                //$('#scan_awb').focus();
+                console.log($scope.scan);
+                $scope.scan.awbArray = removeDumplicateValue($scope.scan.slip_no.split("\n"));
+                console.log($scope.scan.awbArray);
+                $scope.scan.slip_no = $scope.scan.awbArray.join('\n');
+
+
+                $scope.validateOrder();
+            }
+
+            $scope.dispatchOrder = function ()
+            {
+
+                $scope.scan.type = $scope.type;
+                $http({
+                    url: "PickUp/dispatchOrder",
+                    method: "POST",
+                    data: $scope.scan,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+
+
+                }).then(function (response) {
+                    console.log(response);
+                    // $scope.scan.awbArray={};
+                  
+                    if (response.data == 'null')
+                    {
+
+                        var sound = document.getElementById("audioSuccess");
+                        sound.play();
+                        $scope.Message = "Orders Dispatched !";
+                        responsiveVoice.speak($scope.Message);
+                        $scope.sendSms();
+
+                    } else
+                    {
+                        $scope.warning = response.data;
+                    }
+
+                })
+
+            }
+
+            $scope.sendSms=function()
+            {
+                $scope.scan.type = $scope.type;
+                $http({
+                    url: "PickUp/sendSms",
+                    method: "POST",
+                    data: $scope.scan,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+
+
+                }).then(function (response) {
+                    console.log(response);
+                    $scope.scan = {};
+                });
+
+            }
+            function removeDumplicateValue(myArray) {
+                var newArray = [];
+
+                angular.forEach(myArray, function (value, key) {
+                    var exists = false;
+                    angular.forEach(newArray, function (val2, key) {
+                        if (angular.equals(value, val2)) {
+                            exists = true
+                        }
+                        ;
+                    });
+                    if (exists == false && value != "") {
+                        newArray.push(value);
+                    }
+                });
+
+                return newArray;
+            }
+            $scope.validateOrder = function () {
+                $scope.invalid = [];
+                $scope.warning = null;
+                $scope.Message = null;
+                // alert("ss");
+
+                //console.log($scope.scan);
+                $http({
+                    url: "PickUp/validateDispatch",
+                    method: "POST",
+                    data: $scope.scan.awbArray,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+
+                }).then(function (response) {
+                    console.log(response);
+
+                    angular.forEach(response.data.invalid, function (value) {
+                        console.log(value)
+                        var index = $scope.scan.awbArray.indexOf(value.slip_no);
+                        if (index > -1) {
+                            $scope.scan.awbArray.splice(index, 1);
+                        }
+                        $scope.invalid.push(value.slip_no);
+
+
+                    });
+                    $scope.scan.slip_no = $scope.scan.awbArray.join('\n');
+                    $scope.invalidstring = $scope.invalid.join()
+
+
+                });
+
+
+
+
+            }
+
+
+        })
+
+
 //=====================return from LM======================//
         .controller('returnfromlm', function ($scope, $http, $interval, $window) {
             $scope.shipData = [];

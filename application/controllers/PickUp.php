@@ -1695,6 +1695,15 @@ if(!empty( $salatoken))
 
         $this->load->view('pickup/dispatch');
     }
+    public function dispatch_b2b() {
+        if (menuIdExitsInPrivilageArray(10) == 'N') {
+            redirect(base_url() . 'notfound');
+            die;
+        }
+
+
+        $this->load->view('pickup/dispatch_b2b');
+    }
 
     public function returnLM() {
         if (menuIdExitsInPrivilageArray(78) == 'N') {

@@ -135,6 +135,7 @@ $route['packing']                = 'PickUp/packing';
 $route['packing_tod']            = 'PickUp/packing_tod';
 $route['packing_b2b']                = 'Business/packing_b2b';
 $route['dispatch']               = 'PickUp/dispatch';
+$route['dispatch_b2b']               = 'PickUp/dispatch_b2b';
 $route['TrackingResult']         = 'Shipment/getshipmenttrackingresult';
 $route['TrackingDetails/(:any)'] = 'Shipment/getshipmentdetailshow/$1';
 $route['Staff_report']           = 'PickUp/Staff_report';
@@ -202,7 +203,7 @@ $route['stockLocationFilter']   = 'Shelve/stockLocationFilter';
 $route['GenerateTods'] = 'Shelve/GenerateTods';
 $route['generatetodsfrm']         = 'Shelve/generatetodsfrm';
 $route['showtods']             = 'Shelve/showtods';
-$route['showtods/(:any)']      = 'Shelve/showtods/$1';
+$route['showtods/(:any)']      = 'Shelve/showtods/$1'; 
 //========================================================//
 
 
