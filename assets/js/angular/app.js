@@ -436,7 +436,7 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
 
             $scope.dispatchOrder = function ()
             {
-
+  console.log($scope.scan);
                 $scope.scan.type = $scope.type;
                 $http({
                     url: "PickUp/dispatchOrder",
@@ -446,7 +446,7 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
 
 
                 }).then(function (response) {
-                    console.log(response);
+                  
                     // $scope.scan.awbArray={};
                   
                     if (response.data == 'null')
