@@ -662,7 +662,7 @@ class PickUp extends MY_Controller {
 
         $_POST = json_decode(file_get_contents('php://input'), true);
         //$_POST=array('awbArray'=>array('STF9252413194'));
-        echo json_encode($_POST); exit;
+       // echo '<pre>';print_r($_POST);exit;
 
         
         
@@ -690,6 +690,10 @@ class PickUp extends MY_Controller {
         $key = 0;
         $key1 = 0;
         foreach ($shipments['result'] as $data) {
+            
+            
+        //  echo   $_POST[$data['slip_no']]['pallet'];
+         //   die;
 
             if ($new_status == 5) {
                 $d1 = $this->Shipment_model->filter($data['slip_no']); 
@@ -705,7 +709,11 @@ class PickUp extends MY_Controller {
             //print_r( $responseData);exit;
 
             if ($responseData['status'] == 200) {
-
+                if($_POST[$data['slip_no']]['pallet']>0)
+                $newUpdatePallet[$key]['pallet_count']=$_POST[$data['slip_no']]['pallet'];
+                else
+                   $newUpdatePallet[$key]['pallet_count']=0; 
+                $newUpdatePallet[$key]['slip_no']=$data['slip_no'];
                 $statusvalue[$key]['user_id'] = $this->session->userdata('user_details')['user_id'];
                 $statusvalue[$key]['user_type'] = 'fulfillment';
                 $statusvalue[$key]['slip_no'] = $data['slip_no'];
@@ -840,6 +848,10 @@ if(!empty( $salatoken))
         if (!empty($statusvalue) && !empty($slip_data)) {
             $this->Status_model->insertStatus($statusvalue);
             $this->Shipment_model->updateStatusBatch($slip_data);
+            if(!empty($newUpdatePallet))
+            {
+                 $this->Shipment_model->updateStatusBatch($newUpdatePallet);
+            }
             $this->Pickup_model->GetalloutboundDataAdded($OutboundArray);
         }
 

@@ -107,13 +107,15 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('something').
     <table class="table table-bordered table-hover" style="width: 100%;">
                     <!-- width="170px;" height="200px;" -->
                     <tbody >
+                        
                     
-                      <tr ng-repeat="data1 in scan.awbArray" style="width: 80%;"><td><strong>{{data1}}:</strong> </td><td> <input type="text"  ng-model="scan.pallet[$index]"  class="form-control" placeholder="Enter Number of Pallet."></td>
+                      <tr ng-repeat="data1 in scan.awbArray" style="width: 80%;"><td><strong>{{data1}}:</strong> </td><td> <input type="text"  ng-model="scan[data1].pallet"  class="form-control" placeholder="Enter Number of Pallet."></td>
                           </tr>
                           </tbody>
                           </table>
 
 </div>
+                       
 <div class="col-md-12"></div>
               <div class="col-md-2">
             <div class="form-group">
