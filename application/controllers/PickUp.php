@@ -662,7 +662,7 @@ class PickUp extends MY_Controller {
 
         $_POST = json_decode(file_get_contents('php://input'), true);
         //$_POST=array('awbArray'=>array('STF9252413194'));
-        // echo json_encode($_POST); exit;
+        echo json_encode($_POST); exit;
 
         
         

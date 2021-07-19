@@ -95,19 +95,33 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('something').
                  
 
                    <form ng-submit="dispatchOrder();" method="post" >
-            <div class="col-md-12">
+            <div class="col-md-6">
             <div class="form-group">
             <textarea rows="8" id="show_awb_no" ng-change="scan_awb();"   ng-model="scan.slip_no" required class="form-control"></textarea>
 				
             </div>
             </div>
+            <div class="col-md-6">
+           
+    
+    <table class="table table-bordered table-hover" style="width: 100%;">
+                    <!-- width="170px;" height="200px;" -->
+                    <tbody >
+                    
+                      <tr ng-repeat="data1 in scan.awbArray" style="width: 80%;"><td><strong>{{data1}}:</strong> </td><td> <input type="text"  ng-model="scan.pallet[$index]"  class="form-control" placeholder="Enter Number of Pallet."></td>
+                          </tr>
+                          </tbody>
+                          </table>
+
+</div>
+<div class="col-md-12"></div>
               <div class="col-md-2">
             <div class="form-group">
           <a type="button"  class="btn btn-warning" style=" margin-left: 2%; margin-right: 3%; "><?= lang('lang_Row_Count'); ?> <span class="badge badge badge-pill badge-success" id="count_val">{{scan.awbArray.length}}</span>	</a>
 			
 				</div>
                        </div>
-         <div class="col-md-4">	
+         <div class="col-md-2">	
            
          <div class="form-group">
              <select ng-model="type" class="form-control">
@@ -117,7 +131,7 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('something').
              </select>
              </div>
                        </div>
-            <div class="col-md-4">	
+            <div class="col-md-2">	
            
          <div class="form-group">
               <button type"submit" ng-if="scan.awbArray.length>0"  role="button" class="btn btn-primary form-control" ><?= lang('lang_Dispatch'); ?></button>	
@@ -152,41 +166,7 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('something').
 <!-- /content area -->
     </div>
     
-    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-   
-    
-      
-        <h5 class="modal-title" id="exampleModalLabel">Add Pallet</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-       <form name="myform" novalidate ng-submit="myForm.$valid && dispatchOrder()" enctype="multipart/form-data" >
-      <div class="modal-body">
-      
-    <table class="table table-bordered table-hover" style="width: 100%;">
-                    <!-- width="170px;" height="200px;" -->
-                    <tbody >
-                    
-                      <tr ng-repeat="data1 in InputAray" style="width: 80%;"><td><strong>Pallet No.({{data1}}):</strong></td><td> <input type="text"  ng-model="scan.pallet[$index]"  class="form-control" placeholder="Enter Pallet No."></td>
-                          </tr>
-                          </tbody>
-                          </table>
-     
-      
-    
-         
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" ng-click="dispatchOrder();" >Update</button>
-      </div>
-          </form>          
-    </div>
-  </div>
+ 
 </div>
  <?php $this->load->view('include/footer'); ?>   
 
