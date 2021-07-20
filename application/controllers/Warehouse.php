@@ -7,6 +7,7 @@ class Warehouse extends MY_Controller {
     function __construct() {
         parent::__construct();
         //error_reporting(0);
+        
         if (menuIdExitsInPrivilageArray(77) == 'N') {
             redirect(base_url() . 'notfound');
             die;
@@ -26,6 +27,7 @@ class Warehouse extends MY_Controller {
 
     public function add_view() {
 
+        
         if (($this->session->userdata('user_details') != '')) {
             $data['customers'] = $this->Warehouse_model->Zone();
             $data['city_drp'] = $this->Warehouse_model->fetch_all_cities();
@@ -88,8 +90,53 @@ class Warehouse extends MY_Controller {
 
         $this->load->view('Warehouse/edit_view', $data);
     }
+    public function setup_storage($id=null) {
+       
+        
+         $data['id'] = $id;
+        $data['wareArr'] = $this->Warehouse_model->edit_view_customerdata($id);
+       $data['storageArr'] = $this->Warehouse_model->fetch_all_storage($id);
+        $this->load->view('Warehouse/setup_storage', $data);
+    }
+    
+    public function storage_processs($wh_id=0)
+    {
+        if($wh_id>0)
+        {
+            $capacityArr=$this->input->post('capacity');
+           // print_r($capacityArr); 
+            $entrydate=date("Y-m-d H:i:s");
+            foreach($capacityArr as $key=>$val)
+            {
+              $s_id=$key;
+              $size=$val;
+              
+              $newEntryArr[]=array(
+                  'wh_id'=>$wh_id,
+                  'storage_id'=>$s_id,
+                  'size'=>$size,
+                   'entrydate'=>$entrydate,
+                  'super_id'=>$this->session->userdata('user_details')['super_id'],
+              );
+            }
+            
+          // echo '<pre>';print_r($newEntryArr); die;
+           if(!empty($newEntryArr))
+           {
+               $this->Warehouse_model->insertstorageType($newEntryArr,$wh_id);
+               $this->session->set_flashdata('msg','updated successfully');
+           }
+           
+             
+        redirect('viewWarehouse');
+            
+        }
+    }
+    
+    
+    
 
-    public function edit($id) {
+    public function edit($id=null) {
 
         $this->form_validation->set_rules("city_id[]", 'City', 'trim|required');
         $id = $this->input->post('id');
@@ -193,6 +240,13 @@ class Warehouse extends MY_Controller {
             // exit();
             $this->load->view('SellerM/seller_report', $data);
         }
+    }
+    
+    public function warehouse_stprage_report()
+    {
+        
+        $data['warehouseArr']= $this->Warehouse_model->all();
+        $this->load->view('Warehouse/storage_graph_report', $data);
     }
 
 }
