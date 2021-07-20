@@ -3718,3 +3718,50 @@ if(!function_exists('getStatusByCode_fm')){
     }
 
 }   
+
+ if (!function_exists('GetStorageData')) {
+
+    function GetStorageData($wh_id = null,$storage_id=null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        $sql = "SELECT size FROM warehouse_storage where wh_id='$wh_id' and storage_id='$storage_id'";
+         $query = $ci->db->query($sql);
+        $result = $query->row_array();
+        return $result['size'];
+    }
+
+} 
+ if (!function_exists('GetAllwarehouseChartData')) {
+
+    function GetAllwarehouseChartData($wh_id = null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        $sql = "SELECT WS.storage_id,WS.size,ST.storage_type FROM warehouse_storage as WS LEFT JOIN storage_table as ST ON  ST.id=WS.storage_id where WS.wh_id='$wh_id' and WS.super_id='".$ci->session->userdata('user_details')['super_id']."'";
+         $query = $ci->db->query($sql);
+        $result = $query->result_array();
+        return $result;
+    }
+
+} 
+
+if(!function_exists('GetAllstorageusedSize'))
+{
+    function GetAllstorageusedSize($wh_id=null,$storage_id=null)
+    {
+        $ci = & get_instance();
+        $ci->load->database();
+        $ci->db->where('item_inventory.super_id', $ci->session->userdata('user_details')['super_id']);
+        $ci->db->select('count(item_inventory.id) as total');
+        $ci->db->from('item_inventory');
+        $ci->db->join('items_m', 'items_m.id = item_inventory.item_sku','LEFT');
+        $ci->db->where('items_m.storage_id',$storage_id);
+        $ci->db->where('item_inventory.wh_id',$wh_id);
+         $ci->db->group_by('items_m.storage_id');
+        $query = $ci->db->get();
+        $result = $query->row_array();
+        return $result['total'];
+       // print_r($result);
+       // echo $ci->db->last_query();  die;
+    }
+}
+

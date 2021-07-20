@@ -320,6 +320,9 @@ $route['salla'] = 'Salla/add';
 $route['zid/(:any)']   = 'Zid/getOrder/$1';
 $route['bulk_tracking']= 'Shipment/bulk_tracking';
 $route['remove_forward']= 'Shipment/forward_remove';
+$route['setup_storage/(:any)']= 'Warehouse/setup_storage/$1';
+$route['warehouse_stprage_report']= 'Warehouse/warehouse_stprage_report';
+
 
 //===================================================//
 
