@@ -5793,7 +5793,7 @@ class Ccompany_model extends CI_Model {
         return $responseData;
     }
     
-    public function BostaArray(array $ShipArr, array $counrierArr,$token= null, $complete_sku = null, $box_pieces1=null,$c_id=null,$super_id=null){
+    public function BostaArray($sellername=null, array $ShipArr, array $counrierArr,$token= null, $complete_sku = null, $box_pieces1=null,$c_id=null,$super_id=null){
         
             $API_URL = $counrierArr['api_url'].'deliveries';
             //print "<pre>"; print_r($ShipArr);die;
