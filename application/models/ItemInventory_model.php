@@ -2313,7 +2313,7 @@ class ItemInventory_model extends CI_Model {
         if ($query->num_rows() > 0) {
 
             $data['result'] = $query->result_array();
-            $data['count'] = $this->filterCount($quantity, $sku, $seller, $to, $from, $exact, $page_no);
+            $data['count'] = $this->filterCount_shelve($quantity, $sku, $seller, $to, $from, $exact, $page_no, $shelve_no, $storage_id, $data);
             return $data;
             // return $page_no.$this->db->last_query();
         } else {
@@ -2321,6 +2321,104 @@ class ItemInventory_model extends CI_Model {
             $data['count'] = 0;
             return $data;
         }
+    }
+    
+    public function filterCount_shelve($quantity, $sku, $seller, $to, $from, $exact, $page_no, $shelve_no = null, $storage_id, $data = array())
+    {
+        
+          $this->db->where('item_inventory.super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->select('COUNT(item_inventory.id) as tcount');
+        $this->db->from('item_inventory');
+        $this->db->join('items_m', 'items_m.id = item_inventory.item_sku');
+        $this->db->join('customer as seller_m', 'seller_m.id = item_inventory.seller_id');
+        $this->db->join('warehouse_category', 'warehouse_category.id = item_inventory.wh_id');
+
+
+        if ($this->session->userdata('user_details')['user_type'] != 1) {
+            $this->db->where('item_inventory.wh_id', $this->session->userdata('user_details')['wh_id']);
+        }
+
+        if (!empty($exact)) {
+            $date = date("Y-m-d", strtotime($exact));
+            $this->db->where('DATE(item_inventory.update_date)', $exact);
+        }
+
+
+        if (!empty($from) && !empty($to)) {
+            $date = date("Y-m-d", strtotime($from));
+            $date = date("Y-m-d", strtotime($to));
+            $where = "DATE(item_inventory.update_date) BETWEEN '" . $from . "' AND '" . $to . "'";
+            $this->db->where($where);
+        }
+
+
+        //echo $quantity;
+        $this->db->where('item_inventory.shelve_no!=', '');
+        $this->db->group_by('item_inventory.shelve_no');
+
+        if ($quantity || $quantity == '0') {
+            $this->db->where('item_inventory.quantity', $quantity);
+        }
+
+        if (!empty($shelve_no)) {
+            $this->db->where('item_inventory.shelve_no', $shelve_no);
+        }
+
+        if (!empty($storage_id)) {
+            $this->db->where('items_m.storage_id', $storage_id);
+        }
+        if (!empty($sku)) {
+            $this->db->where('items_m.sku', $sku);
+        }
+
+        if (!empty($seller)) {
+            $this->db->where('seller_m.id', $seller);
+        }
+
+        if (!empty($data['stock_location'])) {
+            $this->db->where('item_inventory.stock_location', $data['stock_location']);
+        }
+
+        if (!empty($data['wh_name'])) {
+            $this->db->where('warehouse_category.name', $data['wh_name']);
+        }
+
+        if (!empty($data['item_description'])) {
+            $this->db->where('items_m.description', $data['item_description']);
+        }
+
+        if (!empty($data['update_date'])) {
+            $date = date("Y-m-d", strtotime($data['update_date']));
+            //$this->db->where("item_inventory.update_date like '".$date."%'"); 
+            $this->db->where('DATE(item_inventory.update_date)', $data['update_date']);
+        }
+
+        if (!empty($data['expity_date'])) {
+            $expity_date = date("Y-m-d", strtotime($data['expity_date']));
+            $this->db->where('DATE(item_inventory.expity_date)', $expity_date);
+        }
+
+        if (!empty($data['expiry'])) {
+            $this->db->where('item_inventory.expiry', $data['expiry']);
+        }
+        
+
+
+        $this->db->order_by('item_inventory.id', 'DESC');
+
+
+      
+
+        $query = $this->db->get();
+       // echo $this->db->last_query(); die;
+          if ($query->num_rows() > 0) {
+              return $query->num_rows();
+              
+          }
+          else{
+              return 0;
+          }
+        
     }
 
     public function filter_shelve_details_Query($data = array()) {
