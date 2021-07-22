@@ -4346,14 +4346,14 @@ class Ccompany_model extends CI_Model {
                 $weight = $ShipArr['weight'];
                 }
 
-
-                if($ShipArr['mode'] == "COD"){
+               // print_r($ShipArr);die;
+                if($ShipArr['pay_mode'] == "COD"){
                     $pay_mode = "cash";
                     $paid = FALSE;
                     $cod_amount = $ShipArr['total_cod_amt'];
                     
                 }
-                elseif ($ShipArr['mode'] == 'CC'){
+                elseif ($ShipArr['pay_mode'] == 'CC'){
                     $pay_mode = "credit_balance";
                     $paid = TRUE;
                     $cod_amount = 0;
