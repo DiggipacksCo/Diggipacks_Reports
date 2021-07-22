@@ -1803,6 +1803,7 @@ class ItemInventory extends MY_Controller {
         }
         //echo '<pre>';
         //print_r($palletArray);
+         $returnArray['count'] = $items['count'];
         $returnArray['dropexport'] = $expoertdropArr;
         $returnArray['result'] = $ItemArray;
         echo json_encode($returnArray);

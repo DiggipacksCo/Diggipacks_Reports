@@ -260,7 +260,8 @@ $route['update_password'] = 'Generalsetting/update_password';
  
 
 $route['performance']                                     = 'CourierCompany/performance';
-$route['performance_details/(:any)/(:any)/(:any)/(:any)'] = 'CourierCompany/performance_details/$1/$2/$3/$4';
+$route['performance_details/(:any)/(:any)/(:any)/(:any)'] = 'Reports/performance_details_3pl/$1/$2/$3/$4';
+//$route['performance_details/(:any)/(:any)/(:any)/(:any)'] = 'CourierCompany/performance_details/$1/$2/$3/$4';
 
 $route['report_3pl'] = 'Reports/performance_3pl';
 $route['performance_details_3pl/(:any)/(:any)/(:any)/(:any)'] = 'Reports/performance_details_3pl/$1/$2/$3/$4';
