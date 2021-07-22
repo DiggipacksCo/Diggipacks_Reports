@@ -1792,7 +1792,9 @@ class ItemInventory extends MY_Controller {
             $ItemArray[$kk]['item_type'] = getalldataitemtables($rdata['item_sku'], 'type');
             $ItemArray[$kk]['storage_id'] = Getallstoragetablefield(getalldataitemtables($rdata['item_sku'], 'storage_id'), 'storage_type');
             //if($rdata['shelve_no']!='')
-
+            $PostData=array('seller_id'=>$rdata['seller_id'],'shelve_no'=>$rdata['shelve_no']);
+            $detailsArr = $this->ItemInventory_model->filter_shelve_details_Query($PostData);
+            $ItemArray[$kk]['detailsArr']=$detailsArr;
             $ItemArray[$kk]['wh_name'] = Getwarehouse_categoryfield($rdata['wh_id'], 'name');
 
             //$PData=$this->ItemInventory_model->Getcheckvalidpallet($rdata['shelve_no'],$rdata['sid']);
