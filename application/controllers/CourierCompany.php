@@ -413,6 +413,7 @@ class CourierCompany extends MY_Controller  {
                         'origin' => $sender_default_city['0']['branch_location'] , 
                         'slip_no' => $ShipArr['slip_no'],
                         'mode' => $pay_mode,
+                        'pay_mode' => $ShipArr['mode'],
                         'total_cod_amt' => $ShipArr['total_cod_amt'],
                         'pieces' =>  $box_pieces1,
                         'status_describtion' => $complete_sku,
@@ -430,6 +431,7 @@ class CourierCompany extends MY_Controller  {
                         'old_slip_no'=> $ShipArr['slip_no'],
                         'sku_data' => $sku_data
                     );
+                    //print_r($ShipArr);die;
 
                 
                    
