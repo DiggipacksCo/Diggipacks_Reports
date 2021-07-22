@@ -412,7 +412,7 @@ class CourierCompany extends MY_Controller  {
                         'sender_email' =>  $ShipArr['sender_email'],
                         'origin' => $sender_default_city['0']['branch_location'] , 
                         'slip_no' => $ShipArr['slip_no'],
-                        'mode' => 'CC',
+                        'mode' => $pay_mode,
                         'total_cod_amt' => $ShipArr['total_cod_amt'],
                         'pieces' =>  $box_pieces1,
                         'status_describtion' => $complete_sku,
