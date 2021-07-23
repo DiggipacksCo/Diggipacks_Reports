@@ -168,16 +168,16 @@ class Ccompany_model extends CI_Model {
         return $result[$field];
     }
 
-	public function getdestinationfieldshow_auto_array($id=null,$field=null,$super_id){
-	
-                
-     $sql ="SELECT $field FROM country where id='$id' and super_id='".$super_id."'";
-       $query = $this->db->query($sql);
-
-      
-       $result=$query->row_array();
-       return $result[$field];
-   }
+//	public function getdestinationfieldshow_auto_array($id=null,$field=null,$super_id){
+//	
+//                
+//     $sql ="SELECT $field FROM country where id='$id' and super_id='".$super_id."'";
+//       $query = $this->db->query($sql);
+//
+//      
+//       $result=$query->row_array();
+//       return $result[$field];
+//   }
 
  
    public function Generate_awb_number_new_fm($super_id = null) {
@@ -244,7 +244,7 @@ class Ccompany_model extends CI_Model {
            'reciever_email' => $ShipArr['reciever_email'],
            'status_describtion' => addslashes($ShipArr['status_describtion']),
            'entrydate' => $CURRENT_DATE,
-           'mode' => $ShipArr['mode'],
+           'mode' => $ShipArr['pay_mode'],
            'delivered' => '21',
            'cust_id' => $ShipArr['cust_id'],
            //'total_cod_amt' => $data['cod'],
@@ -447,7 +447,7 @@ class Ccompany_model extends CI_Model {
         //echo $this->db->last_query();
     }
     
-    public function AramexArrayAdvance(array $ShipArr, array $counrierArr, $complete_sku = null, $pay_mode = null, $CashOnDeliveryAmount = null, $services = null,$box_pieces1= null,$super_id = null, $totalcustomerAmt=null )
+    public function AramexArrayAdvance($sellername = null, array $ShipArr, array $counrierArr, $complete_sku = null, $pay_mode = null, $CashOnDeliveryAmount = null, $services = null,$box_pieces1= null,$super_id = null, $totalcustomerAmt=null )
     {    
        
         $sender_address = $ShipArr['sender_address'];
@@ -706,14 +706,17 @@ class Ccompany_model extends CI_Model {
         return $params;
     }
 
-    public function AramexArray(array $ShipArr, array $counrierArr, $complete_sku = null, $pay_mode = null, $CashOnDeliveryAmount = null, $services = null,$box_pieces1= null,$super_id = null ) 
+    public function AramexArray($sellername = null, array $ShipArr, array $counrierArr, $complete_sku = null, $pay_mode = null, $CashOnDeliveryAmount = null, $services = null,$box_pieces1= null,$super_id = null ) 
     {
         
-        $sender_default_city= Getselletdetails_new($super_id);
-        $sender_address = $sender_default_city['0']['address'];
-        $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
+        //$sender_default_city= Getselletdetails_new($super_id);
+        //$sender_address = $sender_default_city['0']['address'];
+        //$sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
+        
+        $sender_address = $ShipArr['sender_address'];
+        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city', $super_id);
         $sender_name =  $ShipArr['sender_name'];
-        $reciever_city = $this->getdestinationfieldshow_auto_array($ShipArr['destination'], 'aramex_city',$super_id);
+        $reciever_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'aramex_city',$super_id);
         $date = (int) microtime(true) * 1000;
         
         
@@ -991,14 +994,12 @@ class Ccompany_model extends CI_Model {
     public function SafeArray($sellername = null ,array $ShipArr, array $counrierArr, $complete_sku = null, $Auth_token = null, $c_id = null,$box_pieces1=null,$super_id = null) {
         //print "<pre>"; print_r($ShipArr);die;
        // $sender_default_city = Getselletdetails_new($super_id);
-        $sellername = $sellername   ;  
-
+        $sellername =  $ShipArr['sender_name'];
         $sender_address = $ShipArr['sender_address'];
         $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city', $super_id);
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'safe_arrival',$super_id);
         
-
-       $API_URL = $counrierArr['api_url'];
+        $API_URL = $counrierArr['api_url'];
         
        
        if(empty($box_pieces1))
@@ -1010,7 +1011,7 @@ class Ccompany_model extends CI_Model {
             }
             else { $weight = $ShipArr['weight'] ; }
 
-        if($ShipArr['mode'] == "COD"){
+        if($ShipArr['pay_mode'] == "COD"){
             $pay_mode = "cash";
             $paid = 0;
         }
@@ -1127,7 +1128,7 @@ class Ccompany_model extends CI_Model {
             }
             else { $weight = $ShipArr['weight'] ; }
 
-        if($ShipArr['mode'] == "COD"){
+        if($ShipArr['pay_mode'] == "COD"){
             $pay_mode = "cash";
             $paid = 0;
         }
@@ -1222,10 +1223,12 @@ class Ccompany_model extends CI_Model {
         return $safe_response;
     }
 
-    public function EsnadArray(array $ShipArr, array $counrierArr, $esnad_awb_number = null, $complete_sku = null, $Auth_token = null,$c_id=null,$box_pieces1=null,$super_id) {
+    public function EsnadArray($sellername=null, array $ShipArr, array $counrierArr, $esnad_awb_number = null, $complete_sku = null, $Auth_token = null,$c_id=null,$box_pieces1=null,$super_id) {
+        
+        
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'esnad_city',$super_id);     
         //$sender_default_city= Getselletdetails_new($super_id);
-        $sender_address = $ShipArr['0']['sender_address'];
+        $sender_address = $ShipArr['sender_address'];
         $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city', $super_id);
         $sender_name = $ShipArr['sender_name'];
         $receiver_cityID = getdestinationfieldshow_auto_array($ShipArr['destination'], 'esnad_city_code',$super_id);
@@ -1234,7 +1237,7 @@ class Ccompany_model extends CI_Model {
         $iscod = false;
         $cod_amount = $ShipArr['total_cod_amt'];
         
-        if ($ShipArr['mode'] == 'COD') {
+        if ($ShipArr['pay_mode'] == 'COD') {
             $pay_mode = "COD";
             //$declared_charge = 0;
             $iscod = true;
@@ -1361,7 +1364,7 @@ class Ccompany_model extends CI_Model {
         $api_url = $counrierArr['api_url'];
         $senderData= Getsite_configData();
         $cod_amount = $ShipArr['total_cod_amt'];
-        if ($ShipArr['mode'] === 'COD') {
+        if ($ShipArr['pay_mode'] === 'COD') {
             $cod_collection_mode = 'COD';
         } else {
             $cod_collection_mode = 'PREPAID';
@@ -1480,7 +1483,7 @@ class Ccompany_model extends CI_Model {
 
     }
     public function ClexArray($sellername = null ,$ShipArr, $counrierArr, $complete_sku, $box_pieces1, $c_id,$super_id) {
-        $sender_default_city = Getselletdetails_new($super_id);
+        //$sender_default_city = Getselletdetails_new($super_id);
         // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
         $sender_address = $ShipArr['sender_address'];
         $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city', $super_id);
@@ -1489,7 +1492,7 @@ class Ccompany_model extends CI_Model {
         $comp_api_url = $counrierArr['api_url'];
         $declared_charge = $ShipArr['total_cod_amt'];
         $cod_amount = $ShipArr['total_cod_amt'];
-        if ($ShipArr['mode'] == 'COD') {
+        if ($ShipArr['pay_mode'] == 'COD') {
             $billing_type = 'COD';
             // $cod_amount=0;
         } else {
@@ -1591,7 +1594,7 @@ class Ccompany_model extends CI_Model {
     }
 
     public function AjeekArray($sellername = null ,$ShipArr, $counrierArr, $complete_sku, $box_pieces1, $c_id,$super_id) {
-        $sender_default_city = Getselletdetails_new($super_id);
+        //$sender_default_city = Getselletdetails_new($super_id);
         // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
         $sender_address = $ShipArr['sender_address'];
         $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city', $super_id);
@@ -1606,7 +1609,7 @@ class Ccompany_model extends CI_Model {
         $comp_api_url = $counrierArr['api_url'];
         $cod_amount = $ShipArr['total_cod_amt'];
 
-        if ($ShipArr['mode'] == 'COD') {
+        if ($ShipArr['pay_mode'] == 'COD') {
             $billing_type = 1;
             $cod_amount = $ShipArr['total_cod_amt'];
         } else {
@@ -1961,7 +1964,7 @@ class Ccompany_model extends CI_Model {
 
         $cod_amount = $ShipArr['total_cod_amt'];
 
-        if ($ShipArr['mode'] === 'COD') {
+        if ($ShipArr['pay_mode'] === 'COD') {
             $cod_collection_mode = 'COD';
             $cod_amount = 0;
         } else {
@@ -2067,10 +2070,15 @@ class Ccompany_model extends CI_Model {
     }
     public function ZajilArray($sellername = null ,$ShipArr, $counrierArr, $complete_sku, $c_id,$box_pieces1,$super_id) {
         
-        $sender_default_city = Getselletdetails_new($super_id);
+        //$sender_default_city = Getselletdetails_new($super_id);
         // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
-        $sender_address = $sender_default_city['0']['address'];
-        $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
+        //$sender_address = $sender_default_city['0']['address'];
+        //$sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
+        
+        $sender_address = $ShipArr['sender_address'];
+        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city', $super_id);
+
+        
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'zajil',$super_id);
         
         $declared_charge = $ShipArr['total_cod_amt'];
@@ -2092,7 +2100,7 @@ class Ccompany_model extends CI_Model {
             $weight = $ShipArr['weight'] ; 
         }
        
-        if ($ShipArr['mode'] === 'COD') {
+        if ($ShipArr['pay_mode'] === 'COD') {
             $cod_collection_mode = 'CASH';
             
         } else {
@@ -2303,11 +2311,14 @@ class Ccompany_model extends CI_Model {
         return $response;
     }
 
-    public function SaeeArray(array $ShipArr, array $counrierArr, $Auth_token = null,$c_id,$box_pieces1,$super_id) {
+    public function SaeeArray($sellername=null ,array $ShipArr, array $counrierArr, $Auth_token = null,$c_id,$box_pieces1,$super_id) {
         
-        $sender_default_city= Getselletdetails_new($super_id);
-        $sender_address = $sender_default_city['0']['address'];
-        $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
+//        $sender_default_city= Getselletdetails_new($super_id);
+//        $sender_address = $sender_default_city['0']['address'];
+//        $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
+//        
+        $sender_address = $ShipArr['sender_address'];
+        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city', $super_id);
         $sender_name = $ShipArr['sender_name'];
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'saee_city',$super_id);
         $lat = getdestinationfieldshow_auto_array($ShipArr['origin'], 'latitute',$super_id);
@@ -2333,11 +2344,11 @@ class Ccompany_model extends CI_Model {
         else { 
             $weight = $ShipArr['weight'] ; 
         }
-       
-        if ($ShipArr['mode'] == 'COD') {
+        
+        if ($ShipArr['pay_mode'] == 'COD') {
             $BookingMode = 'COD';
             $codValue = $ShipArr['total_cod_amt'];
-        } elseif ($ShipArr['mode'] == 'CC') {
+        } elseif ($ShipArr['pay_mode'] == 'CC') {
             $BookingMode = 'CC';
             $codValue = 0;
         }
@@ -2375,6 +2386,7 @@ class Ccompany_model extends CI_Model {
             "longitude" => $lang,
         );
         $all_param_data = json_encode($param);
+        //echo $all_param_data;die;
         $live_url = $API_URL."/new?secret=$Secretkey";
         $headers = array("Content-type:application/json");
 
@@ -2404,10 +2416,14 @@ class Ccompany_model extends CI_Model {
     public function AymakanArray($sellername = null ,array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null,$box_pieces1,$complete_sku=null,$super_id) {
 
    
-        $sender_default_city = Getselletdetails_new($super_id);
+        //$sender_default_city = Getselletdetails_new($super_id);
         // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
-        $sender_address = $sender_default_city['0']['address'];
-        $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
+       // $sender_address = $sender_default_city['0']['address'];
+        //$sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
+        $sender_address = $ShipArr['sender_address'];
+        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city', $super_id);
+
+        
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'aymakan',$super_id);
 
         $store = getallsellerdatabyID($ShipArr['cust_id'], 'company',$super_id);        
@@ -2439,11 +2455,11 @@ class Ccompany_model extends CI_Model {
             $weight = $ShipArr['weight'] ; 
          }        
 
-        if ($ShipArr['mode'] == 'COD') {
+        if ($ShipArr['pay_mode'] == 'COD') {
             $price_set = 113;
             $is_cod = 1;
             $cod_amount = $ShipArr['total_cod_amt'];
-        } elseif ($ShipArr['mode'] == 'CC') {
+        } elseif ($ShipArr['pay_mode'] == 'CC') {
             $is_cod = 0;
             $price_set = 364;
             $cod_amount = 0;
@@ -2538,17 +2554,22 @@ class Ccompany_model extends CI_Model {
 
     public function SMSAArray($sellername = null ,$ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id) {
         
-        $sender_default_city = Getselletdetails_new($super_id);
+        //$sender_default_city = Getselletdetails_new($super_id);
         // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
-        $sender_address = $sender_default_city['0']['address'];
-        $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
+        //$sender_address = $sender_default_city['0']['address'];
+        //$sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
+        
+        $sender_address = $ShipArr['sender_address'];
+        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city', $super_id);
+        
+        
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'samsa_city',$super_id);
         
         $store = "smsa";//getallsellerdatabyID($ShipArr['cust_id'], 'company');
         $declared_charge = $ShipArr['total_cod_amt'];
         $cod_amount = $ShipArr['total_cod_amt'];
 
-        if ($ShipArr['mode'] == 'COD') {
+        if ($ShipArr['pay_mode'] == 'COD') {
             $codValue = $cod_amount;
         } else {
             $codValue = 0;
@@ -2739,9 +2760,9 @@ class Ccompany_model extends CI_Model {
 
         
         
-            if ($ShipArr['mode'] == 'CC') {
+            if ($ShipArr['pay_mode'] == 'CC') {
                     $BillingType = 1;
-                } elseif ($ShipArr['mode'] == "COD") {
+                } elseif ($ShipArr['pay_mode'] == "COD") {
                     $BillingType = 5;
                 }
             if(empty($box_pieces1))
@@ -2871,16 +2892,19 @@ class Ccompany_model extends CI_Model {
     public function ShipsyArray($sellername = null ,array $ShipArr, array $counrierArr, $complete_sku = null, $box_pieces1 = null, $c_id = null,$super_id) {
         //print_r($ShipArr);exit;
         
-        $sender_default_city = Getselletdetails_new($super_id);
+        //$sender_default_city = Getselletdetails_new($super_id);
         // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
-        $sender_address = $sender_default_city['0']['address'];
-        $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
+        //$sender_address = $sender_default_city['0']['address'];
+        //$sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
+        
+        $sender_address = $ShipArr['sender_address'];
+        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city', $super_id);
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'shipsy_city',$super_id);
 
         
-            if ($ShipArr['mode'] == 'COD') {
+            if ($ShipArr['pay_mode'] == 'COD') {
                     $total_cod_amt = $ShipArr['total_cod_amt'];
-                } elseif ($ShipArr['mode'] == "CC") {
+                } elseif ($ShipArr['pay_mode'] == "CC") {
                     $total_cod_amt = 0;
                 }
 				       
@@ -3048,16 +3072,23 @@ class Ccompany_model extends CI_Model {
 
         if(  empty($ShipArr['reciever_email']))
         $ShipArr['reciever_email']='no@no.com';
-         $sender_default_city = Getselletdetails_new($super_id);         
+        
+        
+         //$sender_default_city = Getselletdetails_new($super_id);         
         //  $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');  
-         $sender_address = $sender_default_city['0']['address'];
-         $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'shipsa_city', $super_id);
+         //$sender_address = $sender_default_city['0']['address'];
+         //$sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'shipsa_city', $super_id);
+        $sender_address = $ShipArr['sender_address'];
+        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city', $super_id);
+        
+        
+        
          $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'shipsa_city',$super_id);
 
-            if ($ShipArr['mode'] == 'COD') {
+            if ($ShipArr['pay_mode'] == 'COD') {
                 $total_cod_amt = $ShipArr['total_cod_amt'];
                 $paymentMethod = 'CashOnDelivery';
-            }elseif ($ShipArr['mode'] == "CC") {
+            }elseif ($ShipArr['pay_mode'] == "CC") {
                 $total_cod_amt = 0;
                 $paymentMethod = 'Prepaid';
             }
@@ -3104,6 +3135,7 @@ class Ccompany_model extends CI_Model {
     // echo "<pre>"; print_r($param); die;
      
         $paramArray = json_encode($param);  
+        
        //echo "<pre>"; print_r($paramArray); die;
        
         if (empty($param[0]['recipient']['city']))
@@ -3163,11 +3195,11 @@ class Ccompany_model extends CI_Model {
         //print_r( $counrierArr); 
        // echo $counrierArr['api_url'].'/'.$client_awb."?apikey=".$counrierArr['auth_token']; exit;
         
-        if ($ShipArr['mode'] == 'COD') {
+        if ($ShipArr['pay_mode'] == 'COD') {
                         $total_cod_amt = $ShipArr['total_cod_amt'];
                         $paymentMethod = 'CashOnDelivery';
                     }
-                    elseif ($ShipArr['mode'] == "CC") {
+                    elseif ($ShipArr['pay_mode'] == "CC") {
                         $total_cod_amt = 0;
                         $paymentMethod = 'Prepaid';
                     }
@@ -3246,10 +3278,15 @@ class Ccompany_model extends CI_Model {
                             
     public function SPArray($sellername = null ,array $ShipArr, array $counrierArr, $complete_sku = null,$Auth_token=null, $c_id = null,$box_pieces1=null,$super_id){
         
-        $sender_default_city = Getselletdetails_new($super_id);
+        //$sender_default_city = Getselletdetails_new($super_id);
         // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
-        $sender_address = $sender_default_city['0']['address'];
-        $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
+        //$sender_address = $sender_default_city['0']['address'];
+        //$sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
+        
+        $sender_address = $ShipArr['sender_address'];
+        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city', $super_id);
+
+        
          $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'saudipost_id',$super_id);
 
         $username = $counrierArr['user_name'];
@@ -3303,7 +3340,7 @@ class Ccompany_model extends CI_Model {
        
        
         
-        if ($ShipArr['mode'] == "COD") {
+        if ($ShipArr['pay_mode'] == "COD") {
             $PaymentType = 2;
             $total_cod_amt = $ShipArr['total_cod_amt'];
         }else{
@@ -3600,7 +3637,7 @@ class Ccompany_model extends CI_Model {
       
         //$sender_default_city = Getselletdetails_new($super_id);
         // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
-        $sender_address = $ShipArr['0']['sender_address'];
+        $sender_address = $ShipArr['sender_address'];
         $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city', $super_id);
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'city',$super_id);
 
@@ -3615,10 +3652,10 @@ class Ccompany_model extends CI_Model {
         $signMethod = "md5";
     
     
-        if ($ShipArr['mode'] == 'COD') {
+        if ($ShipArr['pay_mode'] == 'COD') {
             $cod_amount = $ShipArr['total_cod_amt'];
     
-        } elseif ($ShipArr['mode'] == 'CC') {         
+        } elseif ($ShipArr['pay_mode'] == 'CC') {         
             $cod_amount = 0;
         }
         if(empty($box_pieces1))
@@ -3836,7 +3873,7 @@ class Ccompany_model extends CI_Model {
         foreach ($sku_data as $key => $val) {
                 $itemsArray[] = array("ProductName"=>$val['name'],'Quantity'=>$box_pieces,'SKU'=>$val['sku'],'UPC'=>'','Description'=>$complete_sku);
         }
-        if ($ShipArr['mode'] == "COD") {
+        if ($ShipArr['pay_mode'] == "COD") {
             $total_cod_amt = $ShipArr['total_cod_amt'];
         }else{
             $total_cod_amt = 0;
@@ -3949,9 +3986,9 @@ class Ccompany_model extends CI_Model {
             $weight = $ShipArr['weight'];
             }
             
-            if ($ShipArr['mode'] == 'COD') {
+            if ($ShipArr['pay_mode'] == 'COD') {
             $cod_amount = $ShipArr['total_cod_amt'];
-            } elseif ($ShipArr['mode'] == 'CC') {
+            } elseif ($ShipArr['pay_mode'] == 'CC') {
             $cod_amount = 0;
             }
             
@@ -4088,12 +4125,12 @@ class Ccompany_model extends CI_Model {
                     $weight = $ShipArr['weight'];
                     }
                     
-                    if($ShipArr['mode'] == "COD"){
+                    if($ShipArr['pay_mode'] == "COD"){
                         $pay_mode = "credit_balance";
                         $cod_amount = $ShipArr['total_cod_amt'];
                         $paid = FALSE;
                     }
-                    elseif ($ShipArr['mode'] == 'CC'){
+                    elseif ($ShipArr['pay_mode'] == 'CC'){
                         $pay_mode = "credit_balance";
                         $paid = TRUE;
                         $cod_amount = 0;
@@ -4318,14 +4355,22 @@ class Ccompany_model extends CI_Model {
              return $Auth_token;
     
     }
-        public function MMCCOArray(array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null, $box_pieces1 = null, $super_id= null) 
+        public function MMCCOArray($sellername=null, array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null, $box_pieces1 = null, $super_id= null) 
     {
-                $sender_default_city = Getselletdetails_new($super_id);
-                $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
-                $selleremail = GetallCutomerBysellerId($ShipArr['cust_id'],'email');
-                $sellerphone = GetallCutomerBysellerId($ShipArr['cust_id'],'phone');
-                $sender_address = $sender_default_city['0']['address'];
-                $sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
+                //$sender_default_city = Getselletdetails_new($super_id);
+                //$sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+                //$selleremail = GetallCutomerBysellerId($ShipArr['cust_id'],'email');
+                //$sellerphone = GetallCutomerBysellerId($ShipArr['cust_id'],'phone');
+                
+                $sender_address = $ShipArr['sender_address'];
+                $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city', $super_id);
+                $selleremail = $ShipArr['sender_email'];
+                $sellerphone = $ShipArr['sender_phone'];
+                
+                //$sender_address = $sender_default_city['0']['address'];
+                //$sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
+                
+                
                 $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'MMCCO_city',$super_id);
 
                 
@@ -4363,7 +4408,7 @@ class Ccompany_model extends CI_Model {
     
             $sender_data = array(
                     'address_type' => 'residential',
-                    'name' => "DIGGIPACKS FULFILLMENT - ".$sellername,
+                    'name' => $sellername,
                     'email' => $selleremail,
                     'apartment'=> 221,
                     'building' => 'B',
@@ -4582,7 +4627,7 @@ class Ccompany_model extends CI_Model {
         
         //100: PPD(Prepaid) 200: COD (Cash On Delivery)
         
-        if ($ShipArr['mode'] == "COD") {
+        if ($ShipArr['pay_mode'] == "COD") {
             $total_cod_amt = $ShipArr['total_cod_amt'];
             $payMethod = "200";
             $collecting_amt = $total_cod_amt;
@@ -4707,11 +4752,11 @@ class Ccompany_model extends CI_Model {
             }
     
 
-        if ($ShipArr['mode'] == 'COD') {
+        if ($ShipArr['pay_mode'] == 'COD') {
             $BookingMode = 'COD';
             $codValue = $ShipArr['total_cod_amt'];
            
-        } elseif ($ShipArr['mode'] == 'CC') {
+        } elseif ($ShipArr['pay_mode'] == 'CC') {
             $BookingMode = 'Credit Card';
                 $codValue = 1;
            
@@ -4839,7 +4884,7 @@ class Ccompany_model extends CI_Model {
         if(!empty($receiver_city))
         {
             $API_URL = $counrierArr['api_url'].'create';
-            if ($ShipArr['mode'] == 'COD') {
+            if ($ShipArr['pay_mode'] == 'COD') {
                 $codValue = $ShipArr['total_cod_amt'];
             } else {
                 $codValue = 0;
@@ -4880,7 +4925,7 @@ class Ccompany_model extends CI_Model {
             "pack_currency_code" => $currency,
             "pack_extra_note" => "OK",
             "pack_live_time" => "4",
-            "pack_sender_name" => "Diggipacks",
+            "pack_sender_name" => $sellername,//"Diggipacks",
             "pack_sender_phone" => $ShipArr['reciever_phone'],
             "pack_sender_email" =>$ShipArr['sender_email'],
             "pack_send_country" => "SA",
@@ -4945,8 +4990,8 @@ class Ccompany_model extends CI_Model {
         $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city', $super_id);
         $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'sls',$super_id);
 
-        $lat = $this->getdestinationfieldshow_auto_array($ShipArr['origin'], 'latitute',$super_id);
-        $lang = $this->getdestinationfieldshow_auto_array($ShipArr['origin'], 'longitute',$super_id);
+        $lat = getdestinationfieldshow_auto_array($ShipArr['origin'], 'latitute',$super_id);
+        $lang = getdestinationfieldshow_auto_array($ShipArr['origin'], 'longitute',$super_id);
         $api_url = trim($counrierArr['api_url'])."create";
         $api_key = $counrierArr['auth_token'];
         $sender_city = $receiver_city = 'Riyadh';
@@ -4963,9 +5008,9 @@ class Ccompany_model extends CI_Model {
                 $weight = $ShipArr['weight'];
             }
             
-            if ($ShipArr['mode'] == 'COD') {
+            if ($ShipArr['pay_mode'] == 'COD') {
                 $cod_amount = $ShipArr['total_cod_amt'];
-            } elseif ($ShipArr['mode'] == 'CC') {
+            } elseif ($ShipArr['pay_mode'] == 'CC') {
                 $cod_amount = 0;
             }
             if(empty($complete_sku)){
@@ -5111,9 +5156,9 @@ class Ccompany_model extends CI_Model {
                 $weight = $ShipArr['weight'];
             }
             
-            if ($ShipArr['mode'] == 'COD') {
+            if ($ShipArr['pay_mode'] == 'COD') {
                 $cod_amount = $ShipArr['total_cod_amt'];
-            } elseif ($ShipArr['mode'] == 'CC') {
+            } elseif ($ShipArr['pay_mode'] == 'CC') {
                 $cod_amount = 0;
             }
             
@@ -5295,10 +5340,13 @@ class Ccompany_model extends CI_Model {
     }
      public function MomentsArray($sellername = null ,array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null, $box_pieces1 = null,$complete_sku=null,$super_id) 
     {
-            $sender_default_city = Getselletdetails_new($super_id);
+            //$sender_default_city = Getselletdetails_new($super_id);
             // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
-            $senderemail = GetallCutomerBysellerId($ShipArr['cust_id'],'email');
-            $senderphone = GetallCutomerBysellerId($ShipArr['cust_id'],'phone');
+            //$senderemail = GetallCutomerBysellerId($ShipArr['cust_id'],'email');
+            //$senderphone = GetallCutomerBysellerId($ShipArr['cust_id'],'phone');
+            $senderemail = $ShipArr['sender_email'];
+            $senderphone = $ShipArr['sender_phone'];
+            $sender_address = $ShipArr['sender_address'];
            
             $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city_code', $super_id);
             $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'momentsKsa_city',$super_id);
@@ -5316,12 +5364,12 @@ class Ccompany_model extends CI_Model {
                 } else {
                 $weight = $ShipArr['weight'];
                 }
-                if($ShipArr['mode'] == "COD"){
+                if($ShipArr['pay_mode'] == "COD"){
                     $pay_mode = "credit_balance";
                     $cod_amount = $ShipArr['total_cod_amt'];
                     $paid = FALSE;
                 }
-                elseif ($ShipArr['mode'] == 'CC'){
+                elseif ($ShipArr['pay_mode'] == 'CC'){
                     $pay_mode = "credit_balance";
                     $paid = TRUE;
                     $cod_amount = 0;
@@ -5368,6 +5416,7 @@ class Ccompany_model extends CI_Model {
             );
 
           $json_final_date = json_encode($details);
+          //echo $json_final_date;die;
              //print_r($json_final_date);  die;
                $curl = curl_init();
 
@@ -5446,8 +5495,11 @@ class Ccompany_model extends CI_Model {
     {
             $sender_default_city = Getselletdetails_new($super_id);
             // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
-            $senderemail = GetallCutomerBysellerId($ShipArr['cust_id'],'email');
-            $senderphone = GetallCutomerBysellerId($ShipArr['cust_id'],'phone');
+//            $senderemail = GetallCutomerBysellerId($ShipArr['cust_id'],'email');
+//            $senderphone = GetallCutomerBysellerId($ShipArr['cust_id'],'phone');
+            $senderemail = $ShipArr['sender_email'];
+            $senderphone = $ShipArr['sender_phone'];
+            $sender_address = $ShipArr['sender_address'];
          
             $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city_code', $super_id);
             $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'Postagexp_city',$super_id);
@@ -5466,12 +5518,12 @@ class Ccompany_model extends CI_Model {
                 }
 
 
-                if($ShipArr['mode'] == "COD"){
+                if($ShipArr['pay_mode'] == "COD"){
                     $pay_mode = "credit_balance";
                     $cod_amount = $ShipArr['total_cod_amt'];
                     $paid = FALSE;
                 }
-                elseif ($ShipArr['mode'] == 'CC'){
+                elseif ($ShipArr['pay_mode'] == 'CC'){
                     $pay_mode = "credit_balance";
                     $paid = TRUE;
                     $cod_amount = 0;
@@ -5565,11 +5617,13 @@ class Ccompany_model extends CI_Model {
                 return $responseArray;
     }
     public function SMSAEgyptArray($sellername = null ,$ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id) {
-            $sender_default_city = Getselletdetails_new($super_id);
+            //$sender_default_city = Getselletdetails_new($super_id);
             // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
-            $senderemail = GetallCutomerBysellerId($ShipArr['cust_id'],'email');
-            $senderphone = GetallCutomerBysellerId($ShipArr['cust_id'],'phone');
+            //$senderemail = GetallCutomerBysellerId($ShipArr['cust_id'],'email');
+            //$senderphone = GetallCutomerBysellerId($ShipArr['cust_id'],'phone');
             $sender_address =$ShipArr['sender_address'];
+            $senderemail =$ShipArr['sender_email'];
+            $senderphone =$ShipArr['sender_phone'];
            
             $country = getdestinationfieldshow_auto_array($ShipArr['destination'], 'country',$super_id);
             $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city', $super_id);
@@ -5578,7 +5632,7 @@ class Ccompany_model extends CI_Model {
         $declared_charge = $ShipArr['total_cod_amt'];
         $cod_amount = $ShipArr['total_cod_amt'];
 
-        if ($ShipArr['mode'] == 'COD') {
+        if ($ShipArr['pay_mode'] == 'COD') {
             $codValue = $cod_amount;
         } else {
             $codValue = 0;
@@ -5818,10 +5872,10 @@ class Ccompany_model extends CI_Model {
             }
 
 
-            if($ShipArr['mode'] == "COD"){
+            if($ShipArr['pay_mode'] == "COD"){
                 $cod_amount = $ShipArr['total_cod_amt'];
             }
-            elseif ($ShipArr['mode'] == 'CC'){
+            elseif ($ShipArr['pay_mode'] == 'CC'){
                 $cod_amount = 0;
             }
 
