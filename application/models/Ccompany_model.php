@@ -4101,6 +4101,147 @@ class Ccompany_model extends CI_Model {
             return  $label_response;
         }
 
+   //KwickBox Array 
+    public function KwickBoxArray($sellername = null ,array $ShipArr, array $counrierArr, $c_id = null, $box_pieces1 = null, $complete_sku = null,$super_id = null) 
+    {
+            $sender_city =  getdestinationfieldshow_auto_array($ShipArr['origin'], 'city', $super_id); 
+            $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'kwickBox_city',$super_id);          
+            $sender_country = getdestinationfieldshow_auto_array($ShipArr['origin'], 'country',$super_id);
+            $receiver_country = getdestinationfieldshow_auto_array($ShipArr['destination'], 'country',$super_id);
+            $store_address = $ShipArr['sender_address'];              
+            $senderemail = GetallCutomerBysellerId($ShipArr['cust_id'],'email');
+            $senderphone = GetallCutomerBysellerId($ShipArr['cust_id'],'phone');
+
+           //echo $receiver_city; die;
+
+            $API_URL = $counrierArr['api_url'] . "shipments";
+            $api_key = $counrierArr['auth_token'];
+           
+            $currency = site_configTable("default_currency");//"SAR";            
+            
+            if (empty($box_pieces1)) {
+            $box_pieces = 1;
+            } else {
+            $box_pieces = $box_pieces1;
+            }
+            if(empty($complete_sku)){
+                $complete_sku = "Qty:". $box_pieces;
+            }else {$complete_sku = $complete_sku; }
+            
+            if ($ShipArr['weight'] == 0) {
+            $weight = 1;
+            } else {
+            $weight = $ShipArr['weight'];
+            }
+            
+            if ($ShipArr['pay_mode'] == 'COD') {
+                $cod_amount = $ShipArr['total_cod_amt'];
+            } elseif ($ShipArr['pay_mode'] == 'CC') {
+                $cod_amount = 0;
+            }          
+
+            $Shipper = array(
+                'Reference' => '',
+                'Contact' => array(
+                    'Name' => $sellername,
+                    'Email' => $senderemail,
+                    'Phone' => $senderphone,
+                    'SecondPhone' => ''
+                ),
+                'Address' => array(
+                    'Reference' => '',
+                    'Country' => $sender_country,
+                    'State' => '',
+                    'PostCode' => '',
+                    'City' => $sender_city,
+                    'AddressLine1' => $store_address,
+                    'AddressLine2' => '',
+                    'AddressLine3' => '',
+                )
+            );
+
+            $Consignee = array(
+                'Reference' => '',
+                'Contact' => array(
+                    'Name' => $ShipArr['reciever_name'],
+                    'Email' => '',
+                    'Phone' => $senderphone,
+                    'SecondPhone' => ''
+                ),
+                'Address' => array(
+                    'Reference' => '',
+                    'Country' => $receiver_country,
+                    'State' => '',
+                    'PostCode' => '',
+                    'City' => $receiver_city,
+                    'AddressLine1' => $ShipArr['reciever_address'],
+                    'AddressLine2' => '',
+                    'AddressLine3' => '',
+                )
+            );
+
+            $Commodity = array(
+                'Reference' => '',
+                'Weight' => $weight,
+                'Dimensions' => $senderphone,
+                'Description' => $complete_sku,
+                'COD' => $cod_amount,
+                'NumberOfPieces' => $box_pieces,
+                );  
+
+
+            $details[] = array(
+            'UniqueReference' => $ShipArr['slip_no'],
+            'Shipper' => $Shipper,
+            'Consignee' => $Consignee,
+            'Commodity' => $Commodity,
+            'Notes' => '',           
+            );
+            
+            $json_final_date = json_encode($details);
+
+            if(!empty($receiver_city))
+            { 
+                    $curl = curl_init();                    
+                    curl_setopt_array($curl, array(
+                    CURLOPT_URL => $API_URL,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => $json_final_date,
+                    CURLOPT_HTTPHEADER => array(
+                    'Content-Type:application/json',
+                    'ApiKey:'. $api_key),
+                    ));
+                    $response = curl_exec($curl);                    
+                    curl_close($curl);                   
+            }
+            else {
+                $error = 'reciever city empty';
+                $responseArray['field.'][0] = $error;
+                $log = $this->shipmentLog($c_id, $error,'Fail', $ShipArr['slip_no']);
+                return $responseArray;
+            }
+            $responseArray = json_decode($response, true);            
+            $logresponse = json_encode($response);
+
+
+            $successres = $responseArray['number'];
+
+            if (!empty($successres)) 
+            {
+                    $successstatus = "Success";
+            } else {
+                    $successstatus = "Fail";
+            }
+            $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no']);
+            return $responseArray;
+    }
+
 
     public function WadhaArray($sellername = null ,array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null, $box_pieces1 = null,$super_id=null) 
         {
@@ -5847,7 +5988,7 @@ class Ccompany_model extends CI_Model {
         return $responseData;
     }
     
-    public function BostaArray($sellername = null, array $ShipArr, array $counrierArr,$token= null, $complete_sku = null, $box_pieces1=null,$c_id=null,$super_id=null){
+    public function BostaArray($sellername=null, array $ShipArr, array $counrierArr,$token= null, $complete_sku = null, $box_pieces1=null,$c_id=null,$super_id=null){
         
             $API_URL = $counrierArr['api_url'].'deliveries';
             //print "<pre>"; print_r($ShipArr);die;
