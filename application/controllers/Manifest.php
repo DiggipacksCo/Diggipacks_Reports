@@ -3069,7 +3069,7 @@ class Manifest extends CourierCompany_pickup {
        
           
             if (!empty($data)) {
-                $result = $this->ItemInventory_model->add($data);
+                $result = $this->ItemInventory_model->add_new($data);
                 $this->Manifest_model->getupdateconfirmstatus_new($uid, $manifestUpdate);
             }
             

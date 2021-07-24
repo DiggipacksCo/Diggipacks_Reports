@@ -7,6 +7,7 @@ var app = angular.module('updateManifest', [])
         $scope.scan = {};
         $scope.scan_new = {};
         $scope.specialtype = {};
+        
         $scope.shipData_new = [];
 
         $scope.awbArray = [];
@@ -136,6 +137,7 @@ var app = angular.module('updateManifest', [])
                         $scope.MatchStockLocation.push(value.stockLocation);
                         $scope.MatchShelveArrr.push(value.shelveNo);
 
+console.log( $scope.Menidata);
                     });
 
                     // console.log($scope.Menidata);
