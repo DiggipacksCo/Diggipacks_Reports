@@ -1169,10 +1169,10 @@ class Excel_export extends MY_Controller {
         $table_columns[] = "Esnad City Code";
         $table_columns[] = "Salla";
         $table_columns[] = "Zid";
+        $table_columns[] = "Country Code";
         sort($table_columns);
         
         $table_column = array_merge(array("City"),$table_columns);
-        
         $column = 0;
 
         foreach ($table_column as $field) {
@@ -1289,6 +1289,12 @@ class Excel_export extends MY_Controller {
                                     $dynmicColumn = 'burq_city';
                                 if ($colimn == 'Beez')
                                     $dynmicColumn = 'beez_city';
+                                if ($colimn == 'Country Code')
+                                    $dynmicColumn = 'country_code';
+                                if ($colimn == 'DHL JONES')
+                                    $dynmicColumn = 'dhl_jones_city';
+                                if ($colimn == 'KwickBox')
+                                    $dynmicColumn = 'kwickBox_city';
 
                                 
                                  

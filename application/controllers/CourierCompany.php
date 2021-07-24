@@ -1616,6 +1616,33 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                             }
                         
                     }
+                    elseif ($company == 'KwickBox')
+                    {
+                        $responseArray = $this->Ccompany_model->KwickBoxArray($sellername, $ShipArr, $counrierArr, $c_id, $box_pieces1, $complete_sku, $super_id);
+
+                        $successres = $responseArray['number'];
+                        $error_status = $responseArray['field.'][0];
+                        
+                        if (!empty($successres))
+                        {
+                            $client_awb = $responseArray['number'];
+                            $media_data = $responseArray['labelUrl'];
+
+                            if (file_put_contents( "assets/all_labels/$slipNo.pdf",file_get_contents($media_data))){
+                                $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';                             
+                                $CURRENT_DATE = date("Y-m-d H:i:s");
+                                $CURRENT_TIME = date("H:i:s");                                                      
+                                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                                return $return;  
+                            } 
+                        } 
+                        else
+                        {
+                            $returnArr['responseError'] = $slipNo . ':' . $error_status;  
+                            $return= array('status'=>201,'error'=> $returnArr); 
+                            return $return;
+                        }                                                    
+                    }
                     elseif($company == 'Tamex')
                     {
                         
