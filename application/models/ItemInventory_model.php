@@ -189,7 +189,7 @@ class ItemInventory_model extends CI_Model {
                     $array_added[] = array('item_sku' => $rdata['item_sku'], 'seller_id' => $rdata['seller_id'], 'expity_date' => $rdata['expity_date'], 'stock_location' => $rdata['stock_location'], 'quantity' => $rdata['quantity'], 'itype' => $rdata['itype'], 'shelve_no' => $rdata['shelve_no'], 'wh_id' => $rdata['wh_id'], 'super_id' => $this->session->userdata('user_details')['super_id']);
                
                                     
-                    $activitiesArr[] = array('exp_date' => $rdata['expity_date'], 'st_location' => $rdata['stock_location'], 'item_sku' => $rdata['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $rdata['seller_id'], 'qty' => $rdata['quantity'], 'p_qty' => 0, 'qty_used' => $rdata['quantity'], 'type' => $activitiesType, 'entrydate' => date("Y-m-d h:i:s"), 'super_id' => $this->session->userdata('user_details')['super_id'],'shelve_no'=>$rdata['shelve_no']);
+                    $activitiesArr[] = array('exp_date' => $rdata['expity_date'], 'st_location' => $rdata['stock_location'], 'item_sku' => $rdata['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $rdata['seller_id'], 'qty' => $rdata['quantity'], 'p_qty' => 0, 'qty_used' => $rdata['quantity'], 'type' => 'Add', 'entrydate' => date("Y-m-d h:i:s"), 'super_id' => $this->session->userdata('user_details')['super_id'],'shelve_no'=>$rdata['shelve_no']);
                 
             }
         }

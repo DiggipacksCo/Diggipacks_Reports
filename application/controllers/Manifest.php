@@ -2947,6 +2947,7 @@ class Manifest extends CourierCompany_pickup {
          
         if (!empty($postData)) {
 
+           
             $uid = $skus[0]['uid'];
             foreach ($skus as $key => $val) {
 
@@ -2993,7 +2994,7 @@ class Manifest extends CourierCompany_pickup {
                             'type' => 'Update',
                             'entrydate' => date("Y-m-d h:i:s"),
                             'super_id' => $this->session->userdata('user_details')['super_id'],
-                            'shelve_no' => $$val2['shelveNo']
+                            'shelve_no' => $val2['shelveNo']
                         );
                            
 
@@ -3100,12 +3101,15 @@ class Manifest extends CourierCompany_pickup {
             }
 
        
-          
+        //  print_r($data); die;
             if (!empty($data)) {
                 $result = $this->ItemInventory_model->add_new($data);
-                $this->Manifest_model->getupdateconfirmstatus_new($uid, $manifestUpdate);
+               
             }
-            
+            if(!empty($manifestUpdate))
+            {
+             $this->Manifest_model->getupdateconfirmstatus_new($uid, $manifestUpdate);
+            }
         
             if (!empty($token)) {
 
