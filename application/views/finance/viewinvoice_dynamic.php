@@ -125,10 +125,11 @@
  						// $dispatch_charge = $rowData['dispatch_charge'];
  						$inbound_charge = $rowData['inbound_charge'];
  						$outbound_charge = $rowData['outbound_charge'];
+						 $pallet_charge= $rowData['pallet_charge'];
  						$box_charge = $rowData['box_charge'];
  						$shipping_charge = $rowData['shipping_charge'];
  						$sku_barcode_print = $rowData['sku_barcode_print'];
- 						$total_without_vat = round(($packing_charge+$box_charge+$picking_charge+$special_packing+$cancel_charge+$outbound_charge),2);
+ 						$total_without_vat = round(( $pallet_charge+$packing_charge+$box_charge+$picking_charge+$special_packing+$cancel_charge+$outbound_charge),2);
  						$totalvat    =round( (($total_without_vat * 15)/100),2) ;
  						$total_with_vat  =round( ($total_without_vat + $totalvat),2);
  						 $counter = $key + 1;
