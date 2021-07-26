@@ -160,7 +160,7 @@
 					<tr>	
 						<tr>	
 					<?php  
-					$tot = round(($totalValue['picking_charge']+$totalValue['packing_charge']+$totalValue['special_packing']+$totalValue['outbound_charge']+$totalValue['box_charge']),2);  
+					$tot = round(($totalValue['pallet_charge']+$totalValue['picking_charge']+$totalValue['packing_charge']+$totalValue['special_packing']+$totalValue['outbound_charge']+$totalValue['box_charge']),2);  
 					$totvat  = round((($tot * 15)/100),2) ;
  					$tot_with_vat  = round(($tot + $totvat),2);
  					$bank_fees = GetalldashboardClientField($invoiceData[0]['cust_id'], 'bank_fees');
