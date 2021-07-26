@@ -552,7 +552,7 @@ class Manifest extends CourierCompany_pickup {
             'origin' => $senderdetails['city'],
             'slip_no' => $alldetails['uniqueid'],
             'mode' =>$pay_mode,
-            'pay_mode' => $ShipArr['mode'],
+            'pay_mode' => 'CC',
             'total_cod_amt' => 0,
             'pieces' => $alldetails['boxes'],
             'status_describtion' => $alldetails['sku'],
@@ -1333,6 +1333,36 @@ class Manifest extends CourierCompany_pickup {
                     $returnArr['Error_msg'][] = $slipNo . ':' .$error_status;
                 }                  
             }
+            elseif($company == 'DHL JONES') {
+                if(!empty($counrierArr)) { 
+                            $api_response = $this->Ccompany_model->DhlJonesArray($sellername,$ShipArr, $counrierArr,$token, $complete_sku, $box_pieces1,$c_id,$super_id);
+                            
+                            if($api_response['error'] == FALSE) {
+                                 $client_awb = $api_response['data']['ShipmentResponse']['ShipmentIdentificationNumber'];
+                                 $lableData = $api_response['data']['ShipmentResponse']['Documents'][0]['Document'];
+                                 //print "<pre>"; print_r($lableData);die;
+                                 $dhlLabel = '';
+                                 
+                                if (!empty($lableData['DocumentImage'])) {
+                                    $encoded = base64_decode($lableData['DocumentImage']);
+                                     header('Content-Type: application/pdf');
+                                     file_put_contents("assets/all_labels/$slipNo.pdf", $encoded);
+
+                                    $dhlLabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+                                }
+
+                                $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $dhlLabel, $c_id);
+
+                                array_push($succssArray, $slipNo);
+                                $returnArr['Success_msg'][] = $slipNo . ':Successfully Assigned';                                       
+                                 
+                            } else {                                       
+                                $returnArr['Error_msg'] = $slipNo . ':' .$api_response['data']['ShipmentResponse']['Notification'][0]['Message'];
+                            }
+                } else {
+                   $returnArr['Error_msg'][] = $slipNo . ':Token Not Genrated'; 
+                }                       
+            } 
 
             elseif($company == 'Tamex'){
                             $responseArray = $this->Ccompany_model->tamexArray($sellername, $ShipArr, $counrierArr, $complete_sku, $pay_mode,$c_id,$box_pieces1,$super_id);
@@ -3251,8 +3281,8 @@ class Manifest extends CourierCompany_pickup {
             'origin' => $senderdetails[0]['branch_location'],        
             'cust_id' => $dataArray['sellerid'],
             'slip_no' => $dataArray['mid'],
-            'mode' => $pay_mode,
-            'pay_mode' => $ShipArr['mode'],
+            'mode' => 'CC',
+            'pay_mode' => 'CC',
             'total_cod_amt' => 0,
             'pieces' => $dataArray['boxes'],
             'status_describtion' => $complete_sku,
@@ -4095,6 +4125,41 @@ class Manifest extends CourierCompany_pickup {
                     $returnArr['responseError'][] = $slipNo . ':' .$error_status;
                 }                  
             }
+            
+            elseif($company == 'DHL JONES') {
+                        if(!empty($counrierArr)) { 
+                                    $api_response = $this->Ccompany_model->DhlJonesArray($sellername,$ShipArr, $counrierArr,$token, $complete_sku, $box_pieces1,$c_id,$super_id);
+                                    
+                                    if($api_response['error'] == FALSE) {
+                                         $client_awb = $api_response['data']['ShipmentResponse']['ShipmentIdentificationNumber'];
+                                         $lableData = $api_response['data']['ShipmentResponse']['Documents'][0]['Document'];
+                                         //print "<pre>"; print_r($lableData);die;
+                                         $dhlLabel = '';
+                                         
+                                        if (!empty($lableData['DocumentImage'])) {
+                                            $encoded = base64_decode($lableData['DocumentImage']);
+                                             header('Content-Type: application/pdf');
+                                             file_put_contents("assets/all_labels/$slipNo.pdf", $encoded);
+
+                                            $dhlLabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+                                        }
+                                                                           
+                                        $CURRENT_DATE = date("Y-m-d H:i:s");
+                                        $CURRENT_TIME = date("H:i:s");
+
+                                        $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $dhlLabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
+
+                                        $returnArr['Success_msg'][] = $slipNo.': Data updated successfully.';
+                                       
+                                        array_push($succssArray, $slipNo);
+                                         
+                                    } else {                                       
+                                         $returnArr['responseError'][] = $slipNo . ':' .$api_response['data']['ShipmentResponse']['Notification'][0]['Message'];
+                                    }
+                        } else {
+                           $returnArr['Error_msg'][] = $slipNo . ':Token Not Genrated'; 
+                        }                       
+                    }
             elseif($company == 'Tamex'){
                             $responseArray = $this->Ccompany_model->tamexArray($sellername, $ShipArr, $counrierArr, $complete_sku, $pay_mode,$c_id,$box_pieces1,$super_id);
                          
