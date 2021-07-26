@@ -171,9 +171,9 @@
                                                     $from_date = 0;
                                                 foreach ($sellers as $seller) {
 
-                                                    $delivered = GetdeliveryreportArr($seller->id, '7',$postData);
-                                                    $Not_delivered = GetdeliveryreportArr($seller->id, '8',$postData);
-                                                    $running = GetdeliveryreportArr($seller->id, 'running',$postData);
+                                                    $delivered = GetdeliveryreportArr($seller->cc_id, '7',$postData);
+                                                    $Not_delivered = GetdeliveryreportArr($seller->cc_id, '8',$postData);
+                                                    $running = GetdeliveryreportArr($seller->cc_id, 'running',$postData);
 
                                                     $totalrun = $delivered + $Not_delivered + $running;
                                                     $performance = number_format($delivered / $totalrun * 100, 2);
@@ -184,9 +184,9 @@
                                                     echo'<tr>
                       <td>' . $sr . '</td>
                       <td>' . $seller->company . ' </td>
-                      <td><a href="' . base_url() . 'performance_details/' . $seller->id . '/7/' . $from_date . '/' . $to_date . '" target="_blank"><span class="btn btn-success">' . $delivered . ' </span></a></td>
-					  <td><a href="' . base_url() . 'performance_details/' . $seller->id . '/8/' . $from_date . '/' . $to_date . '" target="_blank"><span class="btn btn-danger">' . $Not_delivered . ' </span></a></td>
-					  <td><a href="' . base_url() . 'performance_details/' . $seller->id . '/running/' . $from_date . '/' . $to_date . '" target="_blank"><span class="btn btn-warning">' . $running . '</span></a> </td>
+                      <td><a href="' . base_url() . 'performance_details/' . $seller->cc_id . '/7/' . $from_date . '/' . $to_date . '" target="_blank"><span class="btn btn-success">' . $delivered . ' </span></a></td>
+					  <td><a href="' . base_url() . 'performance_details/' . $seller->cc_id . '/8/' . $from_date . '/' . $to_date . '" target="_blank"><span class="btn btn-danger">' . $Not_delivered . ' </span></a></td>
+					  <td><a href="' . base_url() . 'performance_details/' . $seller->cc_id . '/running/' . $from_date . '/' . $to_date . '" target="_blank"><span class="btn btn-warning">' . $running . '</span></a> </td>
 					  <td><span class="btn btn-info">' . $performance . '</span> </td>
 					 <td class="text-center"><a data-toggle="modal" data-target="#update_location_' . $seller->id . '" title="Graph Details" onclick="chartcheckdetail(' . $seller->id . ',' . $delivered . ',' . $Not_delivered . ',' . $running . ');"><i class="fa fa-signal fa-2x text-green"></i></a></td>
 					  

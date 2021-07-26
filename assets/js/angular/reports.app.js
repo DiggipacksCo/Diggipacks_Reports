@@ -147,6 +147,96 @@ $scope.pickerArr={};
 
     }
     
+     $scope.GetofdDetails = function (page_no,reset,frwd_throw,status,from,to)
+            {
+               
+               $scope.filterData.frwd_throw = frwd_throw;
+               $scope.filterData.status = status;
+               $scope.filterData.from = from;
+               $scope.filterData.to = to;
+                console.log($scope.filterData);
+                // console.log($scope.selectedData);    
+                $scope.filterData.page_no = page_no;
+                if (reset == 1)
+                {
+                    $scope.shipData = [];
+                }
+
+                $http({
+                    url: URLBASE + "Reports/performance_details_filter",
+                    method: "POST",
+                    data: $scope.filterData,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+
+                }).then(function (response) {
+                   
+                    $scope.totalCount = response.data.count;
+                    if (response.data.result.length > 0) {
+                        angular.forEach(response.data.result, function (value) {
+                          
+
+                            $scope.shipData.push(value);
+
+                        });
+                        //console.log( $scope.shipData)
+                        //$scope.$broadcast('scroll.infiniteScrollComplete');
+                    } else {
+                        $scope.nodata = true
+                    }
+
+
+
+                })
+
+
+            };
+            
+            $scope.Get3plDetails = function (page_no,reset,frwd_throw,status,from,to)
+            {
+               
+               
+               $scope.filterData.frwd_throw = frwd_throw;
+               $scope.filterData.status = status;
+               $scope.filterData.from = from;
+               $scope.filterData.to = to;
+                console.log($scope.filterData);
+                // console.log($scope.selectedData);    
+                $scope.filterData.page_no = page_no;
+                if (reset == 1)
+                {
+                    
+                    $scope.shipData = [];
+                }
+
+                $http({
+                    url: URLBASE + "Reports/performance_details_filter",
+                    method: "POST",
+                    data: $scope.filterData,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+
+                }).then(function (response) {
+                   
+                    $scope.totalCount = response.data.count;
+                    if (response.data.result.length > 0) {
+                        angular.forEach(response.data.result, function (value) {
+                          
+
+                            $scope.shipData.push(value);
+
+                        });
+                        //console.log( $scope.shipData)
+                        //$scope.$broadcast('scroll.infiniteScrollComplete');
+                    } else {
+                        $scope.nodata = true
+                    }
+
+
+
+                })
+
+
+            };
+    
     $scope.getExcelDetails = function () {
 
         $scope.listData1.exportlimit = $scope.filterData.exportlimit;

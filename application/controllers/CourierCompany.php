@@ -412,7 +412,8 @@ class CourierCompany extends MY_Controller  {
                         'sender_email' =>  $ShipArr['sender_email'],
                         'origin' => $sender_default_city['0']['branch_location'] , 
                         'slip_no' => $ShipArr['slip_no'],
-                        'mode' => 'CC',
+                        'mode' => $pay_mode,
+                        'pay_mode' => $ShipArr['mode'],
                         'total_cod_amt' => $ShipArr['total_cod_amt'],
                         'pieces' =>  $box_pieces1,
                         'status_describtion' => $complete_sku,
@@ -430,6 +431,7 @@ class CourierCompany extends MY_Controller  {
                         'old_slip_no'=> $ShipArr['slip_no'],
                         'sku_data' => $sku_data
                     );
+                    //print_r($ShipArr);die;
 
                 
                    
@@ -620,7 +622,8 @@ class CourierCompany extends MY_Controller  {
                                 'sender_email' =>  $ShipArr['reciever_email'],
                                 'origin' => $ShipArr['destination']  , 
                                 'slip_no' => $new_awb_number,
-                                'mode' => 'CC',
+                                'mode' => $ShipArr['mode']  , 
+                                'pay_mode' => $ShipArr['mode'],
                                 'total_cod_amt' => $ShipArr['total_cod_amt'],
                                 'pieces' =>  $box_pieces1,
                                 'status_describtion' => $complete_sku,
@@ -851,7 +854,7 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                             
 
                             $dataJson = json_encode($params);
-                            
+                            //echo $dataJson;die;
                             $headers = array("Content-type:application/json");
                             $url = $api_url;
                             
@@ -916,6 +919,7 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                     {
                         $params = $this->Ccompany_model->AramexArrayAdvance($sellername,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id);
                         $dataJson = json_encode($params);
+                        //echo $dataJson;die;
                         // print "<pre>"; print_r($dataJson); 
                         $headers = array("Content-type:application/json");
                         $url = $api_url;                        
@@ -942,11 +946,11 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                         else if ($check_error == 'true' || $check_error == TRUE) {
                             
                                 if (empty($awb_array['Shipments'])) {
-                                        $error_response = $awb_array['Notifications']['Notification'];
+                                        
+                                        $error_response = $awb_array['Notifications']['Notification']['Message'];
                                         $error_response = json_encode($error_response);
-                                        //array_push($error_array, $slipNo . ':' . $error_response);
                                         $returnArr['responseError']= $slipNo . ':' . $error_response;
-                                        $return= array('status'=>201); 
+                                        $return= array('status'=>201,'error'=> $returnArr); 
                                         return $return;  
                                 } else {
                                         if ($awb_array['Shipments']['ProcessedShipment']['Notifications']['Notification']['Message'] == '') {
@@ -1267,8 +1271,8 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                                         }
                         }
                     }elseif ($company == 'Saee'){
-
-                             $response = $this->Ccompany_model->SaeeArray($sellername, $counrierArr, $Auth_token,$c_id,$box_pieces1,$super_id);
+                            
+                             $response = $this->Ccompany_model->SaeeArray($sellername, $ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1,$super_id);
                              $safe_response =  $response; 
                             if ($safe_response['success'] == 'true') 
                             {
@@ -1463,7 +1467,7 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                     
                     }elseif($company == 'Shipsy'){
 						
-                                $response = $this->Ccompany_model->ShipsyArray($sellername, $counrierArr, $Auth_token, $box_pieces1,$c_id,$super_id);
+                                $response = $this->Ccompany_model->ShipsyArray($sellername,$ShipArr, $counrierArr, $Auth_token, $box_pieces1,$c_id,$super_id);
 
                                 $response_array = json_decode($response, true);
 
@@ -1612,6 +1616,33 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                             }
                         
                     }
+                    elseif ($company == 'KwickBox')
+                    {
+                        $responseArray = $this->Ccompany_model->KwickBoxArray($sellername, $ShipArr, $counrierArr, $c_id, $box_pieces1, $complete_sku, $super_id);
+
+                        $successres = $responseArray['number'];
+                        $error_status = $responseArray['field.'][0];
+                        
+                        if (!empty($successres))
+                        {
+                            $client_awb = $responseArray['number'];
+                            $media_data = $responseArray['labelUrl'];
+
+                            if (file_put_contents( "assets/all_labels/$slipNo.pdf",file_get_contents($media_data))){
+                                $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';                             
+                                $CURRENT_DATE = date("Y-m-d H:i:s");
+                                $CURRENT_TIME = date("H:i:s");                                                      
+                                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                                return $return;  
+                            } 
+                        } 
+                        else
+                        {
+                            $returnArr['responseError'] = $slipNo . ':' . $error_status;  
+                            $return= array('status'=>201,'error'=> $returnArr); 
+                            return $return;
+                        }                                                    
+                    }
                     elseif($company == 'Tamex')
                     {
                         
@@ -1727,7 +1758,7 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                        // print_r($counrierArr);die;
                         $Auth_token=$this->Ccompany_model->MMCCO_auth($counrierArr['user_name'],$counrierArr['password'],$counrierArr['api_url']);
                       
-                        $responseArray = $this->Ccompany_model->MMCCOArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$super_id);  
+                        $responseArray = $this->Ccompany_model->MMCCOArray($sellername, $ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$super_id);  
                         //   echo "<br><br><pre>";
                           // print_r($responseArray); DIE;
 

@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title><?=lang('lang_Inventory');?></title>
+        <title><?= lang('lang_Inventory'); ?></title>
         <?php $this->load->view('include/file'); ?>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">
 
@@ -86,7 +86,7 @@
                             <!--style="padding-bottom:220px;background-color: lightgray;"-->
                             <div class="panel-heading" dir="ltr">
                                 <!-- <h5 class="panel-title">Basic responsive table</h5> -->
-                                <h1><strong><?=lang('lang_Items_Table');?></strong>
+                                <h1><strong><?= lang('lang_Items_Table'); ?></strong>
 
                                     <a id="btnExport" ><i class="icon-file-excel pull-right" style="font-size: 35px;"></i></a>
 
@@ -105,60 +105,59 @@
                                     <tbody >
 
                                         <tr style="width: 80%;">
-                                            <td><div class="form-group" ><strong><?=lang('lang_SKU');?>:</strong>
+                                            <td><div class="form-group" ><strong><?= lang('lang_SKU'); ?>:</strong>
                                                     <input type="text" id="sku"name="sku" ng-model="filterData.sku"  class="form-control" placeholder="Enter SKU no.">
                                                 </div></td>
-                                            <td ><div class="form-group" ><strong><?=lang('lang_Name');?>:</strong>
+                                            <td ><div class="form-group" ><strong><?= lang('lang_Name'); ?>:</strong>
                                                     <input type="text"  id="name" name="name"  ng-model="filterData.name" class="form-control" placeholder="Enter Name">
                                                 </div></td>
-                                            <td ><div class="form-group" ><strong><?=lang('lang_Storage_Capacity');?>:</strong>
+                                            <td ><div class="form-group" ><strong><?= lang('lang_Storage_Capacity'); ?>:</strong>
                                                     <input type="text"  id="sku_size"name="sku_size"  ng-model="filterData.sku_size" class="form-control" placeholder="Enter Storage Capacity">
                                                 </div></td>
-                                                 <td ><div class="form-group" ><strong><?=lang('lang_StorageType');?>:</strong> <br>
+                                            <td ><div class="form-group" ><strong><?= lang('lang_StorageType'); ?>:</strong> <br>
                                                     <select  id="storage_id" name="storage_id" ng-model="filterData.storage_id" class="selectpicker" data-width="100%" >
-                                                        <option value=""><?=lang('lang_SelectStorageType');?></option>
-<?php foreach ($StorageType as $storage_detail): ?>
+                                                        <option value=""><?= lang('lang_SelectStorageType'); ?></option>
+                                                        <?php foreach ($StorageType as $storage_detail): ?>
                                                             <option value="<?= $storage_detail['id']; ?>">
-    <?= $storage_detail['storage_type']; ?>
+                                                                <?= $storage_detail['storage_type']; ?>
                                                             </option>
-<?php endforeach; ?>
+                                                        <?php endforeach; ?>
                                                     </select>
-                                                     </div></td></tr>
+                                                </div></td></tr>
                                         <tr style="width: 80%;">
-                                           
-                                            <td><div class="form-group" ><strong><?=lang('lang_warehouse');?>:</strong>
-<?php
-$warehouseArr = Getwarehouse_Dropdata();
-?>
+
+                                            <td><div class="form-group" ><strong><?= lang('lang_warehouse'); ?>:</strong>
+                                                    <?php
+                                                    $warehouseArr = Getwarehouse_Dropdata();
+                                                    ?>
                                                     <select  id="storagwh_ide_id" name="wh_id" ng-model="filterData.wh_id" class="selectpicker" data-width="100%" >
-                                                        <option value=""><?=lang('lang_Selectwarehousename');?></option>
-                                                            <?php foreach ($warehouseArr as $storage_detail): ?>
+                                                        <option value=""><?= lang('lang_Selectwarehousename'); ?></option>
+                                                        <?php foreach ($warehouseArr as $storage_detail): ?>
                                                             <option value="<?= $storage_detail['id']; ?>">
-                                                            <?= $storage_detail['name']; ?>
+                                                                <?= $storage_detail['name']; ?>
                                                             </option>
-<?php endforeach; ?>
+                                                        <?php endforeach; ?>
                                                     </select>
 
                                                 </div></td>
-                                                 <td><div class="form-group" ><strong><?=lang('lang_warehouse');?>:</strong>
-<?php
-$warehouseArr = Getwarehouse_Dropdata();
-
-?>
+                                            <td><div class="form-group" ><strong><?= lang('lang_warehouse'); ?>:</strong>
+                                                    <?php
+                                                    $warehouseArr = Getwarehouse_Dropdata();
+                                                    ?>
                                                     <select  id="added_by" name="added_by" ng-model="filterData.added_by" class="selectpicker" data-width="100%" >
-                                                        <option value=""><?=lang('lang_Added_By');?></option>
-                                                         <option value="admin"> <?=lang('lang_Admin');?></option>
-                                                        <?php 
-                                                        $sellerdrop=Getallsellerdata();
+                                                        <option value=""><?= lang('lang_Added_By'); ?></option>
+                                                        <option value="admin"> <?= lang('lang_Admin'); ?></option>
+                                                        <?php
+                                                        $sellerdrop = Getallsellerdata();
                                                         ?>
-                                                            <?php foreach ($sellerdrop as $sdata): ?>
+                                                        <?php foreach ($sellerdrop as $sdata): ?>
                                                             <option value="<?= $sdata['id']; ?>"><?= $sdata['name']; ?> </option>
-<?php endforeach; ?>
+                                                        <?php endforeach; ?>
                                                     </select>
 
                                                 </div></td>
 
-                                            <td><div class="form-group" ><strong><?=lang('lang_Description');?>:</strong>
+                                            <td><div class="form-group" ><strong><?= lang('lang_Description'); ?>:</strong>
                                                     <input type="text" id="item_description" name="description" ng-model="filterData.description"  class="form-control" placeholder="Enter Description.">
                                                 </div></td>
 
@@ -166,18 +165,18 @@ $warehouseArr = Getwarehouse_Dropdata();
 
                                         </tr>
                                         <tr>
-                                            <td> <div class="form-group" ><strong><?=lang('lang_From');?>:</strong>
+                                            <td> <div class="form-group" ><strong><?= lang('lang_From'); ?>:</strong>
                                                     <input class="form-control date" placeholder="From" id="from" name="from" ng-model="filterData.from">
 
                                                 </div></td>
-                                            <td><div class="form-group" ><strong><?=lang('lang_To');?>:</strong>
+                                            <td><div class="form-group" ><strong><?= lang('lang_To'); ?>:</strong>
                                                     <input class="form-control date" placeholder="To" id="to"name="to"  ng-model="filterData.to" class="form-control"> 
 
                                                 </div></td>
-                                                
-                                                
 
-                                            <td co><button type="button" class="btn btn-success" style="margin-left: 7%"><?=lang('lang_Total');?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button> <button  class="btn btn-danger" ng-click="loadMore(1, 1);" ><?=lang('lang_Search');?></button></td>
+
+
+                                            <td co><button type="button" class="btn btn-success" style="margin-left: 7%"><?= lang('lang_Total'); ?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button> <button  class="btn btn-danger" ng-click="loadMore(1, 1);" ><?= lang('lang_Search'); ?></button></td>
 
                                         </tr>
 
@@ -189,26 +188,27 @@ $warehouseArr = Getwarehouse_Dropdata();
                                     <table class="table table-striped table-hover table-bordered" id="example">
                                         <thead>
                                             <tr>
-                                            <th><?=lang('lang_SrNo');?>.</th>
-                                                <th><?=lang('lang_Created_Date');?></th>
-                                                <th><?=lang('lang_Item_Image');?></th>
-                                                <th><?=lang('lang_Item_Type');?></th>
-                                                <th><?=lang('lang_Expire_Block');?></th>
-                                                <th><?=lang('lang_Name');?></th>
-                                                <th><?=lang('lang_item_sku');?></th>
-                                                <th><?=lang('lang_StorageType');?></th>
-                                                <th><?=lang('lang_Capacity');?></th>
-                                                <th><?=lang('lang_Less_Quantity');?></th>
-                                                <th><?=lang('lang_Expiry_Days');?></th>
-                                                <th><?=lang('lang_Color');?></th>
-                                                <th><?=lang('lang_Length');?></th>
-                                                <th><?=lang('lang_Width');?></th>
-                                                <th><?=lang('lang_Height');?></th>
-                                                <th><?=lang('lang_Weight');?>(KG)</th>
-                                                <th><?=lang('lang_Added_By');?></th>
+                                                <th><?= lang('lang_SrNo'); ?>.</th>
+                                                <th><?= lang('lang_Created_Date'); ?></th>
+                                                <th><?= lang('lang_Item_Image'); ?></th>
+                                                <th><?= lang('lang_Item_Type'); ?></th>
+                                                <th><?= lang('lang_Expire_Block'); ?></th>
+                                                <th><?= lang('lang_Name'); ?></th>
+                                                <th><?= lang('lang_item_sku'); ?></th>
+                                                  <th>Warehouse</th>
+                                                <th><?= lang('lang_StorageType'); ?></th>
+                                                <th><?= lang('lang_Capacity'); ?></th>
+                                                <th><?= lang('lang_Less_Quantity'); ?></th>
+                                                <th><?= lang('lang_Expiry_Days'); ?></th>
+                                                <th><?= lang('lang_Color'); ?></th>
+                                                <th><?= lang('lang_Length'); ?></th>
+                                                <th><?= lang('lang_Width'); ?></th>
+                                                <th><?= lang('lang_Height'); ?></th>
+                                                <th><?= lang('lang_Weight'); ?>(KG)</th>
+                                                <th><?= lang('lang_Added_By'); ?></th>
 
 
-                                                <th><?=lang('lang_Description');?></th>
+                                                <th><?= lang('lang_Description'); ?></th>
 
  <!-- <th>Category</th> -->
                                                 <th class="text-center" ><i class="icon-database-edit2"></i></th>
@@ -233,6 +233,7 @@ $warehouseArr = Getwarehouse_Dropdata();
                                                 </td>
                                                 <td><a href="<?= base_url(); ?>Item/edit_view/{{data.id}}">{{data.name}}</a></td>
                                                 <td>{{data.sku}}</td>
+                                                <td>{{data.wh_name}}</td>
                                                 <td>{{data.storage_type}}</td>
                                                 <td>{{data.sku_size}}</td>
 
@@ -243,7 +244,7 @@ $warehouseArr = Getwarehouse_Dropdata();
                                                 <td>{{data.width}}</td>
                                                 <td>{{data.height}}</td>
                                                 <td>{{data.weight}} </td>
-                                                  <td>{{data.seller_name}} </td>
+                                                <td>{{data.seller_name}} </td>
 
                                                 <td>{{data.description}}</td>
 
@@ -257,8 +258,8 @@ $warehouseArr = Getwarehouse_Dropdata();
                                                             </a>
 
                                                             <ul class="dropdown-menu dropdown-menu-right">
-                                                                <li><a href="<?= base_url(); ?>Item/edit_view/{{data.id}}"><i class="icon-pencil7"></i> <?=lang('lang_Edit');?> </a></li>
-                                                                <li><a ng-click="getallskubarcodeform(data.sku);"><i class="icon-file-pdf"></i> <?=lang('lang_Print_Barcode');?></a></li>
+                                                                <li><a href="<?= base_url(); ?>Item/edit_view/{{data.id}}"><i class="icon-pencil7"></i> <?= lang('lang_Edit'); ?> </a></li>
+                                                                <li><a ng-click="getallskubarcodeform(data.sku);"><i class="icon-file-pdf"></i> <?= lang('lang_Print_Barcode'); ?></a></li>
 
                                                             </ul>
                                                         </li>
@@ -271,12 +272,12 @@ $warehouseArr = Getwarehouse_Dropdata();
 
 
                                 </div>
-                                <button ng-hide="shipData.length < 100 || shipData.length == totalCount || shipData == 0" class="btn btn-info" ng-click="loadMore(count = count + 1, 0);" ng-init="count = 1"><?=lang('lang_Load_More');?></button>
+                                <button ng-hide="shipData.length < 100 || shipData.length == totalCount || shipData == 0" class="btn btn-info" ng-click="loadMore(count = count + 1, 0);" ng-init="count = 1"><?= lang('lang_Load_More'); ?></button>
                                 <hr>
                             </div>
                         </div>
                         <!-- /basic responsive table --> 
-<?php $this->load->view('include/footer'); ?>
+                        <?php $this->load->view('include/footer'); ?>
 
                     </div>
                     <!-- /content area -->
@@ -292,22 +293,22 @@ $warehouseArr = Getwarehouse_Dropdata();
             <table id="downloadtable">
                 <thead>
                     <tr>
-                            <th><?=lang('lang_SrNo');?>.</th>
+                        <th><?= lang('lang_SrNo'); ?>.</th>
 
-                            <th><?=lang('lang_Item_Type');?></th>
-                            <th><?=lang('lang_Expire_Block');?></th>
-                            <th><?=lang('lang_Name');?></th>
-                            <th><?=lang('lang_item_sku');?></th>
-                            <th><?=lang('lang_StorageType');?></th>
-                            <th><?=lang('lang_Capacity');?></th>
-                            <th><?=lang('lang_Less_Quantity');?></th>
-                            <th><?=lang('lang_Expiry_Days');?></th>
-                            <th><?=lang('lang_Color');?></th>
-                            <th><?=lang('lang_Length');?></th>
-                            <th><?=lang('lang_Width');?></th>
-                            <th><?=lang('lang_Height');?></th>
+                        <th><?= lang('lang_Item_Type'); ?></th>
+                        <th><?= lang('lang_Expire_Block'); ?></th>
+                        <th><?= lang('lang_Name'); ?></th>
+                        <th><?= lang('lang_item_sku'); ?></th>
+                        <th><?= lang('lang_StorageType'); ?></th>
+                        <th><?= lang('lang_Capacity'); ?></th>
+                        <th><?= lang('lang_Less_Quantity'); ?></th>
+                        <th><?= lang('lang_Expiry_Days'); ?></th>
+                        <th><?= lang('lang_Color'); ?></th>
+                        <th><?= lang('lang_Length'); ?></th>
+                        <th><?= lang('lang_Width'); ?></th>
+                        <th><?= lang('lang_Height'); ?></th>
 
-                        <th><?=lang('lang_Description');?></th>
+                        <th><?= lang('lang_Description'); ?></th>
 
                     </tr>
                 </thead>
@@ -320,8 +321,8 @@ $warehouseArr = Getwarehouse_Dropdata();
                             <span class="badge badge-warning" ng-if="data.type == 'B2C'">{{data.type}}</span>
                         </td>
                         <td>
-                            <span class="badge badge-success" ng-if="data.expire_block == 'Y'"><?=lang('lang_Yes');?></span>
-                            <span class="badge badge-warning" ng-if="data.expire_block == 'N'"><?=lang('lang_No');?></span>
+                            <span class="badge badge-success" ng-if="data.expire_block == 'Y'"><?= lang('lang_Yes'); ?></span>
+                            <span class="badge badge-warning" ng-if="data.expire_block == 'N'"><?= lang('lang_No'); ?></span>
                         </td>
                         <td>{{data.name}}</td>
                         <td>{{data.sku}}</td>
@@ -349,7 +350,7 @@ $warehouseArr = Getwarehouse_Dropdata();
                     <div class="modal-header">
 
 
-                        <h5 class="modal-title" id="exampleModalLabel" dir="ltr"><?=lang('lang_PrintSKUBarcode');?></h5>
+                        <h5 class="modal-title" id="exampleModalLabel" dir="ltr"><?= lang('lang_PrintSKUBarcode'); ?></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -368,26 +369,26 @@ $warehouseArr = Getwarehouse_Dropdata();
                                     <tr style="width: 80%;">
 
                                         <td>
-                                            <div class="form-group" ><strong><?=lang('lang_Sellers');?>:</strong>
+                                            <div class="form-group" ><strong><?= lang('lang_Sellers'); ?>:</strong>
                                                 <select id="seller_id" name="seller_id" ng-model="filterData.seller_id" class="form-control"> 
-                                                    <option value=""><?=lang('lang_Select_Seller');?></option>
+                                                    <option value=""><?= lang('lang_Select_Seller'); ?></option>
                                                     <option ng-repeat="sdata in showdropsellerArr"  value="{{sdata.id}}">{{sdata.name}}</option>
                                                 </select>
-                                                <span class="error" ng-show="myForm.seller_id.$error.required"> <?=lang('lang_PleaseSelectSeller');?></span>
+                                                <span class="error" ng-show="myForm.seller_id.$error.required"> <?= lang('lang_PleaseSelectSeller'); ?></span>
                                             </div>
                                         </td>
 
 
 
                                         <td>
-                                            <div class="form-group" ><strong><?=lang('lang_QTY');?>:</strong>
+                                            <div class="form-group" ><strong><?= lang('lang_QTY'); ?>:</strong>
                                                 <input type="text" id="sqty" name="sqty" ng-model="filterData.sqty" class="form-control"> 
-                                                <span class="error" ng-show="myForm.sqty.$error.required"> <?=lang('lang_PleaseEnterQTY');?> </span>
+                                                <span class="error" ng-show="myForm.sqty.$error.required"> <?= lang('lang_PleaseEnterQTY'); ?> </span>
                                             </div>
                                         </td>
 
 
-                                        <td><button type="button" class="btn btn-success" ng-click="myForm.$valid && GetGenratebarcode()" style="margin-left: 7%"><?=lang('lang_Generate');?></button></td>
+                                        <td><button type="button" class="btn btn-success" ng-click="myForm.$valid && GetGenratebarcode()" style="margin-left: 7%"><?= lang('lang_Generate'); ?></button></td>
 
 
 
@@ -404,7 +405,7 @@ $warehouseArr = Getwarehouse_Dropdata();
                                 <thead>
                                     <tr>
 
-                                        <th><?=lang('lang_Barcode');?></th>
+                                        <th><?= lang('lang_Barcode'); ?></th>
 
 
 
@@ -429,7 +430,7 @@ $warehouseArr = Getwarehouse_Dropdata();
                         </form> 
                         <br>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><?=lang('lang_Close');?></button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><?= lang('lang_Close'); ?></button>
 
                         </div>
 
@@ -440,49 +441,47 @@ $warehouseArr = Getwarehouse_Dropdata();
         <!-- /page container -->
         <script type="text/javascript">
 
-            $('.date').datepicker({
+                $('.date').datepicker({
 
-            format: 'yyyy-mm-dd'
+                format: 'yyyy-mm-dd'
 
             });
-        </script>
+                    </script>
         <script>
 
 
 
-
                     var tableToExcel = (function() {
-                    var uri = 'data:application/vnd.ms-excel;base64,'
-                            , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><meta http-equiv="content-type" content="text/plain; charset=UTF-8"/></head><body><table>{table}</table></body></html>'
-                                                , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
-                                        , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
-                                        return function(table, name) {
-                                        if (!table.nodeType) table = document.getElementById(table)
-                                                var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
-                                        var blob = new Blob([format(template, ctx)]);
+                            var uri = 'data:application/vnd.ms-excel;base64,'
+                    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><meta http-equiv="content-type" content="text/plain; charset=UTF-8"/></head><body><table>{table}</table></body></html>'
+                                        , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+                                , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+                                return function(table, name) {
+                                if (!table.nodeType) table = document.getElementById(table)
+                                        var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+                                var blob = new Blob([format(template, ctx)]);
                                         var blobURL = window.URL.createObjectURL(blob);
                                         return blobURL;
-                                        }
-                                        })()
+                                }
+                                })()
 
-                                        $("#btnExport").click(function () {
-                                var todaysDate = 'Items Table ' + new Date();
+                                $("#btnExport").click(function () {
+                        var todaysDate = 'Items Table ' + new Date();
                                 var blobURL = tableToExcel('downloadtable', 'test_table');
                                 $(this).attr('download', todaysDate + '.xls')
-                                        $(this).attr('href', blobURL);
-                                });
+                                $(this).attr('href', blobURL);
+                        });
                                 function printPage()
                                 {
                                 var divToPrint = document.getElementById('printTable');
-                                var htmlToPrint = '' +
+                                        var htmlToPrint = '' +
                                         '<style type="text/css">' +
-                                                    'table {' +
-                                                    'border:1px solid #000;' +
-                                                    '}' +
-                                                    'table th, table td {' +
-                                                    'width:1200px' +
-                                                    '}' +
-                                                    'table th, table td {' +      'padding:8px;' +
+                                                            'table {' +
+                                                            'border:1px solid #000;' +
+                                                            '}' +
+                                                            'table th, table td {' +
+                                                            'width:1200px' +
+                                                            '}' +             'table th, table td {' +      'padding:8px;' +
                 '}' +
                         'table th {' +
                         'padding-top: 12px;'+

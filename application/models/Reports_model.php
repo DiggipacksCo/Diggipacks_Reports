@@ -220,5 +220,121 @@ class Reports_model extends CI_Model {
             return $query->result_array();
        
     }
+    
+    
+     public function GetallperformationDetailsQry_filter($data = array()) {
+        //$frwd_throw = null, $status = null, $from = null, $to = null
+
+        $limit = 100;
+        if (empty($data['page_no'])) {
+            $start = 0;
+        } else {
+            $start = ($data['page_no'] - 1) * $limit;
+        }
+
+        if ($data['frwd_throw'] != 0) {
+            $condition_id = "shipment_fm.frwd_company_id='" . $data['frwd_throw'] . "'";
+            $this->db->where($condition_id);
+        }
+        //$objSmarty->assign("frwd_throw", $_REQUEST['frwd_throw']);
+
+        $from_date = $data['from'];
+        $to_date = $data['to'];
+        if ($from_date != 0 && $to_date != 0) {
+            $condition_date = " DATE(shipment_fm.entrydate) BETWEEN '" . $from_date . "' AND '" . $to_date . "'";
+            $this->db->where($condition_date);
+        }
+
+        $delivered = $data['status'];
+        if ($delivered == 'running') {
+            $condition_del = " shipment_fm.delivered in(1,2,3,4,5)";
+            $this->db->where($condition_del);
+        } else {
+            $condition_del = " shipment_fm.delivered='$delivered'";
+            $this->db->where($condition_del);
+        }
+
+        if ($data['searchval']) {
+            $searchval = trim($data['searchval']);
+            $this->db->where("(shipment_fm.slip_no='$searchval' or shipment_fm.frwd_company_awb='$searchval')");
+        }
+        $this->db->where('shipment_fm.super_id',$this->session->userdata('user_details')['super_id']);
+        $this->db->select('courier_company.company,status_main_cat_fm.main_status,shipment_fm.*');
+        $this->db->from('shipment_fm');
+        $this->db->join('courier_company', 'shipment_fm.frwd_company_id= courier_company.cc_id', 'left');
+        $this->db->join('status_main_cat_fm', 'shipment_fm.delivered= status_main_cat_fm.id', 'left');
+        $this->db->where('shipment_fm.deleted', 'N');
+        $this->db->where('shipment_fm.status', 'Y');
+        $this->db->where('shipment_fm.status', 'Y');
+        $this->db->group_by("shipment_fm.slip_no");
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        //echo $this->db->last_query(); die;
+        if ($query->num_rows() > 0) {
+
+            $data1['result'] = $query->result_array();
+            $data1['count'] = $this->GetallperformationDetailsQry_filter_count($data);
+            return $data1;
+            // return $page_no.$this->db->last_query();
+        } else {
+            $data1['result'] = '';
+            $data1['count'] = 0;
+            return $data1;
+        }
+
+
+//        $query = $this->db->query("SELECT courier_company.company,shipment_fm.* FROM shipment_fm join courier_company on shipment_fm.frwd_company_id= courier_company.id WHERE  shipment_fm.deleted='N' and shipment_fm.status='Y'   $condition");
+//        // echo $this->db->last_query(); 
+//        return $query->result_array();
+    }
+
+    public function GetallperformationDetailsQry_filter_count($data = array()) {
+        if ($data['frwd_throw'] != 0) {
+            $condition_id = "shipment_fm.frwd_company_id='" . $data['frwd_throw'] . "'";
+            $this->db->where($condition_id);
+        }
+        //$objSmarty->assign("frwd_throw", $_REQUEST['frwd_throw']);
+
+        $from_date = $data['from'];
+        $to_date = $data['to'];
+        if ($from_date != 0 && $to_date != 0) {
+            $condition_date = " DATE(shipment_fm.entrydate) BETWEEN '" . $from_date . "' AND '" . $to_date . "'";
+            $this->db->where($condition_date);
+        }
+
+        $delivered = $data['status'];
+        if ($delivered == 'running') {
+            $condition_del = " shipment_fm.delivered in(1,2,3,4,5)";
+            $this->db->where($condition_del);
+        } else {
+            $condition_del = " shipment_fm.delivered='$delivered'";
+            $this->db->where($condition_del);
+        }
+        if ($data['searchval']) {
+            $searchval = trim($data['searchval']);
+            $this->db->where("(shipment_fm.slip_no='$searchval' or shipment_fm.frwd_company_awb='$searchval')");
+        }
+        $this->db->where('shipment_fm.super_id',$this->session->userdata('user_details')['super_id']);
+        $this->db->select('COUNT(shipment_fm.id) as sh_count');
+        $this->db->from('shipment_fm');
+        $this->db->join('courier_company', 'shipment_fm.frwd_company_id= courier_company.cc_id', 'left');
+        $this->db->where('shipment_fm.deleted', 'N');
+        $this->db->where('shipment_fm.status', 'Y');
+        $this->db->group_by("shipment_fm.slip_no");
+
+        $query = $this->db->get();
+       // echo $this->db->last_query(); die;
+        if ($query->num_rows() > 0) {
+           // $data = $query->result_array();
+            return $query->num_rows() ;
+            // return $page_no.$this->db->last_query();
+        }
+        else
+        {
+           return 0;  
+        }
+       
+    }
+
 
 }

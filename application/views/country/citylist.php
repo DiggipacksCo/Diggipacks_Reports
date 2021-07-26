@@ -174,15 +174,17 @@
                                             <?php if (GetCourierCompanyStausActive('MMCCO') == 'Y') { ?>
                                                 <th class="head1">MMCCO</th>
                                             <?php } ?>
-                                                
-                                                
-
+                                            <?php if (GetCourierCompanyStausActive('KwickBox') == 'Y') { ?>
+                                                <th class="head1">KwickBox</th>
+                                            <?php } ?>
+                                            <?php if (GetCourierCompanyStausActive('DHL JONES') == 'Y') { ?>
+                                                <th class="head1">DHL JONES</th>
+                                            <?php } ?>
+                                            <th class="head1">Country Code</th>
                                             <th class="head1">LAT</th>
-
                                             <th class="head1">LNG</th>
                                         </tr>
                                     </thead>
-
                                     <tbody>
                                         <?php
                                         //print "<pre>"; print_r($result);die;
@@ -435,7 +437,22 @@
                                                             <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'MMCCO_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
                                                         </td>
                                                      <?php } ?>
-                                                        
+                                                    <?php if (GetCourierCompanyStausActive('KwickBox') == 'Y') { ?>
+                                                    <td><input type="text" name="kwickBox_city" id="kwickBox_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['kwickBox_city']; ?>" class="form-control">
+                                                            <br>
+                                                            <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'kwickBox_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
+                                                        </td>
+                                                     <?php } ?>
+                                                    <?php if (GetCourierCompanyStausActive('DHL JONES') == 'Y') { ?>
+                                                    <td><input type="text" name="dhl_jones_city" id="dhl_jones_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['dhl_jones_city']; ?>" class="form-control">
+                                                            <br>
+                                                            <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'dhl_jones_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
+                                                        </td>
+                                                     <?php } ?>
+                                                    <td><input type="text" name="country_code" id="country_code<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['country_code']; ?>" class="form-control">
+                                                            <br>
+                                                            <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'country_code');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
+                                                        </td>    
                                                     <td><input type="text" name="latitute" id="latitute<?php echo $listdata['id']; ?>" placeholder="LAT" value="<?php echo $listdata['latitute']; ?>" class="form-control">
                                                         <br>
                                                         <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'latitute');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
