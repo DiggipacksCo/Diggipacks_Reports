@@ -256,6 +256,7 @@ public function addsmssetting($id=null) {
                     'fax' => $this->input->post('fax'),
                     'email' => $this->input->post('email'),
                     'support_email' => $this->input->post('support_email'),
+                    'ligal_name' => $this->input->post('ligal_name'),
                     'webmaster_email' => $this->input->post('webmaster_email'),
                     'default_awb_char_fm' => $this->input->post('default_awb_char_fm'), 
                     'e_city' => implode(',', $this->input->post('e_city')), 

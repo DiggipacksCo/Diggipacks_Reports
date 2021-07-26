@@ -81,6 +81,14 @@ class Finance_model extends CI_Model {
         return true;
         
     }
+    public function addInvoiceUpdateDiscount($data=array())
+    {
+        $this->db->update('dynamic_invoice',$data,array('invoice_no'=>$data['invoice_no']));
+  // echo $this->db->last_query(); exit;
+	
+        return true;
+        
+    }
     public function Getpaydynamic_edit($id=null)
     {
         $this->db->where('dynamic_invoice.super_id', $this->session->userdata('user_details')['super_id']);
