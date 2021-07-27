@@ -769,7 +769,8 @@ $scope.data={};
                              if (response.data.status == 'succ')
                             {
                                 $scope.Success_msg[0] = response.data.Success_msg;
-                                 location.href = 'showpickuplist';
+                                 //location.href = 'showpickuplist';
+                                 location.reload();
                             } else
                             { 
                                 //$scope.invalidSslip_no = response.data.invalid_slipNO;
