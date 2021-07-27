@@ -638,7 +638,7 @@ $u_type = $this->input->post('u_type');
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.zid.dev/app/v1/settings/cities/by-country-id/184",
+            CURLOPT_URL => "https://api.zid.dev/app/v2/settings/cities/by-country-id/184",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -1090,7 +1090,7 @@ $u_type = $this->input->post('u_type');
              
                 $curl = curl_init();
                 curl_setopt_array($curl, array(
-                    CURLOPT_URL => "https://api.zid.dev/app/v1/managers/store/delivery-options/add",
+                    CURLOPT_URL => "https://api.zid.dev/app/v2/managers/store/delivery-options/add",
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => "",
                     CURLOPT_MAXREDIRS => 10,
@@ -1139,7 +1139,7 @@ $u_type = $this->input->post('u_type');
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.zid.dev/app/v1/managers/store/delivery-options",
+            CURLOPT_URL => "https://api.zid.dev/app/v2/managers/store/delivery-options",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
