@@ -1232,6 +1232,8 @@ if (!function_exists('PrintPiclist3PL')) {
             }
             else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Bosta') {
                 $pdf = new FPDI('P', 'mm', array(170, 160));
+            }else if (GetCourCompanynameId($frwd_company_id, 'company') == 'DHL JONES'){
+                $pdf = new FPDI('P', 'mm', array(270, 210));
             } else {
                 $pdf = new FPDI('P', 'mm', array(102, 160));
             }
@@ -1354,6 +1356,8 @@ if (!function_exists('PrintPiclist3PL_bulk')) {
             }
             else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Bosta') {
                 $pdf = new FPDI('P', 'mm', array(170, 160));
+            }else if (GetCourCompanynameId($frwd_company_id, 'company') == 'DHL JONES'){
+                $pdf = new FPDI('P', 'mm', array(270, 210));
             } else {
                 $pdf = new FPDI('P', 'mm', array(102, 160));
             }
