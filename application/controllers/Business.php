@@ -63,6 +63,10 @@ class Business extends MY_Controller {
         }
 
         foreach ($dataArray['shipData'] as $data) {
+            $check_exist=GetCheckpackStatus($data['slip_no']);
+             
+             if(empty($check_exist))
+             {
             array_push($shippingArr, array('slip_no' => $data['slip_no']));
             array_push($slip_data, $data['slip_no']);
             $statusvalue[$key]['user_id'] = $this->session->userdata('user_details')['user_id'];
@@ -139,6 +143,7 @@ class Business extends MY_Controller {
 
 
             $key++;
+             }
         }
 
         //print_r($dataArray['exportData']); die;
