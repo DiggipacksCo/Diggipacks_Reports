@@ -4016,6 +4016,9 @@ class Shipment extends MY_Controller {
         $statusvalue = array();
         $key = 0;
         foreach ($dataArray['listData'] as $data) {
+             $check_exist=GetCheckPickupStatus($data['slip_no']);
+              if(empty($check_exist))
+            {
             /* -------------Picklist Array----------- */
             $picklistValue[$key]['pickupId'] = $uid;
             $picklistValue[$key]['slip_no'] = $data['slip_no'];
@@ -4076,6 +4079,8 @@ class Shipment extends MY_Controller {
 
 
             $key++;
+            
+            }
         }
 
         $shipData = array();

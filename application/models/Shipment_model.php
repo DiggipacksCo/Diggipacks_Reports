@@ -51,7 +51,9 @@ class Shipment_model extends CI_Model {
             $this->db->from('shipment_fm');
             $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);        
             $this->db->where_in('slip_no', $slipdata);
+            $this->db->where('code','OG');
             //echo "<br> last_query = ";
+            
             $query = $this->db->get();
            //return  $this->db->result_array();
             if ($query->num_rows() > 0) {
