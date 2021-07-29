@@ -1027,8 +1027,9 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                             $Auth_response = Thabit_Auth_cURL($counrierArr);
                             $responseArray = json_decode($Auth_response, true);                      
                             $Auth_token = $responseArray['data']['id_token'];
-                            $response = $this->Ccompany_model->ThabitArray($sellername,$ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1,$super_id);
-                            $thabit_response = json_decode($response, true);   
+                            
+                            $thabit_response = $this->Ccompany_model->ThabitArray($sellername,$ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1,$super_id);
+                            
                             if ($thabit_response['status'] == 'success' ) {
                                 $thabit_order_ID = $thabit_response['data']['id'];
                                 $client_awb = $thabit_response['data']['order_number'];
@@ -1047,7 +1048,7 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                                     
                                 }else if($thabit_response['status']=='error'){
 
-                                $returnArr['responseError'] = $slipNo . ':' . $thabit_response['status'];
+                                $returnArr['responseError'] = $slipNo . ':' . $thabit_response['message'];
                                 $return= array('status'=>201,'error'=> $returnArr); 
                                 return $return;
                             }
