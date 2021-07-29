@@ -4104,6 +4104,9 @@ class Ccompany_model extends CI_Model {
    //KwickBox Array 
     public function KwickBoxArray($sellername = null ,array $ShipArr, array $counrierArr, $c_id = null, $box_pieces1 = null, $complete_sku = null,$super_id = null) 
     {
+        
+        
+            
             $sender_city =  getdestinationfieldshow_auto_array($ShipArr['origin'], 'city', $super_id); 
             $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'kwickBox_city',$super_id);          
             $sender_country = getdestinationfieldshow_auto_array($ShipArr['origin'], 'country',$super_id);
@@ -4164,8 +4167,8 @@ class Ccompany_model extends CI_Model {
                 'Reference' => '',
                 'Contact' => array(
                     'Name' => $ShipArr['reciever_name'],
-                    'Email' => '',
-                    'Phone' => $senderphone,
+                    'Email' => $ShipArr['reciever_email'],
+                    'Phone' => $ShipArr['reciever_phone'],
                     'SecondPhone' => ''
                 ),
                 'Address' => array(
@@ -4183,7 +4186,7 @@ class Ccompany_model extends CI_Model {
             $Commodity = array(
                 'Reference' => '',
                 'Weight' => $weight,
-                'Dimensions' => $senderphone,
+                'Dimensions' => '',
                 'Description' => $complete_sku,
                 'COD' => $cod_amount,
                 'NumberOfPieces' => $box_pieces,
