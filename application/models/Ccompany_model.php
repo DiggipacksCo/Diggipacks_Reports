@@ -4104,6 +4104,9 @@ class Ccompany_model extends CI_Model {
    //KwickBox Array 
     public function KwickBoxArray($sellername = null ,array $ShipArr, array $counrierArr, $c_id = null, $box_pieces1 = null, $complete_sku = null,$super_id = null) 
     {
+        
+        
+            
             $sender_city =  getdestinationfieldshow_auto_array($ShipArr['origin'], 'city', $super_id); 
             $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'kwickBox_city',$super_id);          
             $sender_country = getdestinationfieldshow_auto_array($ShipArr['origin'], 'country',$super_id);
@@ -4164,8 +4167,8 @@ class Ccompany_model extends CI_Model {
                 'Reference' => '',
                 'Contact' => array(
                     'Name' => $ShipArr['reciever_name'],
-                    'Email' => '',
-                    'Phone' => $senderphone,
+                    'Email' => $ShipArr['reciever_email'],
+                    'Phone' => $ShipArr['reciever_phone'],
                     'SecondPhone' => ''
                 ),
                 'Address' => array(
@@ -4183,7 +4186,7 @@ class Ccompany_model extends CI_Model {
             $Commodity = array(
                 'Reference' => '',
                 'Weight' => $weight,
-                'Dimensions' => $senderphone,
+                'Dimensions' => '',
                 'Description' => $complete_sku,
                 'COD' => $cod_amount,
                 'NumberOfPieces' => $box_pieces,
@@ -4240,6 +4243,216 @@ class Ccompany_model extends CI_Model {
             }
             $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no']);
             return $responseArray;
+    }
+
+public function DhlJonesArray($sellername = null, array $ShipArr, array $counrierArr,$token= null, $complete_sku = null, $box_pieces1=null,$c_id=null,$super_id=null)
+    { 
+            date_default_timezone_set('Asia/Kolkata');
+            $API_URL = $counrierArr['api_url'].'ShipmentRequest';            
+            $sender_default_city = Getselletdetails_new($super_id);            
+            $senderemail = GetallCutomerBysellerId($ShipArr['cust_id'],'email');
+            $senderphone = GetallCutomerBysellerId($ShipArr['cust_id'],'phone');
+            $senderAddress = GetallCutomerBysellerId($ShipArr['cust_id'],'address');
+            $senderCompany = GetallCutomerBysellerId($ShipArr['cust_id'],'company');   
+            $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'dhl_jones_city', $super_id);
+            $sender_country_code = getdestinationfieldshow_auto_array($ShipArr['origin'], 'country_code', $super_id);
+            $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'dhl_jones_city',$super_id);           
+            $receiver_country_code = getdestinationfieldshow_auto_array($ShipArr['destination'], 'country_code',$super_id);           
+
+            // reciver city only belongs to AE Country like dubai            
+            if(empty($receiver_city)){
+                 $logresponse = "Receiver city empty";
+                $successstatus  = "Fail";
+                $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
+                return array("error"=>true,"data"=>array('message'=>'receiver city empty'));
+            }
+
+            if (empty($box_pieces1)) {
+                $box_pieces = 1;
+            } else {
+                $box_pieces = $box_pieces1;
+            }
+
+            if ($ShipArr['weight'] == 0) {
+                $weight = 1;
+            } else {
+                $weight = $ShipArr['weight'];
+            }
+            
+            
+            if($ShipArr['pay_mode'] == "COD"){
+                $cod_amount = $ShipArr['total_cod_amt'];
+            }
+            elseif ($ShipArr['pay_mode'] == 'CC'){
+                $cod_amount = 1;
+            }
+            
+            if(empty($complete_sku)){
+             $complete_sku = $ShipArr['status_describtion'];
+
+            }else {
+                $complete_sku =  $complete_sku;
+            }
+        
+        $shipDate =  date('Y-m-d')."T".date('H:i:s') ."GMT+03:00";
+        
+        $request_params_array = array(
+            "ShipmentRequest"=>array(
+                "RequestedShipment"=>array(
+                    "ShipmentInfo"=>array(
+                        "DropOffType"=> "REGULAR_PICKUP",
+                        "ServiceType"=> "P",
+                        "Account"=> $counrierArr['courier_account_no'],
+                        "Currency"=> "SAR",
+                        "UnitOfMeasurement"=> "SI",
+                        "LabelOptions"=>array(
+                             "RequestWaybillDocument"=> "Y",
+                             "RequestDHLCustomsInvoice"=> "Y"
+                        ),
+                        "PaperlessTradeEnabled"=> "true",
+                        "SpecialServices"=>array(
+                            "Service"=>array(
+                                "ServiceType"=>"WY"
+                            )
+                        ),
+                    ),
+                    //"ShipTimestamp"=> "2021-07-20T12:00:00GMT+03:00",
+                    "ShipTimestamp"=> $shipDate,
+                    "PaymentInfo"=> "DAP",
+                    "InternationalDetail"=>array(
+                        "Commodities"=>array(
+                            "NumberOfPieces"=> $ShipArr['pieces'],
+                            "Description"=> $complete_sku,
+                            "CountryOfManufacture"=>"SA",
+                            "Quantity"=> $box_pieces,
+                            "UnitPrice"=> $cod_amount,
+                            "CustomsValue"=> $cod_amount
+                        ),
+                        "Content"=>"NON_DOCUMENTS",
+                        "ExportDeclaration"=>array(
+                            "DestinationPort"=> "DXB Port",
+                            "ExporterCode"=> "14212",
+                            "InvoiceDate"=> date('Y-m-d'),
+                            "InvoiceNumber"=> $ShipArr['slip_no'],
+                            "ExporterID"=> "124567433",
+                            "ExportLicense"=> "332453",
+                            "ExportReason"=> substr($complete_sku, 0,30),
+                            "ImportLicense"=> "11335323",
+                            "PackageMarks"=> $complete_sku,
+                            "PayerGSTVAT"=> "123986",
+                            "RecipientReference"=> "",
+                            "ExportLineItems"=>array(
+                                "ExportLineItem"=>array(
+
+                                    array(
+                                        "ItemNumber"=> $box_pieces,
+                                        "Quantity"=> $box_pieces,
+                                        "QuantityUnitOfMeasurement"=> "",
+                                        "ItemDescription"=> $complete_sku,
+                                        "UnitPrice"=> $cod_amount,
+                                        "NetWeight"=> $weight,
+                                        "GrossWeight"=> $weight,
+                                        "ManufacturingCountryCode"=> "SA"
+                                    )
+                                )
+                            )
+                        )
+                    ),
+                    "Ship"=>array(
+                        "Shipper"=>array(
+                            "Contact"=>array(
+                                "PersonName"=>$sellername,
+                                "CompanyName"=>$senderCompany,
+                                "PhoneNumber"=> $senderphone,
+                                "EmailAddress"=> $senderemail
+                            ),
+                            "Address"=>array(
+                                "StreetLines"=> substr($senderAddress, 0,50),
+                                "StreetLines2"=> substr($senderAddress, 0,50),
+                                "City"=> $sender_city,
+                                "PostalCode"=>"",
+                                "CountryCode"=> $sender_country_code
+                            )
+                        ),
+                        "Recipient"=>array(
+                            "Contact"=>array(
+                                "PersonName"=> $ShipArr['reciever_name'],
+                                "CompanyName"=> $ShipArr['reciever_name'],
+                                "PhoneNumber"=> $ShipArr['reciever_phone'],
+                                "EmailAddress"=> $ShipArr['reciever_email']
+                            ),
+                            "Address"=>array(
+                                "StreetLines"=> substr($ShipArr['reciever_address'], 0,50),
+                                "StreetLines2"=> substr($ShipArr['reciever_address'], 0,50),
+                                "City"=> $receiver_city,
+                                "StateOrProvinceCode"=>"",
+                                "PostalCode"=> "",
+                                "CountryCode"=> $receiver_country_code
+                            )
+                        )
+                    ),
+                    "Packages"=>array(
+                        "RequestedPackages"=>array(
+                            array(
+                                "@number"=>"1",
+                                "Weight"=>$weight,
+                                "Dimensions"=>array(
+                                    "Length"=> 1,
+                                    "Width"=> 1,
+                                    "Height"=> 1
+                                ),
+                                "CustomerReferences"=> $ShipArr['slip_no']
+                            )
+                        )
+                    )
+                )
+            )
+        );        
+        
+        //echo '<Pre>'; print_r($request_params_array); die;
+        
+        $json_params = json_encode($request_params_array);
+        //echo $json_params;die;
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => $API_URL,
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'POST',
+          CURLOPT_POSTFIELDS =>$json_params,
+          CURLOPT_HTTPHEADER => array(
+            'Accept: application/json',
+            'Content-Type: application/json',
+            'Authorization: Basic '.$counrierArr['auth_token'].' ' 
+          ),
+        ));
+
+        $response = curl_exec($curl);
+        
+        curl_close($curl);
+        $responseData = json_decode($response,TRUE);
+        //print "<pre>"; print_r($responseData);die;
+        $logresponse =   json_encode($response);  
+        $errorFlag = TRUE;
+        if(isset($responseData['ShipmentResponse']) && !empty($responseData['ShipmentResponse'])){
+            if(isset($responseData['ShipmentResponse']['ShipmentIdentificationNumber']) && !empty($responseData['ShipmentResponse']['ShipmentIdentificationNumber'])){
+                $errorFlag = FALSE;
+            }
+        }
+        
+        
+        if ($errorFlag === FALSE){
+            $successstatus = "Success";
+        }else{
+            $successstatus = "Fail";
+        }
+        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
+        
+        return array("error"=>$errorFlag,'message'=>'','data'=>$responseData);       
     }
 
 

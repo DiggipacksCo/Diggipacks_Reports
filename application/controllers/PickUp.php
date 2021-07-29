@@ -140,6 +140,11 @@ class PickUp extends MY_Controller {
 	}
         
         foreach ($dataArray['shipData'] as $data) {
+			
+			$check_exist=GetCheckpackStatus($data['slip_no']);
+             
+             if(empty($check_exist))
+             {
             array_push($shippingArr, array('slip_no' => $data['slip_no']));
             array_push($slip_data, $data['slip_no']);
             $statusvalue[$key]['user_id'] = $this->session->userdata('user_details')['user_id'];
@@ -221,6 +226,7 @@ class PickUp extends MY_Controller {
             
 
             $key++;
+			 }
         }
 
         //print_r($dataArray['exportData']); die;
@@ -1525,7 +1531,7 @@ if(!empty( $salatoken))
                 //=========shipment update===================//
               
                 $shipupdateAray[$key]['code'] = 'C';
-                $shipupdateAray[$key]['deleted'] = 'Y';
+               // $shipupdateAray[$key]['deleted'] = 'Y';
                 $shipupdateAray[$key]['delivered'] = 9;
                 $shipupdateAray[$key]['cancel_fee'] = $shipmentChrg;
                 $shipupdateAray[$key]['slip_no'] = $val['slip_no'];
@@ -2200,6 +2206,9 @@ else
                 $E_city_button = 'N';
             }
             // print_r($forwardedArr);
+			$pack_button=GetCheckPackingOrderBtn($rdata['pickupId']);
+
+             $shiparray[$ii]['pack_button'] = $pack_button;
 
             $shiparray[$ii]['E_city_button'] = $E_city_button;
             $shiparray[$ii]['forwardedArr'] = $forwardedArr;

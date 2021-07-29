@@ -64,7 +64,7 @@
 
 
                                 <div class="table-responsive" style="padding-bottom:20px;" >
-                                    <div id="chartdiv_' . $val->name . '"></div>
+                                    <div id="chartdiv_' . $val->id . '"></div>
 
 
                                 </div>
@@ -90,7 +90,7 @@
                                 //  print_r(json_encode($main_storageArr));
                                 ?>
                                 <style>
-                                    #chartdiv_<?= $val->name; ?> {
+                                    #chartdiv_<?= $val->id; ?> {
                                         width: 100%;
                                         height: 500px;
                                     }
@@ -104,7 +104,7 @@
 
 
 
-                                        var chart = am4core.create('chartdiv_<?= $val->name; ?>', am4charts.XYChart)
+                                        var chart = am4core.create('chartdiv_<?= $val->id; ?>', am4charts.XYChart)
                                         chart.colors.step = 3;
 
                                         chart.legend = new am4charts.Legend()

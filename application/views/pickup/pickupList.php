@@ -54,8 +54,8 @@
                                         <h1>
                                             <strong>Pickup List </strong>
                                             <a  ng-click="exportExcel();" > 
-											 <!--<a  ng-click="getExcelDetailsPicklist();" >-->
-											<i class="icon-file-excel pull-right" style="font-size: 35px;"></i></a>   
+                                                <!--<a  ng-click="getExcelDetailsPicklist();" >-->
+                                                <i class="icon-file-excel pull-right" style="font-size: 35px;"></i></a>   
                                             <select id="exportlimit" class="custom-select pull-right" ng-model="filterData.exportlimit" name="exprort_limit" required="" style="    font-size: 16px;padding: 5px;margin-right: 10px;" >
                                                 <option value="" selected>Select Export Limit</option>
                                                 <option ng-repeat="exdata in dropexport" value="{{exdata.i}}" >{{exdata.j}}-{{exdata.i}}</option>  
@@ -113,37 +113,37 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <div class="form-group" ><strong>Pickup:</strong>
-                                                       
+
                                                         <select  id="picked_status" name="picked_status"  ng-model="filterData.picked_status"  class="selectpicker" data-width="100%" >
                                                             <option value="">Select Pickup</option>
-                                                              <option value="Y">Yes</option>
-                                                              <option value="N">No</option>
-                                                            
+                                                            <option value="Y">Yes</option>
+                                                            <option value="N">No</option>
+
                                                         </select>
                                                     </div>
                                                 </div>
-                                                 <div class="col-md-3">
+                                                <div class="col-md-3">
                                                     <div class="form-group" ><strong>Packed:</strong>
-                                                       
+
                                                         <select  id="pickup_status" name="pickup_status"  ng-model="filterData.pickup_status"  class="selectpicker" data-width="100%" >
                                                             <option value="">Select Packed</option>
-                                                              <option value="Y">Yes</option>
-                                                              <option value="N">No</option>
-                                                            
+                                                            <option value="Y">Yes</option>
+                                                            <option value="N">No</option>
+
                                                         </select>
                                                     </div>
                                                 </div>
-                                           
+
                                                 <div class="col-md-3">
                                                     <div class="form-group" ><strong>Picker:</strong>
-                                                      
+
                                                         <select  id="assigned_to" name="assigned_to"  ng-model="filterData.assigned_to"  class="form-control" data-width="100%" >
                                                             <option value="">Select Picker</option>
-                                                            
+
                                                             <option ng-repeat="Pdat in pickerArray" value="{{Pdat.id}}">
-                                                             {{Pdat.name}}
-                                                                </option>
-                                                           
+                                                                {{Pdat.name}}
+                                                            </option>
+
                                                         </select>
                                                     </div>
                                                 </div>
@@ -152,8 +152,8 @@
                                                     <div class="form-group" >
                                                         <button type="button" class="btn btn-success">Total <span class="badge">{{shipData.length}}/{{totalCount}}</span></button>
                                                         <button  class="btn btn-danger" ng-click="loadMore(1, 1);" >Search</button>
-                                                    
-                                                    <a class="btn btn-primary" ng-click="run_pickup_cron();" target="_blank"><i class="fa fa-refresh"></i> Sync</a>
+
+                                                        <a class="btn btn-primary" ng-click="run_pickup_cron();" target="_blank"><i class="fa fa-refresh"></i> Sync</a>
                                                     </div></div>
 
 
@@ -221,7 +221,7 @@
 
                                                         <ul class="dropdown-menu dropdown-menu-right">
                                                             <li><a href="pickListView/{{data.pickupId}}" target="_blank"><i class="icon-eye" ></i> View</a></li>
-                                                            <li ng-if="data.picked_status == 'N'"><a ng-click="assignPicker(data.pickupId);"  ><i class="icon-pencil7"></i> Assign Pickup List</a></li>
+                                                            <li ng-if="data.pack_button == 'Y'"><a ng-click="assignPicker(data.pickupId);"  ><i class="icon-pencil7"></i> Assign Pickup List</a></li>
 
                                                             <li ng-repeat="data8 in data.forwardedArr"><a href="Printpicklist3PL/{{data.pickupId}}/{{data8.frwd_company_id}}" target="_blank"><i class="icon-file-pdf" ></i>{{data8.company}} Print 3PL</a>
                                                             </li>
@@ -229,11 +229,11 @@
                                                             <li ng-if="data.E_city_button == 'Y'"><a href="awbPickupPrint/{{data.pickupId}}/e_city" target="_blank"><i class="icon-file-spreadsheet" ></i>Exception Print</a></li>
 
                                                             <li><a href="pickListPrint/{{data.pickupId}}" target="_blank"><i class="icon-file-spreadsheet" ></i>Print Pickup List</a></li>
-                                                            
+
                                                             <li><a href="pickListPrintA4/{{data.pickupId}}" target="_blank"><i class="icon-file-spreadsheet" ></i>Print Pickup List A4</a></li>
 
                                                             <li><a href="awbPickupPrint/{{data.pickupId}}/FS" target="_blank"><i class="icon-file-pdf"></i>Awb 4*6</a></li>
-                                                               <li><a href="awbPickupPrint/{{data.pickupId}}/AF" target="_blank"><i class="icon-file-pdf"></i>Awb A4</a></li>
+                                                            <li><a href="awbPickupPrint/{{data.pickupId}}/AF" target="_blank"><i class="icon-file-pdf"></i>Awb A4</a></li>
                                                             <li><a onClick="return confirm('are you sure want to delete?');" href="<?= base_url(); ?>/PickUp/picklistremove/{{data.pickupId}}"><i class="icon-trash"></i>Delete</a></li>
 
 
@@ -250,103 +250,103 @@
                                 <hr>
                             </div>
                         </div>
-						
-						
-							<div id="excelcolumnPicklist" class="modal fade">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                     <div class="modal-header" style="background-color: #f3f5f6;">
-                                <center>   <h4 class="modal-title" style="color:#000"><?=lang('lang_Select_Column_to_download');?></h4></center>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
 
-                    <div class="modal-body">
-                         <div class="row">
-							<div class="col-sm-4">             
-								<label class="container">
 
-									<input type="checkbox" id='but_checkall' value='Check all' ng-model="listData2.checked" ng-click='checkAll()'/>   <?=lang('lang_SelectAll');?> 
-									<span class="checkmark"></span>
-								   
-
-								</label>
-							</div>
-					
-						  <div class="col-md-12 row">
-							<div class="col-sm-4">          
-								<label class="container">  
-									<input type="checkbox" name="pickupId" value="pickupId"   ng-checked="checkall" ng-model="listData2.pickupId"> Picklist ID #
-									<span class="checkmark"></span>
-								</label>   
-							</div>
-						
-							 <div class="col-sm-4">
-								<label class="container">
-									<input type="checkbox" name="packedcount" value="packedcount"  ng-checked="checkall" ng-model="listData2.packedcount"> Order Count
-									<span class="checkmark"></span>
-								</label>
-							</div>
-							   <div class="col-sm-4">
-                                        <label class="container">
-                                            <input type="checkbox" name="unpackedcount" value="unpackedcount"  ng-checked="checkall" ng-model="listData2.unpackedcount"> Unpacked Count
-                                            <span class="checkmark"></span>
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <label class="container">
-                                            <input type="checkbox" name="entrydate" value="entrydate"  ng-checked="checkall" ng-model="listData2.entrydate"> Date
-                                            <span class="checkmark"></span>
-                                        </label>
-                                    </div>
-                                 
-                                   
-                                    <div class="col-sm-4">
-                                        <label class="container">
-                                            <input type="checkbox" name="picked_status" value="picked_status" ng-checked="checkall" ng-model="listData2.picked_status"> Picked Up
-                                            <span class="checkmark"></span>
-                                        </label>
+                        <div id="excelcolumnPicklist" class="modal fade">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header" style="background-color: #f3f5f6;">
+                                        <center>   <h4 class="modal-title" style="color:#000"><?= lang('lang_Select_Column_to_download'); ?></h4></center>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
                                     </div>
 
-                                    <div class="col-sm-4">
-                                        <label class="container">
-                                            <input type="checkbox" name="Packed" value="address" ng-checked="checkall" ng-model="listData2.Packed"> Packed
-                                            <span class="checkmark"></span>
-                                        </label>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-sm-4">             
+                                                <label class="container">
+
+                                                    <input type="checkbox" id='but_checkall' value='Check all' ng-model="listData2.checked" ng-click='checkAll()'/>   <?= lang('lang_SelectAll'); ?> 
+                                                    <span class="checkmark"></span>
+
+
+                                                </label>
+                                            </div>
+
+                                            <div class="col-md-12 row">
+                                                <div class="col-sm-4">          
+                                                    <label class="container">  
+                                                        <input type="checkbox" name="pickupId" value="pickupId"   ng-checked="checkall" ng-model="listData2.pickupId"> Picklist ID #
+                                                        <span class="checkmark"></span>
+                                                    </label>   
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <label class="container">
+                                                        <input type="checkbox" name="packedcount" value="packedcount"  ng-checked="checkall" ng-model="listData2.packedcount"> Order Count
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label class="container">
+                                                        <input type="checkbox" name="unpackedcount" value="unpackedcount"  ng-checked="checkall" ng-model="listData2.unpackedcount"> Unpacked Count
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label class="container">
+                                                        <input type="checkbox" name="entrydate" value="entrydate"  ng-checked="checkall" ng-model="listData2.entrydate"> Date
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
+
+
+                                                <div class="col-sm-4">
+                                                    <label class="container">
+                                                        <input type="checkbox" name="picked_status" value="picked_status" ng-checked="checkall" ng-model="listData2.picked_status"> Picked Up
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <label class="container">
+                                                        <input type="checkbox" name="Packed" value="address" ng-checked="checkall" ng-model="listData2.Packed"> Packed
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-4"> 
+                                                    <label class="container">
+                                                        <input type="checkbox" name="assigned_to" value="assigned_to" ng-checked="checkall" ng-model="listData2.assigned_to"> Assigned To
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <label class="container">
+                                                        <input type="checkbox" name="quantity" value="warehouse"  ng-checked="checkall" ng-model="listData2.warehouse">Warehouse
+                                                        <span class="checkmark"></span>
+                                                    </label>   
+                                                </div>
+
+
+                                            </div>  
+                                            <input type="hidden" name="exportlimit" value="exportlimit" ng-model="listData1.exportlimit">   
+
+                                            <div class="row" style="padding-left: 40%;padding-top: 10px;">   
+
+
+                                                <button type="submit" class="btn btn-info pull-left" name="shipment_transfer" ng-click="transferShipPicklist(listData2, listData1.exportlimit);"><?= lang('تحميل تقرير الاكسل'); ?></button>  
+                                            </div>
+
+                                        </div>
+
                                     </div>
-                                    <div class="col-sm-4"> 
-                                        <label class="container">
-                                            <input type="checkbox" name="assigned_to" value="assigned_to" ng-checked="checkall" ng-model="listData2.assigned_to"> Assigned To
-                                            <span class="checkmark"></span>
-                                        </label>
-                                    </div>
-                                  
-                                    <div class="col-sm-4">
-                                        <label class="container">
-                                            <input type="checkbox" name="quantity" value="warehouse"  ng-checked="checkall" ng-model="listData2.warehouse">Warehouse
-                                            <span class="checkmark"></span>
-                                        </label>   
-                                    </div>
-
-                                   
-								</div>  
-									  <input type="hidden" name="exportlimit" value="exportlimit" ng-model="listData1.exportlimit">   
-
-                                <div class="row" style="padding-left: 40%;padding-top: 10px;">   
-
-
-                                    <button type="submit" class="btn btn-info pull-left" name="shipment_transfer" ng-click="transferShipPicklist(listData2, listData1.exportlimit);"><?=lang('تحميل تقرير الاكسل');?></button>  
                                 </div>
-							
-						</div>
-						   
-                    </div>
-                </div>
-            </div>  
- 
+                            </div>  
 
-        </div>   
+
+                        </div>   
 
 
 
@@ -433,19 +433,18 @@ return !~text.indexOf(val);
             </div>
 
         </div>
-                                    <script>
+        <script>
 
         var tableToExcel = (function() {
-                var uri = 'data:application/vnd.ms-excel;base64,'
-        , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><meta http-equiv="content-type" content="text/plain; charset=UTF-8"/></head><body><table>{table}</table></body></html>'
-                            , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
-                    , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
-                    return function(table, name) {
-                    if (!table.nodeType) table = document.getElementById(table)
-                            var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
-                    var blob = new Blob([format(template, ctx)]);
-                            var blobURL = window.URL.createObjectURL(blob);
-                            return blobURL;
+        var uri = 'data:application/vnd.ms-excel;base64,'
+                , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><meta http-equiv="content-type" content="text/plain; charset=UTF-8"/></head><body><table>{table}</table></body></html>'
+                                    , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+                            , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+                            return function(table, name) {
+                            if (!table.nodeType) table = document.getElementById(table)
+                                    var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+                            var blob = new Blob([format(template, ctx)]);
+                                    var blobURL = window.URL.createObjectURL(blob);           return blobURL;
 }
 })()
 
@@ -484,11 +483,11 @@ $('#s_type_val').attr('placeholder','Enter AWB no.');
 
         <script type="text/javascript">
 
-                                    $('.date').datepicker({
+                            $('.date').datepicker({
 
-                            format: 'yyyy-mm-dd'
+                    format: 'yyyy-mm-dd'
 
-                            });
+                    });
 
 <!-- /page container -->
         </script>

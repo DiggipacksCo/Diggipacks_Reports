@@ -142,6 +142,7 @@ public function ViewinvoiceDynamic($invoiceNo = null){
 				$chargesArray['inbound_charge']=$chargesArray['inbound_charge']+$val['inbound_charge'];
 				$chargesArray['return_charge']=$chargesArray['return_charge']+$val['return_charge'];
 				$chargesArray['shipping_charge']=$chargesArray['shipping_charge']+$val['shipping_charge'];
+				$chargesArray['pallet_charge']=$chargesArray['pallet_charge']+$val['pallet_charge'];
 
 			 }
 			 else
@@ -158,7 +159,7 @@ public function ViewinvoiceDynamic($invoiceNo = null){
 				$chargesArray['inbound_charge']=$chargesArray['inbound_charge']+$val['inbound_charge'];
 				$chargesArray['return_charge']=$chargesArray['return_charge']+$val['return_charge'];
 				$chargesArray['shipping_charge']=$chargesArray['shipping_charge']+$val['shipping_charge'];
-
+				$chargesArray['pallet_charge']=$chargesArray['pallet_charge']+$val['pallet_charge'];
 					if($val['special_packing_seller']>0)
 					{
 						$chargesArray['special_packing']=$chargesArray['special_packing']+$val['special_packing_seller'];	
@@ -649,7 +650,7 @@ public function GettransportReportShowData()
     {
             
             $dataArray=$dataArray= $this->input->post();
-			print_r($dataArray);
+		//	print_r($dataArray);
             $invoice_no = $dataArray['invoice_no'];
 			$discount = $dataArray['discount'];
 		$CURRENT_DATE=date("Y-m-d H:i:s");

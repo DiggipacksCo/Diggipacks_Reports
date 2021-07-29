@@ -37,6 +37,51 @@ if (!function_exists('todcount')) {
     }
 
 }  
+if (!function_exists('GetCheckPackingOrderBtn')) {
+
+    function GetCheckPackingOrderBtn($id = null) {
+        $ci = & get_instance();
+        $ci->load->database();
+
+        $sql = "SELECT id FROM pickuplist_tbl where pickupId='$id' and pickup_status='Y' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and deleted='N' group by pickupId  $cndition";
+        $query = $ci->db->query($sql);
+       if($query->num_rows()>0)
+       {
+           return 'N';
+       }
+       else
+       {
+          return 'Y';  
+       }
+    }
+
+}
+
+if (!function_exists('GetCheckpackStatus')) {
+
+    function GetCheckpackStatus($id = null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        $sql = "SELECT slip_no FROM shipment_fm where code='PK' and  slip_no='$id'";
+        $query = $ci->db->query($sql);
+        $result = $query->row_array();
+        return $result['slip_no'];
+    }
+
+}
+
+if (!function_exists('GetCheckPickupStatus')) {
+
+    function GetCheckPickupStatus($id = null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        $sql = "SELECT slip_no FROM pickuplist_tbl where deleted ='N' and  slip_no='$id' and super_id='".$ci->session->userdata('user_details')['super_id']."'";
+        $query = $ci->db->query($sql);
+        $result = $query->row_array();
+        return $result['slip_no'];
+    }
+
+}
 
 function remove_phone_format($number) {
 
@@ -1232,6 +1277,8 @@ if (!function_exists('PrintPiclist3PL')) {
             }
             else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Bosta') {
                 $pdf = new FPDI('P', 'mm', array(170, 160));
+            }else if (GetCourCompanynameId($frwd_company_id, 'company') == 'DHL JONES'){
+                $pdf = new FPDI('P', 'mm', array(270, 210));
             } else {
                 $pdf = new FPDI('P', 'mm', array(102, 160));
             }
@@ -1354,6 +1401,8 @@ if (!function_exists('PrintPiclist3PL_bulk')) {
             }
             else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Bosta') {
                 $pdf = new FPDI('P', 'mm', array(170, 160));
+            }else if (GetCourCompanynameId($frwd_company_id, 'company') == 'DHL JONES'){
+                $pdf = new FPDI('P', 'mm', array(270, 210));
             } else {
                 $pdf = new FPDI('P', 'mm', array(102, 160));
             }

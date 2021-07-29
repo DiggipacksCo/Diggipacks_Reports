@@ -416,7 +416,7 @@ class CourierCompany extends MY_Controller  {
                         'pay_mode' => $ShipArr['mode'],
                         'total_cod_amt' => $ShipArr['total_cod_amt'],
                         'pieces' =>  $box_pieces1,
-                        'status_describtion' => $complete_sku,
+                        'status_describtion' => empty($complete_sku)?$ShipArr['status_describtion']:$complete_sku,
                         'weight' => $ShipArr['weight'],
                         'shippers_ac_no' => $ShipArr['shippers_ac_no'],
                         'cust_id' => $ShipArr['cust_id'],
@@ -614,7 +614,13 @@ class CourierCompany extends MY_Controller  {
                                     $services = '';
                             }
                             $new_awb_number = $this->Ccompany_model->Generate_awb_number_new_fm($super_id);
-                            
+                            $sellername = $ShipArr['reciever_name']; 
+                            $recDetail = Getselletdetails_new($super_id);
+                           
+                            $receiver_name = "DIGGIPACKS FULFILLMENT ";
+                            $receiver_address = $recDetail['0']['address'];
+                            $receiver_mobile = $recDetail['0']['phone'];
+
                             $ShipArr = array(
                                 'sender_name' =>  $ShipArr['reciever_name'],
                                 'sender_address' =>  $ShipArr['reciever_address'],
@@ -631,19 +637,19 @@ class CourierCompany extends MY_Controller  {
                                 'shippers_ac_no' => $ShipArr['shippers_ac_no'],
                                 'cust_id' => $ShipArr['cust_id'],
                                 'service_id' => $ShipArr['service'],
-                                'reciever_name' => $ShipArr['sender_name'],
-                                'reciever_address' =>  $ShipArr['sender_address'],
-                                'reciever_phone' =>  $ShipArr['sender_phone'],
-                                'reciever_email' => $ShipArr['sender_email'],
-                                'destination' => $ShipArr['origin'],
+                                'reciever_name' => $receiver_name,
+                                'reciever_address' => $receiver_address,
+                                'reciever_phone' =>   $receiver_mobile,
+                                'reciever_email' => $recDetail['0']['email'],
+                                'destination' =>$recDetail['0'] ['branch_location'],
                                 'sku' => $ShipArr['sku'],
                                 'booking_id' => $ShipArr['booking_id'],
                                 'old_slip_no'=> $ShipArr['slip_no'],
                                 'sku_data' => $sku_data
                             );
 
-                            //echo "<pre> sdfsd"; print_r($ShipArr); die;
-                            $sellername = $ShipArr['reciever_name']; 
+                           // echo "<pre> sdfsd"; print_r($ShipArr); die;
+                          
                            // $sellername = "DIGGIPACKS FULFILLMENT- ".$sellername;
 
                             $CURRENT_TIME = date('H:i:s');
@@ -1643,6 +1649,40 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                             return $return;
                         }                                                    
                     }
+                    elseif($company == 'DHL JONES') {
+                        if(!empty($counrierArr)) { 
+                                    $api_response = $this->Ccompany_model->DhlJonesArray($sellername, $ShipArr, $counrierArr,$token, $complete_sku, $box_pieces1,$c_id, $super_id);
+                                    
+                                    if($api_response['error'] == FALSE) {
+                                         $client_awb = $api_response['data']['ShipmentResponse']['ShipmentIdentificationNumber'];
+                                         $lableData = $api_response['data']['ShipmentResponse']['Documents'][0]['Document'];
+                                         
+                                         $dhlLabel = '';
+                                         
+                                         if (!empty($lableData['DocumentImage'])) {
+                                            $encoded = base64_decode($lableData['DocumentImage']);
+                                             header('Content-Type: application/pdf');
+                                             file_put_contents("assets/all_labels/$slipNo.pdf", $encoded);
+
+                                            $dhlLabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+                                         }
+                                         
+                                         
+                                         $return= array('status'=>200,'label'=> $dhlLabel,'client_awb'=>$client_awb); 
+
+                                         return $return;  
+                                    } else {                                       
+                                        $returnArr['responseError'] = $slipNo . ':' .$api_response['data']['ShipmentResponse']['Notification'][0]['Message'];
+                                        $return= array('status'=>201,'error'=> $returnArr); 
+                                        return $return;
+                                    }
+                        } else {
+                            $returnArr['responseError'] = 'Courier Details Not Founds.';
+                            $return= array('status'=>201,'error'=> $returnArr); 
+                            return $return;
+                        }                 
+                        
+                    }   
                     elseif($company == 'Tamex')
                     {
                         
