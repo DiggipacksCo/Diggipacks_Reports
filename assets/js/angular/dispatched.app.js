@@ -335,7 +335,8 @@ var app = angular.module('Appdispatched', [])
     "pl3_close_date": false,
     "transaction_days": false,
     "no_of_attempt": false,
-    "cc_name": false
+    "cc_name": false,
+    "last_status_n": false
 };
 
 

@@ -618,6 +618,12 @@
                                             <span class="checkmark"></span>
                                         </label>
                                     </div>
+                                      <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="last_status_n" value="last_status_n"  ng-model="listData2.last_status_n"> Last Status
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
                                     <div class="col-sm-4">
                                         <label class="container">
                                             <input type="checkbox" name="COD_Amount" value="COD_Amount"   ng-model="listData2.total_cod_amt"> <?= lang('lang_COD_Amount'); ?>
