@@ -180,6 +180,9 @@
                                             <?php if (GetCourierCompanyStausActive('DHL JONES') == 'Y') { ?>
                                                 <th class="head1">DHL JONES</th>
                                             <?php } ?>
+                                            <?php if (GetCourierCompanyStausActive('Thabit') == 'Y') { ?>
+                                                <th class="head1">Thabit</th>
+                                            <?php } ?>
                                             <th class="head1">Country Code</th>
                                             <th class="head1">LAT</th>
                                             <th class="head1">LNG</th>
@@ -447,6 +450,12 @@
                                                     <td><input type="text" name="dhl_jones_city" id="dhl_jones_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['dhl_jones_city']; ?>" class="form-control">
                                                             <br>
                                                             <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'dhl_jones_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
+                                                        </td>
+                                                     <?php } ?>
+                                                      <?php if (GetCourierCompanyStausActive('Thabit') == 'Y') { ?>
+                                                    <td><input type="text" name="thabit_city" id="thabit_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['thabit_city']; ?>" class="form-control">
+                                                            <br>
+                                                            <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'thabit_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
                                                         </td>
                                                      <?php } ?>
                                                     <td><input type="text" name="country_code" id="country_code<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['country_code']; ?>" class="form-control">

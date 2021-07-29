@@ -1114,7 +1114,9 @@ class Ccompany_model extends CI_Model {
         $sender_address = $ShipArr['sender_address'];
         $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city', $super_id);
         //$sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
-        $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'safe_arrival',$super_id);
+        $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'city', $super_id);
+
+        //echo $receiver_city; die;
         
 
        $API_URL = $counrierArr['api_url'];
@@ -1143,7 +1145,7 @@ class Ccompany_model extends CI_Model {
             "email" => $ShipArr['sender_email'],
             "street" => html_entity_decode($sender_address),
             "city" => array(
-                "code" =>strtolower($sender_city)
+                "name" =>strtolower($sender_city)
             ),
             "country" => array(
                 "id" => 191
@@ -1158,7 +1160,7 @@ class Ccompany_model extends CI_Model {
             "email" => $ShipArr['reciever_email'],
             "street" => html_entity_decode($ShipArr['reciever_address']),
             "city" => array(
-                "id" => $receiver_city
+                "name" => $receiver_city
             ),
             "country" => array(
                 "id" => 191
@@ -1170,7 +1172,7 @@ class Ccompany_model extends CI_Model {
             "weight" => $weight
         );
         $package_type = array(
-            "courier_type" => 'express_delivery'
+            "courier_type" => 'Next_Day_Delivery'
         );
         $charge_items = array(
             array(

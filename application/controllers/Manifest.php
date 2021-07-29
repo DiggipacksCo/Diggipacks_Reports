@@ -1204,7 +1204,6 @@ class Manifest extends CourierCompany_pickup {
                 $Auth_token = $responseArray['data']['id_token'];
                 
                 $thabit_response = $this->Ccompany_model->ThabitArray($sellername, $ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id, $box_pieces1, $super_id);
-                //print "<pre>"; print_r($thabit_response);die;
 
                 if ($thabit_response['status'] == 'success') 
                 {
@@ -3411,7 +3410,6 @@ class Manifest extends CourierCompany_pickup {
                 $Auth_token = $responseArray['data']['id_token'];
                 
                 $thabit_response = $this->Ccompany_model->ThabitArray($sellername, $ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id, $box_pieces1,$super_id);
-                //print "<pre>"; print_r($thabit_response);die;
 
                 if ($thabit_response['status'] == 'success') 
                 {
