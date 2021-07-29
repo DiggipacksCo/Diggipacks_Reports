@@ -1531,7 +1531,7 @@ if(!empty( $salatoken))
                 //=========shipment update===================//
               
                 $shipupdateAray[$key]['code'] = 'C';
-                $shipupdateAray[$key]['deleted'] = 'Y';
+               // $shipupdateAray[$key]['deleted'] = 'Y';
                 $shipupdateAray[$key]['delivered'] = 9;
                 $shipupdateAray[$key]['cancel_fee'] = $shipmentChrg;
                 $shipupdateAray[$key]['slip_no'] = $val['slip_no'];
