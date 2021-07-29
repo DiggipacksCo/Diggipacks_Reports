@@ -2462,6 +2462,7 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
                 "messenger_name": false,
                 "close_date": false,
                 "transaction_days": false,
+                 "last_status_n": false,
             };
     $scope.slipnosdetails=function(val)
     {

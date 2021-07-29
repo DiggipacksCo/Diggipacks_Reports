@@ -3410,7 +3410,9 @@ if(!empty($awbids ))
             $selectQry .= " shipment_fm.rec_invoice_status AS INVOICE PAYMENT RECEIVED ,";
             $selectQry .= " shipment_fm.mode AS RECEIVER MODE,";
             $selectQry .= " (select main_status from status_main_cat_fm where status_main_cat_fm.id=shipment_fm.delivered) AS MAINSTATUS,";
-            $selectQry .= " (select sub_status from status_category_fm where status_category_fm.code=shipment_fm.code) AS 3PLSTATUS ,";
+           // $selectQry .= " (select sub_status from status_category_fm where status_category_fm.code=shipment_fm.code) AS 3PLSTATUS ,";
+             $selectQry .= " IFNULL(DATEDIFF(close_date, 3pl_pickup_date) , DATEDIFF(CURRENT_TIMESTAMP() , 3pl_pickup_date)  ) AS transaction_days,";  
+             $selectQry .= " (select Details from status_fm where status_fm.slip_no=shipment_fm.slip_no order by status_fm.id desc limit 1) AS LastStatus ,";
             $selectQry .= " shipment_fm.total_cod_amt AS COD AMOUNT,";
             $selectQry .= " (select uniqueid from customer where customer.id=shipment_fm.cust_id) AS UNIQUE_ID ,";
             $selectQry .= " shipment_fm.pieces AS ON PIECES,";
@@ -3421,7 +3423,8 @@ if(!empty($awbids ))
             $selectQry .= " shipment_fm.3pl_close_date AS 3PL Closed Date,";
             $selectQry .= " shipment_fm.no_of_attempt AS No Of Attempt,";
             $selectQry .= " shipment_fm.pay_invoice_no AS Transaction Number,";
-            $selectQry .= " IFNULL(DATEDIFF(close_date, 3pl_pickup_date) , DATEDIFF(CURRENT_TIMESTAMP() , pickup_date)  ) AS transaction_days,";  
+           
+           // $selectQry .= " (select Details from status_fm where status_fm.slip_no=shipment_fm.slip_no order by status_fm.id desc limit 1) AS LastStatus ,";
             
             
             
@@ -3499,6 +3502,13 @@ if(!empty($awbids ))
                 if ($data['status_o'] == 1) {
                     $selectQry .= " (select sub_status from status_category_fm where status_category_fm.code=shipment_fm.code) AS 3PLSTATUS ,";
                 }
+                if ($data['transaction_days'] == 1)
+            $selectQry .= " IFNULL(DATEDIFF(close_date, 3pl_pickup_date) , DATEDIFF(CURRENT_TIMESTAMP() , 3pl_pickup_date)  ) AS transaction_days, ";  
+       
+        
+         if ($data['last_status_n'] == 1) {
+            $selectQry .= " (select Details from status_fm where status_fm.slip_no=shipment_fm.slip_no order by status_fm.id desc limit 1) AS LastStatus ,";
+        }
                 if ($data['total_cod_amt'] == 1)
                     $selectQry .= " shipment_fm.total_cod_amt AS COD AMOUNT,";
 
@@ -3534,10 +3544,8 @@ if(!empty($awbids ))
             
             if ($data['transaction_no'] == 1)
                 $selectQry .= " shipment_fm.pay_invoice_no AS Transaction Number,";
-
-            if ($data['transaction_days'] == 1)
-            $selectQry .= " IFNULL(DATEDIFF(close_date, 3pl_pickup_date) , DATEDIFF(CURRENT_TIMESTAMP() , 3pl_pickup_date)  ) AS transaction_days, ";  
-        }
+ }
+            
         $selectQry = rtrim($selectQry, ',');
         $this->db->select($selectQry);
 
@@ -3550,7 +3558,7 @@ if(!empty($awbids ))
         }
         //$this->db->limit($limit, $start);     
         $query = $this->db->get();
-       //  echo $this->db->last_query(); die();      
+        // echo $this->db->last_query(); die();      
         $delimiter = ",";
         $newline = "\r\n";
         //$filename = "filename.csv";   
@@ -3723,7 +3731,10 @@ if(!empty($awbids ))
             if ($data['cust_id'] == 1) {   
                 $selectQry .= " (select name from customer where customer.id=shipment_fm.cust_id) AS SELLER ,";
                 //$this->db->join('country','country.id=shipment_fm.destination');    
-            }      
+            } 
+             if ($data['last_status_n'] == 1) {
+            $selectQry .= " (select Details from status_fm where status_fm.slip_no=shipment_fm.slip_no order by status_fm.id desc limit 1) AS LastStatus ,";
+        }
           if ($data['warehouse'] == 1)   
                 $selectQry .= " (select name from warehouse_category where warehouse_category.id=shipment_fm.wh_id) AS WAREHOUSE ,";
             if ($data['weight'] == 1)
@@ -3919,6 +3930,10 @@ if(!empty($awbids ))
         if ($data['status_o'] == 1) {
             $selectQry .= " (select sub_status from status_category_fm where status_category_fm.code=shipment_fm.code) AS 3PLSTATUS ,";
         }
+        
+        if ($data['last_status_n'] == 1) {
+            $selectQry .= " (select Details from status_fm where status_fm.slip_no=shipment_fm.slip_no order by status_fm.id desc limit 1) AS LastStatus ,";
+        }
         if ($data['total_cod_amt'] == 1)
             $selectQry .= " shipment_fm.total_cod_amt AS COD AMOUNT,";
 
@@ -3974,7 +3989,7 @@ if(!empty($awbids ))
         }
 
         $query = $this->db->get();
-        //return $this->db->last_query(); die;
+       // echo $this->db->last_query(); die;
         $delimiter = ",";
         $newline = "\r\n";
 
@@ -4110,6 +4125,9 @@ if(!empty($awbids ))
             $selectQry .= " shipment_fm.weight AS ON WEIGHT,";
         if ($data['status_describtion'] == 1)
             $selectQry .= " shipment_fm.status_describtion AS DESCRIPTION,";
+        if ($data['last_status_n'] == 1) {
+            $selectQry .= " (select Details from status_fm where status_fm.slip_no=shipment_fm.slip_no order by status_fm.id desc limit 1) AS LastStatus ,";
+        }
 
         if ($data['frwd_awb_no'] == 1)
             $selectQry .= " shipment_fm.frwd_company_awb AS FORWARD AWB No,";
