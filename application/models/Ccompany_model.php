@@ -4370,7 +4370,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
                             ),
                             "Address"=>array(
                                 "StreetLines"=> substr($senderAddress, 0,50),
-                                "StreetLines2"=> '',
+                                "StreetLines2"=> $sender_city,
                                 "City"=> $sender_city,
                                 "PostalCode"=>"",
                                 "CountryCode"=> $sender_country_code
@@ -4379,13 +4379,13 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
                         "Recipient"=>array(
                             "Contact"=>array(
                                 "PersonName"=> $ShipArr['reciever_name'],
-                                "CompanyName"=> '',
+                                "CompanyName"=> $ShipArr['reciever_name'],
                                 "PhoneNumber"=> $ShipArr['reciever_phone'],
                                 "EmailAddress"=> $ShipArr['reciever_email']
                             ),
                             "Address"=>array(
                                 "StreetLines"=> substr($ShipArr['reciever_address'], 0,50),
-                                "StreetLines2"=> '',
+                                "StreetLines2"=> $receiver_city,
                                 "City"=> $receiver_city,
                                 "StateOrProvinceCode"=>"",
                                 "PostalCode"=> "",
