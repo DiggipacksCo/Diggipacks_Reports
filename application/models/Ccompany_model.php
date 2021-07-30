@@ -2752,10 +2752,7 @@ class Ccompany_model extends CI_Model {
     //Naqel Start
 
  public function NaqelArray($sellername = null ,array $ShipArr, array $counrierArr, $complete_sku = null, $box_pieces1 = null, $Auth_token = null, $c_id = null,$super_id) 
- {  //print "<pre>"; print_r($ShipArr);die;
-     
-           //$sender_default_city = Getselletdetails_new($super_id);
-        //    $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+ {  
            $sender_address = $ShipArr['sender_address'];
            $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city', $super_id);
            $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'naqel_city_code',$super_id);
@@ -2848,7 +2845,7 @@ class Ccompany_model extends CI_Model {
                         </soapenv:Envelope>';   
                
                 $headers = array(
-                    "Content-type: text/xml",
+                    "Content-type: text/xml; charset=utf-8",
                     "Content-length: ".strlen($xml_new),
                 );
 
