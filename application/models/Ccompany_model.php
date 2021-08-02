@@ -2754,10 +2754,10 @@ class Ccompany_model extends CI_Model {
  public function NaqelArray($sellername = null ,array $ShipArr, array $counrierArr, $complete_sku = null, $box_pieces1 = null, $Auth_token = null, $c_id = null,$super_id) 
  {  
            $sender_address = $ShipArr['sender_address'];
+           $reciever_address = $ShipArr['reciever_address'];
            $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city', $super_id);
            $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'naqel_city_code',$super_id);
-
-        
+           $destination_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'city',$super_id);
         
             if ($ShipArr['pay_mode'] == 'CC') {
                     $BillingType = 1;
@@ -2819,7 +2819,7 @@ class Ccompany_model extends CI_Model {
                                     <tem:Email>' . $ShipArr['reciever_email'] . '</tem:Email>
                                     <tem:Mobile>' . $ShipArr['reciever_phone'] . '</tem:Mobile>
                                     <tem:PhoneNumber>' . $ShipArr['reciever_phone'] . '</tem:PhoneNumber>
-                                    <tem:Address>' .$receiver_city . '</tem:Address>
+                                    <tem:Address>' .$reciever_address .' '.$destination_city .'</tem:Address>
                                     <tem:CountryCode>KSA</tem:CountryCode>
                                     <tem:CityCode>' . $receiver_city .'</tem:CityCode>
                                     </tem:ConsigneeInfo>
