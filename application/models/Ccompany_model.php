@@ -2819,7 +2819,7 @@ class Ccompany_model extends CI_Model {
                                     <tem:Email>' . $ShipArr['reciever_email'] . '</tem:Email>
                                     <tem:Mobile>' . $ShipArr['reciever_phone'] . '</tem:Mobile>
                                     <tem:PhoneNumber>' . $ShipArr['reciever_phone'] . '</tem:PhoneNumber>
-                                    <tem:Address>' .$reciever_address .' '.$destination_city .'</tem:Address>
+                                    <tem:Address>' .$reciever_address .'</tem:Address>
                                     <tem:CountryCode>KSA</tem:CountryCode>
                                     <tem:CityCode>' . $receiver_city .'</tem:CityCode>
                                     </tem:ConsigneeInfo>
@@ -2869,6 +2869,7 @@ class Ccompany_model extends CI_Model {
                 curl_close($ch);
 
                  $awb_array = json_decode(json_encode((array) $complicated_awb), TRUE);
+                 //print "<pre>"; print_r($awb_array);die;
                  $logresponse =   json_encode($awb_array);  
                     $successres = $awb_array['HasError'];
                    

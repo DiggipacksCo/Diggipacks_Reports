@@ -1251,8 +1251,9 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                                         curl_close($ch);
                                     
                                     $xml_data = new SimpleXMLElement(str_ireplace(array("soap:", "<?xml version=\"1.0\" encoding=\"utf-16\"?>"), "", $response));
+                                    //print "<pre>" ;print_r($xml_data);die;
                                     $mediaData = $xml_data->Body->GetWaybillStickerResponse->GetWaybillStickerResult[0];
-                                                 
+                                    //echo "data=".$mediaData;die;    
                                         if (!empty($mediaData)) 
                                         {
                                             $pdf_label = json_decode(json_encode((array) $mediaData), TRUE);
