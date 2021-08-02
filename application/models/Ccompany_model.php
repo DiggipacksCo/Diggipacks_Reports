@@ -2870,6 +2870,7 @@ class Ccompany_model extends CI_Model {
                 curl_close($ch);
 
                  $awb_array = json_decode(json_encode((array) $complicated_awb), TRUE);
+                 //print "<pre>"; print_r($awb_array);die;
                  $logresponse =   json_encode($awb_array);  
                     $successres = $awb_array['HasError'];
                    
