@@ -129,6 +129,9 @@
                                              $lang_Product_Type=lang('lang_Product_Type');	
                                              $lang_Product_Description=lang('lang_Product_Description');
                                              $lang_View_detail=lang('lang_View_detail');	
+                                             $lang_Forwarded_AWB_No=lang('lang_Forwarded_AWB_No');	
+                                             $lang_Forwarded=lang('lang_Forwarded');	
+                                             
                                             if ($Shipmentinfo['booking_id'] != '')
                                                 echo' <tr><th><b class="size-2">'.$Reference_No.'</b></th><td>' . $Shipmentinfo['booking_id'] . '</td></tr>';
 
