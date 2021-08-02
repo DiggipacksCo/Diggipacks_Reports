@@ -2819,7 +2819,7 @@ class Ccompany_model extends CI_Model {
                                     <tem:Email>' . $ShipArr['reciever_email'] . '</tem:Email>
                                     <tem:Mobile>' . $ShipArr['reciever_phone'] . '</tem:Mobile>
                                     <tem:PhoneNumber>' . $ShipArr['reciever_phone'] . '</tem:PhoneNumber>
-                                    <tem:Address>' .$reciever_address .' '.$destination_city .'</tem:Address>
+                                    <tem:Address>' .$reciever_address.'</tem:Address>
                                     <tem:CountryCode>KSA</tem:CountryCode>
                                     <tem:CityCode>' . $receiver_city .'</tem:CityCode>
                                     </tem:ConsigneeInfo>
@@ -2838,6 +2838,7 @@ class Ccompany_model extends CI_Model {
                                     <tem:RefNo>' .  $ShipArr['slip_no'] . '</tem:RefNo>
                                     <tem:InsuredValue>0</tem:InsuredValue>
                                     <tem:GoodsVATAmount>0</tem:GoodsVATAmount>
+                                    <tem:Reference1>'.$ShipArr['booking_id'].'</tem:Reference1>
                                     <tem:IsCustomDutyPayByConsignee>false</tem:IsCustomDutyPayByConsignee>
                                 </tem:_ManifestShipmentDetails>
                             </tem:CreateWaybill>
