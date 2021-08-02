@@ -3683,6 +3683,7 @@ if(!empty($awbids ))
             $selectQry .= " shipment_fm.reciever_address AS RECEIVER ADDRESS,";
             $selectQry .= " (select main_status from status_main_cat_fm where status_main_cat_fm.id=shipment_fm.delivered) AS STATUS ,";
 			$selectQry .= " (select name from warehouse_category where warehouse_category.id=shipment_fm.wh_id) AS WAREHOUSE ,";
+                         $selectQry .= " (select Details from status_fm where status_fm.slip_no=shipment_fm.slip_no order by status_fm.id desc limit 1) AS LastStatus ,";
             $selectQry .= " shipment_fm.total_cod_amt AS COD AMOUNT,";
             $selectQry .= " shipment_fm.sku AS SKU,";
 			$selectQry .= " (select name from customer where customer.id=shipment_fm.cust_id) AS SELLER ,";
