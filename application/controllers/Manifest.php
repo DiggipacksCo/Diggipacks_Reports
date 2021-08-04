@@ -1446,7 +1446,8 @@ class Manifest extends CourierCompany_pickup {
                                 }
                                                    
                             }
-            }elseif ($company == 'Wadha'){
+            }
+            elseif ($company == 'Wadha'){
                         $counrierArr['user_name'] = $user_name;
                         $counrierArr['password'] = $password;
                         $counrierArr['api_url'] =$api_url;
@@ -1481,7 +1482,39 @@ class Manifest extends CourierCompany_pickup {
                             $returnArr['Error_msg'][] = $slipNo . ':' .$error_status;
                         }
                     
-            }  elseif ($company == 'MMCCO')
+            }  
+            elseif ($company == 'FDA') {
+                        $Auth_token=$this->Ccompany_model->FDA_auth($counrierArr); 
+                        $responseArray = $this->Ccompany_model->FDAArray($sellername, $ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1, $super_id); 
+                       
+                       $successres = $responseArray['status'];                          
+                        $error_status = $responseArray['message'];
+
+                        if (!empty($successres) && $successres == 'success')
+                        {
+                           $client_awb = $responseArray['data']['order_number'];
+                            $WadhaLabel = $this->Ccompany_model->Wadha_label($client_awb, $counrierArr, $Auth_token);
+                            $label= json_decode($WadhaLabel,TRUE);
+                            $media_data = $label['data']['value'];                               
+                            $generated_pdf = file_get_contents($media_data);
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                            $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';  
+
+                            $CURRENT_DATE = date("Y-m-d H:i:s");
+                            $CURRENT_TIME = date("H:i:s");                               
+
+                            $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                            $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' : forwarded to FDA.';
+                            array_push($succssArray, $slipNo);
+                        }                            
+                        else
+                        {
+                            $returnArr['Error_msg'][] = $slipNo . ':' .$error_status;
+                        }
+                    
+            }
+
+            elseif ($company == 'MMCCO')
                     {
                        // print_r($counrierArr);die;
                         $Auth_token=$this->Ccompany_model->MMCCO_auth($counrierArr['user_name'],$counrierArr['password'],$counrierArr['api_url']);
@@ -4278,7 +4311,45 @@ class Manifest extends CourierCompany_pickup {
                             $returnArr['responseError'][] = $slipNo . ':' .$error_status;
                         }
                     
-            }elseif ($company == 'MMCCO')
+            }
+
+            elseif ($company == 'FDA'){                       
+
+                        $Auth_token=$this->Ccompany_model->FDA_auth($counrierArr); 
+                        
+                        $responseArray = $this->Ccompany_model->FDAArray($sellername, $ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1, $super_id);                      
+                      
+                                            
+                        $successres = $responseArray['status'];                         
+                        $error_status = $responseArray['message'];
+
+                        if (!empty($successres) && $successres == 'success')
+                        {
+
+                             $client_awb = $responseArray['data']['order_number'];
+                            $WadhaLabel = $this->Ccompany_model->Wadha_label($client_awb, $counrierArr, $Auth_token);
+                            $label= json_decode($WadhaLabel,TRUE);
+                            $media_data = $label['data']['value'];                               
+                            $generated_pdf = file_get_contents($media_data);
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                            $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';  
+
+                            $CURRENT_DATE = date("Y-m-d H:i:s");
+                            $CURRENT_TIME = date("H:i:s");                               
+
+                            $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
+                            
+                            $returnArr['Success_msg'][] = $slipNo . ' Data updated successfully.';                            
+                            array_push($succssArray, $slipNo);
+                        }                            
+                        else
+                        {
+                            $returnArr['responseError'][] = $slipNo . ':' .$error_status;
+                        }
+                    
+            }
+
+            elseif ($company == 'MMCCO')
                     {
                        // print_r($counrierArr);die;
                         $Auth_token=$this->Ccompany_model->MMCCO_auth($counrierArr['user_name'],$counrierArr['password'],$counrierArr['api_url']);

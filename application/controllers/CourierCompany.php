@@ -2,8 +2,6 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); 
 
 class CourierCompany extends MY_Controller  { 
-
-
 	function __construct() {
         // error_reporting(-1);
 		// ini_set('display_errors', 1);
@@ -11,25 +9,23 @@ class CourierCompany extends MY_Controller  {
 		if(menuIdExitsInPrivilageArray(22)=='N')
 		{
 			//redirect(base_url().'notfound'); die;
-			
 		}  
 		
 		$this->load->model('Ccompany_model');
 		$this->load->model('Shipment_model');
 		$this->load->model('ItemInventory_model');
 		$this->load->library('form_validation');
-
 	}
 
 	
 	public function cCompany(){
 		$this->load->view('courierCompany/view_company');               
 	}
+
         
     public function forwardshipments(){
         $this->load->view("ShipmentM/forward_shipments");
     }
-
   
 
     public function forwardedshipments() {
@@ -1795,7 +1791,48 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                             return $return;
                             }
 
-                    } elseif ($company == 'MMCCO')
+                    }
+                    elseif ($company == 'FDA')
+                    {
+
+                        $Auth_token=$this->Ccompany_model->FDA_auth($counrierArr); 
+                        $responseArray = $this->Ccompany_model->FDAArray($sellername, $ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1, $super_id); 
+
+                       // echo '<pre>'; print_r( $responseArray); die;
+
+
+                        $successres = $responseArray['status'];                          
+                        $error_status = $responseArray['message'];
+
+                        if (!empty($successres) && $successres == 'success')
+                        {
+
+                            $client_awb = $responseArray['data']['order_number'];
+                            $WadhaLabel = $this->Ccompany_model->Wadha_label($client_awb, $counrierArr, $Auth_token);
+                            $label= json_decode($WadhaLabel,TRUE);
+                            $media_data = $label['data']['value'];                               
+                            $generated_pdf = file_get_contents($media_data);
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                            $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';  
+
+                            $CURRENT_DATE = date("Y-m-d H:i:s");
+                            $CURRENT_TIME = date("H:i:s");                              
+
+                            $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                            return $return;                           
+                        }                            
+                        else
+                        {
+                            
+                                    $returnArr['responseError'] = $slipNo . ':' . $error_status;
+                                    $return= array('status'=>201,'error'=> $returnArr); 
+                                    return $return;
+
+                            }
+
+                    }
+
+                     elseif ($company == 'MMCCO')
                     {
                        // print_r($counrierArr);die;
                         $Auth_token=$this->Ccompany_model->MMCCO_auth($counrierArr['user_name'],$counrierArr['password'],$counrierArr['api_url']);
