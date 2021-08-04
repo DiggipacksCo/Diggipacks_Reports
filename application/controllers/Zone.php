@@ -48,8 +48,8 @@ class Zone extends MY_Controller {
             $data['customers'] = $this->Zone_model->Zone();           
             $data['company'] = $this->Ccompany_model->all();
             $masterCity = array();
-           // echo 'xxx';
-            //print_r($masterCity); exit;
+            // echo '<pre>';
+            // print_r($data['company']); exit;
             if($id!=null)
             {
                 $precityData=$this->Zone_model->previousCity($id);

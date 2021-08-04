@@ -197,6 +197,7 @@ public function payableInvoice_update()
 		
 		$bank_fees=getallsellerdatabyID($cust_id,'bank_fees',$this->session->userdata('user_details')['super_id']);
 		$areadyExit=array();
+		$priceZero=array();
 		foreach($invoiceCheck as $key1=>$val1)
 		{
 
@@ -228,8 +229,10 @@ public function payableInvoice_update()
 		
 		foreach($shipmentdata as $key=>$val)
 		{
+			$keyCheck=null;
 			if($val['code']=='POD')
 			{
+				
 				foreach($chargeData as $key1=>$val1)
 				{
 					$cityArray=json_decode($val1['city_id'],true);
@@ -302,6 +305,11 @@ public function payableInvoice_update()
 			{
 				$codAmount=0;
 			}
+			if($shipCharge==0 && $return_charge==0)
+			{
+				array_push( $priceZero,$val['awb_no']);
+			}
+			else{
 			$invoiceArray[]= array(
 			
 			'invoice_no' => $invoiceNo,
@@ -329,7 +337,7 @@ public function payableInvoice_update()
 			'super_id' =>  $this->session->userdata('user_details')['super_id']
 			);
 			$where_in[]=array('slip_no'=>$val['slip_no'],'pay_invoice_no'=>$invoiceNo);
-	
+		}
 		}
 		
 		if(!empty($invoiceArray))
