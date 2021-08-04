@@ -158,14 +158,14 @@
 <!--                   	  <th class="head1">Remove</th>-->
                                                         </tr>
                                                     </thead>
-                                                    <tbody>
+                                                    <tbody ng-init = "piece=0">
                                                         
                                                         
                                                         
 
 
-                                                        <tr ng-repeat="data in shipData|reverse " >
-                                                            <td ng-init = "piece = piece + data.piece">{{$index + 1}}</td>
+                                                        <tr ng-repeat="data in shipData|reverse "  >
+                                                            <td ng-init = "piece = piece + parseInt(data.piece)">{{$index + 1}}</td>
 
 
                                                             <td><span class="label label-primary">{{data.cust_name}}</span></td>
@@ -191,7 +191,7 @@
                                                         </tr>
                                                         <tr>
                                                             <th colspan="4"><?=lang('lang_Total');?> </th>
-                                                            <td >{{total.peices}} </td>
+                                                            <td >{{piece}} </td>
                                                             <td> {{total.scaned}}</td>
                                                             <td> {{total.extra}}</td>
 
