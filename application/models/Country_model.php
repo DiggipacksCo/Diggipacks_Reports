@@ -32,12 +32,12 @@ class Country_model extends CI_Model {
         $this->db->where('status', 'Y');
       
         $this->db->where_in("id",$id);
-        $this->db->select("  'Saudi Arabia' as country,`city`, arabic_name as title, `naqel_city_code`, `state`, `aramex_city`, `samsa_city`, `clex`, `esnad_city`, `zajil`, `barq_city`, `moovo`, `sls`, `safe_arrival`, `saudipost_id`, `aymakan`, `tamex_city`, `alamalkon`, `shipsa_city`, `saee_city`, `labaih`, `quickbox`, `fedex_city`,`momentsKsa_city`,`Postagexp_city`,`smsa_egypt_city`,`MMCCO_city`,".$this->session->userdata('user_details')['super_id']." as super_id ");
+        $this->db->select("  'Saudi Arabia' as country,`city`, arabic_name as title, `naqel_city_code`, `state`, `aramex_city`, `samsa_city`, `clex`, `esnad_city`, `zajil`, `barq_city`, `moovo`, `sls`, `safe_arrival`, `saudipost_id`, `aymakan`, `tamex_city`, `alamalkon`, `shipsa_city`, `saee_city`, `labaih`, `quickbox`,".$this->session->userdata('user_details')['super_id']." as super_id ");
         $this->db->from('country_final_master');
        // $this->db->order_by('city','ASC');
        
         $query = $this->db->get();
-      //  echo $this->db->last_query(); exit;
+//        echo $this->db->last_query(); exit;
         return $query->result_array();
 
       }
@@ -343,7 +343,7 @@ class Country_model extends CI_Model {
     
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']); 
         //$this->db->select('id,city,samsa_city,ubreem_city,aramex_city,dots_city,imile_city,naqel_city_code,esnad_city,samana_city,agility_city,descen,aymakan,zajil,clex,rabel_city,speedzi_city,barq_city,labaih,makhdoom,saee_city,ajeek_city,emdad_city,shipsy_city,shipsa_city,tamex_city,alamalkon,latitute,longitute');
-        $this->db->select('id,city,samsa_city,ubreem_city,aramex_city,dots_city,imile_city,naqel_city_code,esnad_city,esnad_city_code,samana_city,agility_city,descen,aymakan,zajil,clex,rabel_city,speedzi_city,barq_city,labaih,makhdoom,saee_city,ajeek_city,emdad_city,shipsy_city,shipsa_city,tamex_city,zid,sala,alamalkon,latitute,longitute,saudipost_id,beez_city,fedex_city,momentsKsa_city,Postagexp_city,smsa_egypt_city,fedex_city_code,bosta_city,MMCCO_city,kwickBox_city,dhl_jones_city,thabit_city,country_code');
+        $this->db->select('id,city,samsa_city,ubreem_city,aramex_city,dots_city,imile_city,naqel_city_code,esnad_city,esnad_city_code,samana_city,agility_city,descen,aymakan,zajil,clex,rabel_city,speedzi_city,barq_city,labaih,makhdoom,saee_city,ajeek_city,emdad_city,shipsy_city,shipsa_city,tamex_city,zid,sala,alamalkon,latitute,longitute,saudipost_id,beez_city,fedex_city,momentsKsa_city,Postagexp_city,smsa_egypt_city,fedex_city_code,bosta_city,MMCCO_city,kwickBox_city,dhl_jones_city,thabit_city,country_code,MICGO_city');
         $this->db->from('country'); 
         if(!empty($filterKey)){
             $this->db->where("city like '%".$filterKey."%'",NULL,FALSE );

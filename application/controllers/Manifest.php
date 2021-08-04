@@ -1673,7 +1673,37 @@ class Manifest extends CourierCompany_pickup {
                        $returnArr['Error_msg'][] = $slipNo . ':Token Not Genrated'; 
                     }
             
-            }elseif ($company_type == 'F') { // for all fastcoo clients treat as a CC 
+            } elseif ($company== 'MICGO') { 
+                
+                            $Auth_token = $this->Ccompany_model->MICGO_AUTH($counrierArr);                           
+
+                            $responseArray = $this->Ccompany_model->MICGOarray($sellername, $ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$Auth_token,$super_id); 
+
+                            $successres = $responseArray['error'];                        
+                            $error_status = $responseArray['message'];
+                        if (empty($successres))
+                        {
+
+                            $client_awb = $responseArray['shipments'][0]['waybill'];
+                            $Label = $responseArray['shipments'][0]['shippingLabelUrl'];
+                             
+                            $generated_pdf = file_get_contents($Label);
+                            
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                            
+                            
+                            $micGoLabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';                             
+                            $CURRENT_DATE = date("Y-m-d H:i:s");
+                            $CURRENT_TIME = date("H:i:s");
+                            $comment = 'MicGo Forwarding';
+                            $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $micGoLabel, $c_id);
+                            array_push($succssArray, $slipNo);                          
+                            $returnArr['Success_msg'][] = $slipNo . ':Successfully Assigned';
+                        } else {
+                            $returnArr['Error_msg'][] = $slipNo . ':' .$error_status;
+                        }
+                    
+                    } elseif ($company_type == 'F') { // for all fastcoo clients treat as a CC 
             
                 if ($company=='Ejack' ) 
                         {
@@ -4443,7 +4473,37 @@ class Manifest extends CourierCompany_pickup {
                                $returnArr['responseError'][] = $slipNo . ':Token Not Genrated'; 
                             }
                         
-                    }elseif ($company == 'SLS'){
+                    } elseif ($company== 'MICGO') { 
+                            $Auth_token = $this->Ccompany_model->MICGO_AUTH($counrierArr);                         
+
+                            $responseArray = $this->Ccompany_model->MICGOarray($sellername, $ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$Auth_token,$super_id);  
+                            $successres = $responseArray['error'];                        
+                            $error_status = $responseArray['message'];
+                        
+                        if (empty($successres))
+                        {
+                            $client_awb = $responseArray['shipments'][0]['waybill'];
+                            $Label = $responseArray['shipments'][0]['shippingLabelUrl'];
+                             
+                            $generated_pdf = file_get_contents($Label);
+                            
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);                            
+                            
+                            $micGoLabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';                             
+                            $CURRENT_DATE = date("Y-m-d H:i:s");
+                            $CURRENT_TIME = date("H:i:s");
+                            $comment = 'MicGo Manifest Return CC';
+                            $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $micGoLabel, $c_id, $dataArray, $ShipArr, $itemData, $super_id);
+                            
+                            $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' : forwarded to MICGO.';
+                            
+                            array_push($succssArray, $slipNo);
+                            
+                        } else {
+                            $returnArr['responseError'][] = $slipNo . ':' .$error_status;
+                        }
+                    
+                    } elseif ($company == 'SLS') {
                         $responseArray = $this->Ccompany_model->SLSArray($sellername, $ShipArr, $counrierArr, $complete_sku, $box_pieces1,$c_id, $super_id);
                         
                        //  echo "<pre>" ; print_r($responseArray); //die;
