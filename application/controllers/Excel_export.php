@@ -1295,6 +1295,8 @@ class Excel_export extends MY_Controller {
                                     $dynmicColumn = 'dhl_jones_city';
                                 if ($colimn == 'KwickBox')
                                     $dynmicColumn = 'kwickBox_city';
+                                if ($colimn == 'MICGO')
+                                    $dynmicColumn = 'MICGO_city';
 
                                 
                                  

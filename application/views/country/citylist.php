@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title><?= lang('lang_All_Users'); ?></title>
+        <title>Update City List</title>
         <?php $this->load->view('include/file'); ?>
     </head>
 
@@ -182,6 +182,9 @@
                                             <?php } ?>
                                             <?php if (GetCourierCompanyStausActive('Thabit') == 'Y') { ?>
                                                 <th class="head1">Thabit</th>
+                                            <?php } ?>
+                                            <?php if (GetCourierCompanyStausActive('MICGO') == 'Y') { ?>
+                                                <th class="head1">MicGo</th>
                                             <?php } ?>
                                             <th class="head1">Country Code</th>
                                             <th class="head1">LAT</th>
@@ -456,6 +459,12 @@
                                                     <td><input type="text" name="thabit_city" id="thabit_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['thabit_city']; ?>" class="form-control">
                                                             <br>
                                                             <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'thabit_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
+                                                        </td>
+                                                     <?php } ?>
+                                                      <?php if (GetCourierCompanyStausActive('MICGO') == 'Y') { ?>
+                                                    <td><input type="text" name="MICGO_city" id="MICGO_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['MICGO_city']; ?>" class="form-control">
+                                                            <br>
+                                                            <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'MICGO_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
                                                         </td>
                                                      <?php } ?>
                                                     <td><input type="text" name="country_code" id="country_code<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['country_code']; ?>" class="form-control">
