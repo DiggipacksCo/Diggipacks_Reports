@@ -425,7 +425,8 @@ class CourierCompany extends MY_Controller  {
                         'sku' => $ShipArr['sku'],
                         'booking_id' => $ShipArr['booking_id'],
                         'old_slip_no'=> $ShipArr['slip_no'],
-                        'sku_data' => $sku_data
+                        'sku_data' => $sku_data,
+                        'pack_type' => $ShipArr['pack_type'],
                     );
                     //print_r($ShipArr);die;
 
@@ -1247,9 +1248,8 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                                         curl_close($ch);
                                     
                                     $xml_data = new SimpleXMLElement(str_ireplace(array("soap:", "<?xml version=\"1.0\" encoding=\"utf-16\"?>"), "", $response));
-                                    //print "<pre>" ;print_r($xml_data);die;
                                     $mediaData = $xml_data->Body->GetWaybillStickerResponse->GetWaybillStickerResult[0];
-                                    //echo "data=".$mediaData;die;    
+                                                 
                                         if (!empty($mediaData)) 
                                         {
                                             $pdf_label = json_decode(json_encode((array) $mediaData), TRUE);
@@ -2098,6 +2098,37 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                         }
                         
                         
+                    }elseif ($company== 'MICGO'){ 
+                            //print "<pre>"; print_r($sku_data);die;
+                            $Auth_token = $this->Ccompany_model->MICGO_AUTH($counrierArr);
+                            $responseArray = $this->Ccompany_model->MICGOarray($sellername, $ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$Auth_token,$super_id);  
+                            $successres = $responseArray['error'];                        
+                            $error_status = $responseArray['message'];
+                            //print "<pre>"; print_r($responseArray);die; 
+                        if (empty($successres))
+                        {
+
+                            $client_awb = $responseArray['shipments'][0]['waybill'];
+                            $Label = $responseArray['shipments'][0]['shippingLabelUrl'];
+                             
+                            $generated_pdf = file_get_contents($Label);
+                            
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                            
+                            
+                            $micGoLabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';                             
+                            $CURRENT_DATE = date("Y-m-d H:i:s");
+                            $CURRENT_TIME = date("H:i:s");   
+                            $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $beezlabel,$c_id);
+                            array_push($succssArray, $slipNo);
+                            $return= array('status'=>200,'label'=> $micGoLabel,'client_awb'=>$client_awb); 
+                            return $return;
+                        }else{
+                            $returnArr['responseError'][] = $slipNo . ':' .$error_status;
+                            $return= array('status'=>201,'error'=> $returnArr); 
+                            return $return;
+                        }
+                    
                     }                           
                     elseif ($company_type== 'F')
                     { // for all fastcoo clients treat as a CC 
