@@ -6389,8 +6389,8 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
 
     {
                 $store_address = $ShipArr['sender_address'];
-                $sender_city = 'Riyadh';//getdestinationfieldshow_auto_array($ShipArr['origin'], 'FDA_city', $super_id);
-                $receiver_city = 'Riyadh';//getdestinationfieldshow_auto_array($ShipArr['destination'], 'FDA_city',$super_id);
+                $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'FDA_city', $super_id);
+                $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'FDA_city',$super_id);
                 $currency = site_configTable("default_currency");//"SAR";
                 $senderemail = $ShipArr['sender_email'];
                 $senderphone = $ShipArr['sender_phone'];
