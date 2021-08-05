@@ -191,7 +191,7 @@
                                                         </tr>
                                                         <tr>
                                                             <th colspan="4"><?=lang('lang_Total');?> </th>
-                                                            <td >{{piece}} </td>
+                                                            <td >{{totalpiece}} </td>
                                                             <td> {{total.scaned}}</td>
                                                             <td> {{total.extra}}</td>
 
