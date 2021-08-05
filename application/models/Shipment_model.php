@@ -1312,6 +1312,13 @@ if(!empty($awbids ))
         if (!empty($awb)) {
             $this->db->where('shipment_fm.slip_no', $awb);
         }
+        if($data['s_type']=='close_date')
+        {
+            if(!empty($data['s_type_val']))
+            {
+             $this->db->where('DATE(shipment_fm.close_date)', $data['s_type_val']);
+            }
+        }
          if (!empty($wh_id)) {
             $this->db->where('shipment_fm.wh_id', $wh_id);
         }
@@ -1378,7 +1385,7 @@ if(!empty($awbids ))
 
             //$data['excelresult']=$this->filterexcel($awb,$sku,$delivered,$seller,$to,$from,$exact,$page_no,$destination,$booking_id); 
             $data['result'] = $query->result_array();
-            $data['count'] = $this->shipmCount($awb, $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination, $booking_id, '', $cc_id,$refsno,$mobileno,$wh_id,$data['order_type']);
+            $data['count'] = $this->shipmCount($awb, $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination, $booking_id, '', $cc_id,$refsno,$mobileno,$wh_id,$data['order_type'],$data);
             return $data;
             // return $page_no.$this->db->last_query();
         } else {
@@ -2193,7 +2200,7 @@ if(!empty($awbids ))
         return 0;
     }
 
-    public function shipmCount($awb, $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination, $booking_id, $backorder = null, $cc_id = null,$refsno=null,$mobileno=null,$wh_id=null,$order_type=null) {
+    public function shipmCount($awb, $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination, $booking_id, $backorder = null, $cc_id = null,$refsno=null,$mobileno=null,$wh_id=null,$order_type=null,$data=array()) {
 
 
         if ($this->session->userdata('user_details')['user_type'] != 1) {
@@ -2263,6 +2270,13 @@ if(!empty($awbids ))
 
         if (!empty($awb)) {
             $this->db->where('shipment_fm.slip_no', $awb);
+        }
+        if($data['s_type']=='close_date')
+        {
+            if(!empty($data['s_type_val']))
+            {
+             $this->db->where('DATE(shipment_fm.close_date)', $data['s_type_val']);
+            }
         }
         
         if (!empty($wh_id)) {
@@ -3851,6 +3865,14 @@ if(!empty($awbids ))
         if (isset($filterData['s_type']) && $filterData['s_type'] == "SKU" && !empty($filterData['s_type_val'])) {
             $sku = $data['s_type_val'];
             $this->db->where('diamention_fm.sku', $sku);
+        }
+        
+         if($filterData['s_type']=='close_date')
+        {
+            if(!empty($filterData['s_type_val']))
+            {
+             $this->db->where('DATE(shipment_fm.close_date)', $filterData['s_type_val']);
+            }
         }
 
         if (!empty($filterData['seller'])) {
