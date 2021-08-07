@@ -1970,9 +1970,24 @@ class Shipment extends MY_Controller {
           foreach( $shipmentdata as $shData)
           {
             $slipRArray[]=$shData['slip_no'];
+            $StatusArray[$key]['user_type'] = 'fulfillment';
+            $StatusArray[$key]['slip_no'] = $shData['slip_no'];
+            $StatusArray[$key]['new_status'] = $shData['delivered'];
+            $StatusArray[$key]['pickup_time'] = date("H:i:s");
+            $StatusArray[$key]['pickup_date'] = date("Y-m-d H:i:s");
+            $StatusArray[$key]['Details'] = "Removed by ". getUserNameById($this->session->userdata('user_details')['user_id']);
+            $StatusArray[$key]['Activites'] = "Forwarding Removed";
+            $StatusArray[$key]['entry_date'] = date("Y-m-d H:i:s");
+            $StatusArray[$key]['user_id'] = $this->session->userdata('user_details')['user_id'];
+            $StatusArray[$key]['user_type'] = 'fulfillment';
+            $StatusArray[$key]['code'] = $shData['code'];
+            $StatusArray[$key]['super_id'] = $this->session->userdata('user_details')['super_id'];
+
           }
           if(!empty( $slipRArray))
           {
+            
+            $this->Shipment_model->DeleteUpdateShipmentData($StatusArray);
             $shipmentdata = $this->Shipment_model->removeForwarding($slipRArray);
            // print_r( $slipRArray); exit; 
            $this->session->set_flashdata('msg', 'Forwarding Removed successfully');
