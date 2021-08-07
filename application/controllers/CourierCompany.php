@@ -1808,28 +1808,23 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                         {
 
                             $client_awb = $responseArray['data']['order_number'];
-                            $WadhaLabel = $this->Ccompany_model->Wadha_label($client_awb, $counrierArr, $Auth_token);
-                            $label= json_decode($WadhaLabel,TRUE);
+                            $FDALabel = $this->Ccompany_model->FDA_label($client_awb, $counrierArr, $Auth_token);
+                            $label= json_decode($FDALabel,TRUE);
                             $media_data = $label['data']['value'];                               
                             $generated_pdf = file_get_contents($media_data);
                             file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
                             $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';  
-
                             $CURRENT_DATE = date("Y-m-d H:i:s");
-                            $CURRENT_TIME = date("H:i:s");                              
-
+                            $CURRENT_TIME = date("H:i:s");                            
                             $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
                             return $return;                           
                         }                            
                         else
                         {
-                            
-                                    $returnArr['responseError'] = $slipNo . ':' . $error_status;
-                                    $return= array('status'=>201,'error'=> $returnArr); 
-                                    return $return;
-
-                            }
-
+                            $returnArr['responseError'] = $slipNo . ':' . $error_status;
+                            $return= array('status'=>201,'error'=> $returnArr); 
+                            return $return;
+                        }
                     }
 
                      elseif ($company == 'MMCCO')
