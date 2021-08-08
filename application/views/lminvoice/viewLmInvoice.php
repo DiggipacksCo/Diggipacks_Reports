@@ -78,9 +78,8 @@
 													<option ng-repeat="sdata in staffDropdata" value="{{sdata.id}}">{{sdata.name}}</option>
 												  </select>
 												<th width="30%"> <?=lang('lang_Invoice_no');?>.: 
-												  <select  class="form-control custom-select" >
-												  <option value=""><?=lang('lang_select');?></option>
-												  </select>
+												  <input type="text"  ng-model="SearArr.invoices" class="form-control " >
+												  
 												   <br>
 												<?=lang('lang_Payment_Mode');?>:
 												  <select class="form-control custom-select  mt-15" ng-model="SearArr.mode">
@@ -191,8 +190,14 @@
 															 <li>
 															<a ng-if="data.discount>0" data-toggle="modal" data-target="#updateLinehoulC51201961561904494" title="DISCOUNT" ng-click="Getpopoprncustdetais(data.pid,'#discounted','one');"><i class="fa fa-tag"></i> Discount</a>	
 											  <a ng-if="data.discount<=0" title="DISCOUNT" ng-click="Getpopoprncustdetais(data.pid,'#discount','one');"> <i class="fa fa-tag"></i> Discount</a>	
+															 </li> 
+															 
+															 <li>
+															<a ng-if="data.receivable_pay_status=='N'" data-toggle="modal" data-target="#updateLinehoulC51201961561904494" title="Edit Discount" ng-click="Getpopoprncustdetais(data.pid,'#discounted','one');"><i class="fa fa-tag"></i> Edit Discount</a>	
 															 </li>   
-
+															 <li>
+															 <a ng-if="data.receivable_pay_status=='N'" data-toggle="modal" data-target="#updateLinehoulC51201961561904494" title="Edit Discount" ng-click="Getpopoprncustdetais(data.pid,'#bank_fees_edit','one');"><i class="fa fa-tag"></i> Edit Bank Fees</a>	
+															 </li> 
                                                              
 
 
@@ -354,7 +359,36 @@
                     </div>
              
                
-				<button style="margin-top: 30px;" type="submit" class="btn btn-info" name="update_linehoul" ng-click="payableInvoice_update(editcodlistArray);"> <?=lang('lang_Update');?></button>  
+				<button style="margin-top: 30px;" type="submit" class="btn btn-info" name="update_linehoul" > <?=lang('lang_Update');?></button>  
+					
+			   </div>
+           </form>
+        </div>
+    </div>
+</div>
+<div class="modal" id="bank_fees_edit" tabindex="-1" role="dialog" aria-labelledby="payable_invoice" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"  dir="ltr">Bank Fees Edit#({{editcodlistArray.invoice_no}})</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+          
+			<div class="modal-body">
+   					<div class="col-md-8">
+					   <form action="<?=base_url();?>LastmileInvoice/bankFeesUpdate" method="post" enctype= 'multipart/form-data'>
+                 		<div class="form-group">
+						 <input type="hidden" name="invoice_no" value="{{editcodlistArray.invoice_no}}">
+							 <input type="hidden" name="cust_id" value="{{editcodlistArray.cust_id}}">
+                   		 <label>Bank Fees Edit </label>
+                    	<input type="text" name="bank_fees" class="form-control" ng-model="editcodlistArray.bank_fees" required="">
+                    	</div>
+                    </div>
+             
+               
+				<button style="margin-top: 30px;" type="submit" class="btn btn-info" name="update_linehoul" > <?=lang('lang_Update');?></button>  
 					
 			   </div>
            </form>

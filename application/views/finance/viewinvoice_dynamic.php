@@ -303,7 +303,13 @@
 								<?=$totalValue['pallet_charge'];?>
 							</td>
 						</tr>
-						
+						<tr>
+							<th align="justify">Total Fees before VAT   - إجمالي الرسوم قبل ضريبة القيمة المضافة </th>
+							<th align="center"><?= $currency; ?>
+								<?=$TOTAL?>
+							</th>
+						</tr>
+						<tr>
 						<tr>
 							<td align="justify">Discount / الخصم</td>
 							<td align="center"><?= $currency; ?>

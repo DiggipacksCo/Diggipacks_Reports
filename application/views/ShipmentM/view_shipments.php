@@ -88,7 +88,7 @@
                                                         <select  id="s_type" name="s_type" ng-model="filterData.s_type" class="selectpicker"  data-width="100%" >
 
                                                             <option value="AWB"><?=lang('lang_AWB');?></option>
-                                                            <option value="close_date">Close Date</option>
+<!--                                                            <option value="close_date">Close Date</option>-->
 
 
                                                         </select>
@@ -182,6 +182,7 @@
 
                                                     </div>
                                                 </div>
+                                                
                                                 <div class="col-md-3">  <div class="form-group" ><strong><?=lang('lang_Main');?>  <?=lang('lang_Status');?>:</strong>
                                                         <br>
                                                         <select  id="status" name="status" ng-model="filterData.status" class="selectpicker" multiple data-show-subtext="true" data-live-search="true" data-width="100%" >
@@ -236,6 +237,18 @@
                                             </div>
                                             <div class="col-lg-12" style="padding-left: 20px;padding-right: 20px;">
                                                 
+                                                 <div class="col-md-3"> 
+                                                    <div class="form-group" ><strong><?=lang('lang_From');?>:</strong>
+                                                        <input class="form-control date" id="from" name="from" ng-model="filterData.from_c" placeholder="From Close Date" class="form-control"> 
+
+                                                    </div> 
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group" ><strong><?=lang('lang_To');?>:</strong>
+                                                        <input class="form-control date" id="to" name="to"  ng-model="filterData.to_c" placeholder="To Close Date" class="form-control"> 
+
+                                                    </div>
+                                                </div>
                                                  <div class="col-md-2" style="margin-top: 20px;"><div class="form-group" >
                                                         <select class="form-control"  ng-model="filterData.sort_list" ng-change="loadMore(1, 1);">
 
@@ -319,7 +332,9 @@
                                                 <th><?=lang('lang_No_of_Attempt');?></th>
                                                 <th><?=lang('lang_tpl_Pickup_Date');?></th>
                                                 <th><?=lang('lang_tpl_Closed_Date');?></th>
+                                                 <th>Close Date</th>
                                                 <th><?=lang('lang_Transaction');?> <?=lang('lang_Day');?></th>
+                                                 
                                                 <th>Transaction Timer</th>
                                                 <th class="text-center" ><i class="icon-database-edit2"></i></th>
                                             </tr>  
@@ -353,6 +368,7 @@
                                             <td>{{data.no_of_attempt}}</td>
                                             <td>{{data.pl3_pickup_date}}</td>
                                             <td>{{data.pl3_closed_date}}</td>
+                                             <td>{{data.close_date}}</td>
                                             <td>{{data.transaction_days}}</td>
                                             <td >
 
