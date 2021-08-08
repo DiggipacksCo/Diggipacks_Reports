@@ -1,7 +1,8 @@
 <?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+error_reporting(-1);
+		ini_set('display_errors', 1);
 class Zid extends CI_Controller {
 
     public function __construct() {
@@ -47,6 +48,7 @@ class Zid extends CI_Controller {
         private function zidOrders($uniqueid,$postData) {
             $Order=$postData;
             $customers = $this->Zid_model->fetch_zid_customers($uniqueid);
+           
            // $customers['zid_status']='Ready';
             //print_r($postData); exit;
              $deliveryOption=deliveryOption($customers['id']); 
@@ -115,8 +117,8 @@ class Zid extends CI_Controller {
                        // echo 'xxxxx'; exit;
                         $result1['order'] = $Order; 
                     
-                    
-                   
+                  //  echo  $customers['zid_status'];
+                  // print_r( $result1); exit;
                  
                     if ($result1['order']['order_status']['code'] == $customers['zid_status'] && ( trim($result1['order']['shipping']['method']['name']) ==  trim($deliveryOption) || trim($result1['order']['shipping']['method']['name'])=='DIGGIPACKS' ) ) 
                     {
@@ -187,7 +189,7 @@ class Zid extends CI_Controller {
                             "customerId" => $customerId,
                         );
 
-                        $dataJson = json_encode($data_array);
+                        $dataJson = json_encode($data_array); 
                     
                       
                         if ($customers['zid_access'] == 'FM') {

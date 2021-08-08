@@ -1127,6 +1127,20 @@ if (!function_exists('site_configTable')) {
 
 }
 
+if (!function_exists('site_configTableSuper_id')) {
+
+    function site_configTableSuper_id($field = null,$super_id=null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        $sql = "select $field from site_config where super_id='" . $super_id. "'";
+        $query = $ci->db->query($sql);
+        //echo $ci->db->last_query();exit;
+        $result = $query->row_array();
+        return $result[$field];
+    }
+
+}
+
 if (!function_exists('site_config')) {
 
     function site_config($url = null) {
