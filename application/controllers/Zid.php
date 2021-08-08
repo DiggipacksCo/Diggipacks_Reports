@@ -11,12 +11,18 @@ class Zid extends CI_Controller {
         $this->load->helper('zid_helper');
         $this->load->model('Zid_model');
     }
-    public function getOrder($uniqueid) {
-        // error_reporting(-1);
-		// ini_set('display_errors', 1);
-     
+    public function getOrder($uniqueid) { 
+        $_POST = json_decode(file_get_contents('php://input'), true);
+        $dataJson = json_encode($_POST);
+        //==================log write start========
+        
+        $fr = fopen('zidLog/zid'. $_POST['id'] . '.json', 'w+');
+        fwrite($fr, $dataJson);
+         
+        fclose($fr);
+
         ignore_user_abort();
-        $file = fopen("/var/www/html/diggipack_new/zidlock/zidcron.".$uniqueid.".lock", "w+");;
+        $file = fopen("zidlock/zidcron".$_POST['id'].".lock", "w+");;
 
         // exclusive lock, LOCK_NB serves as a bitmask to prevent flock() to block the code to run while the file is locked.
         // without the LOCK_NB, it won't go inside the if block to echo the string
@@ -27,104 +33,87 @@ class Zid extends CI_Controller {
         else
         {
             //Lock obtained, start doing some work now
-            sleep(10);//sleep for 10 seconds
-            $this->zidOrders($uniqueid);
+           // sleep(10);//sleep for 10 seconds
+            $this->zidOrders($uniqueid,$_POST); exit;
             echo "Work completed!";
              // release lock
             flock($file,LOCK_UN);
         }
 
         fclose($file);
-        /*
-        $filehandle = fopen("/var/www/html/fastcoo-tech/zidcron.lock", "c+");
-
-      
-        $filehandle = fopen("/var/www/html/fastcoo-tech/zidcron.lock", "w+");
- 
-        if (flock($filehandle, LOCK_EX | LOCK_NB)) {
-            $this->zidOrders($uniqueid);
-            sleep(10);
-            flock($filehandle, LOCK_UN);  // don't forget to release the lock
-        } else {
-            $myfile = fopen("/var/www/html/fastcoo-tech/zidlogs.txt", "a") or die("Unable to open file!");
-            $txt = $uniqueid ."==cron run at: " . date('Y-m-d H:i:s');
-            fwrite($myfile, "\n" . $txt);
-            fclose($myfile);
-            // throw an exception here to stop the next cron job
-        }
-
-        fclose($filehandle);
-         
-         */
-        
     }
 
-    private function zidOrders($uniqueid) {
 
-        $customers = $this->Zid_model->fetch_zid_customers($uniqueid);
-        echo $deliveryOption=deliveryOption($customers['id']); 
-        $user_agent = "Fastcoo/1.00.00 (web)"; //$customers['user_Agent'];
-        $manager_token = $customers['manager_token'];
-        $Bearer = $this->config->item('zid_authorization');
-        $store_link = "https://api.zid.sa/v1/managers/store/orders?per_page=100&sort_by=asc&order_status=" . $customers['zid_status'];
-        $ZidTotalOrders = ZidcURL($manager_token, $user_agent, $store_link, 0,$Bearer);
-        $pageCount = ceil($ZidTotalOrders / 100);
-
-        for ($i = 1; $i <= $pageCount; $i++) {
-            $store_link = "https://api.zid.sa/v1/managers/store/orders?per_page=100&sort_by=asc&order_status=" . $customers['zid_status'] . "&page=" . $i;
-            $ZidOrders = ZidcURL($manager_token, $user_agent, $store_link, $i,$Bearer);
- 
-           
-        //     echo '<pre>'.$customers['zid_status'];
-        //     print_r( $customers);
-        //    print_r( $ZidOrders); die(); 
-          
- 
-            foreach ($ZidOrders['orders'] as $Order) {
+        private function zidOrders($uniqueid,$postData) {
+            $Order=$postData;
+            $customers = $this->Zid_model->fetch_zid_customers($uniqueid);
+           // $customers['zid_status']='Ready';
+            //print_r($postData); exit;
+             $deliveryOption=deliveryOption($customers['id']); 
+            $manager_token = $customers['manager_token'];
+            $Bearer = site_configTableSuper_id('zid_provider_token',$customers['super_id']); 
               
-                $secKey = $customers['secret_key'];
-                $customerId = $customers['uniqueid'];
-                $formate = "json";
-                $method = "createOrder";
-                $signMethod = "md5";
-                $product = array();            
-              
-                $booking_id = $Order['id'];
-
-              // echo "<pre>";  print_r($customers['id']);  die; 
-
-                if ($customers['access_fm'] == 'Y') {
-                    $check_booking_id = exist_booking_id($booking_id, $customers['id']);
-                }
-
-                if ($customers['access_lm'] == 'Y') {
-                    $check_booking_id = $this->Zid_model->existLmBookingId($booking_id, $customers['id']);
-                }
-
-                if (!empty($check_booking_id)) {
-
                   
+                    $secKey = $customers['secret_key'];
+                    $customerId = $customers['uniqueid'];
+                    $formate = "json";
+                    $method = "createOrder";
+                    $signMethod = "md5";
+                    $product = array();
+                 
+                  
+                 $booking_id = $Order['id'];
                    
-                    // if($check_booking_id['code']=='POD')
-                    // {
+                   
+                   
+    
+                    if ($customers['access_fm'] == 'Y') {
+                        $check_booking_id = exist_booking_id($booking_id, $customers['id']);
+    
+                        print_r( $check_booking_id);
+                    }
+    
+                    if ($customers['access_lm'] == 'Y') {
+                        $check_booking_id = $this->Zid_model->existLmBookingId($booking_id, $customers['id']);
+                        print_r( $check_booking_id);
+                    }
+    
+                    if (!empty($check_booking_id)) {
+    
+                      
                        
-                    // // if(!empty($check_booking_id['frwd_company_label']))
-                    // // $lable=$check_booking_id['frwd_company_label'];
-                    // // else
-                    // // $lable='https://api.fastcoo-tech.com/API/print/'.$check_booking_id['slip_no'];
-
-
-                    // // $trackingurl=makeTrackUrl($check_booking_id['cc_id'],$check_booking_id['frwd_company_awb']);
-                  
-                    
-                    // updateZidStatus($booking_id, $manager_token, 'delivered', $check_booking_id['slip_no'], $lable, $trackingurl);
-                    // }
-                    echo $booking_id . ' Exist<br>';
-
-                } else {
-
-                    $result1 = Zid_Order_Details($booking_id, $manager_token, $user_agent); 
-
+                        if($check_booking_id['code']=='POD')
+                        {
+                           
+                        // if(!empty($check_booking_id['frwd_company_label']))
+                        // $lable=$check_booking_id['frwd_company_label'];
+                        // else
+                        // $lable='https://api.fastcoo-tech.com/API/print/'.$check_booking_id['slip_no'];
+    
+    
+                        // $trackingurl=makeTrackUrl($check_booking_id['cc_id'],$check_booking_id['frwd_company_awb']);
+                      
+                        
+                        // updateZidStatus($booking_id, $manager_token, 'delivered', $check_booking_id['slip_no'], $lable, $trackingurl);
+                        }
+                        elseif($check_booking_id['code']=='B')
+                        {
+                        //     $lable='https://api.fastcoo-tech.com/API/print/'.$check_booking_id['slip_no'];
+    
+                        //     $trackingurl=TRACKURL_LM.$check_booking_id['awb_no'];
+       
+                        //    // $trackingurl=makeTrackUrl($check_booking_id['cc_id'],$check_booking_id['frwd_company_awb']);
+                         
+                           
+                        //     updateZidStatus($booking_id, $manager_token, 'preparing', $check_booking_id['awb_no'], $lable, $trackingurl);
+           
+                        }
+    
+                        echo $booking_id . ' Exist<br>';
+                    } else {
+    
+                       // echo 'xxxxx'; exit;
+                        $result1['order'] = $Order; 
                     
                     
                    
@@ -199,21 +188,7 @@ class Zid extends CI_Controller {
                         );
 
                         $dataJson = json_encode($data_array);
-                    //   echo "dataJson =  ".$dataJson;
-                    //   echo "<br><br>"; 
-                    //    echo $customers['zid_access'];
-                    // if($booking_id == 7275499 )
-                    //     {
-                    //         echo '<pre>';
-                    //         echo '<br>'.$result1['order']['order_status']['code'];
-                    //         echo '<br>'.print_r($result1['order']['shipping']['method']['name']);
-                    //         echo '<br>'. trim($deliveryOption);
-                    //         echo '<br>'.$customers['zid_status'];
-                    //         print_r( $customers);  
-                           
-                    //         echo $customers['zid_access'];
-                    //         die();
-                    //     }
+                    
                       
                         if ($customers['zid_access'] == 'FM') {
 
@@ -236,8 +211,8 @@ class Zid extends CI_Controller {
                         }
                         print_r($resps); 
                     }
-                }
-            }
+                
+            
         }
     }
 
@@ -263,45 +238,6 @@ class Zid extends CI_Controller {
     }
 
 
-    private function orderCurl($url, $dataJson) {
-        if ($_SERVER['HTTP_HOST'] == "localhost") {
-            $file_path = $_SERVER['DOCUMENT_ROOT'] . '/fastcootech/fullfillment/';
-        } else {
-            $file_path = $file_path = $_SERVER['DOCUMENT_ROOT'] . '/';
-        }
-
-        $filehandle = fopen($file_path . "zidcron.lock", "c+");
-        if (flock($filehandle, LOCK_EX | LOCK_NB)) {
-            /* order create by cron start */
-            $headers = array(
-                "Content-type: application/json",
-            );
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $dataJson);
-
-            $response = curl_exec($ch);
-
-            echo '<pre>';
-            echo $response;
-            /* order create by cron end */
-
-            flock($filehandle, LOCK_UN);  // don't forget to release the lock
-        } else {
-            $myfile = fopen($file_path . "zidcron.txt", "a") or die("Unable to open file!");
-            $txt = "cron run at: " . date('Y-m-d H:i:s');
-            fwrite($myfile, "\n" . $txt);
-            fclose($myfile);
-            // throw an exception here to stop the next cron job
-        }
-
-        fclose($filehandle);
-    }
 
 }
 
