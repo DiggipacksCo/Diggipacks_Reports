@@ -27,7 +27,7 @@ phpqrcode/cache/
 user_guide/
 nbproject/
 zidLock/
-zidlog/
+zidLog/
 # Compiled Java class files
 *.class
 
