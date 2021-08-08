@@ -54,7 +54,7 @@ class Seller extends MY_Controller {
         if ($this->input->post('salla_active') == 'Y') {
             $this->form_validation->set_rules("salla_manager_token", 'X-MANAGER-TOKEN ', 'required');
         }
-        if ($this->form_validation->run() == FALSE) {
+        if ($this->form_validation->run() == FALSE) { 
 
             $this->add_view();
         } else {
@@ -544,84 +544,114 @@ $u_type = $this->input->post('u_type');
     }
 
     public function ZidProducts($id) {
-
         $data['zidproducts'] = $this->Seller_model->zidproduct($id);
         $storeID = $data['zidproducts'];
-        $store_link = "https://api.zid.sa/v1/products/";
-        $bearer = $this->config->item('zid_authorization');
-        $ZidProductRT = ZidPcURL($storeID, $store_link, $bearer);
+        $token = GetallCutomerBysellerId($id, 'manager_token');
+        $store_link = "https://api.zid.dev/app/v2/products";
+        $bearer = site_configTable('zid_provider_token');
+        $ZidProductRT = ZidPcURL($storeID, $store_link, $bearer,$token); 
 
-        //echo "<pre>"; print_r( $ZidProductRT); die; 
-
+       // print_r( $ZidProductRT); exit;
         $ZidProductArr_total = json_decode($ZidProductRT, true);
 
         $total_pages = 1;
-        if ($ZidProductArr_total['count'] > 10) {
-            $total_pages = ceil($ZidProductArr_total['count'] / 10);
+        if ($ZidProductArr_total['count'] > 50) {
+            $total_pages = ceil($ZidProductArr_total['count'] / 50);
         }
-
+         if(empty($this->input->post('i')))
+         {
+            $i = 1;    
+         }
+         else
+         {
+            $i = $this->input->post('i');      
+         }
         $results = array();
         $results2 = array();
         $p = 0;
         $s = 0;
-        for ($i = 1; $i <= $total_pages; $i++) {
-            $storlink_page = "https://api.zid.sa/v1/products/?page=" . $i;
-            $ZidProductArr = ZidPcURL($storeID, $storlink_page, $bearer);
+       
+            $storlink_page = "https://api.zid.dev/app/v2/products?page=" . $i;
+            $ZidProductArr = ZidPcURL($storeID, $storlink_page, $bearer,$token); 
             $ZidProductArr = json_decode($ZidProductArr, true);
 
             if (isset($ZidProductArr['results'])) {
                 foreach ($ZidProductArr['results'] as $key => $products) {
 
                     if (isset($products['structure']) && $products['structure'] == 'parent') {
-                        $product_link = $store_link . $products['id'];
+                      $product_link = $store_link .'/'. $products['id'].'/';
+                        
 
-                        $product = json_decode(ZidPcURL($storeID, $product_link, $bearer), true);
-
+                        $product = json_decode(ZidPcURL($storeID, $product_link, $bearer,$token), true);
+                       // print_r($product); exit;
+                       if(!empty( $product)){
                         if (count($product['variants']) > 0) {
-                            foreach ($product['variants'] as $variant) {
+                            foreach ($product['variants'] as $key=>$variant) {
 
                                 $results[] = $variant;
+                             
                             }
                         } else {
                             $results[] = $product;
+                          
                         }
+                    }
                     } else {
 
                         $results2[] = $products;
+                       
                     }
                 }
-            }
+            
         }
 
         $final_Arr = array_merge($results, $results2);
+        // echo '<pre>';
+        // print_r( $results); exit;
 
         $ZidProducts['products'] = $final_Arr;
+        $ZidProducts['total_pages'] = $total_pages;
+        $ZidProducts['current_page'] = $i;
+        $ZidProducts['seller_id'] = $id;
+        
+        
 
         $this->load->view('SellerM/view_zidp', $ZidProducts);
+
     }
 
     public function SaveZidProducts() {
               
         foreach ($this->input->post('selsku') as  $value) {
           
+
             $skuarray = array();
+            $editData = array();
+            //echo $this->input->post('image')[$value]; exit;
+            file_put_contents('assets/item_uploads/'.$this->input->post('sku')[$value].'.jpg',  file_get_contents($this->input->post('image')[$value]));
             $skuarray = array(
                 'sku' => $this->input->post('sku')[$value],
                 'zid_pid' => $this->input->post('pid')[$value],
                 'name' => $this->input->post('skuname')[$value],
                 'super_id' => $this->session->userdata('user_details')['super_id'],
-                'description' => $this->input->post('sku')[$value],
+                'description' => $this->input->post('description')[$value],
                 'type' => 'B2C',
                 'storage_id' => $this->input->post('storageid'),
                 'wh_id' => $this->input->post('warehouseid'),
                 'sku_size' => $this->input->post('sku_size'),
-                'entry_date' => date("Y-m-d H:i:s")
+                'entry_date' => date("Y-m-d H:i:s"),
+                'item_path'=>'assets/item_uploads/'.$this->input->post('sku')[$value].'.jpg'
+            );
+            $editData= array(
+                'name' => $this->input->post('skuname')[$value],
+                'zid_pid' => $this->input->post('pid')[$value],
+                'item_path'=>'assets/item_uploads/'.$this->input->post('sku')[$value].'.jpg'
+               
             );
          
            $exist_zidsku_id = exist_zidsku_id($this->input->post('sku')[$value], $this->session->userdata('user_details')['super_id']);
-
             if ($exist_zidsku_id != '' || $exist_zidsku_id != 0) {
-                echo $product['sku'] . ' Exist<br>';
+                $this->Item_model->edit($exist_zidsku_id,$editData);
             } else {
                 AddSKUfromZid($skuarray);
             }
