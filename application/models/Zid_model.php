@@ -15,6 +15,7 @@ class Zid_model extends CI_Model {
         $this->db->where('zid_active', 'Y');
         $this->db->where('manager_token !=', '');
         $query = $this->db->get('customer');
+     // echo  $this->db->last_query();
         if ($query->num_rows() > 0) {
             return $query->row_array();
         }

@@ -26,6 +26,8 @@ assets/semantic/
 phpqrcode/cache/
 user_guide/
 nbproject/
+zidLock/
+zidLog/
 # Compiled Java class files
 *.class
 

@@ -829,23 +829,22 @@ $u_type = $this->input->post('u_type');
          // $delivery_options[0]['id']
         if ($customer['zid_status'] == 'new') {
             $event = "order.create";
-            $condition = json_encode(array('status'=>'new','delivery_option_id'=> $delivery_options[0]['delivery_id']));;
+            $condition = json_encode(array('status'=>'new','delivery_option_id'=>$delivery_options[0]['delivery_id']));;
         } else {
             $event = "order.status.update";
             $condition = json_encode(array('status'=>'ready','delivery_option_id'=>$delivery_options[0]['delivery_id']));
         }
-       
+      // echo  $subscribe = site_configTable('company_name'); die; 
         if ($customer['zid_active'] == 'Y') {
-
             $subscribe = site_configTable('company_name');
             $arr = array(
                 "event" => $event,
                 "target_url" => $this->config->item('zid_order_target_url') . '/' . $customer['uniqueid'],
                 "original_id" => $customer['uniqueid'],
-                "subscriber" => $subscribe,
+                "subscriber" =>  $subscribe,
                 "conditions" => $condition
             );
-           // echo "<pre>"; print_r($arr); die; 
+
             
 
             $curl = curl_init();
@@ -863,14 +862,13 @@ $u_type = $this->input->post('u_type');
                     "Accept: en",
                     "Accept-Language: en",
                     "X-MANAGER-TOKEN: " . $customer['manager_token'],
-                    "Authorization:Bearer " . $this->config->item('zid_authorization'),
+                    "Authorization:Bearer " . site_configTable('zid_provider_token'),
                     "User-Agent: Fastcoo/1.00.00 (web)"
                 ),
             ));
 
             $response = json_decode(curl_exec($curl));
             curl_close($curl);
-           
             if ($response->status != "validation_error" || $response->status == "object") {
                 return true;
             } else {
@@ -881,11 +879,8 @@ $u_type = $this->input->post('u_type');
 
     private function zidWebhookSubscriptionDelete($customer) {
         $subscribe = site_configTable('company_name');
-
-        // echo "https://api.zid.dev/app/v2/managers/webhooks?subscriber=".$subscribe."&original_id=" . $customer['uniqueid']";
-        // die; 
         $curl = curl_init();
-  
+        
         curl_setopt_array($curl, array(
             CURLOPT_URL => "https://api.zid.dev/app/v2/managers/webhooks?subscriber=".$subscribe."&original_id=" . $customer['uniqueid'],
             CURLOPT_RETURNTRANSFER => true,
@@ -899,7 +894,7 @@ $u_type = $this->input->post('u_type');
                 "Accept: en",
                 "Accept-Language: en",
                 "X-MANAGER-TOKEN: " . $customer['manager_token'],
-                "Authorization:Bearer " . $this->config->item('zid_authorization'),
+                "Authorization:Bearer " . site_configTable('zid_provider_token'),
                 "User-Agent: Fastcoo/1.00.00 (web)"
             ),
         ));
@@ -912,14 +907,14 @@ $u_type = $this->input->post('u_type');
         }
         return false;
     }
-
     public function getZidWebHooks() {
         $id = $this->input->post('cust_id');
         $customer = $this->Seller_model->edit_view_customerdata($id);
         $curl = curl_init();
-
+         //echo site_configTable('zid_provider_token'); exit;
         curl_setopt_array($curl, array(
             CURLOPT_URL => "https://api.zid.dev/app/v2/managers/webhooks",
+           
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -931,7 +926,7 @@ $u_type = $this->input->post('u_type');
                 "Accept: en",
                 "Accept-Language: en",
                 "X-MANAGER-TOKEN: " . $customer['manager_token'],
-                "Authorization:Bearer " . $this->config->item('zid_authorization'),
+                "Authorization:Bearer " . site_configTable('zid_provider_token'),
                 "User-Agent: Fastcoo/1.00.00 (web)"
             ),
         ));
@@ -942,6 +937,7 @@ $u_type = $this->input->post('u_type');
         echo $response;
         exit();
     }
+
 
     /**
      * @param type $id
@@ -1103,8 +1099,8 @@ $u_type = $this->input->post('u_type');
 
         if ($this->input->post('deliver_option')) {
             $cust_id = $this->input->post('id');
-            //  ECHO "<PRE>";
-            //   print_r($this->input->post('zid_city')); exit;
+            
+            
             $rdata = array(         
                 'name' => $this->input->post('zid_delivery_name'),
                 'cost' => $this->input->post('zid_delivery_cost'),
@@ -1114,9 +1110,8 @@ $u_type = $this->input->post('u_type');
                 'delivery_estimated_time_ar' => $this->input->post('delivery_estimated_time_ar'),
                 'delivery_estimated_time_en' => $this->input->post('delivery_estimated_time_en'),
             );
-         // ECHO "<PRE>";
+         //  ECHO "<PRE>";print_r($rdata);die;
              $customer = $this->Seller_model->edit_view_customerdata($cust_id);
-             //print_r($customer);
              $request = json_encode($rdata);
              
                 $curl = curl_init();
@@ -1134,7 +1129,7 @@ $u_type = $this->input->post('u_type');
                         //"Accept: en",
                         "Accept-Language: en",
                         "X-MANAGER-TOKEN: " . $customer['manager_token'],
-                        "Authorization:Bearer eyJ4NXQiOiJNell4TW1Ga09HWXdNV0kwWldObU5EY3hOR1l3WW1NNFpUQTNNV0kyTkRBelpHUXpOR00wWkdSbE5qSmtPREZrWkRSaU9URmtNV0ZoTXpVMlpHVmxOZyIsImtpZCI6Ik16WXhNbUZrT0dZd01XSTBaV05tTkRjeE5HWXdZbU00WlRBM01XSTJOREF6WkdRek5HTTBaR1JsTmpKa09ERmtaRFJpT1RGa01XRmhNelUyWkdWbE5nX1JTMjU2IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJoYXJpQGZhc3Rjb28uY29tQGNhcmJvbi5zdXBlciIsImF1dCI6IkFQUExJQ0FUSU9OIiwiYXVkIjoiN0ZlcjRpZGthZkNpaDV6bnVYR3g0Tk9mRXZ3YSIsIm5iZiI6MTYxOTAxMzc0NiwiYXpwIjoiN0ZlcjRpZGthZkNpaDV6bnVYR3g0Tk9mRXZ3YSIsInNjb3BlIjoiU2hpcHBpbmctUGFydG5lcnMiLCJpc3MiOiJodHRwczpcL1wvcG9ydGFsLnppZC5kZXY6NDQzXC9vYXV0aDJcL3Rva2VuIiwiZXhwIjoxNjUwNTcwNjcyLCJpYXQiOjE2MTkwMTM3NDYsImp0aSI6ImFjMzNmNWMyLTE1MDItNGUwYi05MWI1LTBiNmIxZTllMTBhNCJ9.crd3muE0AU1lOxSdfi0LAzd6vTw_ae6FCilR-X44nt3Uzp_-aR6pR3N0GV8A8AI9PLOu0RnRUjWXr2nS8fHMgijRNd910z2nowlqJ1g_xLb3wtLj7vwpXurvHP6Hy9-wG8vHUKNXy2QAU7ei-ToQsUMW-2CGlyzjFR64p8yQmFc5DzK6GmEO4JQ_tbbciz7BAmjdyzM8vyV01AqRiyLxN3yS_imTLAVqZpm8yAjYrcM3EdE9sS1W9JpQcjGovriLKFl3Z6-u0kb9SFDI9jP-wmVmSJ1lfEBgPCrzPGXWa5GQuCoIG7CMZBP0WSlL6Zu_v8Pq5lnTXHQegWmxLZ5x8A",
+                        "Authorization:Bearer ".site_configTable('zid_provider_token'),
                         "Content-Type: application/json"
                     ),
                 ));
@@ -1155,15 +1150,16 @@ $u_type = $this->input->post('u_type');
                         'delivery_id' => $deliver_id
                     );
                     
-                    $this->Seller_model->zidDeliveryOptionUpdate($data); 
+                    $this->Seller_model->zidDeliveryOptionUpdate($data);
                 }
                
-            //die();
+            
                 
                 $this->session->set_flashdata('msg', 'Data been updated successfully');
-                redirect('Seller/updateZidConfig/'.$cust_id);
+                redirect('Seller');
         }
     }
+    
     public function getZidDeliveryOptions($id)
     {
         $customer = $this->Seller_model->edit_view_customerdata($id);
@@ -1179,11 +1175,11 @@ $u_type = $this->input->post('u_type');
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "GET",
             CURLOPT_HTTPHEADER => array(
-                "Accept: en",
+                //"Accept: en",
                 "Accept-Language: en",
                 "X-MANAGER-TOKEN: " . $customer['manager_token'],
-                "Authorization:Bearer eyJ4NXQiOiJNell4TW1Ga09HWXdNV0kwWldObU5EY3hOR1l3WW1NNFpUQTNNV0kyTkRBelpHUXpOR00wWkdSbE5qSmtPREZrWkRSaU9URmtNV0ZoTXpVMlpHVmxOZyIsImtpZCI6Ik16WXhNbUZrT0dZd01XSTBaV05tTkRjeE5HWXdZbU00WlRBM01XSTJOREF6WkdRek5HTTBaR1JsTmpKa09ERmtaRFJpT1RGa01XRmhNelUyWkdWbE5nX1JTMjU2IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJoYXJpQGZhc3Rjb28uY29tQGNhcmJvbi5zdXBlciIsImF1dCI6IkFQUExJQ0FUSU9OIiwiYXVkIjoiN0ZlcjRpZGthZkNpaDV6bnVYR3g0Tk9mRXZ3YSIsIm5iZiI6MTYxOTAxMzc0NiwiYXpwIjoiN0ZlcjRpZGthZkNpaDV6bnVYR3g0Tk9mRXZ3YSIsInNjb3BlIjoiU2hpcHBpbmctUGFydG5lcnMiLCJpc3MiOiJodHRwczpcL1wvcG9ydGFsLnppZC5kZXY6NDQzXC9vYXV0aDJcL3Rva2VuIiwiZXhwIjoxNjUwNTcwNjcyLCJpYXQiOjE2MTkwMTM3NDYsImp0aSI6ImFjMzNmNWMyLTE1MDItNGUwYi05MWI1LTBiNmIxZTllMTBhNCJ9.crd3muE0AU1lOxSdfi0LAzd6vTw_ae6FCilR-X44nt3Uzp_-aR6pR3N0GV8A8AI9PLOu0RnRUjWXr2nS8fHMgijRNd910z2nowlqJ1g_xLb3wtLj7vwpXurvHP6Hy9-wG8vHUKNXy2QAU7ei-ToQsUMW-2CGlyzjFR64p8yQmFc5DzK6GmEO4JQ_tbbciz7BAmjdyzM8vyV01AqRiyLxN3yS_imTLAVqZpm8yAjYrcM3EdE9sS1W9JpQcjGovriLKFl3Z6-u0kb9SFDI9jP-wmVmSJ1lfEBgPCrzPGXWa5GQuCoIG7CMZBP0WSlL6Zu_v8Pq5lnTXHQegWmxLZ5x8A",
-                       
+                "Authorization:Bearer ".site_configTable('zid_provider_token'),
+                "Content-Type: application/json"
             ),
         ));
 
