@@ -150,6 +150,24 @@ public function discountUpdate()
 		redirect(base_url('viewLmInvoice'));
     }
 
+	public function bankFeesUpdate()
+    {
+            
+            $dataArray=$dataArray= $this->input->post();
+			//print_r($dataArray);
+            $invoice_no = $dataArray['invoice_no'];
+			$bank_fees = $dataArray['bank_fees'];
+		$CURRENT_DATE=date("Y-m-d H:i:s");
+			 
+		$updateinvoiceAarrayW=array('invoice_no'=>$dataArray['invoice_no'],'cust_id'=>$dataArray['cust_id'],'bank_fees'=>$bank_fees);
+		$res_data=$this->LastMile_model->addInvoiceUpdateDiscount($updateinvoiceAarrayW); 
+            
+		$this->session->set_flashdata('msg', 'Bank Fees updated!'); 
+
+			
+		redirect(base_url('viewLmInvoice'));
+    }
+
 
 public function payableInvoice_update()
     {

@@ -62,7 +62,7 @@ class LastMile_model extends CI_Model {
 	public function addInvoiceUpdateDiscount($data=array())
     {
         $this->db->update('Payable_invoice_fm',$data,array('invoice_no'=>$data['invoice_no']));
-   // echo $this->db->last_query(); exit;
+// echo $this->db->last_query(); exit;
 	
         return true;
         
@@ -142,8 +142,8 @@ class LastMile_model extends CI_Model {
 				}
 				if(!empty($data['invoices']))
 				{
-					 $invoices=implode("','",$data['invoices']); 
-					 $cond5="(Payable_invoice.invoice_no IN ('".$invoices."') || Payable_invoice.r_invoice IN ('".$invoices."')) ";
+					 //$invoices=implode("','",$data['invoices']); 
+					 $cond5="(Payable_invoice.invoice_no = '".$data['invoices']."') ";
 					  $this->db->where($cond5);
 				}
 				
