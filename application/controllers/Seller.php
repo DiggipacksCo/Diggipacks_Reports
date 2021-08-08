@@ -676,13 +676,14 @@ $u_type = $this->input->post('u_type');
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_CUSTOMREQUEST => "GET",
             CURLOPT_HTTPHEADER => array(
-                "Authorization:Bearer eyJ4NXQiOiJNell4TW1Ga09HWXdNV0kwWldObU5EY3hOR1l3WW1NNFpUQTNNV0kyTkRBelpHUXpOR00wWkdSbE5qSmtPREZrWkRSaU9URmtNV0ZoTXpVMlpHVmxOZyIsImtpZCI6Ik16WXhNbUZrT0dZd01XSTBaV05tTkRjeE5HWXdZbU00WlRBM01XSTJOREF6WkdRek5HTTBaR1JsTmpKa09ERmtaRFJpT1RGa01XRmhNelUyWkdWbE5nX1JTMjU2IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJoYXJpQGZhc3Rjb28uY29tQGNhcmJvbi5zdXBlciIsImF1dCI6IkFQUExJQ0FUSU9OIiwiYXVkIjoiN0ZlcjRpZGthZkNpaDV6bnVYR3g0Tk9mRXZ3YSIsIm5iZiI6MTYxODc1Mzk5NSwiYXpwIjoiN0ZlcjRpZGthZkNpaDV6bnVYR3g0Tk9mRXZ3YSIsInNjb3BlIjoiU2hpcHBpbmctUGFydG5lcnMiLCJpc3MiOiJodHRwczpcL1wvcG9ydGFsLnppZC5kZXY6NDQzXC9vYXV0aDJcL3Rva2VuIiwiZXhwIjoxNjUwMzEwOTIxLCJpYXQiOjE2MTg3NTM5OTUsImp0aSI6ImIxMjU0NGUxLWE0MGMtNDVmZi05MDQyLWYwNTBmYzljOTg5YSJ9.hM6OrwT10vh-jKVc-tTJooTGuajFjSuxCw2O3hHF06DFDdbVIY_AvGvALDgX0jWONXDc420xDP46ew9S6zYeiTGTVmSPc3nCDYKhSEF5Ypx_wx7qbl5QZgyoMCYaphGJ1LCIOb639iuxkZUPTU0Rld0MjcbVLRRmshhlyqjFWLsLMzm6Er7Ky5WXR7Capy-4Ss0NGLRe-yqMY2PC8eBGrH361Kh_J3JKbQe-wo8xuxJXOKu8GLhKlC7bSiuPlmeAYSNuD58gBXybcVbWEaJCC8h1e9y6blW6wD6S9NfLitY_riQwnRoS3vAN0sqPesCGF2uifLmVT7EW25mN4sseKg",
+                "Authorization:Bearer ".site_configTable('zid_provider_token'),
             ),
         ));
 
         $response = json_decode(curl_exec($curl), true);
         return $response['cities'];
     }
+
     public function updateZidConfig($id) {
 
         $data['customer'] = $this->Seller_model->edit_view_customerdata($id);
@@ -849,7 +850,7 @@ $u_type = $this->input->post('u_type');
 
             $curl = curl_init();
             curl_setopt_array($curl, array(
-                CURLOPT_URL => "https://api.zid.sa/v1/managers/webhooks",
+                CURLOPT_URL => "https://api.zid.dev/app/v2/managers/webhooks",
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => "",
                 CURLOPT_MAXREDIRS => 10,
@@ -881,12 +882,12 @@ $u_type = $this->input->post('u_type');
     private function zidWebhookSubscriptionDelete($customer) {
         $subscribe = site_configTable('company_name');
 
-        // echo "https://api.zid.sa/v1/managers/webhooks?subscriber=".$subscribe."&original_id=" . $customer['uniqueid']";
+        // echo "https://api.zid.dev/app/v2/managers/webhooks?subscriber=".$subscribe."&original_id=" . $customer['uniqueid']";
         // die; 
         $curl = curl_init();
   
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.zid.sa/v1/managers/webhooks?subscriber=".$subscribe."&original_id=" . $customer['uniqueid'],
+            CURLOPT_URL => "https://api.zid.dev/app/v2/managers/webhooks?subscriber=".$subscribe."&original_id=" . $customer['uniqueid'],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -918,7 +919,7 @@ $u_type = $this->input->post('u_type');
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.zid.sa/v1/managers/webhooks",
+            CURLOPT_URL => "https://api.zid.dev/app/v2/managers/webhooks",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
