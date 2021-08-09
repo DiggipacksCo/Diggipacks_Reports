@@ -3306,12 +3306,12 @@ function Zid_Order_Details($ZO_id, $manager_token, $user_Agent) {
     $result1 = json_decode($response, true);
     return $result1;
 }
-function makeTrackUrl($id, $awb,$slip_no)
+function makeTrackUrl($id=null, $awb=null,$slip_no=null)
 {
    
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT company_url FROM courier_company where id='$id' and deleted='N' and company_url!='' limit 1";
+        $sql = "SELECT company_url FROM courier_company where cc_id='$id' and deleted='N' and company_url!='' limit 1";
         $query = $ci->db->query($sql);
         if($query->num_rows()>0)
         {
