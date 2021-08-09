@@ -766,6 +766,7 @@ class Manifest extends CourierCompany_pickup {
                                             <tem:Version>9.0</tem:Version>
                                         </tem:clientInfo>
                                         <tem:WaybillNo>' . $client_awb . '</tem:WaybillNo>
+                                        <tem:Reference1>' . $ShipArr['booking_id'] . '</tem:Reference1>
                                         <tem:StickerSize>FourMSixthInches</tem:StickerSize>
                                     </tem:GetWaybillSticker>
                                     </soapenv:Body>
@@ -1516,7 +1517,7 @@ class Manifest extends CourierCompany_pickup {
                        // print_r($counrierArr);die;
                         $Auth_token=$this->Ccompany_model->MMCCO_auth($counrierArr['user_name'],$counrierArr['password'],$counrierArr['api_url']);
                       
-                        $responseArray = $this->Ccompany_model->MMCCOArray($sellername, $ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$super_id);  
+                        $responseArray = $this->Ccompany_model->MMCCOArray($sellername, $ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$super_id, $complete_sku);  
                         //   echo "<br><br><pre>";
                           // print_r($responseArray); DIE;
 
@@ -3740,6 +3741,7 @@ class Manifest extends CourierCompany_pickup {
                                         <tem:Version>9.0</tem:Version>
                                     </tem:clientInfo>
                                     <tem:WaybillNo>' . $client_awb . '</tem:WaybillNo>
+                                    <tem:Reference1>' . $ShipArr['booking_id'] . '</tem:Reference1>
                                     <tem:StickerSize>FourMSixthInches</tem:StickerSize>
                                 </tem:GetWaybillSticker>
                                 </soapenv:Body>
@@ -4381,7 +4383,7 @@ class Manifest extends CourierCompany_pickup {
                        // print_r($counrierArr);die;
                         $Auth_token=$this->Ccompany_model->MMCCO_auth($counrierArr['user_name'],$counrierArr['password'],$counrierArr['api_url']);
                       
-                        $responseArray = $this->Ccompany_model->MMCCOArray($sellername, $ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$super_id);  
+                        $responseArray = $this->Ccompany_model->MMCCOArray($sellername, $ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1,$super_id, $complete_sku);  
                         //   echo "<br><br><pre>";
                           // print_r($responseArray); DIE;
 

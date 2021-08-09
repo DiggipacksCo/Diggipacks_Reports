@@ -4713,7 +4713,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
              return $Auth_token;
     
     }
-        public function MMCCOArray($sellername=null, array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null, $box_pieces1 = null, $super_id= null) 
+        public function MMCCOArray($sellername=null, array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null, $box_pieces1 = null, $super_id= null, $complete_sku= null) 
     {
                 //$sender_default_city = Getselletdetails_new($super_id);
                 //$sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
@@ -4751,7 +4751,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
 
                // print_r($ShipArr);die;
                 if($ShipArr['pay_mode'] == "COD"){
-                    $pay_mode = "cash";
+                    $pay_mode = "credit_balance";
                     $paid = FALSE;
                     $cod_amount = $ShipArr['total_cod_amt'];
                     
@@ -4765,11 +4765,11 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
                
     
             $sender_data = array(
-                    'address_type' => 'residential',
+                    'address_type' => 'business',
                     'name' => $sellername,
                     'email' => $selleremail,
-                    'apartment'=> 221,
-                    'building' => 'B',
+                    'apartment'=> '',
+                    'building' => '',
                     'street' => $sender_address,
                     "city" => array(
                         "name" =>$sender_city
@@ -4784,7 +4784,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
                     
         
                     $receiverdata = array(
-                    'address_type' => 'residential',
+                    'address_type' => 'business',
                     'street' => $ShipArr['reciever_address'],
                     'name'=> $ShipArr['reciever_name'],
                     'city' => array(
@@ -4803,13 +4803,14 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
                     'domestic' => true
                 );
                 $package_type = array(
-                    'courier_type' => 'PRIORITY'
+                    //'courier_type' => 'PRIORITY'
+                    'courier_type' => 'BCD'
                 );
     
                 $charge_items[] = array(
                     'paid' => $paid,
                     'charge' => $cod_amount,
-                    'charge_type' => "COD"               
+                    'charge_type' => $ShipArr['pay_mode']             
                 );
         
                 $details = array(
@@ -4820,12 +4821,13 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
                     'charge_items' => $charge_items,
                     'recipient_not_available' => 'do_not_deliver',
                     'payment_type' => $pay_mode,
-                    'payer' => 'sender',
+                    'payer' => 'recipient',
                     'parcel_value' => $cod_amount,
                     'fragile' => true,
-                    'note' => 'mobile phone',
+                    'note' => $complete_sku,
                     'piece_count' => $box_pieces,
-                    'force_create' => true
+                    'force_create' => true,
+                    "reference_id" => $ShipArr['slip_no']
                 );
         
                     
