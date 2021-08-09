@@ -1785,7 +1785,6 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                             }                            
                             else
                             {
-
                             $returnArr['responseError'] = $slipNo . ':' . $error_status;
                             $return= array('status'=>201,'error'=> $returnArr); 
                             return $return;
@@ -1796,7 +1795,7 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                     {
 
                         $Auth_token=$this->Ccompany_model->FDA_auth($counrierArr); 
-                        $responseArray = $this->Ccompany_model->FDAArray($sellername, $ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1, $super_id); 
+                        $responseArray = $this->Ccompany_model->FDAArray($sellername, $ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1, $super_id, $complete_sku); 
 
                        // echo '<pre>'; print_r( $responseArray); die;
 

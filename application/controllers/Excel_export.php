@@ -1297,8 +1297,9 @@ class Excel_export extends MY_Controller {
                                     $dynmicColumn = 'kwickBox_city';
                                 if ($colimn == 'MICGO')
                                     $dynmicColumn = 'MICGO_city';
+                                if ($colimn == 'FDA')
+                                    $dynmicColumn = 'FDA_city';
 
-                                
                                  
                                 if (!empty($cityArrayName)) {
                                     $UpdateArray_new[] = array($dynmicColumn => addslashes($dynmicColumnVal), 'id' => $old_id);
