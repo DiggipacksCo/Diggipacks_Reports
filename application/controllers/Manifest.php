@@ -1482,9 +1482,9 @@ class Manifest extends CourierCompany_pickup {
                             $returnArr['Error_msg'][] = $slipNo . ':' .$error_status;
                         }
                     
-            } elseif ($company == 'FDA') {
+            } elseif ($company == 'FDA') { 
                 $Auth_token=$this->Ccompany_model->FDA_auth($counrierArr); 
-                $responseArray = $this->Ccompany_model->FDAArray($sellername, $ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1, $super_id); 
+                $responseArray = $this->Ccompany_model->FDAArray($sellername, $ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1, $super_id, $complete_sku); 
                    
                 $successres = $responseArray['status'];                          
                 $error_status = $responseArray['message'];
@@ -4344,7 +4344,7 @@ class Manifest extends CourierCompany_pickup {
 
                         $Auth_token=$this->Ccompany_model->FDA_auth($counrierArr); 
                         
-                        $responseArray = $this->Ccompany_model->FDAArray($sellername, $ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1, $super_id);                      
+                        $responseArray = $this->Ccompany_model->FDAArray($sellername, $ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1, $super_id, $complete_sku);
                       
                                             
                         $successres = $responseArray['status'];                         

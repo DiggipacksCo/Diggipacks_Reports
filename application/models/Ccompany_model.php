@@ -6384,7 +6384,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
              return $Auth_token;
     
     }
-    public function FDAArray($sellername = null ,array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null, $box_pieces1 = null, $super_id=null) 
+    public function FDAArray($sellername = null ,array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null, $box_pieces1 = null, $super_id=null, $complete_sku = NULL) 
     {
         $store_address = $ShipArr['sender_address'];
         $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'FDA_city', $super_id);
@@ -6395,15 +6395,15 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
       
         $API_URL = $counrierArr['api_url'] . "v2/customer/order";               
         if (empty($box_pieces1)) {
-        $box_pieces = 1;
+            $box_pieces = 1;
         } else {
-        $box_pieces = $box_pieces1;
+            $box_pieces = $box_pieces1;
         }
         
         if ($ShipArr['weight'] == 0) {
-        $weight = 1;
+            $weight = 1;
         } else {
-        $weight = $ShipArr['weight'];
+            $weight = $ShipArr['weight'];
         }
 
 
@@ -6419,20 +6419,20 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
         }               
 
         $sender_data = array(
-        'address_type' => 'residential',
-        'name' =>$sellername,
-        'email' => $senderemail,
-        'apartment'=> 221,
-        'building' => 'B',
-        'street' => $store_address,
-        "city" => array(
-            "name" =>$sender_city
-        ),
-        "country" => array(
-            "id" => 191
-        ),                
+            'address_type' => 'residential',
+            'name' =>$sellername,
+            'email' => $senderemail,
+            'apartment'=> '',
+            'building' => '',
+            'street' => $store_address,
+            "city" => array(
+                "name" =>$sender_city
+            ),
+            "country" => array(
+                "id" => 191
+            ),                
 
-        'phone' =>$senderphone,
+            'phone' =>$senderphone,
         );
           
     
@@ -6462,10 +6462,10 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
         $charge_items[] = array(
             'paid' => $paid,
             'charge' => $cod_amount,
-            'charge_type' => "COD"               
+            'charge_type' => $ShipArr['mode']              
         );
     
-        $details = array(
+        $details = array( 
             'sender_data' => $sender_data,
             'recipient_data' => $receiverdata,
             'dimensions' => $dimensions,
@@ -6473,17 +6473,17 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
             'charge_items' => $charge_items,
             'recipient_not_available' => 'do_not_deliver',
             'payment_type' => $pay_mode,
-            'payer' => 'sender',
+            'payer' => 'recipient',
             'parcel_value' => $cod_amount,
             'fragile' => true,
-            'note' => 'mobile phone',
+            'note' => $complete_sku,
             'piece_count' => $box_pieces,
             'force_create' => true,
             "reference_id" => $ShipArr['slip_no']
         );
 
         $json_final_date = json_encode($details);
-          // echo $json_final_date;  die;
+           //echo $json_final_date;  die;
                  
         if (empty($receiver_city))
         {
