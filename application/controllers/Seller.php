@@ -684,12 +684,17 @@ $u_type = $this->input->post('u_type');
         return $response['cities'];
     }
 
-    public function updateZidConfig($id) {
+    public function updateZidConfig($id,$edit_id=null) {
 
         $data['customer'] = $this->Seller_model->edit_view_customerdata($id);
         $data['seller'] = $this->Seller_model->edit_view($id);
         $ListArr = $this->zidCities();//$this->Seller_model->zidCities();
-        $data['delivery_options'] = $this->Seller_model->deliverOptionExist($id);
+        $data['delivery_options'] = $this->Seller_model->deliverOptions($id); 
+        if($edit_id!=null)
+        {
+            $data['delivery_option_edit'] = $this->Seller_model->deliverOptionsByid($edit_id); 
+        }
+       
             // echo '<pre>';
             //         print_r(  $ListArr);  exit;
             $pre=array();
@@ -799,13 +804,16 @@ $u_type = $this->input->post('u_type');
      * #description This method is used for zid webhook subscription
      */
     public function zidWebhookSubscribe($id) {
-        if ($this->input->post('zid_webhook_subscribed')) {
 
+   ; 
+        if (!empty($this->input->post('zid_webhook_subscribed'))) {
+
+             $deliver_id=$this->input->post('zid_delivery_name'); 
             $customer = $this->Seller_model->edit_view_customerdata($id);
             if ($customer['manager_token'] !== "" && $customer['zid_active'] == 'Y') {
 
                 if ($this->input->post('zid_webhook_subscribed') == 'Y') {
-                    $this->zidWebhookSubscriptionCreate($customer);
+                    $this->zidWebhookSubscriptionCreate($customer,$deliver_id);
                 } else {
                     $this->zidWebhookSubscriptionDelete($customer);
                 }
@@ -820,19 +828,20 @@ $u_type = $this->input->post('u_type');
             }
             redirect('Seller/updateZidConfig/'.$id);
         }
+        
     }
 
-    private function zidWebhookSubscriptionCreate($customer) {
+    private function zidWebhookSubscriptionCreate($customer,$deliver_id) {
 
         /* check zid status and if status is new then order create other wise update webhook */
-         $delivery_options = $this->Seller_model->deliverOptionExist($customer['id']);
+         $delivery_options = $this->Seller_model->deliverOptionsByid($deliver_id);
          // $delivery_options[0]['id']
         if ($customer['zid_status'] == 'new') {
             $event = "order.create";
-            $condition = json_encode(array('status'=>'new','delivery_option_id'=>$delivery_options[0]['delivery_id']));;
+            $condition = json_encode(array('status'=>'new','delivery_option_id'=>$delivery_options['delivery_id']));;
         } else {
             $event = "order.status.update";
-            $condition = json_encode(array('status'=>'ready','delivery_option_id'=>$delivery_options[0]['delivery_id']));
+            $condition = json_encode(array('status'=>'ready','delivery_option_id'=>$delivery_options['delivery_id']));
         }
       // echo  $subscribe = site_configTable('company_name'); die; 
         if ($customer['zid_active'] == 'Y') {
@@ -870,6 +879,7 @@ $u_type = $this->input->post('u_type');
             $response = json_decode(curl_exec($curl));
             curl_close($curl);
             if ($response->status != "validation_error" || $response->status == "object") {
+                
                 return true;
             } else {
                 return false;

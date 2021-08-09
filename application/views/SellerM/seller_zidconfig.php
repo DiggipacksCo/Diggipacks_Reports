@@ -127,8 +127,102 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                             </div>
                             
-
+       
                             <hr>
+                            <div class="panel-body">
+                                <form action="<?= base_url('Seller/zidWebhookSubscribe/' . $customer['id']); ?>" method="post" enctype="multipart/form-data" autocomplete="off">
+                                    <input type="hidden" class="form-control"  name="id" value="<?php echo $customer['id']; ?>">
+                                    <fieldset class="scheduler-border" id="show_zid_details">   
+                                        <legend class="scheduler-border">Zid Webhook Subscription</legend>
+                                        <div div class="form-group">
+                                        <div class="subject-info-box-1">
+                                          
+                                    <select  id='lstBox1'  name="zid_delivery_name" class="form-control">
+                                    <?php if (!empty($delivery_options)): ?>
+                                                <?php foreach ($delivery_options as $rows):
+                                                    ?>
+                                    <option value="<?= $rows['id']; ?>"> <?= $rows['zid_delivery_name']; ?> </option>
+                                            <?php endforeach; ?>
+                                            <?php endif; ?>
+                                    </select>
+                                    </div>
+                                            <?php //echo "<pre>";print_r($customer);die;?>
+                                            <?php if ($customer['zid_webhook_subscribed'] == 'Y') { ?>
+                                                <a href="javascript://" class="btn btn-primary" onclick="checkWebook('<?php echo $customer['id']; ?>')">Check Webhook List</a>
+                                                <button type="submit" name="zid_webhook_subscribed" value="N" class="btn btn-danger">UnSubscribe Webhook</button> 
+                                            <?php } else { ?>
+                                                <button type="submit" name="zid_webhook_subscribed" value="Y" class="btn btn-primary pull-right" submit="return confirm('Are you sure you want to delete this Webook?');">Subscribe Webhook</button> 
+                                            <?php } ?>
+
+                                        </div>
+                                        <div div class="form-group" id="webhook_id" style="display: none">
+
+                                        </div>
+
+                                    </fieldset>  
+
+
+                                </form>
+                            </div>
+
+                            <div class="panel-body">
+                                   
+                                    <fieldset class="scheduler-border" id="show_zid_details">   
+                                        <legend class="scheduler-border">Zid Delivery Option List</legend>
+                                        
+                                          
+                                 
+                                    <?php if (!empty($delivery_options)): ?>
+                                              
+                                            <table class="table table-striped table-hover table-bordered dataTable bg-* "  id="">
+                                            <thead>
+                                                <tr>
+                                                <th>Sr No.</th>
+                                                    <th>Name</th>
+                                                    <th>Id</th>
+                                                    <th>Delivery Cost</th>
+                                                    <th>COD Enable</th>
+                                                    <th> Estimated Delivery Time </th>
+                                                    <th>Edit </th>
+                                                   
+                                                   
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                                <?php $sr = 1; ?>
+
+                                                <?php if (!empty($delivery_options)): ?>
+                                                   
+                                                    <?php foreach ($delivery_options as $key=>$product): ?>
+
+                                                        <tr>
+                                                        <td><?php echo $key+1;  ?></td>
+                                                      
+                                                            <td><?php echo $product['zid_delivery_name']; ?></td>
+                                                            <td><?php echo $product['delivery_id']; ?></td>
+                                                            
+                                                          
+                                                            <td><?php echo $product['zid_delivery_cost']; ?></td>
+                                                            <td><?php echo $product['zid_cod_enabled']; ?></td>
+                                                            <td><?php echo $product['delivery_estimated_time_en']; ?></td>
+                                                            <td><a class="btn btn-info" href="<?= base_url('Seller/updateZidConfig/' . $customer['id'].'/'.$product['id']);  ?>"  >Edit</a></td>
+                                                        </tr>
+
+                                                    <?php endforeach; ?>
+                                               
+                                                    <?php endif; ?>
+                                            </tbody>
+                                        </table>          
+                                  
+                                 
+                                         
+                                    </fieldset>  
+                                    <?php endif; ?>
+
+                               
+                            </div>
+
                             <div class="panel-body">
                                 <form action="<?= base_url('Seller/zidDeliveryOptionAdd/' . $customer['id']); ?>" method="post" enctype="multipart/form-data" autocomplete="off">
                                     <input type="hidden" class="form-control"  name="id" value="<?php echo $customer['id']; ?>">
@@ -137,37 +231,37 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         <div class="form-group">
                                             <label>Name</label>
                                             
-                                            <input type="text" required="" class="form-control" name="zid_delivery_name" id="zid_delivery_name" value="<?php echo isset($delivery_options[0]['zid_delivery_name']) ? $delivery_options[0]['zid_delivery_name'] : ''; ?>"/>
+                                            <input type="text" required="" class="form-control" name="zid_delivery_name" id="zid_delivery_name" value="<?php echo isset($delivery_option_edit['zid_delivery_name']) ? $delivery_option_edit['zid_delivery_name'] : ''; ?>"/>
                                         </div>
 
                                         <div class="form-group">
                                             <label>Cost</label>
-                                            <input type="text" required="" class="form-control" name="zid_delivery_cost" id="zid_delivery_cost" value="<?php echo isset($delivery_options[0]['zid_delivery_cost']) ? $delivery_options[0]['zid_delivery_cost'] : ''; ?>"/>
+                                            <input type="text" required="" class="form-control" name="zid_delivery_cost" id="zid_delivery_cost" value="<?php echo isset($delivery_option_edit['zid_delivery_cost']) ? $delivery_option_edit['zid_delivery_cost'] : ''; ?>"/>
                                         </div>
 
                                         <div class="form-group">
                                             <label>Cod Enabled</label>
                                             <select name="zid_cod_enabled" id="zid_cod_enabled" required class="form-control">
                                                 <option value="" >Select Cod Status</option>
-                                                <option <?php echo ($delivery_options[0]['zid_cod_enabled'] == "1" ? 'selected' : ''); ?> value="1" >Enabled</option>  
-                                                <option <?php echo ($delivery_options[0]['zid_cod_enabled'] == "0" ? 'selected' : ''); ?> value="0" >Disabled</option>  
+                                                <option <?php echo ($delivery_option_edit['zid_cod_enabled'] == "1" ? 'selected' : ''); ?> value="1" >Enabled</option>  
+                                                <option <?php echo ($delivery_option_edit['zid_cod_enabled'] == "0" ? 'selected' : ''); ?> value="0" >Disabled</option>  
                                             </select>
-                                            <!--<input type="text" required="" class="form-control" name="zid_code_enabled" id="zid_code_enabled" value="<?php echo isset($delivery_options[0]['zid_code_enabled']) ? $delivery_options[0]['zid_code_enabled'] : ''; ?>"/>-->
+                                            <!--<input type="text" required="" class="form-control" name="zid_code_enabled" id="zid_code_enabled" value="<?php echo isset($delivery_option_edit['zid_code_enabled']) ? $delivery_option_edit['zid_code_enabled'] : ''; ?>"/>-->
                                         </div>
 
                                         <div class="form-group">
                                             <label>Cod Fee</label>
-                                            <input type="text" required="" class="form-control" name="zid_cod_fee" id="zid_cod_fee" value="<?php echo isset($delivery_options[0]['zid_cod_fee']) ? $delivery_options[0]['zid_cod_fee'] : ''; ?>"/>
+                                            <input type="text" required="" class="form-control" name="zid_cod_fee" id="zid_cod_fee" value="<?php echo isset($delivery_option_edit['zid_cod_fee']) ? $delivery_option_edit['zid_cod_fee'] : ''; ?>"/>
                                         </div>
 
                                         <div class="form-group">
                                             <label>Delivery Estimated Time ar</label>
-                                            <input type="text" required="" class="form-control" name="delivery_estimated_time_ar" id="delivery_estimated_time_ar" value="<?php echo $delivery_options[0]['delivery_estimated_time_ar']; ?>"/>
+                                            <input type="text" required="" class="form-control" name="delivery_estimated_time_ar" id="delivery_estimated_time_ar" value="<?php echo $delivery_option_edit['delivery_estimated_time_ar']; ?>"/>
                                         </div>
 
                                         <div class="form-group">
                                             <label>Delivery Estimated Time en</label>
-                                            <input type="text" required="" class="form-control" name="delivery_estimated_time_en" id="delivery_estimated_time_en" value="<?php echo $delivery_options[0]['delivery_estimated_time_en']; ?>"/>
+                                            <input type="text" required="" class="form-control" name="delivery_estimated_time_en" id="delivery_estimated_time_en" value="<?php echo $delivery_option_edit['delivery_estimated_time_en']; ?>"/>
                                         </div>
 
                                         <div class="form-group">
@@ -214,32 +308,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                                 </form>
                             </div>
-                            
-                            <hr>
-                            <div class="panel-body">
-                                <form action="<?= base_url('Seller/zidWebhookSubscribe/' . $customer['id']); ?>" method="post" enctype="multipart/form-data" autocomplete="off">
-                                    <input type="hidden" class="form-control"  name="id" value="<?php echo $customer['id']; ?>">
-                                    <fieldset class="scheduler-border" id="show_zid_details">   
-                                        <legend class="scheduler-border">Zid Webhook Subscription</legend>
-                                        <div div class="form-group">
-                                            <?php //echo "<pre>";print_r($customer);die;?>
-                                            <?php if ($customer['zid_webhook_subscribed'] == 'Y') { ?>
-                                                <a href="javascript://" class="btn btn-primary" onclick="checkWebook('<?php echo $customer['id']; ?>')">Check Webhook List</a>
-                                                <button type="submit" name="zid_webhook_subscribed" value="N" class="btn btn-danger">UnSubscribe Webhook</button> 
-                                            <?php } else { ?>
-                                                <button type="submit" name="zid_webhook_subscribed" value="Y" class="btn btn-primary pull-right" submit="return confirm('Are you sure you want to delete this Webook?');">Subscribe Webhook</button> 
-                                            <?php } ?>
-
-                                        </div>
-                                        <div div class="form-group" id="webhook_id" style="display: none">
-
-                                        </div>
-
-                                    </fieldset>  
 
 
-                                </form>
-                            </div>
                         </div>
                         <?php $this->load->view('include/footer'); ?>
 
