@@ -696,7 +696,7 @@ class PickUp extends MY_Controller {
         $key = 0;
         $key1 = 0;
         foreach ($shipments['result'] as $data) {
-            
+        
             
         //  echo   $_POST[$data['slip_no']]['pallet'];
          //   die;
@@ -822,17 +822,18 @@ if(!empty( $salatoken))
                     $slip_no = $data['slip_no'];
                     if(!empty($data['frwd_company_awb']))
                     {
-                       // $trackingurl=makeTrackUrl($data['frwd_company_id'],$data['frwd_company_awb']); 
+                        $trackingurl=makeTrackUrl($data['frwd_company_id'],$data['frwd_company_awb']); 
+                      
                         
                         $lable=$data['frwd_company_label'];
                     }else
                     {
                         $lable='https://api.diggipacks.com/API/print/'.$data['slip_no'];
                         
-
+                        $trackingurl = TRACKURL . $slip_no;
                     }
-                   $trackingurl = TRACKURL . $slip_no;
-                    
+                  
+                     
                     //updateZidStatus($orderID=null, $token=null, $status=null, $code=null, $label=null, $trackingurl=null)
                     updateZidStatus($data['booking_id'], $token, $zidStatus, $slip_no, $lable, $trackingurl);
                 }
