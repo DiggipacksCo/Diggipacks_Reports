@@ -221,11 +221,12 @@ class Seller_model extends CI_Model {
         return $query->result_array();
     }
 
-    public function zidDeliveryOptionUpdate($data) {
+    public function zidDeliveryOptionUpdate($data) { 
         /* check if already exist then update */
         
-        if ($this->deliverOptionExist($data['cust_id'])) {
+        if ($this->deliverOptionExist($data['cust_id'],$data['zid_delivery_name'])) {
             $this->db->where('cust_id', $data['cust_id']);
+            $this->db->where('zid_delivery_name', $data['zid_delivery_name']);
             $this->db->update('zid_deliver_options', $data);
         } else {
             $this->db->insert('zid_deliver_options', $data);
@@ -233,12 +234,29 @@ class Seller_model extends CI_Model {
         //echo $this->db->last_query(); die;
     }
 
-    public function deliverOptionExist($cust_id) {
+    public function deliverOptionExist($cust_id=null,$zid_delivery_name=null) {
         $this->db->select('*');
         $this->db->from('zid_deliver_options');
         $this->db->where('cust_id',$cust_id);
+        $this->db->where('zid_delivery_name', $zid_delivery_name);
         $query = $this->db->get();
         return $query->result_array();
+    }
+    public function deliverOptions($cust_id=null) {
+        $this->db->select('*');
+        $this->db->from('zid_deliver_options');
+        $this->db->where('cust_id',$cust_id);
+       
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+    public function deliverOptionsByid($id=null) {
+        $this->db->select('*');
+        $this->db->from('zid_deliver_options');
+        $this->db->where('id',$id);
+       
+        $query = $this->db->get();
+        return $query->row_array();
     }
     
      public function update_shopify($id, $data) {
@@ -255,6 +273,7 @@ class Seller_model extends CI_Model {
         $this->db->update('customer', $data);
         //echo $this->db->last_query();die;
     }
+    
 
 
 }
