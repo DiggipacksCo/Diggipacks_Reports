@@ -30,6 +30,7 @@ nbproject/
 zidLock/
 zidLog/
 zidlog/
+zidlock/
 zidLog/*
 # Compiled Java class files
 *.class
