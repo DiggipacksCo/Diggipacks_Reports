@@ -129,30 +129,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             
        
                             <hr>
+                           
+
+
+
+                            <hr>
+                            <?php if ($customer['zid_webhook_subscribed'] == 'Y') { ?>
                             <div class="panel-body">
                                 <form action="<?= base_url('Seller/zidWebhookSubscribe/' . $customer['id']); ?>" method="post" enctype="multipart/form-data" autocomplete="off">
                                     <input type="hidden" class="form-control"  name="id" value="<?php echo $customer['id']; ?>">
                                     <fieldset class="scheduler-border" id="show_zid_details">   
-                                        <legend class="scheduler-border">Zid Webhook Subscription</legend>
+                                        <legend class="scheduler-border">Zid Webhook UnSubscribe</legend>
                                         <div div class="form-group">
-                                        <div class="subject-info-box-1">
-                                          
-                                    <select  id='lstBox1'  name="zid_delivery_name" class="form-control">
-                                    <?php if (!empty($delivery_options)): ?>
-                                                <?php foreach ($delivery_options as $rows):
-                                                    ?>
-                                    <option value="<?= $rows['id']; ?>"> <?= $rows['zid_delivery_name']; ?> </option>
-                                            <?php endforeach; ?>
-                                            <?php endif; ?>
-                                    </select>
-                                    </div>
-                                            <?php //echo "<pre>";print_r($customer);die;?>
-                                            <?php if ($customer['zid_webhook_subscribed'] == 'Y') { ?>
+                                      
+                                           
+                                        
                                                 <a href="javascript://" class="btn btn-primary" onclick="checkWebook('<?php echo $customer['id']; ?>')">Check Webhook List</a>
                                                 <button type="submit" name="zid_webhook_subscribed" value="N" class="btn btn-danger">UnSubscribe Webhook</button> 
-                                            <?php } else { ?>
-                                                <button type="submit" name="zid_webhook_subscribed" value="Y" class="btn btn-primary pull-right" submit="return confirm('Are you sure you want to delete this Webook?');">Subscribe Webhook</button> 
-                                            <?php } ?>
 
                                         </div>
                                         <div div class="form-group" id="webhook_id" style="display: none">
@@ -165,6 +158,41 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </form>
                             </div>
 
+                            <?php }   ?>
+
+                                <div class="panel-body">
+                                <form action="<?= base_url('Seller/zidWebhookSubscribe/' . $customer['id']); ?>" method="post" enctype="multipart/form-data" autocomplete="off">
+                                    <input type="hidden" class="form-control"  name="id" value="<?php echo $customer['id']; ?>">
+                                    <fieldset class="scheduler-border" id="show_zid_details">   
+                                        <legend class="scheduler-border">Zid Webhook Subscribe</legend>
+                                        <div div class="form-group">
+                                        <div class="subject-info-box-1">
+                                          
+                                    <select  id='zid_delivery_name11'  name="zid_delivery_name" class="form-control">
+                                    <?php if (!empty($delivery_options)): ?>
+                                                <?php foreach ($delivery_options as $rows):
+                                                   if($rows['subscribed']=='N') { ?>
+                                    <option value="<?= $rows['id']; ?>"> <?= $rows['zid_delivery_name']; ?> </option>
+                                            <?php } endforeach; ?>
+                                            <?php endif; ?>
+                                    </select>
+                                    </div>
+                                           
+                                        
+                                                <button type="submit" name="zid_webhook_subscribed" value="Y" class="btn btn-primary pull-right" submit="return confirm('Are you sure you want to delete this Webook?');">Subscribe Webhook</button> 
+                                          
+
+                                        </div>
+                                        <div div class="form-group" id="webhook_id" style="display: none">
+
+                                        </div>
+
+                                    </fieldset>  
+
+
+                                </form>
+                            </div>
+                         
                             <div class="panel-body">
                                    
                                     <fieldset class="scheduler-border" id="show_zid_details">   
@@ -180,6 +208,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                 <th>Sr No.</th>
                                                     <th>Name</th>
                                                     <th>Id</th>
+                                                    <th>Subscribed</th>
                                                     <th>Delivery Cost</th>
                                                     <th>COD Enable</th>
                                                     <th> Estimated Delivery Time </th>
@@ -201,12 +230,28 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                       
                                                             <td><?php echo $product['zid_delivery_name']; ?></td>
                                                             <td><?php echo $product['delivery_id']; ?></td>
+                                                            <td><?php if($product['subscribed']=='Y'){ echo 'Yes';}else{ echo "NO";} ?></td>
                                                             
                                                           
                                                             <td><?php echo $product['zid_delivery_cost']; ?></td>
                                                             <td><?php echo $product['zid_cod_enabled']; ?></td>
                                                             <td><?php echo $product['delivery_estimated_time_en']; ?></td>
-                                                            <td><a class="btn btn-info" href="<?= base_url('Seller/updateZidConfig/' . $customer['id'].'/'.$product['id']);  ?>"  >Edit</a></td>
+
+                                                            <td class="text-center">
+                        <ul class="icons-list">
+                          <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                              <i class="icon-menu9"></i>
+                            </a>
+
+                            <ul class="dropdown-menu dropdown-menu-right">  
+                              <li><a href="<?= base_url('Seller/updateZidConfig/' . $customer['id'].'/'.$product['id']);  ?>"><i class="icon-pencil7"></i> <?= lang('lang_Edit'); ?> </a></li>
+                               <li><a href="<?= base_url('Seller/deleteDeliveryOption/' . $customer['id'].'/'.$product['id']);?>"  onclick="return confirm('Are you sure?')"><i class="icon-trash"></i>Delete</a></li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </td>
+                                                           
                                                         </tr>
 
                                                     <?php endforeach; ?>

@@ -221,6 +221,24 @@ class Seller_model extends CI_Model {
         return $query->result_array();
     }
 
+    public function deleteDeliveryOption($id) { 
+        /* check if already exist then update */
+        $this -> db -> where('id', $id);
+        $this -> db -> delete('zid_deliver_options');
+        //echo $this->db->last_query(); die;
+    }
+
+
+    public function DeliveryOptionUpdate($id) { 
+        /* check if already exist then update */
+        
+    
+            $this->db->where('id',$id);
+           
+            $this->db->update('zid_deliver_options', array('subscribed'=>'Y'));
+     
+        //echo $this->db->last_query(); die;
+    }
     public function zidDeliveryOptionUpdate($data) { 
         /* check if already exist then update */
         

@@ -879,7 +879,7 @@ $u_type = $this->input->post('u_type');
             $response = json_decode(curl_exec($curl));
             curl_close($curl);
             if ($response->status != "validation_error" || $response->status == "object") {
-                
+                $this->Seller_model->DeliveryOptionUpdate($deliver_id);
                 return true;
             } else {
                 return false;
@@ -1104,7 +1104,18 @@ $u_type = $this->input->post('u_type');
         exit();
     }
 
+    
 
+    public function deleteDeliveryOption($cust_id,$id) {
+       
+        $this->Seller_model->deleteDeliveryOption($id);
+    
+   
+
+    
+    $this->session->set_flashdata('msg', 'Delivery Option Has been Deleted successfully');
+    redirect('Seller/updateZidConfig/'.$cust_id);
+    }
     public function zidDeliveryOptionAdd() {
 
         if ($this->input->post('deliver_option')) {

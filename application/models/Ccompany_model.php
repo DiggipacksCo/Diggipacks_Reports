@@ -2849,7 +2849,8 @@ class Ccompany_model extends CI_Model {
                     "Content-type: text/xml; charset=utf-8",
                     "Content-length: ".strlen($xml_new),
                 );
-
+            //     header('Content-type: text/xml');
+            //    echo $xml_new; exit;
                 $url = $API_URL;
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $url);
