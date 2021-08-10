@@ -36,8 +36,41 @@ class Seller extends MY_Controller {
         } else {
             redirect(base_url() . 'Login');
         }
+        
+    }
+    
+    public function active_seller($id=null,$status=null) {
+
+        if (($this->session->userdata('user_details') != '')) {
+           
+            if($id>0 && ($status=='Y' || $status=='N'))
+            {
+                $updateArr=array('status'=>$status);
+                $this->Seller_model->edit($id,$updateArr);
+                
+                if($status=='Y')
+                {
+                $this->session->set_flashdata('msg','has been updated Active successfully');
+                }
+                else
+                {
+                $this->session->set_flashdata('msg','has been updated Inactive successfully');
+                }
+                 
+            }
+            else
+            {
+                $this->session->set_flashdata('errmsg','try again');
+            }
+            
+            redirect('Seller');
+        } else {
+            redirect(base_url() . 'Login');
+        }
     }
 
+    
+    
     public function add() {
 
         $this->form_validation->set_rules("email", 'Email Address', 'trim|required|is_unique[customer.email]');
