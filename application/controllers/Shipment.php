@@ -3510,7 +3510,7 @@ class Shipment extends MY_Controller {
                     //   print_r($data);
                     //die; 
                     
-                    $stock_check = CheckStockBackorder_ordergen($data['cust_id'], $skuDetails['sku'], $skuDetails['piece'], $data['slip_no']);
+                   $stock_check = CheckStockBackorder_ordergen($data['cust_id'], $skuDetails['sku'], $skuDetails['piece'], $data['slip_no'], $skuDetails['sku_id'], $data['wh_id']);
 
                     if ($stock_check['succ'] == 1) {
                         //array_push($ReturnstockArray,$stock_check['stArray']);

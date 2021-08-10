@@ -2038,7 +2038,7 @@ if (!function_exists('CheckStockBackorder')) {
 
 if (!function_exists('CheckStockBackorder_ordergen')) {
 
-    function CheckStockBackorder_ordergen($seller_id = null, $sku = null, $pieces = null, $slip_no = null, $sku_id = null) {
+    function CheckStockBackorder_ordergen($seller_id = null, $sku = null, $pieces = null, $slip_no = null, $sku_id = null, $wh_id = null) {
         $ci = & get_instance();
         $ci->load->database();
 
@@ -2047,9 +2047,10 @@ if (!function_exists('CheckStockBackorder_ordergen')) {
             $current_date = date("Y-m-d");
             $conditionCheck = " and expiry='N' and expity_date>='$current_date'";
         }
-        $inventory_dataqry = "select item_inventory.*,items_m.sku,items_m.weight from item_inventory left join items_m on item_inventory.item_sku=items_m.id where item_inventory.seller_id='" . $seller_id . "' and items_m.sku like'" . trim($sku) . "' and item_inventory.super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and items_m.super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and item_inventory.quantity>0 $conditionCheck order by  item_inventory.id asc";
+        // and item_inventory.wh_id='" . $wh_id . "' added by bimal and then removed after discussion with ashar 
+        $inventory_dataqry = "select item_inventory.*,items_m.sku from item_inventory left join items_m on item_inventory.item_sku=items_m.id where item_inventory.seller_id='" . $seller_id . "' and items_m.sku like'" . trim($sku) . "' and item_inventory.super_id='" . $ci->session->userdata('user_details')['super_id'] . "'  and items_m.super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and item_inventory.quantity>0 $conditionCheck order by  item_inventory.id asc";
         $query = $ci->db->query($inventory_dataqry);
-       
+
 
 
 
@@ -2059,7 +2060,7 @@ if (!function_exists('CheckStockBackorder_ordergen')) {
             $returnarray = array();
             $totalqty = 0;
             $totalqty1 = 0;
-            $stock_location_new=array();
+            $stock_location_new = array();
             $locationarray = array();
             $error_array = array();
             $countInventry = count($inventory_data) - 1;
@@ -2083,6 +2084,8 @@ if (!function_exists('CheckStockBackorder_ordergen')) {
                     }
                 }
             }
+           // print_r($error_array); die;
+            
             if (empty($error_array)) {
                 if ($pieces <= $totalqty) {
                     $newpcs = $pieces;
@@ -2116,10 +2119,8 @@ if (!function_exists('CheckStockBackorder_ordergen')) {
                             $returnarray[$ii]['pieces'] = $pieces;
                             $returnarray[$ii]['oldPeice'] = $oldPeice;
                             $returnarray[$ii]['st_location'] = $rdata['stock_location'];
-                            $returnarray[$ii]['weight'] = $rdata['weight'];
 
-                            
-                             array_push($stock_location_new,array('slip_no'=>$slip_no,'sku'=>$rdata['sku'],'stock_location'=>$rdata['stock_location'],'shelve_no'=>$shelveno));
+                            array_push($stock_location_new, array('slip_no' => $slip_no, 'sku' => $rdata['sku'], 'stock_location' => $rdata['stock_location'], 'shelve_no' => $shelveno));
                         } else {
                             if ($pieces > 0) {
                                 $oldPeice = $pieces;
@@ -2136,9 +2137,8 @@ if (!function_exists('CheckStockBackorder_ordergen')) {
                                 $returnarray[$ii]['pieces'] = $pieces;
                                 $returnarray[$ii]['oldPeice'] = $oldPeice;
                                 $returnarray[$ii]['st_location'] = $rdata['stock_location'];
-                                $returnarray[$ii]['weight'] = $rdata['weight'];
-                                
-                              array_push($stock_location_new,array('slip_no'=>$slip_no,'sku'=>$rdata['sku'],'stock_location'=>$rdata['stock_location'],'shelve_no'=>$shelveno));
+
+                                array_push($stock_location_new, array('slip_no' => $slip_no, 'sku' => $rdata['sku'], 'stock_location' => $rdata['stock_location'], 'shelve_no' => $shelveno));
 
                                 $pieces = 0;
                             } else {
@@ -2169,6 +2169,7 @@ if (!function_exists('CheckStockBackorder_ordergen')) {
     }
 
 }
+
 
 if (!function_exists('CheckStockBackorder_ordergen_new')) {
 
@@ -2210,13 +2211,13 @@ if (!function_exists('CheckStockBackorder_ordergen_new')) {
 }
 if (!function_exists('UpdateStockBackorder_orderGen')) {
 
-    function UpdateStockBackorder_orderGen($data = array(),$stocklocation=array()) {
+    function UpdateStockBackorder_orderGen($data = array(), $stocklocation = array()) {
         $ci = & get_instance();
         $ci->load->database();
-        
-        
-      //  echo '<pre>';
-      // print_r($data);
+
+
+        //  echo '<pre>';
+        // print_r($data);
         foreach ($data as $rdata) {
             foreach ($rdata as $finaldata) {
 
@@ -2234,16 +2235,16 @@ if (!function_exists('UpdateStockBackorder_orderGen')) {
                         $qty = $finaldata['quantity'] - $finaldata['pieces'];
                         $qty_used = $finaldata['pieces'];
                     }
-                    
-                    $slip_no=$finaldata['slip_no'];
-                 $sku=$finaldata['sku'];
-                 $stock_location=$finaldata['st_location'];
-                $shelve_no=$finaldata['shelve_no'];
-                
-                 $stocklocation = "insert into locationDetails (slip_no,sku,stock_location,shelve_no) values('" . $slip_no. "','" . $sku . "','" . $stock_location . "','$shelve_no')";
-                 $ci->db->query($stocklocation);
 
-          
+                    $slip_no = $finaldata['slip_no'];
+                    $sku = $finaldata['sku'];
+                    $stock_location = $finaldata['st_location'];
+                    $shelve_no = $finaldata['shelve_no'];
+
+                    $stocklocation = "insert into locationDetails (slip_no,sku,stock_location,shelve_no) values('" . $slip_no . "','" . $sku . "','" . $stock_location . "','$shelve_no')";
+                    $ci->db->query($stocklocation);
+
+
 
                     //echo '<br>'. 
                     $insertdata = "insert into inventory_activity (user_id,seller_id,qty,p_qty,qty_used,item_sku,type,entrydate,awb_no,st_location,super_id) values('" . $ci->session->userdata('user_details')['user_id'] . "','" . $finaldata['seller_id'] . "','" . $qty . "','" . $p_qty . "','" . $qty_used . "','" . $finaldata['skuid'] . "','deducted','" . date('Y-m-d H:i:s') . "','" . $finaldata['slip_no'] . "','" . $finaldata['st_location'] . "','" . $ci->session->userdata('user_details')['super_id'] . "')";
@@ -2251,20 +2252,13 @@ if (!function_exists('UpdateStockBackorder_orderGen')) {
                 }
                 if (!empty($finaldata['shelve_no'])) {
                     $updates_dimation = "update diamention_fm set deducted_shelve='" . $finaldata['shelve_no'] . "' where slip_no='" . $finaldata['slip_no'] . "' and sku='" . $finaldata['sku'] . "' and deducted_shelve='' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
-                   $ci->db->query($updates_dimation);
+                    $ci->db->query($updates_dimation);
                 }
                 $updates_ship = "update shipment_fm set wh_id='" . $finaldata['wh_id'] . "' where slip_no='" . $finaldata['slip_no'] . "' and wh_id='0' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
                 $ci->db->query($updates_ship);
                 //echo $ci->db->last_query();
             }
         }
-        
-      
-        
-         
-        
-        
-        
     }
 
 }
