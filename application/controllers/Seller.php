@@ -36,6 +36,7 @@ class Seller extends MY_Controller {
         } else {
             redirect(base_url() . 'Login');
         }
+        
     }
     public function active_seller($id=null,$status=null) {
 

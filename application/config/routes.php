@@ -248,6 +248,7 @@ $route['tickethistory/(:any)']      = 'Ticket/tickethistory/$1';
 $route['add_storage']     = 'Storage/add_storage';
 $route['view_storage']    = 'Storage/storageview';
 $route['editview/(:any)'] = 'Storage/add_storage/$1';
+
 $route['editviewstorage/(:any)'] = 'Seller/add_storagecharges/$1';
 $route['add_courier_company/(:any)'] = 'Seller/add_courier_company/$1';
 $route['active_seller/(:num)/(:any)'] = 'Seller/active_seller/$1/$2';
