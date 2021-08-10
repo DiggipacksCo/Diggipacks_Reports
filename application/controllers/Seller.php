@@ -38,6 +38,7 @@ class Seller extends MY_Controller {
         }
         
     }
+    
     public function active_seller($id=null,$status=null) {
 
         if (($this->session->userdata('user_details') != '')) {

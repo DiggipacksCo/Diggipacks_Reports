@@ -96,7 +96,6 @@
                                                         <td><a href="<?= site_url('Seller/report_view/' . $seller->id); ?>"><?= $seller->name; ?></a></td>
 
 
-                                                        
                                                         <td><?= $seller->company; ?></td>
                                                         <td><?= $seller->email; ?></td>
                                                         <td><?= $seller->uniqueid; ?></td>
