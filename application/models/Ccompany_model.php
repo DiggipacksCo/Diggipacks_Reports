@@ -3887,7 +3887,7 @@ class Ccompany_model extends CI_Model {
                 "TrackingNumber"=> "",
                 "AccountNumber"=> $counrierArr['courier_account_no'],
                 "ApiKey"=> $counrierArr['auth_token'],
-                "RequestedBy"=> "",
+                "RequestedBy"=> $Receiver_name,
                 "OrderNumber"=> $ShipArr['slip_no'],
                 "Shipping"=> true,
                 "ShipmentType"=> "C", //Types of delivery: �D� �Dry, �C� � Cold 
