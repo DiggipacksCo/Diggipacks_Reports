@@ -6595,7 +6595,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
     }
     public function MICGOarray($sellername = null, array $ShipArr, array $counrierArr, $complete_sku = null ,$c_id= null,$box_pieces1=null, $Auth_token= null,$super_id = null) 
     {
-                //print "<pre>"; print_r($ShipArr);die;
+                //print "<pre>"; print_r($counrierArr);die;
                 $sender_address =$ShipArr['sender_address'];
                 $senderemail =$ShipArr['sender_email'];
                 $senderphone =$ShipArr['sender_phone'];
@@ -6616,7 +6616,12 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
                 $xapikey = $counrierArr['courier_pin_no'];
                 $timestamp =  strtotime(date("Y-m-d H:i:s"));
                 $shipperId = $counrierArr['courier_account_no'];
-                $API_URL = $counrierArr['api_url'] .'shipments';
+                if($counrierArr['type'] == 'test'){
+                    $API_URL = $counrierArr['api_url'] .'shipments';
+                }else{
+                    $API_URL = $counrierArr['api_url'] .'shipments/v2';
+                }
+                
                
                 
                 if (empty($box_pieces1)) {

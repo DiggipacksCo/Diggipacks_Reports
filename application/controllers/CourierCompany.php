@@ -357,6 +357,7 @@ class CourierCompany extends MY_Controller  {
                 $counrierArr['create_order_url'] = $create_order_url;
                 $counrierArr['company_type'] = $company_type ;
                 $counrierArr['auth_token'] = $auth_token;
+                $counrierArr['type'] = $counrierArr_table['type'];
                  $super_id = $ShipArr['super_id'];
                
             //  echo "<pre>"; print_r($counrierArr); //die; 
