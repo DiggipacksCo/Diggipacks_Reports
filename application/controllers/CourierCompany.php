@@ -1583,7 +1583,8 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                             }else{
                                 
                                 $client_awb = $response;
-                                $url = 'https://login.beezerp.com/label/pdf/awb/?t='.$client_awb;
+                                //$url = 'https://login.beezerp.com/label/pdf/awb/?t='.$client_awb;
+                                $url = 'https://beezerp.com/login/label/pdf/awb/?t='.$client_awb;
                                 $generated_pdf = file_get_contents($url); 
                                 file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
                                 
