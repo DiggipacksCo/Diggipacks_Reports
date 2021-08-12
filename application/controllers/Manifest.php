@@ -524,6 +524,7 @@ class Manifest extends CourierCompany_pickup {
         $counrierArr['company_type'] = $company_type;
         $counrierArr['create_order_url'] = $create_order_url;
         $counrierArr['auth_token'] = $auth_token;
+        $counrierArr['type'] = $counrierArr_table['type'];
 //echo "<pre>";print_r($counrierArr); die;
         if (!empty($dataArray['mid'])) {
             $shipmentLoopArray = $dataArray['mid'];
@@ -3298,6 +3299,7 @@ class Manifest extends CourierCompany_pickup {
             $counrierArr['company_type'] = $company_type ;
             $counrierArr['create_order_url'] = $create_order_url;
             $counrierArr['auth_token'] = $auth_token;
+            $counrierArr['type'] = $counrierArr_table['type'];
           //print "<pre>"; print_r($dataArray);die;  
           if(!empty($dataArray['mid']))
           {
