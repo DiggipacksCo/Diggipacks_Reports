@@ -462,7 +462,7 @@ class Ccompany_model extends CI_Model {
         $currency = site_configTable("default_currency");
         
         if ($pay_mode == 'COD') {
-            $cod_amount=$cod_amount;
+            $cod_amount=$totalcustomerAmt;
             $shipment_value = $ShipArr['total_cod_amt'];
             $pay_mode = 'P';
             $CashOnDeliveryAmount = array("Value" => $cod_amount,
@@ -2834,7 +2834,7 @@ class Ccompany_model extends CI_Model {
                                     <tem:GeneratePiecesBarCodes>false</tem:GeneratePiecesBarCodes>
                                     <tem:LoadTypeID>36</tem:LoadTypeID>
                                     <tem:DeclareValue>0</tem:DeclareValue>
-                                    <tem:GoodDesc>' . $complete_sku . '</tem:GoodDesc>
+                                    <tem:GoodDesc>' . htmlspecialchars($complete_sku, ENT_XML1 | ENT_COMPAT, 'UTF-8') . '</tem:GoodDesc>
                                     <tem:RefNo>' .  $ShipArr['slip_no'] . '</tem:RefNo>
                                     <tem:InsuredValue>0</tem:InsuredValue>
                                     <tem:GoodsVATAmount>0</tem:GoodsVATAmount>
@@ -2859,15 +2859,18 @@ class Ccompany_model extends CI_Model {
                 curl_setopt($ch, CURLOPT_POST, true);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $xml_new);
                 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-                $response = curl_exec($ch);
+               $response = curl_exec($ch); 
                 $check = $response;
                 $respon = trim($check);
+                if(!empty($respon))
+                {
                 $respon = str_ireplace(array("soap:", "<?xml version=\"1.0\" encoding=\"utf-8\"?>"), "", $respon);
                 $xml2 = new SimpleXMLElement($respon);  
                 $again = $xml2;
                 $a = array("qwb" => $again);
 
                 $complicated_awb = ($a['qwb']->Body->CreateWaybillResponse->CreateWaybillResult);
+                }
                 curl_close($ch);
 
                  $awb_array = json_decode(json_encode((array) $complicated_awb), TRUE);
