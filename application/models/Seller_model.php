@@ -230,13 +230,13 @@ class Seller_model extends CI_Model {
     }
 
 
-    public function DeliveryOptionUpdate($id) { 
+    public function DeliveryOptionUpdate($id,$status) { 
         /* check if already exist then update */
         
     
             $this->db->where('id',$id);
            
-            $this->db->update('zid_deliver_options', array('subscribed'=>'Y'));
+            $this->db->update('zid_deliver_options', array('subscribed'=>$status));
      
         //echo $this->db->last_query(); die;
     }

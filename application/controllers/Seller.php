@@ -776,16 +776,16 @@ $u_type = $this->input->post('u_type');
 
             $user = $this->Seller_model->update_zid($id, $update_data);
 
-            if ($user > 0) {
-                
-                if(  $this->zidWebhookSubscriptionDelete( $data['customer']))
-                    {
-                    $data['customer'] = $this->Seller_model->edit_view_customerdata($id);
-                    $this->zidWebhookSubscriptionCreate( $data['customer']);  
-                    }
-                        $this->session->set_flashdata('msg', $this->input->post('name') . '   has been updated successfully');
-                            redirect('Seller/updateZidConfig/'.$id);
-            }
+//            if ($user > 0) {
+//                
+//                if(  $this->zidWebhookSubscriptionDelete( $data['customer']))
+//                    {
+//                    $data['customer'] = $this->Seller_model->edit_view_customerdata($id);
+//                    $this->zidWebhookSubscriptionCreate( $data['customer']);  
+//                    }
+//                        $this->session->set_flashdata('msg', $this->input->post('name') . '   has been updated successfully');
+//                            redirect('Seller/updateZidConfig/'.$id);
+//            }
         }
         $this->load->view('SellerM/seller_zidconfig', $data);
     }
@@ -838,7 +838,8 @@ $u_type = $this->input->post('u_type');
      */
     public function zidWebhookSubscribe($id) {
 
-   ; 
+  
+   
         if (!empty($this->input->post('zid_webhook_subscribed'))) {
 
              $deliver_id=$this->input->post('zid_delivery_name'); 
@@ -848,7 +849,7 @@ $u_type = $this->input->post('u_type');
                 if ($this->input->post('zid_webhook_subscribed') == 'Y') {
                     $this->zidWebhookSubscriptionCreate($customer,$deliver_id);
                 } else {
-                    $this->zidWebhookSubscriptionDelete($customer);
+                    $this->zidWebhookSubscriptionDelete($customer,$deliver_id);
                 }
 
                 $update_data = array(
@@ -881,7 +882,7 @@ $u_type = $this->input->post('u_type');
             $subscribe = site_configTable('company_name');
             $arr = array(
                 "event" => $event,
-                "target_url" => $this->config->item('zid_order_target_url') . '/' . $customer['uniqueid'],
+                "target_url" => $this->config->item('zid_order_target_url') . '/' . $customer['uniqueid'].'/'. $delivery_options['delivery_id'],
                 "original_id" => $customer['uniqueid'],
                 "subscriber" =>  $subscribe,
                 "conditions" => $condition
@@ -910,9 +911,10 @@ $u_type = $this->input->post('u_type');
             ));
 
             $response = json_decode(curl_exec($curl));
+          //  print_r($response); die;
             curl_close($curl);
             if ($response->status != "validation_error" || $response->status == "object") {
-                $this->Seller_model->DeliveryOptionUpdate($deliver_id);
+                $this->Seller_model->DeliveryOptionUpdate($deliver_id,'Y');
                 return true;
             } else {
                 return false;
@@ -920,9 +922,11 @@ $u_type = $this->input->post('u_type');
         }
     }
 
-    private function zidWebhookSubscriptionDelete($customer) {
+    private function zidWebhookSubscriptionDelete($customer,$deliver_id) {
         $subscribe = site_configTable('company_name');
         $curl = curl_init();
+        
+       // echo $deliver_id; die;
         
         curl_setopt_array($curl, array(
             CURLOPT_URL => "https://api.zid.dev/app/v2/managers/webhooks?subscriber=".$subscribe."&original_id=" . $customer['uniqueid'],
@@ -943,9 +947,10 @@ $u_type = $this->input->post('u_type');
         ));
 
         $response = json_decode(curl_exec($curl));
-
+        // print_r($response); die;
         curl_close($curl);
         if ($response->status == "success") {
+            $this->Seller_model->DeliveryOptionUpdate($deliver_id,'N');
             return true;
         }
         return false;
