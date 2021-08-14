@@ -139,13 +139,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <form action="<?= base_url('Seller/zidWebhookSubscribe/' . $customer['id']); ?>" method="post" enctype="multipart/form-data" autocomplete="off">
                                     <input type="hidden" class="form-control"  name="id" value="<?php echo $customer['id']; ?>">
                                     <fieldset class="scheduler-border" id="show_zid_details">   
-                                        <legend class="scheduler-border">Zid Webhook UnSubscribe</legend>
+                                        <legend class="scheduler-border">Check Webhook List</legend>
                                         <div div class="form-group">
                                       
                                            
                                         
                                                 <a href="javascript://" class="btn btn-primary" onclick="checkWebook('<?php echo $customer['id']; ?>')">Check Webhook List</a>
-                                                <button type="submit" name="zid_webhook_subscribed" value="N" class="btn btn-danger">UnSubscribe Webhook</button> 
+<!--                                                <button type="submit" name="zid_webhook_subscribed" value="N" class="btn btn-danger">UnSubscribe Webhook</button> -->
 
                                         </div>
                                         <div div class="form-group" id="webhook_id" style="display: none">
@@ -157,9 +157,40 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                                 </form>
                             </div>
-
+                           
                             <?php }   ?>
+  <div class="panel-body">
+                                <form action="<?= base_url('Seller/zidWebhookSubscribe/' . $customer['id']); ?>" method="post" enctype="multipart/form-data" autocomplete="off">
+                                    <input type="hidden" class="form-control"  name="id" value="<?php echo $customer['id']; ?>">
+                                    <fieldset class="scheduler-border" id="show_zid_details">   
+                                        <legend class="scheduler-border">Zid Webhook UnSubscribe</legend>
+                                        <div div class="form-group">
+                                        <div class="subject-info-box-1">
+                                          
+                                    <select  id='zid_delivery_name11'  name="zid_delivery_name" class="form-control">
+                                    <?php if (!empty($delivery_options)): ?>
+                                                <?php foreach ($delivery_options as $rows):
+                                                   if($rows['subscribed']=='Y') { ?>
+                                    <option value="<?= $rows['id']; ?>"> <?= $rows['zid_delivery_name']; ?> </option>
+                                            <?php } endforeach; ?>
+                                            <?php endif; ?>
+                                    </select>
+                                    </div>
+                                           
+                                        
+                                                <button type="submit" name="zid_webhook_subscribed" value="N" class="btn btn-danger pull-right" >UnSubscribe Webhook</button> 
+                                          
 
+                                        </div>
+                                        <div div class="form-group" id="webhook_id" style="display: none">
+
+                                        </div>
+
+                                    </fieldset>  
+
+
+                                </form>
+                            </div>
                                 <div class="panel-body">
                                 <form action="<?= base_url('Seller/zidWebhookSubscribe/' . $customer['id']); ?>" method="post" enctype="multipart/form-data" autocomplete="off">
                                     <input type="hidden" class="form-control"  name="id" value="<?php echo $customer['id']; ?>">
