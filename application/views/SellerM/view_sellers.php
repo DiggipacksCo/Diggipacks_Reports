@@ -80,6 +80,7 @@
                                                 <th><?= lang('lang_Location'); ?></th>
                                                 <th> <?= lang('lang_Phone'); ?>#1</th>
                                                 <th><?= lang('lang_Invoice_Type'); ?></th>
+                                                 <th>Discount</th>
                                                  <th>Status</th>
 
                                                 <th class="text-center" ><i class="icon-database-edit2"></i></th>
@@ -102,6 +103,11 @@
                                                         <td><?= $seller->address; ?></td>
                                                         <td><?= $seller->phone; ?></td>
                                                         <td><?= $seller->invoice_type; ?></td>
+                                                        <?php if ($seller->discount == 1) { ?>
+                                                        <td><span class="label bg-success">Yes</span></td>
+                                                         <?php } else { ?>
+                                                         <td><span class="label bg-warning">No</span></td>
+                                                        <?php } ?>
                                                          <?php if ($seller->status == 'N') { ?>
                                                         <td><span class="label bg-warning">Inactive</span></td>
                                                          <?php } else { ?>

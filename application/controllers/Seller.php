@@ -200,6 +200,12 @@ class Seller extends MY_Controller {
             }
 
             
+            
+            $discount=$this->input->post('discount');
+            if($discount==1)
+                $discount=1;
+            else
+                $discount=0;
             $u_type=$this->input->post('name');
             if($u_type=='B2B')
             {
@@ -249,6 +255,7 @@ class Seller extends MY_Controller {
                 // 'salla_from_date' => $salla_from_date,
                 'invoice_type' => $this->input->post('invoice_type'),
                 'first_out' => $this->input->post('first_out'),
+                'discount'=>$discount
                     //'zid_sid' => $this->input->post('zid_sid'),
                     //'zid_status' => $this->input->post('zid_status'),
             );
@@ -401,6 +408,12 @@ $u_type = $this->input->post('u_type');
               $u_type="B2C";  
             }
         $first_out = $this->input->post('first_out');
+        
+          $discount=$this->input->post('discount');
+            if($discount==1)
+                $discount=1;
+            else
+                $discount=0;
         if (!empty($this->input->post('password'))) {
             $customer_info = array(
                   'u_type' => $u_type,
@@ -435,6 +448,7 @@ $u_type = $this->input->post('u_type');
                 // 'invoice_type' => $this->input->post('invoice_type'),
                 'first_out' => $first_out,
                 'zid_access' => $zid_access,
+                'discount'=>$discount
                     // 'zid_sid' => $this->input->post('zid_sid'),
                     // 'zid_status' => $this->input->post('zid_status'),
             );
@@ -471,6 +485,7 @@ $u_type = $this->input->post('u_type');
                 //'invoice_type' => $this->input->post('invoice_type'),
                 'first_out' => $first_out,
                 'zid_access' => $zid_access,
+                'discount'=>$discount
                     //'zid_sid' => $this->input->post('zid_sid'),
                     //'zid_status' => $this->input->post('zid_status'),
             );

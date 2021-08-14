@@ -13,7 +13,7 @@
 <style type="text/css">
 .form-group.radiosection {
     display: inline-block;
-    width: 19%;
+    width: 16%;
 }
 </style>
 </head>
@@ -71,6 +71,11 @@
                       <label for="first_out"><strong><?= lang('lang_Inventory_First_In_First_Out'); ?>  :</strong></label><br>
                       
                       <input type="radio" name="first_out" id="first_out" value="Y">  <?= lang('lang_Yes'); ?> <input type="radio" name="first_out" id="first_out" checked="" value="N">  <?= lang('lang_No'); ?>
+                  </div>
+                <div class="form-group radiosection">
+                      <label for="first_out"><strong>Discount  :</strong></label><br>
+                      
+                      <input type="radio" name="discount" id="discount1" value="1">  <?= lang('lang_Yes'); ?> <input type="radio" name="discount" id="discount2" checked="" value="0">  <?= lang('lang_No'); ?>
                   </div>
 
                 <div class="form-group">
