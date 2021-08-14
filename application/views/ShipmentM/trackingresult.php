@@ -13,6 +13,7 @@
         <?php $this->load->view('include/main_navbar'); ?>
 
         <!-- Page container -->
+        
         <div class="page-container" ng-app="fulfill" ng-controller="ExportCtrl" ng-init="slipnosdetails('<?=implode(',', $traking_awb_no);?>');"> 
 
             <!-- Page content -->

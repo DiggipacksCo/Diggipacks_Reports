@@ -2489,9 +2489,9 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
                 }
             };
     $scope.transferShiptracking = function () {
+        $scope.baseUrl = new $window.URL($location.absUrl()).origin;
 
-
-         $http({ url: "Shipment/getexceldatatracking",
+         $http({ url:  $scope.baseUrl+"/Shipment/getexceldatatracking",
                     method: "POST",
                     data: {slip_nos: $scope.slipnos,listData2: $scope.listData2,},
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}

@@ -1945,11 +1945,13 @@ class Shipment extends MY_Controller {
 //echo "sssssss"; die;
         $searchids = $this->input->post('tracking_numbers');
 
-
+if(!empty( $searchids))
+{
         $data['traking_awb_no'] = preg_split('/\s+/', trim($searchids));
         // print_r($data['traking_awb_no']);
         $data['shipmentdata'] = $this->Shipment_model->getawbdataquery($data['traking_awb_no']);
         //print_r($data['shipmentdata']); die;
+}
         $this->load->view('ShipmentM/trackingresult', $data);
     }
 
@@ -4545,12 +4547,15 @@ class Shipment extends MY_Controller {
 
 
         $show_awb_no = trim($this->input->post('show_awb_no'));
+        if(!empty( $show_awb_no))
+        {
         //echo $show_awb_no;die;  
         $SlipNos = preg_replace('/\s+/', ',', $show_awb_no);
         $slip_arr = explode(",", $SlipNos);
         $slipData = array_unique($slip_arr);
          $data['traking_awb_no'] =$slipData;
          $data['shipmentdata'] = $this->Shipment_model->getawbdataquery($slipData);
+        }
          if(!empty($data['shipmentdata']))
          {
         //print_r($data['shipmentdata']); die;
