@@ -3822,3 +3822,49 @@ if(!function_exists('GetAllstorageusedSize'))
     }
 }
 
+function shopifyFulfill( $awb, $ref_id,$sellerDetail) {
+    $url=$sellerDetail['shopify_url'];
+    $location_id=$sellerDetail['location_id'];
+    $url = explode('orders.json', $url);
+    $url = $url[0];
+    $f_arr = array(
+        "fulfillment" => array(
+            "tracking_number" => $awb,
+            "tracking_url" => "https://track.diggipacks.com/result_detailfm/" . $awb,
+            "tracking_company" => "Diggipacks",
+            "location_id" => $location_id
+        )
+    );
+
+    $furl = $url . "orders/$ref_id/fulfillments.json";
+     $data_string = json_encode($f_arr);
+
+    $cSession = curl_init();
+
+    $requestHeaders = array();
+    $requestHeaders[] = 'Content-Type:application/json';
+    curl_setopt($cSession, CURLOPT_URL, $furl);
+    curl_setopt($cSession, CURLOPT_HTTPHEADER, $requestHeaders);
+    curl_setopt($cSession, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($cSession, CURLOPT_VERBOSE, 0);
+    curl_setopt($cSession, CURLOPT_HEADER, true);
+    curl_setopt($cSession, CURLOPT_CUSTOMREQUEST, 'POST');
+    curl_setopt($cSession, CURLOPT_POSTFIELDS, $data_string);
+    curl_setopt($cSession, CURLOPT_SSL_VERIFYPEER, false);
+
+    $result = curl_exec($cSession);
+
+    if ($result) {
+        $httpCode = curl_getinfo($cSession, CURLINFO_HTTP_CODE);
+        $aHeaderInfo = curl_getinfo($cSession);
+        $curlHeaderSize = $aHeaderInfo['header_size'];
+        $sBody = trim(mb_substr($result, $curlHeaderSize));
+
+        $ResponseHeader = explode("\n", trim(mb_substr($result, 0, $curlHeaderSize)));
+        $responseArray = json_decode($sBody, true);
+        echo "<pre>";
+        print_r($responseArray);
+        curl_close($cSession);
+    }
+}
+

@@ -799,17 +799,22 @@ class PickUp extends MY_Controller {
                 $OutboundArray[$key]['pieces'] = $totalPieces;
                 $OutboundArray[$key]['super_id'] = $this->session->userdata('user_details')['super_id'];
 
-                $token = GetallCutomerBysellerId($seller_id, 'manager_token');
-                $salatoken = GetallCutomerBysellerId($seller_id, 'salla_athentication');
-if(!empty( $salatoken))
-{
-    $Salla_tracking_url = $data['frwd_company_label'];  
+                $sellerDetails=GetSinglesellerdata($seller_id,$this->session->userdata('user_details')['super_id']);
+                $token =  $sellerDetails['manager_token'];
+                $salatoken =  $sellerDetails['salla_athentication'];
+                if($sellerDetails['is_shopify_active']==1)
+                {
+                    shopifyFulfill($data['slip_no'],$data['booking_id'],$sellerDetails);
+                }
+            if(!empty( $salatoken))
+            {
+                $Salla_tracking_url = $data['frwd_company_label'];  
                 $frwd_company_awb = ($data['frwd_company_awb'] != '')? $data['frwd_company_awb'] : '';
                 $Salla_status = "DL";
                 $Salla_note = "delivering";
                 $sallaStatus = Salla_StatusUpdate($data['booking_id'], $Salla_status, $Salla_note, $frwd_company_awb, $Salla_tracking_url);
 
-}
+            }
                 
                 
                 
