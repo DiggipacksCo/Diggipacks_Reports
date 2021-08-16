@@ -111,7 +111,7 @@ if ($query->num_rows > 0) {
                 $response = json_decode($response);
                 
                 if ($response->status == 200 && $customer['shopify_fulfill'] == 1) {
-                    fulfillment($url, $response->awb_no, $order->id,$location_id);
+                    //fulfillment($url, $response->awb_no, $order->id,$location_id);
                 }
             }
         }

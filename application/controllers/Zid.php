@@ -1,8 +1,8 @@
 <?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
-error_reporting(-1);
-		ini_set('display_errors', 1);
+// error_reporting(-1);
+// 		ini_set('display_errors', 1);
 class Zid extends CI_Controller {
 
     public function __construct() {
@@ -50,8 +50,9 @@ class Zid extends CI_Controller {
             $customers = $this->Zid_model->fetch_zid_customers($uniqueid);
            
            // $customers['zid_status']='Ready';
-            //print_r($postData); exit;
-             $deliveryOption=deliveryOption($customers['id']); 
+        //print_r($postData); exit;
+             $deliveryOption=deliveryOption_new($customers['id']); 
+              //  print_r($deliveryOption); 
             $manager_token = $customers['manager_token'];
             $Bearer = site_configTableSuper_id('zid_provider_token',$customers['super_id']); 
               
@@ -119,8 +120,8 @@ class Zid extends CI_Controller {
                     
                   //  echo  $customers['zid_status'];
                   // print_r( $result1); exit;
-                 
-                    if ($result1['order']['order_status']['code'] == $customers['zid_status'] && ( trim($result1['order']['shipping']['method']['name']) ==  trim($deliveryOption) || trim($result1['order']['shipping']['method']['name'])=='DIGGIPACKS' ) ) 
+                 //echo $result1['order']['shipping']['method']['name']; exit;
+                    if ($result1['order']['order_status']['code'] == $customers['zid_status'] && ( in_array($result1['order']['shipping']['method']['name'],$deliveryOption)  || trim($result1['order']['shipping']['method']['name'])=='DIGGIPACKS' ) ) 
                     {
                    
                         $weight = 0;

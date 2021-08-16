@@ -263,6 +263,21 @@ $result=$query->row_array();
 }
 
 
+function deliveryOption_new($cust_id) {
+    $ci = & get_instance();
+    $ci->load->database();
+    $sql = "SELECT  `zid_delivery_name`FROM `zid_deliver_options` WHERE `cust_id` = '" . $cust_id . "'";
+    $query = $ci->db->query($sql);
+$result=$query->result_array();
+$retArray=array();
+foreach($result as $r)
+    {
+      array_push( $retArray,$r['zid_delivery_name']);
+    }
+    return $retArray;
+}
+
+
 //*************************Quantity Update function in Salla*************************//
 function update_salla_qty_product($quantity = null, $pid = null, $token = null,$cust_id=null) 
 {
