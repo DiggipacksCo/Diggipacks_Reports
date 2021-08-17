@@ -8,6 +8,7 @@
         <title><?=lang('lang_Inventory');?></title>
         <?php $this->load->view('include/file'); ?>
         <script type="text/javascript" src="<?= base_url(); ?>assets/js/angular/lminvoice.app.js"></script>
+		
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
 

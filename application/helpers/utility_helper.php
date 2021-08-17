@@ -1826,7 +1826,7 @@ if (!function_exists('GetCityAllDataByname')) {
     function GetCityAllDataByname($name = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT * FROM country where city='$name' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT * FROM country where city='".addslashes($name)."' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
         $query = $ci->db->query($sql);
         //echo $ci->db->last_query();exit;
         return $query->row_array();
@@ -3823,7 +3823,8 @@ if(!function_exists('GetAllstorageusedSize'))
 }
 
 function shopifyFulfill( $awb, $ref_id,$sellerDetail) {
-    $url=$sellerDetail['shopify_url'];
+   // print_r($sellerDetail);
+    $url=$sellerDetail['shopify_url']; 
     $location_id=$sellerDetail['location_id'];
     $url = explode('orders.json', $url);
     $url = $url[0];
@@ -3835,8 +3836,10 @@ function shopifyFulfill( $awb, $ref_id,$sellerDetail) {
             "location_id" => $location_id
         )
     );
+    echo '<pre>';
 
-    $furl = $url . "orders/$ref_id/fulfillments.json";
+ print_r($f_arr);
+   echo $furl = $url . "orders/$ref_id/fulfillments.json"; 
      $data_string = json_encode($f_arr);
 
     $cSession = curl_init();
@@ -3852,7 +3855,7 @@ function shopifyFulfill( $awb, $ref_id,$sellerDetail) {
     curl_setopt($cSession, CURLOPT_POSTFIELDS, $data_string);
     curl_setopt($cSession, CURLOPT_SSL_VERIFYPEER, false);
 
-    $result = curl_exec($cSession);
+  echo  $result = curl_exec($cSession);
 
     if ($result) {
         $httpCode = curl_getinfo($cSession, CURLINFO_HTTP_CODE);

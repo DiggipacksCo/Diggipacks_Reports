@@ -3839,8 +3839,8 @@ if(!empty($awbids ))
             $this->db->where($where);
         }
         
-        if (!empty($data['from_c']) && !empty($data['to_c'])) {
-            $where = "DATE(shipment_fm.close_date) BETWEEN '" . $data['from_c'] . "' AND '" . $data['to_c'] . "'";
+        if (!empty($filterData['from_c']) && !empty($filterData['to_c'])) {
+            $where = "DATE(shipment_fm.close_date) BETWEEN '" . $filterData['from_c'] . "' AND '" . $filterData['to_c'] . "'";
 
 
             $this->db->where($where);
