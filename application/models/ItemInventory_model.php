@@ -2544,10 +2544,14 @@ class ItemInventory_model extends CI_Model {
 
     public function inventoryCheckQry($data = array()) {
         $this->db->where('item_inventory.super_id', $this->session->userdata('user_details')['super_id']);
-        $this->db->select('item_inventory.*,customer.name as cust_name,items_m.sku,customer.id as cust_id');
+        $this->db->where('items_m.super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->where('storage_table.super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->select('item_inventory.*,customer.name as cust_name,items_m.sku,items_m.sku_size,customer.id as cust_id,storage_table.storage_type');
         $this->db->from('item_inventory');
         $this->db->join('customer', 'customer.id = item_inventory.seller_id');
         $this->db->join('items_m', 'items_m.id = item_inventory.item_sku');
+        $this->db->join('storage_table', 'storage_table.id = items_m.storage_id');
+
         $this->db->where('customer.id', $data['cust_name']);
         $this->db->where('item_inventory.stock_location!=', '');
         //$this->db->group_by('item_inventory.seller_id');

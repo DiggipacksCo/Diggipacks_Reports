@@ -202,6 +202,8 @@ class Seller extends MY_Controller {
             
             
             $discount=$this->input->post('discount');
+            $discount_f=$this->input->post('discount_f');
+            $discount_to=$this->input->post('discount_to');
             if($discount==1)
                 $discount=1;
             else
@@ -255,7 +257,9 @@ class Seller extends MY_Controller {
                 // 'salla_from_date' => $salla_from_date,
                 'invoice_type' => $this->input->post('invoice_type'),
                 'first_out' => $this->input->post('first_out'),
-                'discount'=>$discount
+                'discount'=>$discount,
+                'discount_f'=>$discount_f,
+                'discount_to'=>$discount_to
                     //'zid_sid' => $this->input->post('zid_sid'),
                     //'zid_status' => $this->input->post('zid_status'),
             );
@@ -414,6 +418,11 @@ $u_type = $this->input->post('u_type');
                 $discount=1;
             else
                 $discount=0;
+            
+            
+            $discount_f=$this->input->post('discount_f');
+            $discount_to=$this->input->post('discount_to');
+            
         if (!empty($this->input->post('password'))) {
             $customer_info = array(
                   'u_type' => $u_type,
@@ -448,7 +457,9 @@ $u_type = $this->input->post('u_type');
                 // 'invoice_type' => $this->input->post('invoice_type'),
                 'first_out' => $first_out,
                 'zid_access' => $zid_access,
-                'discount'=>$discount
+                'discount'=>$discount,
+                 'discount_f'=>$discount_f,
+                'discount_to'=>$discount_to
                     // 'zid_sid' => $this->input->post('zid_sid'),
                     // 'zid_status' => $this->input->post('zid_status'),
             );
@@ -485,7 +496,9 @@ $u_type = $this->input->post('u_type');
                 //'invoice_type' => $this->input->post('invoice_type'),
                 'first_out' => $first_out,
                 'zid_access' => $zid_access,
-                'discount'=>$discount
+                'discount'=>$discount,
+                 'discount_f'=>$discount_f,
+                'discount_to'=>$discount_to
                     //'zid_sid' => $this->input->post('zid_sid'),
                     //'zid_status' => $this->input->post('zid_status'),
             );

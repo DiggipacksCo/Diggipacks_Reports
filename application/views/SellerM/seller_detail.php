@@ -18,7 +18,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <style type="text/css">
 .form-group.radiosection {
     display: inline-block;
-    width: 16%;
+    width: 23%;
 }
 </style>
     </head>
@@ -132,11 +132,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                             <input type="radio" name="first_out" id="first_out" <?= $checkfirst_out; ?>  value="Y">  <?= lang('lang_Yes'); ?> <input type="radio" name="first_out" id="invoice_type1" <?= $checkfirst_out1; ?> value="N"> <?= lang('lang_No'); ?>
                                         </div>
                                         
-                                          <div class="form-group radiosection">
-                      <label for="first_out"><strong>Discount  :</strong></label><br>
-                      
-                      <input type="radio" name="discount" id="discount1" value="1" <?=$checku_discount;?>>  <?= lang('lang_Yes'); ?> <input type="radio" name="discount" id="discount2"  value="0" <?=$checku_discount1;?>>  <?= lang('lang_No'); ?>
-                  </div>
+                                          
                                         <div class="form-group">
                                             <label><?= lang('lang_Name'); ?></label>
                                             <input type="text"  class="form-control" id="name" name="name" value="<?= $customer['name']; ?>"/>
@@ -289,6 +285,24 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                             <input class="form-control" type="text" name="vat_no" id="vat_no"  value="<?= $customer['vat_no']; ?>"/>
                                         </div>
                                     </fieldset>
+                                    
+                                     <fieldset class="scheduler-border">
+                <legend class="scheduler-border">Discount</legend>
+               <div class="form-group">
+                      <label ><strong>Discount  :</strong></label><br>
+                      
+                      <input type="radio" name="discount" id="discount1" value="1" <?=$checku_discount;?>>  <?= lang('lang_Yes'); ?> &nbsp;&nbsp; <input type="radio" name="discount" id="discount2"  value="0" <?=$checku_discount1;?>>  <?= lang('lang_No'); ?>
+                  </div>
+                <div class="form-group radiosection">
+                  <label> From</label>
+                  <input class="form-control datepppp" type="text" placeholder="From" name="discount_f" id="discount_f"  value="<?= $customer['discount_f']; ?>"/>
+                </div>  
+                <div class="form-group radiosection">&nbsp;</div>
+                <div class="form-group radiosection">
+                  <label> To</label>
+                  <input class="form-control datepppp" type="text" placeholder="To" name="discount_to" id="discount_to"  value="<?= $customer['discount_to']; ?>"/>
+                </div>
+              </fieldset>
 
                                     <!-- <div class="form-group">
                                                   <strong>C2C Client</strong>&nbsp;&nbsp;<input type="radio"  name="VIP_user" />&nbsp;&nbsp;&nbsp;

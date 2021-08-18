@@ -101,7 +101,7 @@
 
 
                                                         <div class="form-group">
- <a class="btn btn-info" ng-show="ExportBtnShow" type="button" id="btnExport" ><?=lang('lang_export_Report');?></a>
+ <a class="btn btn-info"  type="button" id="btnExport" ><?=lang('lang_export_Report');?></a>
                                                             <a class="btn btn-success" ng-show="ExportBtnShow" ng-confirm-click="Are you sure want save report?" confirmed-click="GetSaveReportInventpry();" >t<?=lang('Lang_Save_Report');?> </a>
 
                                                            
@@ -151,6 +151,8 @@
                                                             <th class="head0"><?=lang('lang_Customer');?></th>
                                                             <th class="head1"><?=lang('lang_Stock_Location');?></th>
                                                             <th class="head1"><?=lang('lang_SKU');?></th>
+                                                            <th class="head1"><?=lang('lang_StorageType');?></th>
+                                                            <th class="head1"><?=lang('lang_Capacity');?></th>
                                                             <th class="head0"><?=lang('lang_Total');?></th> 
                                                             <th class="head1"><?=lang('lang_Scaned');?></th>
                                                             <th class="head0"><?=lang('lang_Extra');?></th>
@@ -172,6 +174,8 @@
                                                             <td><span class="label label-primary">{{data.stock_location}}</span></td>
 
                                                             <td><span class="label label-warning">{{data.sku}}</span></td>
+                                                            <td><span class="label label-info">{{data.storage_type}}</span></td>
+                                                            <td><span class="label label-warning">{{data.sku_size}}</span></td>
                                                             <td ng-if="data.piece > data.scaned"  >  <span class="badge badge badge-pill badge-info" >{{data.piece}}</span></td>
                                                             <td ng-if="data.piece == data.scaned"  >  <span class="badge badge badge-pill badge-success" >{{data.piece}}</span></td>
 
