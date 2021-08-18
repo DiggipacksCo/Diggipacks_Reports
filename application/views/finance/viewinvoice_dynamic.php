@@ -1,8 +1,8 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
-<script type="text/javascript" src="js/jszip.js"></script>
-<script type="text/javascript" src="assets/js/jszip-utils.js"></script>
-<script type="text/javascript" src="assets/js/FileSaver.js"></script>
+<script type="text/javascript" src="<?=base_url();?>assets/jszip.js"></script>
+<script type="text/javascript" src="<?=base_url();?>assets/jszip-utils.js"></script>
+<script type="text/javascript" src="<?=base_url();?>assets/FileSaver.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"  />
 <div class="centercontent tables">
 	<div id="contentwrapper" class="contentwrapper">
@@ -49,7 +49,8 @@
 			}
 			</style>
 			<br />
-			<table  cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;width: 100%;">
+			<div id='print'>
+			<table   cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;width: 100%;">
 				<tr>
 					<!-- <td colspan="5"></td> -->
 					<td colspan="13" style="text-align:center;"><strong>Tax Invoice -  الفاتورة الضريبية</strong></td>
@@ -87,7 +88,7 @@
 				</tr>
 				
 				</table>
-				<table  cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;width: 100%;">
+				<table   cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;width: 100%;">
 				<thead>
 				<tr>
 			
@@ -354,28 +355,9 @@
 							</tr>
 								</tbody>
 						</table>
-				
+				</div>
 				
 				<!-- Export To Excel -->
-				<SCRIPT>
-				function create_zip() {
-					var tab_text = '<html xmlns:x="urn:schemas-microsoft-com:office:excel"><meta http-equiv="content-type" content="text/plain; charset=UTF-8"/>';
-					tab_text = tab_text + '<head><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>';
-					tab_text = tab_text + '<x:Name>Test Sheet</x:Name>';
-					tab_text = tab_text + '<x:WorksheetOptions><x:Panes></x:Panes></x:WorksheetOptions></x:ExcelWorksheet>';
-					tab_text = tab_text + '</x:ExcelWorksheets></x:ExcelWorkbook></xml><meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8"></head><body>';
-					tab_text = tab_text + "<table border='1px'>";
-					//get table HTML code
-					tab_text = tab_text + $('#printme').html();
-					tab_text = tab_text + '</table></body></html>';
-					var zip = new JSZip();
-					zip.file(Date() + " Invoice.xls", tab_text);
-					zip.generateAsync({
-						type: "blob"
-					}).then(function(content) {
-						saveAs(content, Date() + "invoice.zip");
-					});
-				}
-				</SCRIPT>
+				<script type="text/javascript" src="<?= base_url(); ?>assets/zip_request.js"></script>
 				<form action='' id='new_form' method='POST'>
 					<input type='hidden' id='new_id' name='exceldata'> </form>

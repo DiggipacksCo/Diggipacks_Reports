@@ -802,9 +802,9 @@ class PickUp extends MY_Controller {
                 $sellerDetails=GetSinglesellerdata($seller_id,$this->session->userdata('user_details')['super_id']);
                 $token =  $sellerDetails['manager_token'];
                 $salatoken =  $sellerDetails['salla_athentication'];
-                if($sellerDetails['is_shopify_active']==1)
+                if($sellerDetails['is_shopify_active']==1 && !empty($data['shopify_order_id']))
                 {
-                    shopifyFulfill($data['slip_no'],$data['booking_id'],$sellerDetails);
+                    shopifyFulfill($data['slip_no'],$data['shopify_order_id'],$sellerDetails);
                 }
             if(!empty( $salatoken))
             {

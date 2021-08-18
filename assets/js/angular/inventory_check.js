@@ -135,7 +135,7 @@ var app = angular.module('InventoryCheckApp', [])
                         $scope.totalpiece+=parseInt(value.quantity);
                          //console.log($scope.totalpiece);
                         
-                        $scope.shipData.push({'cust_id': value.cust_id,'cust_name': value.cust_name, 'stock_location': value.stock_location, 'sku': value.sku, 'sku1': value.sku, 'piece': value.quantity, 'scaned': 0, 'extra': 0});
+                        $scope.shipData.push({'cust_id': value.cust_id,'cust_name': value.cust_name,'storage_type': value.storage_type, 'sku_size': value.sku_size,'stock_location': value.stock_location, 'sku': value.sku, 'sku1': value.sku, 'piece': value.quantity, 'scaned': 0, 'extra': 0});
 
                     });
                   

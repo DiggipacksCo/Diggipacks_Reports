@@ -230,7 +230,7 @@ public function payableInvoice_update()
 		$shipmentdata= $this->Shipment_model->getawbdataquery($finalArray);
 		$chargeData= $this->LastMile_model->calculateShipCharge($cust_id);
 		$returnData= $this->LastMile_model->calculateReturn($cust_id);
-		//print_r($chargeData); exit;
+		//echo json_encode($chargeData); exit;
 		foreach($returnData as $rdata)
 		{
 			if($rdata['name']=='Additional Return')
@@ -244,7 +244,8 @@ public function payableInvoice_update()
 			}
 		}
 		
-		
+	
+		//print_r($shipmentdata);
 		foreach($shipmentdata as $key=>$val)
 		{
 			$keyCheck=null;
@@ -325,7 +326,7 @@ public function payableInvoice_update()
 			}
 			if($shipCharge==0 && $return_charge==0)
 			{
-				array_push( $priceZero,$val['awb_no']);
+				array_push( $priceZero,$val['slip_no']);
 			}
 			else{
 			$invoiceArray[]= array(
@@ -364,7 +365,7 @@ public function payableInvoice_update()
 			$this->LastMile_model->updateShipmet($where_in); 
 			$this->LastMile_model->addlmIncoice($invoiceArray);
 		}
-		echo json_encode($invoiceArray );
+		echo json_encode( array('price_zero'=>$priceZero) );
 	}
 
 

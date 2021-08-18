@@ -3836,11 +3836,11 @@ function shopifyFulfill( $awb, $ref_id,$sellerDetail) {
             "location_id" => $location_id
         )
     );
-    echo '<pre>';
+   
 
- print_r($f_arr);
-   echo $furl = $url . "orders/$ref_id/fulfillments.json"; 
-     $data_string = json_encode($f_arr);
+
+   $furl = $url . "orders/$ref_id/fulfillments.json"; 
+    $data_string = json_encode($f_arr);
 
     $cSession = curl_init();
 
@@ -3855,19 +3855,19 @@ function shopifyFulfill( $awb, $ref_id,$sellerDetail) {
     curl_setopt($cSession, CURLOPT_POSTFIELDS, $data_string);
     curl_setopt($cSession, CURLOPT_SSL_VERIFYPEER, false);
 
-  echo  $result = curl_exec($cSession);
+    $result = curl_exec($cSession);
 
-    if ($result) {
-        $httpCode = curl_getinfo($cSession, CURLINFO_HTTP_CODE);
-        $aHeaderInfo = curl_getinfo($cSession);
-        $curlHeaderSize = $aHeaderInfo['header_size'];
-        $sBody = trim(mb_substr($result, $curlHeaderSize));
+    // if ($result) {
+    //     $httpCode = curl_getinfo($cSession, CURLINFO_HTTP_CODE);
+    //     $aHeaderInfo = curl_getinfo($cSession);
+    //     $curlHeaderSize = $aHeaderInfo['header_size'];
+    //     $sBody = trim(mb_substr($result, $curlHeaderSize));
 
-        $ResponseHeader = explode("\n", trim(mb_substr($result, 0, $curlHeaderSize)));
-        $responseArray = json_decode($sBody, true);
-        echo "<pre>";
-        print_r($responseArray);
-        curl_close($cSession);
-    }
+    //     $ResponseHeader = explode("\n", trim(mb_substr($result, 0, $curlHeaderSize)));
+    //     $responseArray = json_decode($sBody, true);
+    //     echo "<pre>";
+    //     print_r($responseArray);
+    //     curl_close($cSession);
+    // }
 }
 
