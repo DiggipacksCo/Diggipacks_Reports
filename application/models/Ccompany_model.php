@@ -2117,7 +2117,7 @@ class Ccompany_model extends CI_Model {
                     'reference_number' => '',
                     'load_type' => 'NON-DOCUMENT',
                     'description' => $complete_sku,
-                    'service_type_id' => 'B2B',
+                    'service_type_id' => 'B2C',
                     'cod_favor_of' => '',
                     'dimension_unit' => 'cm',
                     'length' => '',
