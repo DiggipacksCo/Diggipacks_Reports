@@ -637,7 +637,7 @@ class PickUp extends MY_Controller {
             $url = $_SERVER['HTTP_HOST'];
             $url = ltrim($url, 'fm.');
             $companyName= 'Diggipacks';
-            $trackLink= 'https://track/'. $url.'/result_detailfm/'.$shData['slip_no'];
+            $trackLink= 'https://track'. $url.'/result_detailfm/'.$shData['slip_no'];
 
         }
        

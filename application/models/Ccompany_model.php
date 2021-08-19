@@ -6576,7 +6576,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
         $ch = curl_init();
 
         curl_setopt_array($ch, array(
-          CURLOPT_URL => "https://auth-dev.525k.io/oauth2/token",
+          CURLOPT_URL => "https://auth-prod.525k.io/oauth2/token",
           CURLOPT_RETURNTRANSFER => true,
           CURLOPT_SSL_VERIFYHOST =>false,
           CURLOPT_SSL_VERIFYPEER => false,
@@ -6595,7 +6595,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
         $responseArray = json_decode($Auth_response, true);
         //print_r($responseArray);die;
         $Auth_token = $responseArray['access_token'];
-        //print_r($Auth_token);die;
+        // print_r($Auth_token);die;
         return $Auth_token;
     
     }
