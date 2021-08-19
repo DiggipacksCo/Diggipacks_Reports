@@ -1706,12 +1706,10 @@ class Manifest extends CourierCompany_pickup {
                        $returnArr['Error_msg'][] = $slipNo . ':Token Not Genrated'; 
                     }
             
-            } elseif ($company== 'MICGO') { 
+            }elseif ($company== 'MICGO') { 
                 
                             $Auth_token = $this->Ccompany_model->MICGO_AUTH($counrierArr);                           
-
                             $responseArray = $this->Ccompany_model->MICGOarray($sellername, $ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$Auth_token,$super_id); 
-
                             $successres = $responseArray['error'];                        
                             $error_status = $responseArray['message'];
                         if (empty($successres))
@@ -1736,7 +1734,33 @@ class Manifest extends CourierCompany_pickup {
                             $returnArr['Error_msg'][] = $slipNo . ':' .$error_status;
                         }
                     
-                    } elseif ($company_type == 'F') { // for all fastcoo clients treat as a CC 
+                    }elseif ($company== 'Dots') {
+                            
+                            $responseArray = $this->Ccompany_model->DOTSarray($sellername, $ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$super_id); 
+                            
+                            $statusCode = $responseArray['status'];
+                            
+                            if ($statusCode == 'OK' && $responseArray['code'] == '200'){
+                                
+                                $client_awb = $responseArray['payload']['awbs'][0]['code'];
+                                $LabelUrl = $responseArray['payload']['awbs'][0]['label_url'];;
+
+//                                $generated_pdf = file_get_contents($Label);
+//                                file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+//                                $micGoLabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';
+                                
+                                $CURRENT_DATE = date("Y-m-d H:i:s");
+                                $CURRENT_TIME = date("H:i:s");
+                                $comment = 'Dots Forwarding';
+                                $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $LabelUrl, $c_id);
+                                array_push($succssArray, $slipNo);                          
+                                $returnArr['Success_msg'][] = $slipNo . ':Successfully Assigned';
+                            } else {
+                                $error_status = json_encode($responseArray['payload']);
+                                $returnArr['Error_msg'][] = $slipNo . ':' .$error_status;
+                            }
+                    
+                    }elseif($company_type == 'F') { // for all fastcoo clients treat as a CC 
             
                 if ($company=='Ejack' ) 
                         {
@@ -4604,6 +4628,32 @@ class Manifest extends CourierCompany_pickup {
                             {
                                 $returnArr['responseError'][] = $slipNo . ':' .$error_status;
                             }
+            }elseif ($company== 'Dots') {
+                            
+                            $responseArray = $this->Ccompany_model->DOTSarray($sellername, $ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$super_id); 
+                            
+                            $statusCode = $responseArray['status'];
+                            
+                            if ($statusCode == 'OK' && $responseArray['code'] == '200'){
+                                
+                                $client_awb = $responseArray['payload']['awbs'][0]['code'];
+                                $LabelUrl = $responseArray['payload']['awbs'][0]['label_url'];;
+
+//                                $generated_pdf = file_get_contents($Label);
+//                                file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+//                                $micGoLabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';
+                                
+                                $CURRENT_DATE = date("Y-m-d H:i:s");
+                                $CURRENT_TIME = date("H:i:s");
+                                $comment = 'Dots Forwarding';
+                                $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
+                                array_push($succssArray, $slipNo);                          
+                                $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' : forwarded to Dots.';
+                            } else {
+                                $error_status = json_encode($responseArray['payload']);
+                                $returnArr['responseError'][] = $slipNo . ':' .$error_status;
+                            }
+                           
             }elseif ($company_type== 'F'){ // for all fastcoo clients treat as a CC 
                       
                 $response = $this->Ccompany_model->fastcooArray($sellername, $ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1, $super_id);

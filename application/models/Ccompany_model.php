@@ -241,7 +241,7 @@ class Ccompany_model extends CI_Model {
            'reciever_address' => addslashes($ShipArr['reciever_address']),
            'reciever_phone' => $ShipArr['reciever_phone'],
            //'reciever_city' =>  $ShipArr['destination'],
-           'reciever_email' => $ShipArr['reciever_email'],
+           'reciever_email' => !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com',
            'status_describtion' => addslashes($ShipArr['status_describtion']),
            'entrydate' => $CURRENT_DATE,
            'mode' => $ShipArr['pay_mode'],
@@ -612,7 +612,7 @@ class Ccompany_model extends CI_Model {
                                                     'PhoneNumber2Ext' => '',
                                                     'FaxNumber' => '',
                                                     'CellPhone' => $ShipArr['reciever_phone'],
-                                                    'EmailAddress' => 'support@diggipacks.com',
+                                                    'EmailAddress' =>  !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com',
                                                     'Type' => '',
                                                 ),
                                             ),
@@ -814,7 +814,7 @@ class Ccompany_model extends CI_Model {
                             'PhoneNumber2Ext' => '',
                             'FaxNumber' => '',
                             'CellPhone' => $ShipArr['reciever_phone'],
-                            'EmailAddress' => $ShipArr['reciever_email'],
+                            'EmailAddress' =>  !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com',
                             'Type' => '',
                         ),
                     ),
@@ -1038,7 +1038,7 @@ class Ccompany_model extends CI_Model {
         $recipient_data = array(
             "address_type" => "residential",
             "name" => $ShipArr['reciever_name'],
-            "email" => $ShipArr['reciever_email'],
+            "email" => !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com',
             "street" => $ShipArr['reciever_address'],
             "city" => array(
                 "id" => $receiver_city
@@ -1157,7 +1157,7 @@ class Ccompany_model extends CI_Model {
         $recipient_data = array(
             "address_type" => "residential",
             "name" => $ShipArr['reciever_name'],
-            "email" => $ShipArr['reciever_email'],
+            "email" => !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com',
             "street" => html_entity_decode($ShipArr['reciever_address']),
             "city" => array(
                 "name" => $receiver_city
@@ -1423,7 +1423,7 @@ class Ccompany_model extends CI_Model {
             'paymentMethod' => $cod_collection_mode,
             'paymentAmount' => $cod_amount,
             'consigneeName' => $ShipArr['reciever_name'], 
-            'consigneeEmail' => $ShipArr['reciever_email'],
+            'consigneeEmail' => !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com',
             'consigneeMobile' => $ShipArr['reciever_phone'],
             'consigneePhone' => $ShipArr['reciever_phone'], 
             'consigneeCity' => $receiver_city, 
@@ -1541,7 +1541,7 @@ class Ccompany_model extends CI_Model {
             'consignor_alternate_country_code' => '',
             'consignor_alternate_phone' => '',
             'consignee' => $ShipArr['reciever_name'],
-            'consignee_email' => $ShipArr['receiver_email'],
+            'consignee_email' => !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com',
             'destination_city' => $receiver_city,
             'destination_area_new' => '',
             'consignee_street_name' => $ShipArr['reciever_address'],
@@ -2117,7 +2117,7 @@ class Ccompany_model extends CI_Model {
                     'reference_number' => '',
                     'load_type' => 'NON-DOCUMENT',
                     'description' => $complete_sku,
-                    'service_type_id' => 'B2B',
+                    'service_type_id' => 'B2C',
                     'cod_favor_of' => '',
                     'dimension_unit' => 'cm',
                     'length' => '',
@@ -2238,7 +2238,7 @@ class Ccompany_model extends CI_Model {
         $recipient_data = array(
             "address_type" => "residential",
             "name" => $ShipArr['reciever_name'],
-            "email" => $ShipArr['reciever_email'],
+            "email" => !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com',
             "street" => $ShipArr['reciever_address'],
             "city" => array(
                 'code' => $receiver_city
@@ -2374,7 +2374,7 @@ class Ccompany_model extends CI_Model {
             "weight" => $weight,
             "quantity" => $box_pieces,
             "description" => "",
-            "email" => $ShipArr['reciever_email'],
+            "email" => !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com',
             "pickup_address_id" => '',
             "Pickup_address_code" => '',
             "sendername" =>$sender_name,
@@ -2477,7 +2477,7 @@ class Ccompany_model extends CI_Model {
             "cod_amount" => $cod_amount,
             "currency" => $currency,
             "delivery_name" => $ShipArr['reciever_name'],
-            "delivery_email" => $ShipArr['reciever_email'],
+            "delivery_email" => !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com',
             "delivery_city" => $receiver_city,
             "delivery_address" => $ShipArr['reciever_address'],
             "delivery_country" => 'SA',
@@ -2597,7 +2597,7 @@ class Ccompany_model extends CI_Model {
         }
        
         $comp_api_url = $counrierArr['api_url'];
-
+        $receiver_email = !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com';
         $SMSAXML = '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
             <soap:Body>
                 <addShip xmlns="http://track.smsaexpress.com/secom/">
@@ -2617,7 +2617,7 @@ class Ccompany_model extends CI_Model {
                   <cAddr2></cAddr2>
                   <shipType>DLV</shipType>
                   <PCs>' . $box_pieces . '</PCs>
-                  <cEmail>' . $ShipArr['reciever_email'] . '</cEmail>
+                  <cEmail>' . $receiver_email . '</cEmail>
                   <carrValue>2</carrValue>
                   <carrCurr>2</carrCurr>
                   <codAmt>' . $codValue . '</codAmt>
@@ -2758,6 +2758,7 @@ class Ccompany_model extends CI_Model {
            $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city', $super_id);
            $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'naqel_city_code',$super_id);
            $destination_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'city',$super_id);
+           $receiver_email = !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com';
         
             if ($ShipArr['pay_mode'] == 'CC') {
                     $BillingType = 1;
@@ -2816,7 +2817,7 @@ class Ccompany_model extends CI_Model {
 
                                     <tem:ConsigneeInfo>
                                     <tem:ConsigneeName>' .$ShipArr['reciever_name'].'</tem:ConsigneeName>
-                                    <tem:Email>' . $ShipArr['reciever_email'] . '</tem:Email>
+                                    <tem:Email>' . $receiver_email . '</tem:Email>
                                     <tem:Mobile>' . $ShipArr['reciever_phone'] . '</tem:Mobile>
                                     <tem:PhoneNumber>' . $ShipArr['reciever_phone'] . '</tem:PhoneNumber>
                                     <tem:Address>' .$reciever_address.'</tem:Address>
@@ -2976,7 +2977,7 @@ class Ccompany_model extends CI_Model {
                                                     "pincode" => '',
                                                     "city" =>$receiver_city,
                                                     "state" => '',
-                                                    "email" => $ShipArr['reciever_email'],
+                                                    "email" => !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com',
                                                 ),
 
                                             "pieces_detail" => Array
@@ -3121,7 +3122,7 @@ class Ccompany_model extends CI_Model {
             'name' => $ShipArr['reciever_name'],
             'address' => $ShipArr['reciever_address'],
             'phone' => $number,
-            'email' => $ShipArr['reciever_email'],
+            'email' => !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com',
             'city' => $receiver_city,
         );
         $param[] = array(
@@ -3482,7 +3483,7 @@ class Ccompany_model extends CI_Model {
         }
        
         $Receiver_name = $ShipArr['reciever_name'];
-        $Receiver_email = $ShipArr['reciever_email'];
+        $Receiver_email = !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com';
         $Receiver_phone = $ShipArr['reciever_phone'];
         $Receiver_address = $ShipArr['reciever_address'];
         if (empty($Receiver_address)) {
@@ -3575,7 +3576,7 @@ class Ccompany_model extends CI_Model {
         }
        
         $Receiver_name = $ShipArr['reciever_name'];
-        $Receiver_email = $ShipArr['reciever_email'];
+        $Receiver_email = !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com';
         $Receiver_phone = $ShipArr['reciever_phone'];
         $Receiver_address = $ShipArr['reciever_address'];
         if (empty($Receiver_address)) {
@@ -3706,7 +3707,7 @@ class Ccompany_model extends CI_Model {
                     "receiver_name" => $ShipArr['reciever_name'],
                     "receiver_address" => $ShipArr['reciever_address'],
                     "receiver_phone" => $ShipArr['reciever_phone'],
-                    "receiver_email" =>  $ShipArr['reciever_email'],
+                    "receiver_email" =>  !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com',
                     "description" => $complete_sku,
                     "pieces"=>  $box_pieces,
                     "weight"=> $weight,
@@ -4171,7 +4172,7 @@ class Ccompany_model extends CI_Model {
                 'Reference' => '',
                 'Contact' => array(
                     'Name' => $ShipArr['reciever_name'],
-                    'Email' => $ShipArr['reciever_email'],
+                    'Email' => !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com',
                     'Phone' => $ShipArr['reciever_phone'],
                     'SecondPhone' => ''
                 ),
@@ -4383,7 +4384,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
                                 "PersonName"=> $ShipArr['reciever_name'],
                                 "CompanyName"=> $ShipArr['reciever_name'],
                                 "PhoneNumber"=> $ShipArr['reciever_phone'],
-                                "EmailAddress"=> $ShipArr['reciever_email']
+                                "EmailAddress"=> !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com'
                             ),
                             "Address"=>array(
                                 "StreetLines"=> substr($ShipArr['reciever_address'], 0,50),
@@ -4968,7 +4969,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
         $userName = $counrierArr['user_name'];
         
         $Receiver_name = $ShipArr['reciever_name'];
-        $Receiver_email = $ShipArr['reciever_email'];
+        $Receiver_email = !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com';
         $Receiver_phone = $ShipArr['reciever_phone'];
         $Receiver_address = $ShipArr['reciever_address']; 
         if (empty($Receiver_address)) {
@@ -5139,7 +5140,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
                     array(
                         "order_reference"=> $ShipArr['slip_no'],
                         "name"=> $ShipArr['reciever_name'],
-                        "email"=> $ShipArr['reciever_email'],
+                        "email"=> !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com',
                         "phone_number"=>$ShipArr['reciever_phone'],
                         "address"=> $ShipArr['reciever_address'],
                         "receiver_country"=> $country, //"Saudi Arabia",
@@ -5302,7 +5303,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
             "pack_sender_extar_address" => "NA",
             "pack_sender_longitude" => "NA",
             "pack_sender_latitude" => "NA",
-            "pack_reciver_email" => $ShipArr['reciever_email'],
+            "pack_reciver_email" => !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com',
             "pack_reciver_street" => $ShipArr['reciever_address'],
             "pack_reciver_zipcode" => "",
             "pack_reciver_building" => "",
@@ -5411,7 +5412,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
                 'delivery_postal_code'=>'0',
                 'delivery_country'=>'SA',
                 'delivery_phone'=>$Receiver_phone = $ShipArr['reciever_phone'],
-                'delivery_email'=>$ShipArr['reciever_email'],
+                'delivery_email'=>!empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com',
                 'delivery_location_w3w'=>'bikers.exam.boots',
                 'delivery_location_lat'=>$lat,
                 'delivery_location_lng'=>$lang,
@@ -5546,7 +5547,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
                 "ReceiversCompany"=>"",
                 "ReceiversContactPerson"=>$ShipArr['reciever_name'],
                 "ReceiversCountry"=>'Egypt',
-                "ReceiversEmail"=>$ShipArr['reciever_email'],
+                "ReceiversEmail"=>!empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com',
                 "ReceiversGeoLocation"=>"",
                 "ReceiversMobile"=>$ShipArr['reciever_phone'],
                 "ReceiversPhone"=>$ShipArr['reciever_phone'],
@@ -5758,7 +5759,8 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
                         "address"=>  $ShipArr['reciever_address'],
                         "zip_code"=>$ShipArr['reciever_zip'],
                         "phone"=> $ShipArr['reciever_phone'],
-                        "email"=>$ShipArr['reciever_email']);
+                        "email"=>!empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com'
+                    );
     
     
            
@@ -5917,7 +5919,8 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
                         "address"=>  $ShipArr['reciever_address'],
                         "zip_code"=>$ShipArr['reciever_zip'],
                         "phone"=> $ShipArr['reciever_phone'],
-                        "email"=>$ShipArr['reciever_email']);
+                        "email"=>!empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com'
+                    );
     
     
            
@@ -6023,8 +6026,8 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
        
         $api_url = $counrierArr['api_url'];
 
+        $receiver_email = !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com';
        
-        
     $SMSAXML = '<?xml version="1.0" encoding="utf-8"?>
 <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
   <soap:Body>
@@ -6046,7 +6049,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
                                         <cAddr2></cAddr2>
                                         <shipType>DLV</shipType>
                                         <PCs>' . $box_pieces . '</PCs>
-                                        <cEmail>' . $ShipArr['reciever_email'] . '</cEmail>
+                                        <cEmail>' . $receiver_email . '</cEmail>
                                         <carrValue>2</carrValue>
                                         <carrCurr>2</carrCurr>
                                         <codAmt>' . $codValue . '</codAmt>
@@ -6281,7 +6284,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
                     "firstName"=> $ShipArr['reciever_name'],
                     "lastName"=> "",
                     "phone"=> "01".remove_phone_format($reciver_phone_number), // use  less then 13 chanracter for phone string
-                    "email"=> $ShipArr['reciever_email']
+                    "email"=> !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com'
             )
         );
         
@@ -6669,7 +6672,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
                             'longitude'=> $lang_D 
                         ),
                         'country'=> $country,
-                        'email'=>$ShipArr['reciever_email'],
+                        'email'=>!empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com',
                         'name'=>$ShipArr['reciever_name'],
                         'phone'=>$ShipArr['reciever_phone']
                         );
@@ -6773,6 +6776,171 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
                 } else {
                         $successstatus = "Fail";
                 }
+            $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
+            return $responseArray;
+    }
+    
+    
+    public function DOTSarray($sellername = null, $ShipArr = array(), $counrierArr = array(), $complete_sku= null,$c_id= null,$box_pieces1= null, $super_id = null){
+        
+                //print "<pre>"; print_r($ShipArr);die;
+                $store_address =$ShipArr['sender_address'];
+                $senderemail =$ShipArr['sender_email'];
+                $senderphone =$ShipArr['sender_phone'];
+                $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'dots_city', $super_id);
+                $sender_country_code = getdestinationfieldshow_auto_array($ShipArr['origin'], 'country',$super_id);
+                $sender_latitute = getdestinationfieldshow_auto_array($ShipArr['origin'], 'latitute',$super_id);
+                $sender_longitute = getdestinationfieldshow_auto_array($ShipArr['origin'], 'longitute',$super_id);
+                
+                
+                $receiver_country_code = getdestinationfieldshow_auto_array($ShipArr['destination'], 'country',$super_id);
+                $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'dots_city',$super_id);
+                $receiver_latitute = getdestinationfieldshow_auto_array($ShipArr['destination'], 'latitute',$super_id);
+                $receiver_longitute = getdestinationfieldshow_auto_array($ShipArr['destination'], 'longitute',$super_id);
+                
+                $currency = site_configTable('default_currency');        
+        
+                $API_URL = $counrierArr['api_url'] . "create_order/";
+                
+                if (empty($box_pieces1)) {
+                    $box_pieces = 1;
+                } else {
+                    $box_pieces = $box_pieces1;
+                }
+                
+                if ($ShipArr['weight'] == 0) {
+                    $weight = 1;
+                } else {
+                    $weight = $ShipArr['weight'];
+                }
+
+
+                if($ShipArr['pay_mode'] == "COD"){
+                    $pay_mode = "cash";
+                    $paid = FALSE;
+                    $cod_amount = $ShipArr['total_cod_amt'];
+                    
+                }
+                elseif ($ShipArr['pay_mode'] == 'CC'){
+                    $pay_mode = "credit_balance";
+                    $paid = TRUE;
+                    $cod_amount = 0;
+                }
+
+               
+                
+            $sender_data = array(
+                    'name'=>$sellername,
+                    'country'=>$sender_country_code,
+                    'city'=>$sender_city,
+                    'region'=>'',
+                    'street'=>$store_address,
+                    'building'=>'',
+                    'level'=>'',
+                    'apartment_number'=>'',
+                    'zip_code'=>'',
+                    'latitude'=>$sender_latitute,
+                    'longitude'=>$sender_longitute,
+                    'phone'=>$senderphone,
+                    'email'=>$senderemail,
+                    'address_type'=>'',
+                    'preferred_time'=>''
+            );
+            $receiverdata = array(
+                    'name'=>$ShipArr['reciever_name'],
+                    'country'=>$receiver_country_code,
+                    'city'=>$receiver_city,
+                    'region'=>'',
+                    'street'=>$ShipArr['reciever_address'],
+                    'building'=>'',
+                    'level'=>'',
+                    'apartment_number'=>'',
+                    'zip_code'=>'',
+                    'latitude'=>$receiver_latitute,
+                    'longitude'=>$receiver_longitute,
+                    'phone'=>$ShipArr['reciever_phone'],
+                    'email'=>!empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com',
+                    'address_type'=>'residential',
+                    'preferred_time'=>''
+            );      
+    
+           
+            
+            $package_details = array(
+                'type' => 'EXPRESS_DELIVERY',
+                "collection_type"=> "VENDOR_WAREHOUSE",
+                "collection_point"=> $sender_city,
+                "expected_delivery_date"=> date('Y-m-d H:i:s'),
+                "items_description"=> $complete_sku,
+                "weight"=> $weight,
+                "reference_no"=>$ShipArr['booking_id'],
+                "shipping_note"=> $complete_sku,
+                "number_packages"=> $box_pieces
+            );
+           
+            $payment = array(
+                'currency' => $currency,
+                'cod_amount' => $cod_amount,
+                'item_value' => $cod_amount,
+                'freight_cost' => '0.00',
+                'tax' => '0.00',
+            );
+    
+            $details = array(
+                'awb'=>$ShipArr['slip_no'],
+                'from_address' => $sender_data,
+                'to_address' => $receiverdata,
+                'package_details' => $package_details,
+                'payment' => $payment,
+            );
+
+            $json_final_date = json_encode($details);
+            //echo $json_final_date;  die;
+              
+                      
+            if (empty($receiver_city))
+            {  
+                 $response = array('reason'=> 'Receiver city empty' ); 
+                 $logresponse = json_encode($response);
+                 $this->shipmentLog($c_id, $logresponse,'Fail', $ShipArr['slip_no']);
+                 return $response;
+            }
+            else {
+                $curl = curl_init();    
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => $API_URL,
+                    CURLOPT_HTTPAUTH=> CURLAUTH_BASIC,
+                    CURLOPT_USERPWD=> "".$counrierArr['user_name'].":".$counrierArr['password']."",
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => $json_final_date,
+                    CURLOPT_HTTPHEADER => array(
+                        'Content-Type: application/json',
+                        //'Accept: application/json',
+                        //'Authorization:Bearer ' .$Auth_token
+                        ),
+                ));
+                $response = curl_exec($curl);
+                curl_close($curl);
+            }
+
+            $responseArray = json_decode($response, true);
+       
+            $logresponse =   json_encode($response);  
+            
+            $successres = $responseArray['status'];
+            //print_r($successres);die;
+    
+            if ($successres == 'OK' && $responseArray['code'] == '200'){
+                    $successstatus = "Success";
+            } else {
+                    $successstatus = "Fail";
+            }
             $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
             return $responseArray;
     }
