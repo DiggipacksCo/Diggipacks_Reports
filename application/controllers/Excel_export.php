@@ -1299,6 +1299,8 @@ class Excel_export extends MY_Controller {
                                     $dynmicColumn = 'MICGO_city';
                                 if ($colimn == 'FDA')
                                     $dynmicColumn = 'FDA_city';
+                                if ($colimn == 'Dots')
+                                    $dynmicColumn = 'dots_city';
 
                                  
                                 if (!empty($cityArrayName)) {
