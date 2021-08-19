@@ -2096,45 +2096,35 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                         
                         
                     }elseif ($company== 'MICGO'){ 
-                      
-                      
-                                //print "<pre>"; print_r($sku_data);die;
+                
                            $Auth_token = $this->Ccompany_model->MICGO_AUTH($counrierArr);
-                           $responseArray = $this->Ccompany_model->MICGOarray($sellername, $ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$Auth_token,$super_id);  
-                         
-                        //    $data="{\"shipments\":[{\"trackingURL\":\"https:\/\/mlcgo.scdev.io\/shipment\/track\/12AAEE\",\"id\":\"Shipment_9deebd0f-f65d-4d96-b038-2589ed28c20d\",\"waybill\":\"12AAEE\",\"shippingLabelUrl\":\"https:\/\/stg-cf2.scdev.io\/shipping-labels\/mlcgo\/9deebd0f-f65d-4d96-b038-2589ed28c20d.pdf\",\"message\":null,\"invoice\":null,\"status\":null,\"loadId\":\"JDK1212364104\",\"itemIds\":[\"JDK1212364104\"]}]}";
-                        //    $responseArray=json_decode($data,true);
-                         
-                           //print_r($data1);
-                         
-                           $successres = $responseArray['error'];                        
-                            $error_status = $responseArray['message'];
-                            //print "<pre>"; print_r($responseArray);die; 
-                        if (empty($successres))
-                        {
-                            sleep(2);
 
-                            $client_awb = $responseArray['shipments'][0]['waybill']; 
-                            $Label = $responseArray['shipments'][0]['shippingLabelUrl']; 
-                             
-                            $generated_pdf = file_get_contents($Label); 
-                            
-                            file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
-                            
-                            
-                            $micGoLabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';                          
-                            $CURRENT_DATE = date("Y-m-d H:i:s");
-                            $CURRENT_TIME = date("H:i:s");   
-                            $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $beezlabel,$c_id);
-                            array_push($succssArray, $slipNo);
-                            $return= array('status'=>200,'label'=> $micGoLabel,'client_awb'=>$client_awb); 
-                            return $return;
-                        }else{
-                            $returnArr['responseError'][] = $slipNo . ':' .$error_status;
-                            $return= array('status'=>201,'error'=> $returnArr); 
-                            return $return;
-                        }
-                    
+                             $responseArray = $this->Ccompany_model->MICGOarray($sellername, $ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$Auth_token,$super_id);  
+                                $successres = $responseArray['error'];                        
+                                $error_status = $responseArray['message'];
+                                //print "<pre>"; print_r($responseArray);die; 
+                                if (empty($successres) )
+                                {
+                                    sleep(2);
+
+                                    $client_awb = $responseArray['shipments'][0]['waybill']; 
+                                    $Label = $responseArray['shipments'][0]['shippingLabelUrl'];                                    
+                                    $generated_pdf = file_get_contents($Label);                                     
+                                    file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);                                    
+                                    
+                                    $micGoLabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';                          
+                                    $CURRENT_DATE = date("Y-m-d H:i:s");
+                                    $CURRENT_TIME = date("H:i:s");   
+                                    $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $beezlabel,$c_id);
+                                    array_push($succssArray, $slipNo);
+                                    $return= array('status'=>200,'label'=> $micGoLabel,'client_awb'=>$client_awb); 
+                                    return $return;
+                                }else{
+                                    $returnArr['responseError'][] = $slipNo . ':' .$error_status;
+                                    $return= array('status'=>201,'error'=> $returnArr); 
+                                    return $return;
+                                }
+                          
                     }                           
                     elseif ($company_type== 'F')
                     { // for all fastcoo clients treat as a CC 

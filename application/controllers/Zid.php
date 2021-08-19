@@ -121,7 +121,7 @@ class Zid extends CI_Controller {
                   //  echo  $customers['zid_status'];
                   // print_r( $result1); exit;
                  //echo $result1['order']['shipping']['method']['name']; exit;
-                    if ($result1['order']['order_status']['code'] == $customers['zid_status'] && ( in_array($result1['order']['shipping']['method']['name'],$deliveryOption)  || trim($result1['order']['shipping']['method']['name'])=='DIGGIPACKS' ) ) 
+                    if ($result1['order']['order_status']['code'] == $customers['zid_status'] && ( in_array($result1['order']['shipping']['method']['name'],$deliveryOption)  || strpos(trim($result1['order']['shipping']['method']['name']),'DIGGIPACK')!==false ) ) 
                     {
                    
                         $weight = 0;
