@@ -6574,9 +6574,15 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
         $client_secret = $counrierArr['password'];
 
         $ch = curl_init();
+        
+        if($counrierArr['type'] == 'test'){
+            $api_url = "https://auth-dev.525k.io/oauth2/token";
+        }else{
+            $api_url = "https://auth-prod.525k.io/oauth2/token";
+        }
 
         curl_setopt_array($ch, array(
-          CURLOPT_URL => "https://auth-prod.525k.io/oauth2/token",
+          CURLOPT_URL => $api_url,
           CURLOPT_RETURNTRANSFER => true,
           CURLOPT_SSL_VERIFYHOST =>false,
           CURLOPT_SSL_VERIFYPEER => false,
@@ -6600,7 +6606,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
     
     }
     public function MICGOarray($sellername = null, array $ShipArr, array $counrierArr, $complete_sku = null ,$c_id= null,$box_pieces1=null, $Auth_token= null,$super_id = null) 
-    {
+    {   
                 //print "<pre>"; print_r($counrierArr);die;
                 $sender_address =$ShipArr['sender_address'];
                 $senderemail =$ShipArr['sender_email'];
@@ -6622,11 +6628,15 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
                 $xapikey = $counrierArr['courier_pin_no'];
                 $timestamp =  strtotime(date("Y-m-d H:i:s"));
                 $shipperId = $counrierArr['courier_account_no'];
-                if($counrierArr['type'] == 'test'){
-                    $API_URL = $counrierArr['api_url'] .'shipments';
-                }else{
-                    $API_URL = $counrierArr['api_url'] .'shipments/v2';
-                }
+                $API_URL = $counrierArr['api_url'] .'shipments';
+//                if($counrierArr['type'] == 'test'){
+//                    $API_URL = $counrierArr['api_url'] .'shipments';
+//                    
+//                }else{
+//                    //$API_URL = $counrierArr['api_url'] .'shipments/v2';
+//                    $API_URL = $counrierArr['api_url'] .'shipments';
+//                    //$API_URL = 'https://api.525k.io/api/shipments';
+//                }
                 
                
                 
@@ -6744,8 +6754,9 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
                  return $response;
             }
             else {
+                
                 $curl = curl_init();
-
+                
                 curl_setopt_array($curl, array(
                   CURLOPT_URL =>$API_URL,
                   CURLOPT_RETURNTRANSFER => true,
