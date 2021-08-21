@@ -101,15 +101,23 @@
                                             
                                              $lang_Shipping_Zone=lang('lang_Shipping_Zone');	
                                              $lang_Entry_Date=lang('lang_Entry_Date');	
-                                             $lang_Origin=lang('lang_Origin');		
+                                             $lang_Origin=lang('lang_Origin');	
+                                             $lang_Receiver=lang('lang_Receiver');		
                                              $lang_Destination=lang('lang_Destination');	
                                              $lang_No_of_Pieces=lang('lang_No_of_Pieces');	
                                              $lang_Payment_Mode=lang('lang_Payment_Mode');	
-                                             $lang_Schedule_Chanel=lang('lang_Schedule_Chanel');	
-
-
-
-
+                                             $lang_Schedule_Chanel=lang('lang_Schedule_Chanel');
+                                             $lang_Payment_Mode=lang('lang_Payment_Mode');		
+                                             $lang_Transaction_Date=lang('lang_Transaction_Date');	
+                                             $lang_No_of_Attempt=lang('lang_No_of_Attempt');	
+                                             $lang_tpl_Pickup_Date=lang('lang_tpl_Pickup_Date');	
+                                             $lang_tpl_Closed_Date=lang('lang_tpl_Closed_Date');	
+                                             $lang_tpl_Pickup_Date=lang('lang_tpl_Pickup_Date');	
+                                             $lang_tpl_Closed_Date=lang('lang_tpl_Closed_Date');	
+                                             $lang_Forwarded_Date=lang('lang_Forwarded_Date');	
+                                             $lang_Forwarded_Company=lang('lang_Forwarded_Company');
+                                             $lang_Sender=lang('lang_Sender');	
+                                             $lang_User_Type=lang('lang_User_Type');	
                                              $lang_Scheduled=lang('lang_Scheduled');	
                                              $lang_Shelve_No=lang('lang_Shelve_No');	
                                              $lang_Location=lang('lang_Location');	
@@ -121,6 +129,9 @@
                                              $lang_Product_Type=lang('lang_Product_Type');	
                                              $lang_Product_Description=lang('lang_Product_Description');
                                              $lang_View_detail=lang('lang_View_detail');	
+                                             $lang_Forwarded_AWB_No=lang('lang_Forwarded_AWB_No');	
+                                             $lang_Forwarded=lang('lang_Forwarded');	
+                                             
                                             if ($Shipmentinfo['booking_id'] != '')
                                                 echo' <tr><th><b class="size-2">'.$Reference_No.'</b></th><td>' . $Shipmentinfo['booking_id'] . '</td></tr>';
 
@@ -146,7 +157,7 @@
                                             else
                                                 echo'<td><span class="label label-danger">N/A</span></td>';
                                             echo'</tr>';
-                                            echo '<tr><th><b class="size-2">Payment Date</b></th><td>--</td></tr>';
+                                            echo '<tr><th><b class="size-2">'.$lang_Payment_Date.'</b></th><td>--</td></tr>';
                                             if ($Shipmentinfo['shipping_zone'])
                                                 echo'<tr><th><b class="size-2">'.$lang_Shipping_Zone.'</b></th><td>' . $Shipmentinfo['shipping_zone'] . '</td></tr>';
 
@@ -177,12 +188,12 @@
                           <!--<tr><th><b class="size-2" >Status </b></th><td ' . $colorclass . ' ' . $colorclass2 . '>' . getallmaincatstatus($Shipmentinfo['delivered'], 'main_status') . '</td></tr>-->
                           <tr><th><b class="size-2" >'.$lang_Status.' </b></th><td ' . $colorclass . ' ' . $colorclass2 . '>' . $Shipmentinfo['status_fm'] . '</td></tr>
                          <!-- <tr><th><b class="size-2">Store Link</b></th><td>' . $Shipmentinfo['cust_id'] . '</td></tr>
-                          <tr><th><b class="size-2">User Type</b></th><td>' . $Shipmentinfo['cust_id'] . '</td></tr>-->
+                          <tr><th><b class="size-2">'.$lang_User_Type.'</b></th><td>' . $Shipmentinfo['cust_id'] . '</td></tr>-->
                           <tr><th><b class="size-2">'.$lang_Product_Type.'</b></th><td>' . $Shipmentinfo['nrd'] . '</td></tr>
-                          <tr><th><b class="size-2">No. Of Attempt</b></th><td>' . $Shipmentinfo['no_of_attempt'] . '</td></tr>                              
-                          <tr><th><b class="size-2">3pl Pickup Date</b></th><td>' . $Shipmentinfo['pl3_pickup_date'] . '</td></tr>
-                          <tr><th><b class="size-2">3pl Closed Date</b></th><td>' . $Shipmentinfo['pl3_closed_date'] . '</td></tr>
-                          <tr><th><b class="size-2">Transaction Date</b></th><td>' . $Shipmentinfo['transaction_date'] . '</td></tr>
+                          <tr><th><b class="size-2">'.$lang_No_of_Attempt.'</b></th><td>' . $Shipmentinfo['no_of_attempt'] . '</td></tr>                              
+                          <tr><th><b class="size-2">'.$lang_tpl_Pickup_Date.'</b></th><td>' . $Shipmentinfo['pl3_pickup_date'] . '</td></tr>
+                          <tr><th><b class="size-2">'.$lang_tpl_Closed_Date.'</b></th><td>' . $Shipmentinfo['pl3_closed_date'] . '</td></tr>
+                          <tr><th><b class="size-2">'.$lang_Transaction_Date.'</b></th><td>' . $Shipmentinfo['transaction_date'] . '</td></tr>
                           <tr><th><b class="size-2">'.$lang_Product_Description.'</b></th><td>' . $Shipmentinfo['status_describtion'] . '</td></tr>';
                                             ?>
                                             <?php
@@ -212,9 +223,9 @@
                                         <thead>
                                             <?php
                                             if ($Shipmentinfo['sender_name'] != '')
-                                                echo' <tr><th><b class="size-2">Sender</b></th><td>' . $Shipmentinfo['sender_name'] . '</td></tr>';
+                                                echo' <tr><th><b class="size-2">'.$lang_Sender.'</b></th><td>' . $Shipmentinfo['sender_name'] . '</td></tr>';
                                             else
-                                                 echo' <tr><th><b class="size-2">Sender</b></th><td style="color:grey;">No Info Found</td></tr>';
+                                                 echo' <tr><th><b class="size-2">'.$lang_Sender.'</b></th><td style="color:grey;">No Info Found</td></tr>';
 
                                            
                                             if ($Shipmentinfo['sender_address'] != '')
@@ -259,7 +270,7 @@
                                         <thead>
                                             <?php
                                             if ($Shipmentinfo['reciever_name'] != '')
-                                                echo' <tr><th><b class="size-2">Receiver</b></th><td>' . $Shipmentinfo['reciever_name'] . '</td></tr>';
+                                                echo' <tr><th><b class="size-2">'.$lang_Receiver.'</b></th><td>' . $Shipmentinfo['reciever_name'] . '</td></tr>';
                                             else
                                                 echo' <tr><th><b class="size-2">Sender</b></th><td style="color:grey;">No Info Found</td></tr>';
 
@@ -307,28 +318,28 @@
                                         <thead>
                                             <?php
                                             if ($Shipmentinfo['frwd_date'] != '')
-                                                echo' <tr><th><b class="size-2">Forwarded Date</b></th><td>' . $Shipmentinfo['frwd_date'] . '</td></tr>';
+                                                echo' <tr><th><b class="size-2">'.$lang_Forwarded_Date.'</b></th><td>' . $Shipmentinfo['frwd_date'] . '</td></tr>';
                                             else
-                                                echo' <tr><th><b class="size-2">Forwarded Date</b></th><td style="color:grey;">No Info Found</td></tr>';
+                                                echo' <tr><th><b class="size-2">'.$lang_Forwarded_Date.'</b></th><td style="color:grey;">No Info Found</td></tr>';
 
                                            
                                             if ($Shipmentinfo['frwd_company_id'] != '0')
-                                                echo   '<tr><th><b class="size-2">Forwarded Company</b></th><td>' . GetCourCompanynameId($Shipmentinfo['frwd_company_id'], 'company') . '</td></tr>';
+                                                echo   '<tr><th><b class="size-2">'.$lang_Forwarded_Company.'</b></th><td>' . GetCourCompanynameId($Shipmentinfo['frwd_company_id'], 'company') . '</td></tr>';
                                             else
-                                                echo' <tr><th><b class="size-2">Forwarded Company </b></th><td style="color:grey;">No Info Found</td></tr>';
+                                                echo' <tr><th><b class="size-2">'.$lang_Forwarded_Company.'</b></th><td style="color:grey;">No Info Found</td></tr>';
                                            
                                            
                                             if ($Shipmentinfo['frwd_company_awb'] != '')
-                                                echo'<tr><th><b class="size-2">Forwarded AWB No.</b></th><td>' . ($Shipmentinfo['frwd_company_awb']) . '</td></tr>';
+                                                echo'<tr><th><b class="size-2"> '.$lang_Forwarded_AWB_No.'</b></th><td>' . ($Shipmentinfo['frwd_company_awb']) . '</td></tr>';
                                             else
-                                                echo' <tr><th><b class="size-2">Forwarded AWB No.</b></th><td style="color:grey;">No Info Found</td></tr>';
+                                                echo' <tr><th><b class="size-2">'.$lang_Forwarded_AWB_No.'</b></th><td style="color:grey;">No Info Found</td></tr>';
 
 
                                            
                                             if ($Shipmentinfo['forwarded'] != '0')
-                                                echo' <tr><th><b class="size-2">Forwarded </b></th><td> Yes </td></tr>';
+                                                echo' <tr><th><b class="size-2">'.$lang_Forwarded.' </b></th><td> Yes </td></tr>';
                                             else
-                                                echo' <tr><th><b class="size-2">Forwarded </b></th><td style="color:grey;">No</td></tr>';
+                                                echo' <tr><th><b class="size-2">'.$lang_Forwarded.' </b></th><td style="color:grey;">No</td></tr>';
                          
                                           
                                             ?>
@@ -343,7 +354,7 @@
                         <td>' . $awbdata['weight'] . '</td>
                         <td>' . getallmaincatstatus($awbdata['delivered'], 'main_status') . '</td>
                         <td>' . getallmaincatstatus($awbdata['delivered'], 'main_status') . '</td>
-                        <td><a href="' . base_url() . 'TrackingDetails/' . $awbdata['id'] . '" class="btn btn-primary">View Details</a></td>
+                        <td><a href="' . base_url() . 'TrackingDetails/' . $awbdata['id'] . '" class="btn btn-primary">'.$lang_View_detail.'</a></td>
                         
                         </tr>';
                                             }
@@ -360,7 +371,7 @@
                                     echo ' <table class="table table-striped table-hover table-bordered dataTable bg-*" id="example" style="width:100%;">
               <thead>
                   <tr>
-                    <th width="20">Sr.No</th><th>SKU</th><th>Weight</th><th>Pieces</th><th>Description</th></thead>
+                    <th width="20">'.$SrNo.'</th><th>'.$SKU.'</th><th>'.$Weight.'</th><th>'.$Pieces.'</th><th>'.$Description.'</th></thead>
               ';
                                     foreach ($skuArr as $key => $skuval) {
                                         $counter2 = $key + 1;

@@ -77,7 +77,8 @@ class Reports extends MY_Controller {
     
       public function performance_details_3pl($frwd_throw=null,$status=null,$from=null,$to=null){
 		
-		$data['DetailsArr'] = $this->Reports_model->GetallperformationDetailsQry_3pl($frwd_throw,$status,$from,$to);
+          $data['Urldata'] = array('frwd_throw' => $frwd_throw, 'status' => $status, 'from' => $from, 'to' => $to);
+		//$data['DetailsArr'] = $this->Reports_model->GetallperformationDetailsQry_3pl($frwd_throw,$status,$from,$to);
 	
 		$this->load->view('reports/performance_details_3pl',$data);
 		
@@ -98,6 +99,19 @@ class Reports extends MY_Controller {
 		$this->load->view('reports/performance_3pl',$data);
 		
 	}
+        
+           public function performance_details_filter() {
+
+        
+        $filterArr = json_decode(file_get_contents('php://input'), true);
+
+
+        
+        $dataArray = $this->Reports_model->GetallperformationDetailsQry_filter($filterArr);
+
+         echo json_encode($dataArray);
+    }
+    
 
 }
 

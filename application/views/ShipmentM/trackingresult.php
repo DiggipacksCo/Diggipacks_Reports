@@ -13,6 +13,7 @@
         <?php $this->load->view('include/main_navbar'); ?>
 
         <!-- Page container -->
+        
         <div class="page-container" ng-app="fulfill" ng-controller="ExportCtrl" ng-init="slipnosdetails('<?=implode(',', $traking_awb_no);?>');"> 
 
             <!-- Page content -->
@@ -50,8 +51,10 @@
                                 <div class="table-responsive" style="padding-bottom:20px;" > 
                                     <!--style="background-color: green;"-->
                                     <?php
+
+                                   $lang_Tracking_Result_for_AWB=lang('lang_Tracking_Result_for_AWB');	
                                     if (!empty($traking_awb_no))
-                                        echo 'Tracking Result for AWB#<b>' . implode(',', $traking_awb_no) . '</b>';
+                                        echo ''.$lang_Tracking_Result_for_AWB.'#      <b>' . implode(',', $traking_awb_no) . '</b>';
                                     ?>
                                     <table class="table table-striped table-hover table-bordered dataTable" id="example" style="width:100%;">
                                         <thead>
@@ -65,6 +68,7 @@
                                                 <th><b class="size-2"><?=lang('lang_Action');?></b></th>
                                             </tr>
                                             <?php
+                                              $lang_View_detail=lang('lang_View_detail');	
                                             //print_r($shipmentdata);
                                             if (!empty($shipmentdata)) {
                                                 foreach ($shipmentdata as $awbdata) {
@@ -77,7 +81,7 @@
                                                         <td>' . $awbdata['weight'] . 'Kg</td>
                                                         <td>' . getallmaincatstatus($awbdata['delivered'], 'main_status') . '</td>
 
-                                                        <td><a href="' . base_url() . 'TrackingDetails/' . $awbdata['id'] . '" class="btn btn-primary" target="_black">View Details</a></td>
+                                                        <td><a href="' . base_url() . 'TrackingDetails/' . $awbdata['id'] . '" class="btn btn-primary" target="_black">'.$lang_View_detail.'</a></td>
 
                                                         </tr>';
                                                 }
@@ -262,6 +266,13 @@
                                     <div class="col-sm-4">    
                                         <label class="container">
                                             <input type="checkbox" name="close_date" value="close_date"  ng-model="listData2.close_date"> <?= lang('lang_close_date'); ?>
+                                            <span class="checkmark"></span>    
+                                        </label>
+                                    </div>
+                                    
+                                      <div class="col-sm-4">    
+                                        <label class="container">
+                                            <input type="checkbox" name="last_status_n" value="last_status_n"  ng-model="listData2.last_status_n"> Last Status
                                             <span class="checkmark"></span>    
                                         </label>
                                     </div>

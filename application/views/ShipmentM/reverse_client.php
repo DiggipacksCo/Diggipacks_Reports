@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title>Inventory</title>
+        <title><?=lang('lang_Inventory');?></title>
         <?php $this->load->view('include/file'); ?>
         <script src="<?= base_url(); ?>assets/js/angular/courier_company.js"></script>
     </head>
@@ -38,25 +38,25 @@
                                 <!-- Marketing campaigns -->
                                 <div class="panel panel-flat">
                                     <div class="panel-heading">
-                                        <h1> <strong>Reverse Shipment Delivery Station</strong> </h1>
+                                        <h1> <strong><?=lang('lang_Reverse_Shipment_Delivery_Station');?></strong> </h1>
                                     </div>
                                     <div class="panel-body">
 
                                         <div class="card-body">
                                             <div class="clearfix">
 
-                                                <span class="badge badge badge-pill badge-danger" id="count_val">Dublicates Orders are automatically removed</span>
+                                                <span class="badge badge badge-pill badge-danger" id="count_val"><?=lang('lang_Dublicates_Orders_are_automatically_removed');?></span>
                                                 </br>
-                                                <span class="badge badge badge-pill badge-danger mt-10" id="count_val">You can 20 Shipments.
+                                                <span class="badge badge badge-pill badge-danger mt-10" id="count_val"><?=lang('lang_you_can_reverse_twenty_shipments');?>
                                                 </span> 
                                             </div>  
 
                                             <div class="row" style="margin-top:10px">
                                                 <div class="col-md-12" ng-if="invalidSslip_no">
-                                                    <div class="alert alert-warning" ng-if="invalidSslip_no" ng-repeat="in_data in invalidSslip_no">Invalid slip no. "{{in_data}}"</div>
+                                                    <div class="alert alert-warning" ng-if="invalidSslip_no" ng-repeat="in_data in invalidSslip_no"><?=lang('lang_Invalid_slip_no');?>. "{{in_data}}"</div>
                                                 </div>
                                                 <div class="col-md-12" ng-if="Success_msg">
-                                                    <div class="alert alert-success" ng-repeat="success_msg in Success_msg">{{success_msg}} : Shipment Forwarded</div>
+                                                    <div class="alert alert-success" ng-repeat="success_msg in Success_msg">{{success_msg}} : <?=lang('lang_Shipment_Forwarded');?></div>
                                                 </div>
                                                 <div class="col-md-12" ng-if="Error_msg">
                                                     <div class="alert alert-danger" ng-repeat="error_msg in Error_msg">{{error_msg}}</div>
@@ -69,7 +69,7 @@
                                                     <div class="alert alert-danger" ng-if="mainstatusEmpty">{{mainstatusEmpty}}</div>
                                                 </div>
                                                 <div class="col-md-12" ng-if="messArray1 != 0">
-                                                    <div class="alert alert-danger" ng-repeat="mdata in messArray1">Wrong Awb {{mdata}}</div>    
+                                                    <div class="alert alert-danger" ng-repeat="mdata in messArray1"><?=lang('lang_wrong_AWB_no');?> {{mdata}}</div>    
                                                 </div>
 
 
@@ -84,14 +84,14 @@
                                             <div class="row">
                                                 <div class="col-md-2">    
                                                     <div class="form-group" style="margin-top:30px">      
-                                                        <a type="button"  class="btn btn-primary" style="margin-top: 0px;color:#fff">Row Count <span class="" id="count_val"ng-if="scan.awbArray.length > 0"> ( {{scan.awbArray.length}} )</span>	
+                                                        <a type="button"  class="btn btn-primary" style="margin-top: 0px;color:#fff"><?=lang('lang_Row_Count');?> <span class="" id="count_val"ng-if="scan.awbArray.length > 0"> ( {{scan.awbArray.length}} )</span>	
                                                             <span class="" id="count_val"></span>
                                                         </a>    
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3">  
                                                     <div class="form-group">
-                                                        <label>Select Company </label><br />
+                                                        <label><?=lang('lang_Select_Company');?> </label><br />
 
                                                         <select  class="select2  form-control" ng-model="userselected.cc_id" style="word-wrap: break-word; width:100% !important"   data-placeholder="Choose Company" required="">
 
@@ -106,14 +106,14 @@
                                                   </div>-->
                                                 <div class="col-md-3">  
                                                     <div class="form-group">
-                                                        <label>Comment</label><br />
+                                                        <label><?=lang('lang_Comment');?></label><br />
                                                         <textarea rows="2" id="comment"  class="form-control" ng-model="userselected.comment"></textarea>
                                                     </div>
                                                 </div>
 
                                                 <div class="col-md-2" style="margin-bottom: 11px;">   
                                                     <label>&nbsp;</label>
-                                                    <button type="submit" class="btn btn-primary form-control" ng-click="BulkForwardCompanyRev();">Submit </button>
+                                                    <button type="submit" class="btn btn-primary form-control" ng-click="BulkForwardCompanyRev();"> <?=lang('lang_Submit');?></button>
                                                 </div>
                                             </div>
 

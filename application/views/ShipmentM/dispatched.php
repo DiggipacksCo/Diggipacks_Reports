@@ -143,7 +143,7 @@
 
                                                             <option value=""><?=lang('lang_Select_Company');?></option>
                                                             <?php foreach (GetCourierCompanyDrop() as $data): ?>
-                                                                <option value="<?= $data['id']; ?>"><?= $data['company']; ?></option>
+                                                                <option value="<?= $data['cc_id']; ?>"><?= $data['company']; ?></option>
                                                             <?php endforeach; ?>
 
                                                         </select>
@@ -536,6 +536,12 @@
                                                     <label class="container">
                                                         <input type="checkbox" name="cc_name" value="cc_name" ng-checked="checkall"  ng-model="listData2.cc_name"> <?=lang('lang_Forwarded_Company');?>
                                                         <span class="checkmark"></span>    
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label class="container">
+                                                        <input type="checkbox" name="last_status_n" value="last_status_n" ng-checked="checkall"  ng-model="listData2.last_status_n"> Last Status
+                                                        <span class="checkmark"></span>
                                                     </label>
                                                 </div>
 

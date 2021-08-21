@@ -150,6 +150,24 @@ public function discountUpdate()
 		redirect(base_url('viewLmInvoice'));
     }
 
+	public function bankFeesUpdate()
+    {
+            
+            $dataArray=$dataArray= $this->input->post();
+			//print_r($dataArray);
+            $invoice_no = $dataArray['invoice_no'];
+			$bank_fees = $dataArray['bank_fees'];
+		$CURRENT_DATE=date("Y-m-d H:i:s");
+			 
+		$updateinvoiceAarrayW=array('invoice_no'=>$dataArray['invoice_no'],'cust_id'=>$dataArray['cust_id'],'bank_fees'=>$bank_fees);
+		$res_data=$this->LastMile_model->addInvoiceUpdateDiscount($updateinvoiceAarrayW); 
+            
+		$this->session->set_flashdata('msg', 'Bank Fees updated!'); 
+
+			
+		redirect(base_url('viewLmInvoice'));
+    }
+
 
 public function payableInvoice_update()
     {
@@ -197,6 +215,7 @@ public function payableInvoice_update()
 		
 		$bank_fees=getallsellerdatabyID($cust_id,'bank_fees',$this->session->userdata('user_details')['super_id']);
 		$areadyExit=array();
+		$priceZero=array();
 		foreach($invoiceCheck as $key1=>$val1)
 		{
 
@@ -211,7 +230,7 @@ public function payableInvoice_update()
 		$shipmentdata= $this->Shipment_model->getawbdataquery($finalArray);
 		$chargeData= $this->LastMile_model->calculateShipCharge($cust_id);
 		$returnData= $this->LastMile_model->calculateReturn($cust_id);
-		//print_r($chargeData); exit;
+		//echo json_encode($chargeData); exit;
 		foreach($returnData as $rdata)
 		{
 			if($rdata['name']=='Additional Return')
@@ -225,11 +244,14 @@ public function payableInvoice_update()
 			}
 		}
 		
-		
+	
+		//print_r($shipmentdata);
 		foreach($shipmentdata as $key=>$val)
 		{
+			$keyCheck=null;
 			if($val['code']=='POD')
 			{
+				
 				foreach($chargeData as $key1=>$val1)
 				{
 					$cityArray=json_decode($val1['city_id'],true);
@@ -302,6 +324,11 @@ public function payableInvoice_update()
 			{
 				$codAmount=0;
 			}
+			if($shipCharge==0 && $return_charge==0)
+			{
+				array_push( $priceZero,$val['slip_no']);
+			}
+			else{
 			$invoiceArray[]= array(
 			
 			'invoice_no' => $invoiceNo,
@@ -321,15 +348,15 @@ public function payableInvoice_update()
 			'return_charge' => $return_charge,
 			'service_charge' => $shipCharge,
 			'cod_amount' => $codAmount,
-			'vat' => $val['close_date'],
-			'close_date' => $vat,
+			'vat' =>$vat ,
+			'close_date' => $val['close_date'],
 			'invoice_created_by' => $this->session->userdata('user_details')['user_id'],
 			'invoice_created_date' => $date,
 			'invoice_date' => $date,
 			'super_id' =>  $this->session->userdata('user_details')['super_id']
 			);
 			$where_in[]=array('slip_no'=>$val['slip_no'],'pay_invoice_no'=>$invoiceNo);
-	
+		}
 		}
 		
 		if(!empty($invoiceArray))
@@ -338,7 +365,7 @@ public function payableInvoice_update()
 			$this->LastMile_model->updateShipmet($where_in); 
 			$this->LastMile_model->addlmIncoice($invoiceArray);
 		}
-		echo json_encode($invoiceArray );
+		echo json_encode( array('price_zero'=>$priceZero) );
 	}
 
 

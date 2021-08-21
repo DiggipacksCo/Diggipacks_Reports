@@ -53,7 +53,7 @@ class Manifest_model extends CI_Model {
         }
 
         $this->db->where('pickup_request.deleted','N');
-        $this->db->select('COUNT(id) as id_count,id,SUM(qty) as qtyall,SUM(missing_qty) as m_qty,SUM(damage_qty) as d_qty,,SUM(received_qty) as r_qty,id,uniqueid,sku,qty,assign_to,req_date,pstatus,code,seller_id,on_hold,itemupdated,confirmO,pickimg,address,city,3pl_awb,3pl_name,3pl_label,3pl_date,boxes,description,return_type,staff_id,vehicle_type,assign_date');
+        $this->db->select('COUNT(id) as id_count,id,SUM(qty) as qtyall,SUM(missing_qty) as m_qty,SUM(damage_qty) as d_qty,manifest_type,SUM(received_qty) as r_qty,id,uniqueid,sku,qty,assign_to,req_date,pstatus,code,seller_id,on_hold,itemupdated,confirmO,pickimg,address,city,3pl_awb,3pl_name,3pl_label,3pl_date,boxes,description,return_type,staff_id,vehicle_type,assign_date,pack_type');
         $this->db->from('pickup_request');
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         if ($this->session->userdata('user_details')['user_type'] == 9)
@@ -282,7 +282,7 @@ class Manifest_model extends CI_Model {
         $this->db->where('pickup_request.deleted','N');
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
 
-        $this->db->select('COUNT(id) as id_count,id,SUM(qty) as qtyall,SUM(missing_qty) as m_qty,SUM(damage_qty) as d_qty,,SUM(received_qty) as r_qty,id,uniqueid,sku,qty,assign_to,req_date,pstatus,code,seller_id,on_hold,itemupdated,schedule_date,vehicle_type,boxes,pack_type');
+        $this->db->select('COUNT(id) as id_count,id,SUM(qty) as qtyall,SUM(missing_qty) as m_qty,SUM(damage_qty) as d_qty,SUM(received_qty) as r_qty,id,uniqueid,sku,qty,assign_to,req_date,pstatus,code,seller_id,on_hold,itemupdated,schedule_date,vehicle_type,boxes,pack_type,manifest_type');
         $this->db->from('pickup_request');
         if ($filterarray['seller_id'])
             $this->db->where('seller_id', $filterarray['seller_id']);

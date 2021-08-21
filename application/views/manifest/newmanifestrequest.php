@@ -158,14 +158,15 @@
                                     <!--<th>SKU</th>-->
                                     <th><?=lang('lang_QTY');?></th>  
                                                                                 <!-- <th>Assign To</th> -->  
-                                     <!--<th>Status</th>
-                                     <th>Code</th>-->
+                                     <!--<th>Status</th>>-->
+                                     <th>Manifest Type</th>
                                         <th><?=lang('lang_Vehicle_type');?></th>
                                         <th><?=lang('lang_Seller');?></th>
                                         <th><?=lang('lang_Number_Of_Boxes');?></th>
                                         <th><?=lang('lang_Storage_Type');?></th>
                                     <th><?=lang('lang_Schedule_Date');?></th>
                                     <th><?=lang('lang_Request_Date');?></th>
+                                 
 
 
 
@@ -182,6 +183,8 @@
 
  <!-- <td > {{data.pstatus}}</td>
    <td > {{data.code}}</td>-->
+   <td ng-if="data.manifest_type == 'D'"><span class="badge badge-danger">Delivery By Seller</span></td>
+                                            <td ng-if="data.manifest_type == 'P'"><span class="badge badge-success">Pickup By Diggipacks </span></td>
                                             <td><img ng-if="data.vehicle_type != ''" src="<?= base_url(); ?>{{data.vehicle_type}}" width="65">
                                                 <img ng-if="data.vehicle_type == ''" src="<?= base_url(); ?>assets/nfd.png" width="65"></td>
                                             <td > {{data.seller_id}}</td>
@@ -190,9 +193,7 @@
                                             <td ><span ng-if="data.schedule_date != ''">{{data.schedule_date}}</span><span ng-if="data.schedule_date == ''">--</span></td>
 
                                             <td > {{data.req_date}}</td>
-
-
-
+                                           
 
                                             <td class="text-center">
                                                 <ul class="icons-list">

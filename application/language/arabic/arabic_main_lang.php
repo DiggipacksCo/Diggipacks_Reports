@@ -1464,11 +1464,25 @@ $lang['lang_tpl_Pickup_Date']="3pl تاريخ الاستلام";
 $lang['lang_tpl_Closed_Date']="3pl تاريخ اغلاق";
 $lang['lang_Transaction_Date']="تاريخ التحويل";
 $lang['lang_Open_Order']="طلب مفتوح ";
-$lang['lang_Update_Shelve_Inventory']="Update Shelve Inventory";
+$lang['lang_Update_Shelve_Inventory']="تحديت مخزون الرفوف";
 $lang['lang_Updated_Date']="تاريخ التحديث";
 $lang['lang_Print']="طباعه";
 $lang['lang_User_Logo']="شعار المستخدم";
 $lang['lang_Forwarded_Info']="ارسال الشحن تفاصيل";
+$lang['lang_No_of_Attempts']="عدد محاولات ";
+$lang['lang_Forwarded_Date']="ارسال الشحن التاريخ";
+$lang['lang_Forwarded']="ارسال الشحن ";
+$lang['lang_Change']="تغير ";
+$lang['lang_remove_forwarding']="إزالة التوجية";
+$lang['lang_Reverse_Shipment']="الشحن العكسي";
+$lang['lang_View_Reverse_Shipment']="عرض الشحنات العكسية";
+$lang['lang_Forward_Remove']="تم إزالة التوجية";
+$lang['lang_Remove']="إزالة ";
+$lang['lang_Reverse_Shipment_Delivery_Station']="توصيل الشحن العكسي";
+$lang['lang_Transaction_Timer']="وقت المعاملة";
+$lang['lang_Added_By']="تمت الاضافة بواسطة";
+$lang['lang_Admin']="المسؤول";
+$lang['lang_you_can_reverse_twenty_shipments']="يمكنك عكس ٢٠ شحنه";
 
 $lang['lang_CC']="CC";
 

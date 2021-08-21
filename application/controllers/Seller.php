@@ -36,8 +36,41 @@ class Seller extends MY_Controller {
         } else {
             redirect(base_url() . 'Login');
         }
+        
+    }
+    
+    public function active_seller($id=null,$status=null) {
+
+        if (($this->session->userdata('user_details') != '')) {
+           
+            if($id>0 && ($status=='Y' || $status=='N'))
+            {
+                $updateArr=array('status'=>$status);
+                $this->Seller_model->edit($id,$updateArr);
+                
+                if($status=='Y')
+                {
+                $this->session->set_flashdata('msg','has been updated Active successfully');
+                }
+                else
+                {
+                $this->session->set_flashdata('msg','has been updated Inactive successfully');
+                }
+                 
+            }
+            else
+            {
+                $this->session->set_flashdata('errmsg','try again');
+            }
+            
+            redirect('Seller');
+        } else {
+            redirect(base_url() . 'Login');
+        }
     }
 
+    
+    
     public function add() {
 
         $this->form_validation->set_rules("email", 'Email Address', 'trim|required|is_unique[customer.email]');
@@ -54,7 +87,7 @@ class Seller extends MY_Controller {
         if ($this->input->post('salla_active') == 'Y') {
             $this->form_validation->set_rules("salla_manager_token", 'X-MANAGER-TOKEN ', 'required');
         }
-        if ($this->form_validation->run() == FALSE) {
+        if ($this->form_validation->run() == FALSE) { 
 
             $this->add_view();
         } else {
@@ -166,8 +199,27 @@ class Seller extends MY_Controller {
                 $order_status = $this->input->post('order_status');
             }
 
+            
+            
+            $discount=$this->input->post('discount');
+            $discount_f=$this->input->post('discount_f');
+            $discount_to=$this->input->post('discount_to');
+            if($discount==1)
+                $discount=1;
+            else
+                $discount=0;
+            $u_type=$this->input->post('name');
+            if($u_type=='B2B')
+            {
+                $u_type="B2B";
+            }
+            else
+            {
+              $u_type="B2C";  
+            }
             $secret_key = implode('-', str_split(substr(strtolower(md5(microtime() . rand(1000, 9999))), 0, 30), 6)) . $seller_id;
             $customer_info = array(
+                'u_type'=>$u_type,
                 'name' => $this->input->post('name'),
                 'uniqueid' => $unique_acc_mp,
                 'seller_id' => 0,
@@ -205,6 +257,9 @@ class Seller extends MY_Controller {
                 // 'salla_from_date' => $salla_from_date,
                 'invoice_type' => $this->input->post('invoice_type'),
                 'first_out' => $this->input->post('first_out'),
+                'discount'=>$discount,
+                'discount_f'=>$discount_f,
+                'discount_to'=>$discount_to
                     //'zid_sid' => $this->input->post('zid_sid'),
                     //'zid_status' => $this->input->post('zid_status'),
             );
@@ -278,6 +333,7 @@ class Seller extends MY_Controller {
         $data['city_drp'] = $this->Seller_model->fetch_all_cities();
         $data['customer'] = $this->Seller_model->edit_view_customerdata($id);
 
+        
         $this->load->view('SellerM/seller_detail', $data);
     }
 
@@ -346,11 +402,30 @@ class Seller extends MY_Controller {
 
 
         //echo $path_upload_contact; die;
-
-
+$u_type = $this->input->post('u_type');
+     if($u_type=='B2B')
+            {
+                $u_type="B2B";
+            }
+            else
+            {
+              $u_type="B2C";  
+            }
         $first_out = $this->input->post('first_out');
+        
+          $discount=$this->input->post('discount');
+            if($discount==1)
+                $discount=1;
+            else
+                $discount=0;
+            
+            
+            $discount_f=$this->input->post('discount_f');
+            $discount_to=$this->input->post('discount_to');
+            
         if (!empty($this->input->post('password'))) {
             $customer_info = array(
+                  'u_type' => $u_type,
                 'name' => $this->input->post('name'),
                 'account_number' => $this->input->post('account_number'),
                 'phone' => $this->input->post('phone1'),
@@ -382,11 +457,15 @@ class Seller extends MY_Controller {
                 // 'invoice_type' => $this->input->post('invoice_type'),
                 'first_out' => $first_out,
                 'zid_access' => $zid_access,
+                'discount'=>$discount,
+                 'discount_f'=>$discount_f,
+                'discount_to'=>$discount_to
                     // 'zid_sid' => $this->input->post('zid_sid'),
                     // 'zid_status' => $this->input->post('zid_status'),
             );
         } else {
             $customer_info = array(
+                   'u_type' => $u_type,
                 'name' => $this->input->post('name'),
                 'account_number' => $this->input->post('account_number'),
                 'company' => $this->input->post('company'),
@@ -417,16 +496,20 @@ class Seller extends MY_Controller {
                 //'invoice_type' => $this->input->post('invoice_type'),
                 'first_out' => $first_out,
                 'zid_access' => $zid_access,
+                'discount'=>$discount,
+                 'discount_f'=>$discount_f,
+                'discount_to'=>$discount_to
                     //'zid_sid' => $this->input->post('zid_sid'),
                     //'zid_status' => $this->input->post('zid_status'),
             );
         }
 
-        //echo "<pre>";print_r($this->input->post());exit();
+       // echo "<pre>";print_r($customer_info);exit();
         // $this->Seller_model->edit($id, $data);
         $this->Seller_model->edit_custimer($id, $customer_info);
         $this->session->set_flashdata('msg', $this->input->post('name') . '   has been updated successfully');
         redirect('Seller');
+        
     }
 
     public function report_view($id = null) {
@@ -522,84 +605,114 @@ class Seller extends MY_Controller {
     }
 
     public function ZidProducts($id) {
-
         $data['zidproducts'] = $this->Seller_model->zidproduct($id);
         $storeID = $data['zidproducts'];
-        $store_link = "https://api.zid.sa/v1/products/";
-        $bearer = $this->config->item('zid_authorization');
-        $ZidProductRT = ZidPcURL($storeID, $store_link, $bearer);
+        $token = GetallCutomerBysellerId($id, 'manager_token');
+        $store_link = "https://api.zid.dev/app/v2/products";
+        $bearer = site_configTable('zid_provider_token');
+        $ZidProductRT = ZidPcURL($storeID, $store_link, $bearer,$token); 
 
-        //echo "<pre>"; print_r( $ZidProductRT); die; 
-
+       // print_r( $ZidProductRT); exit;
         $ZidProductArr_total = json_decode($ZidProductRT, true);
 
         $total_pages = 1;
-        if ($ZidProductArr_total['count'] > 10) {
-            $total_pages = ceil($ZidProductArr_total['count'] / 10);
+        if ($ZidProductArr_total['count'] > 50) {
+            $total_pages = ceil($ZidProductArr_total['count'] / 50);
         }
-
+         if(empty($this->input->post('i')))
+         {
+            $i = 1;    
+         }
+         else
+         {
+            $i = $this->input->post('i');      
+         }
         $results = array();
         $results2 = array();
         $p = 0;
         $s = 0;
-        for ($i = 1; $i <= $total_pages; $i++) {
-            $storlink_page = "https://api.zid.sa/v1/products/?page=" . $i;
-            $ZidProductArr = ZidPcURL($storeID, $storlink_page, $bearer);
+       
+            $storlink_page = "https://api.zid.dev/app/v2/products?page=" . $i;
+            $ZidProductArr = ZidPcURL($storeID, $storlink_page, $bearer,$token); 
             $ZidProductArr = json_decode($ZidProductArr, true);
 
             if (isset($ZidProductArr['results'])) {
                 foreach ($ZidProductArr['results'] as $key => $products) {
 
                     if (isset($products['structure']) && $products['structure'] == 'parent') {
-                        $product_link = $store_link . $products['id'];
+                      $product_link = $store_link .'/'. $products['id'].'/';
+                        
 
-                        $product = json_decode(ZidPcURL($storeID, $product_link, $bearer), true);
-
+                        $product = json_decode(ZidPcURL($storeID, $product_link, $bearer,$token), true);
+                       // print_r($product); exit;
+                       if(!empty( $product)){
                         if (count($product['variants']) > 0) {
-                            foreach ($product['variants'] as $variant) {
+                            foreach ($product['variants'] as $key=>$variant) {
 
                                 $results[] = $variant;
+                             
                             }
                         } else {
                             $results[] = $product;
+                          
                         }
+                    }
                     } else {
 
                         $results2[] = $products;
+                       
                     }
                 }
-            }
+            
         }
 
         $final_Arr = array_merge($results, $results2);
+        // echo '<pre>';
+        // print_r( $results); exit;
 
         $ZidProducts['products'] = $final_Arr;
+        $ZidProducts['total_pages'] = $total_pages;
+        $ZidProducts['current_page'] = $i;
+        $ZidProducts['seller_id'] = $id;
+        
+        
 
         $this->load->view('SellerM/view_zidp', $ZidProducts);
+
     }
 
     public function SaveZidProducts() {
               
         foreach ($this->input->post('selsku') as  $value) {
           
+
             $skuarray = array();
+            $editData = array();
+            //echo $this->input->post('image')[$value]; exit;
+            file_put_contents('assets/item_uploads/'.$this->input->post('sku')[$value].'.jpg',  file_get_contents($this->input->post('image')[$value]));
             $skuarray = array(
                 'sku' => $this->input->post('sku')[$value],
                 'zid_pid' => $this->input->post('pid')[$value],
                 'name' => $this->input->post('skuname')[$value],
                 'super_id' => $this->session->userdata('user_details')['super_id'],
-                'description' => $this->input->post('sku')[$value],
+                'description' => $this->input->post('description')[$value],
                 'type' => 'B2C',
                 'storage_id' => $this->input->post('storageid'),
                 'wh_id' => $this->input->post('warehouseid'),
                 'sku_size' => $this->input->post('sku_size'),
-                'entry_date' => date("Y-m-d H:i:s")
+                'entry_date' => date("Y-m-d H:i:s"),
+                'item_path'=>'assets/item_uploads/'.$this->input->post('sku')[$value].'.jpg'
+            );
+            $editData= array(
+                'name' => $this->input->post('skuname')[$value],
+                'zid_pid' => $this->input->post('pid')[$value],
+                'item_path'=>'assets/item_uploads/'.$this->input->post('sku')[$value].'.jpg'
+               
             );
          
            $exist_zidsku_id = exist_zidsku_id($this->input->post('sku')[$value], $this->session->userdata('user_details')['super_id']);
-
             if ($exist_zidsku_id != '' || $exist_zidsku_id != 0) {
-                echo $product['sku'] . ' Exist<br>';
+                $this->Item_model->edit($exist_zidsku_id,$editData);
             } else {
                 AddSKUfromZid($skuarray);
             }
@@ -616,7 +729,7 @@ class Seller extends MY_Controller {
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.zid.dev/app/v1/settings/cities/by-country-id/184",
+            CURLOPT_URL => "https://api.zid.dev/app/v2/settings/cities/by-country-id/184",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -624,19 +737,25 @@ class Seller extends MY_Controller {
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_CUSTOMREQUEST => "GET",
             CURLOPT_HTTPHEADER => array(
-                "Authorization:Bearer eyJ4NXQiOiJNell4TW1Ga09HWXdNV0kwWldObU5EY3hOR1l3WW1NNFpUQTNNV0kyTkRBelpHUXpOR00wWkdSbE5qSmtPREZrWkRSaU9URmtNV0ZoTXpVMlpHVmxOZyIsImtpZCI6Ik16WXhNbUZrT0dZd01XSTBaV05tTkRjeE5HWXdZbU00WlRBM01XSTJOREF6WkdRek5HTTBaR1JsTmpKa09ERmtaRFJpT1RGa01XRmhNelUyWkdWbE5nX1JTMjU2IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJoYXJpQGZhc3Rjb28uY29tQGNhcmJvbi5zdXBlciIsImF1dCI6IkFQUExJQ0FUSU9OIiwiYXVkIjoiN0ZlcjRpZGthZkNpaDV6bnVYR3g0Tk9mRXZ3YSIsIm5iZiI6MTYxODc1Mzk5NSwiYXpwIjoiN0ZlcjRpZGthZkNpaDV6bnVYR3g0Tk9mRXZ3YSIsInNjb3BlIjoiU2hpcHBpbmctUGFydG5lcnMiLCJpc3MiOiJodHRwczpcL1wvcG9ydGFsLnppZC5kZXY6NDQzXC9vYXV0aDJcL3Rva2VuIiwiZXhwIjoxNjUwMzEwOTIxLCJpYXQiOjE2MTg3NTM5OTUsImp0aSI6ImIxMjU0NGUxLWE0MGMtNDVmZi05MDQyLWYwNTBmYzljOTg5YSJ9.hM6OrwT10vh-jKVc-tTJooTGuajFjSuxCw2O3hHF06DFDdbVIY_AvGvALDgX0jWONXDc420xDP46ew9S6zYeiTGTVmSPc3nCDYKhSEF5Ypx_wx7qbl5QZgyoMCYaphGJ1LCIOb639iuxkZUPTU0Rld0MjcbVLRRmshhlyqjFWLsLMzm6Er7Ky5WXR7Capy-4Ss0NGLRe-yqMY2PC8eBGrH361Kh_J3JKbQe-wo8xuxJXOKu8GLhKlC7bSiuPlmeAYSNuD58gBXybcVbWEaJCC8h1e9y6blW6wD6S9NfLitY_riQwnRoS3vAN0sqPesCGF2uifLmVT7EW25mN4sseKg",
+                "Authorization:Bearer ".site_configTable('zid_provider_token'),
             ),
         ));
 
         $response = json_decode(curl_exec($curl), true);
         return $response['cities'];
     }
-    public function updateZidConfig($id) {
+
+    public function updateZidConfig($id,$edit_id=null) {
 
         $data['customer'] = $this->Seller_model->edit_view_customerdata($id);
         $data['seller'] = $this->Seller_model->edit_view($id);
         $ListArr = $this->zidCities();//$this->Seller_model->zidCities();
-        $data['delivery_options'] = $this->Seller_model->deliverOptionExist($id);
+        $data['delivery_options'] = $this->Seller_model->deliverOptions($id); 
+        if($edit_id!=null)
+        {
+            $data['delivery_option_edit'] = $this->Seller_model->deliverOptionsByid($edit_id); 
+        }
+       
             // echo '<pre>';
             //         print_r(  $ListArr);  exit;
             $pre=array();
@@ -685,16 +804,16 @@ class Seller extends MY_Controller {
 
             $user = $this->Seller_model->update_zid($id, $update_data);
 
-            if ($user > 0) {
-                
-                if(  $this->zidWebhookSubscriptionDelete( $data['customer']))
-                    {
-                    $data['customer'] = $this->Seller_model->edit_view_customerdata($id);
-                    $this->zidWebhookSubscriptionCreate( $data['customer']);  
-                    }
-                        $this->session->set_flashdata('msg', $this->input->post('name') . '   has been updated successfully');
-                            redirect('Seller/updateZidConfig/'.$id);
-            }
+//            if ($user > 0) {
+//                
+//                if(  $this->zidWebhookSubscriptionDelete( $data['customer']))
+//                    {
+//                    $data['customer'] = $this->Seller_model->edit_view_customerdata($id);
+//                    $this->zidWebhookSubscriptionCreate( $data['customer']);  
+//                    }
+//                        $this->session->set_flashdata('msg', $this->input->post('name') . '   has been updated successfully');
+//                            redirect('Seller/updateZidConfig/'.$id);
+//            }
         }
         $this->load->view('SellerM/seller_zidconfig', $data);
     }
@@ -746,15 +865,19 @@ class Seller extends MY_Controller {
      * #description This method is used for zid webhook subscription
      */
     public function zidWebhookSubscribe($id) {
-        if ($this->input->post('zid_webhook_subscribed')) {
 
+  
+   
+        if (!empty($this->input->post('zid_webhook_subscribed'))) {
+
+             $deliver_id=$this->input->post('zid_delivery_name'); 
             $customer = $this->Seller_model->edit_view_customerdata($id);
             if ($customer['manager_token'] !== "" && $customer['zid_active'] == 'Y') {
 
                 if ($this->input->post('zid_webhook_subscribed') == 'Y') {
-                    $this->zidWebhookSubscriptionCreate($customer);
+                    $this->zidWebhookSubscriptionCreate($customer,$deliver_id);
                 } else {
-                    $this->zidWebhookSubscriptionDelete($customer);
+                    $this->zidWebhookSubscriptionDelete($customer,$deliver_id);
                 }
 
                 $update_data = array(
@@ -767,37 +890,37 @@ class Seller extends MY_Controller {
             }
             redirect('Seller/updateZidConfig/'.$id);
         }
+        
     }
 
-    private function zidWebhookSubscriptionCreate($customer) {
+    private function zidWebhookSubscriptionCreate($customer,$deliver_id) {
 
         /* check zid status and if status is new then order create other wise update webhook */
-         $delivery_options = $this->Seller_model->deliverOptionExist($customer['id']);
+         $delivery_options = $this->Seller_model->deliverOptionsByid($deliver_id);
          // $delivery_options[0]['id']
         if ($customer['zid_status'] == 'new') {
             $event = "order.create";
-            $condition = json_encode(array('status'=>'new','delivery_option_id'=> $delivery_options[0]['delivery_id']));;
+            $condition = json_encode(array('status'=>'new','delivery_option_id'=>$delivery_options['delivery_id']));;
         } else {
             $event = "order.status.update";
-            $condition = json_encode(array('status'=>'ready','delivery_option_id'=>$delivery_options[0]['delivery_id']));
+            $condition = json_encode(array('status'=>'ready','delivery_option_id'=>$delivery_options['delivery_id']));
         }
-       
+      // echo  $subscribe = site_configTable('company_name'); die; 
         if ($customer['zid_active'] == 'Y') {
-
             $subscribe = site_configTable('company_name');
             $arr = array(
                 "event" => $event,
-                "target_url" => $this->config->item('zid_order_target_url') . '/' . $customer['uniqueid'],
+                "target_url" => $this->config->item('zid_order_target_url') . '/' . $customer['uniqueid'].'/'. $delivery_options['delivery_id'],
                 "original_id" => $customer['uniqueid'],
-                "subscriber" => $subscribe,
+                "subscriber" =>  $subscribe,
                 "conditions" => $condition
             );
-           // echo "<pre>"; print_r($arr); die; 
+
             
 
             $curl = curl_init();
             curl_setopt_array($curl, array(
-                CURLOPT_URL => "https://api.zid.sa/v1/managers/webhooks",
+                CURLOPT_URL => "https://api.zid.dev/app/v2/managers/webhooks",
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => "",
                 CURLOPT_MAXREDIRS => 10,
@@ -810,15 +933,16 @@ class Seller extends MY_Controller {
                     "Accept: en",
                     "Accept-Language: en",
                     "X-MANAGER-TOKEN: " . $customer['manager_token'],
-                    "Authorization:Bearer " . $this->config->item('zid_authorization'),
+                    "Authorization:Bearer " . site_configTable('zid_provider_token'),
                     "User-Agent: Fastcoo/1.00.00 (web)"
                 ),
             ));
 
             $response = json_decode(curl_exec($curl));
+          //  print_r($response); die;
             curl_close($curl);
-           
             if ($response->status != "validation_error" || $response->status == "object") {
+                $this->Seller_model->DeliveryOptionUpdate($deliver_id,'Y');
                 return true;
             } else {
                 return false;
@@ -826,15 +950,14 @@ class Seller extends MY_Controller {
         }
     }
 
-    private function zidWebhookSubscriptionDelete($customer) {
+    private function zidWebhookSubscriptionDelete($customer,$deliver_id) {
         $subscribe = site_configTable('company_name');
-
-        // echo "https://api.zid.sa/v1/managers/webhooks?subscriber=".$subscribe."&original_id=" . $customer['uniqueid']";
-        // die; 
         $curl = curl_init();
-  
+        
+       // echo $deliver_id; die;
+        
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.zid.sa/v1/managers/webhooks?subscriber=".$subscribe."&original_id=" . $customer['uniqueid'],
+            CURLOPT_URL => "https://api.zid.dev/app/v2/managers/webhooks?subscriber=".$subscribe."&original_id=" . $customer['uniqueid'],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -846,27 +969,28 @@ class Seller extends MY_Controller {
                 "Accept: en",
                 "Accept-Language: en",
                 "X-MANAGER-TOKEN: " . $customer['manager_token'],
-                "Authorization:Bearer " . $this->config->item('zid_authorization'),
+                "Authorization:Bearer " . site_configTable('zid_provider_token'),
                 "User-Agent: Fastcoo/1.00.00 (web)"
             ),
         ));
 
         $response = json_decode(curl_exec($curl));
-
+        // print_r($response); die;
         curl_close($curl);
         if ($response->status == "success") {
+            $this->Seller_model->DeliveryOptionUpdate($deliver_id,'N');
             return true;
         }
         return false;
     }
-
     public function getZidWebHooks() {
         $id = $this->input->post('cust_id');
         $customer = $this->Seller_model->edit_view_customerdata($id);
         $curl = curl_init();
-
+         //echo site_configTable('zid_provider_token'); exit;
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.zid.sa/v1/managers/webhooks",
+            CURLOPT_URL => "https://api.zid.dev/app/v2/managers/webhooks",
+           
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -878,7 +1002,7 @@ class Seller extends MY_Controller {
                 "Accept: en",
                 "Accept-Language: en",
                 "X-MANAGER-TOKEN: " . $customer['manager_token'],
-                "Authorization:Bearer " . $this->config->item('zid_authorization'),
+                "Authorization:Bearer " . site_configTable('zid_provider_token'),
                 "User-Agent: Fastcoo/1.00.00 (web)"
             ),
         ));
@@ -889,6 +1013,7 @@ class Seller extends MY_Controller {
         echo $response;
         exit();
     }
+
 
     /**
      * @param type $id
@@ -1045,13 +1170,24 @@ class Seller extends MY_Controller {
         exit();
     }
 
+    
 
+    public function deleteDeliveryOption($cust_id,$id) {
+       
+        $this->Seller_model->deleteDeliveryOption($id);
+    
+   
+
+    
+    $this->session->set_flashdata('msg', 'Delivery Option Has been Deleted successfully');
+    redirect('Seller/updateZidConfig/'.$cust_id);
+    }
     public function zidDeliveryOptionAdd() {
 
         if ($this->input->post('deliver_option')) {
             $cust_id = $this->input->post('id');
-            //  ECHO "<PRE>";
-            //   print_r($this->input->post('zid_city')); exit;
+            
+            
             $rdata = array(         
                 'name' => $this->input->post('zid_delivery_name'),
                 'cost' => $this->input->post('zid_delivery_cost'),
@@ -1061,14 +1197,13 @@ class Seller extends MY_Controller {
                 'delivery_estimated_time_ar' => $this->input->post('delivery_estimated_time_ar'),
                 'delivery_estimated_time_en' => $this->input->post('delivery_estimated_time_en'),
             );
-         // ECHO "<PRE>";
+         //  ECHO "<PRE>";print_r($rdata);die;
              $customer = $this->Seller_model->edit_view_customerdata($cust_id);
-             //print_r($customer);
              $request = json_encode($rdata);
              
                 $curl = curl_init();
                 curl_setopt_array($curl, array(
-                    CURLOPT_URL => "https://api.zid.dev/app/v1/managers/store/delivery-options/add",
+                    CURLOPT_URL => "https://api.zid.dev/app/v2/managers/store/delivery-options/add",
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => "",
                     CURLOPT_MAXREDIRS => 10,
@@ -1081,7 +1216,7 @@ class Seller extends MY_Controller {
                         //"Accept: en",
                         "Accept-Language: en",
                         "X-MANAGER-TOKEN: " . $customer['manager_token'],
-                        "Authorization:Bearer eyJ4NXQiOiJNell4TW1Ga09HWXdNV0kwWldObU5EY3hOR1l3WW1NNFpUQTNNV0kyTkRBelpHUXpOR00wWkdSbE5qSmtPREZrWkRSaU9URmtNV0ZoTXpVMlpHVmxOZyIsImtpZCI6Ik16WXhNbUZrT0dZd01XSTBaV05tTkRjeE5HWXdZbU00WlRBM01XSTJOREF6WkdRek5HTTBaR1JsTmpKa09ERmtaRFJpT1RGa01XRmhNelUyWkdWbE5nX1JTMjU2IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJoYXJpQGZhc3Rjb28uY29tQGNhcmJvbi5zdXBlciIsImF1dCI6IkFQUExJQ0FUSU9OIiwiYXVkIjoiN0ZlcjRpZGthZkNpaDV6bnVYR3g0Tk9mRXZ3YSIsIm5iZiI6MTYxOTAxMzc0NiwiYXpwIjoiN0ZlcjRpZGthZkNpaDV6bnVYR3g0Tk9mRXZ3YSIsInNjb3BlIjoiU2hpcHBpbmctUGFydG5lcnMiLCJpc3MiOiJodHRwczpcL1wvcG9ydGFsLnppZC5kZXY6NDQzXC9vYXV0aDJcL3Rva2VuIiwiZXhwIjoxNjUwNTcwNjcyLCJpYXQiOjE2MTkwMTM3NDYsImp0aSI6ImFjMzNmNWMyLTE1MDItNGUwYi05MWI1LTBiNmIxZTllMTBhNCJ9.crd3muE0AU1lOxSdfi0LAzd6vTw_ae6FCilR-X44nt3Uzp_-aR6pR3N0GV8A8AI9PLOu0RnRUjWXr2nS8fHMgijRNd910z2nowlqJ1g_xLb3wtLj7vwpXurvHP6Hy9-wG8vHUKNXy2QAU7ei-ToQsUMW-2CGlyzjFR64p8yQmFc5DzK6GmEO4JQ_tbbciz7BAmjdyzM8vyV01AqRiyLxN3yS_imTLAVqZpm8yAjYrcM3EdE9sS1W9JpQcjGovriLKFl3Z6-u0kb9SFDI9jP-wmVmSJ1lfEBgPCrzPGXWa5GQuCoIG7CMZBP0WSlL6Zu_v8Pq5lnTXHQegWmxLZ5x8A",
+                        "Authorization:Bearer ".site_configTable('zid_provider_token'),
                         "Content-Type: application/json"
                     ),
                 ));
@@ -1102,22 +1237,23 @@ class Seller extends MY_Controller {
                         'delivery_id' => $deliver_id
                     );
                     
-                    $this->Seller_model->zidDeliveryOptionUpdate($data); 
+                    $this->Seller_model->zidDeliveryOptionUpdate($data);
                 }
                
-            //die();
+            
                 
                 $this->session->set_flashdata('msg', 'Data been updated successfully');
-                redirect('Seller/updateZidConfig/'.$cust_id);
+                redirect('Seller');
         }
     }
+    
     public function getZidDeliveryOptions($id)
     {
         $customer = $this->Seller_model->edit_view_customerdata($id);
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.zid.dev/app/v1/managers/store/delivery-options",
+            CURLOPT_URL => "https://api.zid.dev/app/v2/managers/store/delivery-options",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -1126,11 +1262,11 @@ class Seller extends MY_Controller {
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "GET",
             CURLOPT_HTTPHEADER => array(
-                "Accept: en",
+                //"Accept: en",
                 "Accept-Language: en",
                 "X-MANAGER-TOKEN: " . $customer['manager_token'],
-                "Authorization:Bearer eyJ4NXQiOiJNell4TW1Ga09HWXdNV0kwWldObU5EY3hOR1l3WW1NNFpUQTNNV0kyTkRBelpHUXpOR00wWkdSbE5qSmtPREZrWkRSaU9URmtNV0ZoTXpVMlpHVmxOZyIsImtpZCI6Ik16WXhNbUZrT0dZd01XSTBaV05tTkRjeE5HWXdZbU00WlRBM01XSTJOREF6WkdRek5HTTBaR1JsTmpKa09ERmtaRFJpT1RGa01XRmhNelUyWkdWbE5nX1JTMjU2IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJoYXJpQGZhc3Rjb28uY29tQGNhcmJvbi5zdXBlciIsImF1dCI6IkFQUExJQ0FUSU9OIiwiYXVkIjoiN0ZlcjRpZGthZkNpaDV6bnVYR3g0Tk9mRXZ3YSIsIm5iZiI6MTYxOTAxMzc0NiwiYXpwIjoiN0ZlcjRpZGthZkNpaDV6bnVYR3g0Tk9mRXZ3YSIsInNjb3BlIjoiU2hpcHBpbmctUGFydG5lcnMiLCJpc3MiOiJodHRwczpcL1wvcG9ydGFsLnppZC5kZXY6NDQzXC9vYXV0aDJcL3Rva2VuIiwiZXhwIjoxNjUwNTcwNjcyLCJpYXQiOjE2MTkwMTM3NDYsImp0aSI6ImFjMzNmNWMyLTE1MDItNGUwYi05MWI1LTBiNmIxZTllMTBhNCJ9.crd3muE0AU1lOxSdfi0LAzd6vTw_ae6FCilR-X44nt3Uzp_-aR6pR3N0GV8A8AI9PLOu0RnRUjWXr2nS8fHMgijRNd910z2nowlqJ1g_xLb3wtLj7vwpXurvHP6Hy9-wG8vHUKNXy2QAU7ei-ToQsUMW-2CGlyzjFR64p8yQmFc5DzK6GmEO4JQ_tbbciz7BAmjdyzM8vyV01AqRiyLxN3yS_imTLAVqZpm8yAjYrcM3EdE9sS1W9JpQcjGovriLKFl3Z6-u0kb9SFDI9jP-wmVmSJ1lfEBgPCrzPGXWa5GQuCoIG7CMZBP0WSlL6Zu_v8Pq5lnTXHQegWmxLZ5x8A",
-                       
+                "Authorization:Bearer ".site_configTable('zid_provider_token'),
+                "Content-Type: application/json"
             ),
         ));
 

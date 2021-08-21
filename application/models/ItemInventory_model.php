@@ -31,20 +31,84 @@ class ItemInventory_model extends CI_Model {
         $result = $query->result_array();
         return $result;
     }
+    
 
+    
     public function add($data, $type = null) {
         //  echo '<pre>';
         //print_r($data); die;
         foreach ($data as $rdata) {
 
-    
+            $array = array('item_sku' => $rdata['item_sku'], 'seller_id' => $rdata['seller_id'], 'expity_date' => $rdata['expity_date'], 'stock_location' => $rdata['stock_location'], 'wh_id' => $rdata['wh_id']);
+            $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+            $this->db->where($array);
+            $query = $this->db->get('item_inventory');
+            //echo $this->db->last_query(); 
+
+            if ($query->num_rows() == 1) {
+
+                // echo "tttt"; die;
+                $status = "Quantity Increase";
+                $previous_data = $query->result()[0];
+                $item_previous_quantity = $previous_data->quantity;
+                //print_r($data['quantity']);
+                $item_new_quantity = $rdata['quantity'];
+                $item_updated_quantity = $item_previous_quantity + $item_new_quantity;
+                if (!empty($data['shelve_no']))
+                    $new_data = array('quantity' => $item_updated_quantity, 'stock_location' => $data['stock_location'], 'shelve_no' => $data['shelve_no']);
+                else
+                    $new_data = array('quantity' => $item_updated_quantity, 'stock_location' => $data['stock_location']);
+
+                $item_inventory_history[] = array(
+                    'item_sku' => $data['item_sku'],
+                    'item_previous_quantity' => $item_previous_quantity,
+                    'item_new_quantity' => $item_updated_quantity,
+                    'update_date' => date("Y/m/d h:i:sa"),
+                    'seller_id' => $data['seller_id'],
+                    'status' => $status
+                );
+
+                if ($type == 'transfer')
+                    $activitiesType = 'transfer';
+                else if ($type == 'return')
+                    $activitiesType = 'return';
+                else if ($type == 'delete')
+                    $activitiesType = 'delete';
+                else
+                    $activitiesType = 'Update';
+                
+                  if(empty($data['shelve_no']))
+                    {
+                        $data['shelve_no']="";
+                    }
+                if (!empty($rdata['awb_no']))
+                {
+                    $activitiesArr = array('exp_date' => $data['expity_date'], 'st_location' => $data['stock_location'], 'item_sku' => $data['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $data['seller_id'], 'qty' => $item_updated_quantity, 'p_qty' => $item_previous_quantity, 'qty_used' => $rdata['quantity'], 'type' => $activitiesType, 'entrydate' => date("Y-m-d h:i:s"), 'awb_no' => $rdata['awb_no'], 'super_id' => $this->session->userdata('user_details')['super_id'],'shelve_no'=>$data['shelve_no']);
+                }
+                else
+                {
+                    $activitiesArr = array('exp_date' => $data['expity_date'], 'st_location' => $data['stock_location'], 'item_sku' => $data['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $data['seller_id'], 'qty' => $item_updated_quantity, 'p_qty' => $item_previous_quantity, 'qty_used' => $rdata['quantity'], 'type' => $activitiesType, 'entrydate' => date("Y-m-d h:i:s"), 'super_id' => $this->session->userdata('user_details')['super_id'],'shelve_no'=>$data['shelve_no']);
+                }
+                GetAddInventoryActivities($activitiesArr);
+
+                $this->db->where($array);
+                return $this->db->update('item_inventory', $new_data);
+
+
+
+                //print_r($this->db->update('item_inventory',$new_data));      
+                //echo '</pre>';
+                //exit();
+                //return  $query->result();
+            } else {
                 //echo "sssss"; die;
 
                 $status = "Recently Added";
-             
+              //  if (!empty($rdata['shelve_no']))
                     $array_added[] = array('item_sku' => $rdata['item_sku'], 'seller_id' => $rdata['seller_id'], 'expity_date' => $rdata['expity_date'], 'stock_location' => $rdata['stock_location'], 'quantity' => $rdata['quantity'], 'itype' => $rdata['itype'], 'shelve_no' => $rdata['shelve_no'], 'wh_id' => $rdata['wh_id'], 'super_id' => $this->session->userdata('user_details')['super_id']);
-               
-                //print_r($data);
+                // else
+                //     $array_added[] = array('item_sku' => $rdata['item_sku'], 'seller_id' => $rdata['seller_id'], 'expity_date' => $rdata['expity_date'], 'stock_location' => $rdata['stock_location'], 'quantity' => $rdata['quantity'], 'itype' => $rdata['itype'], 'wh_id' => $rdata['wh_id'], 'super_id' => $this->session->userdata('user_details')['super_id']);
+                // //print_r($data);
                 //echo "ddd"; die;
 
                 $item_inventory_history2[] = array(
@@ -57,43 +121,86 @@ class ItemInventory_model extends CI_Model {
                     'super_id' => $this->session->userdata('user_details')['super_id']
                 );
 
-                if ($type == 'transfer') {
+                if ($type == 'transfer')
+                {
                     $activitiesType = 'transfer';
-                } else if ($type == 'return') {
+                }
+                else if ($type == 'return')
+                {
                     $activitiesType = 'return';
-                } else if ($type == 'delete') {
+                }
+                else if ($type == 'delete')
+                {
                     $activitiesType = 'delete';
-                } else {
+                }
+                else
+                {
                     $activitiesType = 'Add';
                 }
-
-                if (empty($rdata['shelve_no'])) {
-                    $rdata['shelve_no'] = "";
+                
+                  if(empty($rdata['shelve_no']))
+                    {
+                        $rdata['shelve_no']="";
+                    }
+                if (!empty($rdata['awb_no']))
+                {
+                    $activitiesArr[] = array('exp_date' => $rdata['expity_date'], 'st_location' => $rdata['stock_location'], 'item_sku' => $rdata['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $rdata['seller_id'], 'qty' => $rdata['quantity'], 'p_qty' => 0, 'qty_used' => $rdata['quantity'], 'type' => $activitiesType, 'entrydate' => date("Y-m-d h:i:s"), 'awb_no' => $rdata['awb_no'], 'super_id' => $this->session->userdata('user_details')['super_id'],'shelve_no'=>$rdata['shelve_no']);
                 }
-                if (!empty($rdata['awb_no'])) {
-                    $activitiesArr[] = array('exp_date' => $rdata['expity_date'], 'st_location' => $rdata['stock_location'], 'item_sku' => $rdata['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $rdata['seller_id'], 'qty' => $rdata['quantity'], 'p_qty' => 0, 'qty_used' => $rdata['quantity'], 'type' => $activitiesType, 'entrydate' => date("Y-m-d h:i:s"), 'awb_no' => $rdata['awb_no'], 'super_id' => $this->session->userdata('user_details')['super_id'], 'shelve_no' => $rdata['shelve_no']);
-                } else {
-
-                    $activitiesArr[] = array('exp_date' => $rdata['expity_date'], 'st_location' => $rdata['stock_location'], 'item_sku' => $rdata['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $rdata['seller_id'], 'qty' => $rdata['quantity'], 'p_qty' => 0, 'qty_used' => $rdata['quantity'], 'type' => $activitiesType, 'entrydate' => date("Y-m-d h:i:s"), 'super_id' => $this->session->userdata('user_details')['super_id'], 'shelve_no' => $rdata['shelve_no']);
+                else
+                {
+                    
+                    $activitiesArr[] = array('exp_date' => $rdata['expity_date'], 'st_location' => $rdata['stock_location'], 'item_sku' => $rdata['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $rdata['seller_id'], 'qty' => $rdata['quantity'], 'p_qty' => 0, 'qty_used' => $rdata['quantity'], 'type' => $activitiesType, 'entrydate' => date("Y-m-d h:i:s"), 'super_id' => $this->session->userdata('user_details')['super_id'],'shelve_no'=>$rdata['shelve_no']);
                 }
-            
+            }
         }
         // echo '<pre>';
-        // print_r($array_added); die;
+        ///print_r($activitiesArr); die;
         if (!empty($item_inventory_history)) {
             // $this->db->insert('item_inventory_history',$item_inventory_history);
         }
 
         if (!empty($item_inventory_history2) && !empty($array_added)) {
             // $this->db->insert_batch('item_inventory_history',$item_inventory_history2);
-            // $this->db->insert_batch('item_inventory', $array_added);
-            // echo $this->db->last_query(); die;
-           if( $this->db->insert_batch('item_inventory', $array_added))
+           if($this->db->insert_batch('item_inventory', $array_added))
            {
-          
             $this->db->insert_batch('inventory_activity', $activitiesArr);
            }
+           
+            //echo $this->db->last_query(); die;
+            //GetAddInventoryActivities($activitiesArr);
+        }
+        return true;
+    }
+    public function add_new($data, $type = null) {
+        //  echo '<pre>';
+        //print_r($data); die;
+        foreach ($data as $rdata) {
+
+            $array = array('item_sku' => $rdata['item_sku'], 'seller_id' => $rdata['seller_id'], 'expity_date' => $rdata['expity_date'], 'stock_location' => $rdata['stock_location'], 'wh_id' => $rdata['wh_id']);
+            $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+            $this->db->where($array);
+            $query = $this->db->get('item_inventory');
+            //echo $this->db->last_query(); 
+
+            {
+               
+                $status = "Recently Added";
             
+                    $array_added[] = array('item_sku' => $rdata['item_sku'], 'seller_id' => $rdata['seller_id'], 'expity_date' => $rdata['expity_date'], 'stock_location' => $rdata['stock_location'], 'quantity' => $rdata['quantity'], 'itype' => $rdata['itype'], 'shelve_no' => $rdata['shelve_no'], 'wh_id' => $rdata['wh_id'], 'super_id' => $this->session->userdata('user_details')['super_id']);
+               
+                                    
+                    $activitiesArr[] = array('exp_date' => $rdata['expity_date'], 'st_location' => $rdata['stock_location'], 'item_sku' => $rdata['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $rdata['seller_id'], 'qty' => $rdata['quantity'], 'p_qty' => 0, 'qty_used' => $rdata['quantity'], 'type' => 'Add', 'entrydate' => date("Y-m-d h:i:s"), 'super_id' => $this->session->userdata('user_details')['super_id'],'shelve_no'=>$rdata['shelve_no']);
+                
+            }
+        }
+        
+        if ( !empty($array_added)) {
+            
+           if($this->db->insert_batch('item_inventory', $array_added))
+           {
+            $this->db->insert_batch('inventory_activity', $activitiesArr);
+           }
+           
             //echo $this->db->last_query(); die;
             //GetAddInventoryActivities($activitiesArr);
         }
@@ -2313,7 +2420,7 @@ class ItemInventory_model extends CI_Model {
         if ($query->num_rows() > 0) {
 
             $data['result'] = $query->result_array();
-            $data['count'] = $this->filterCount($quantity, $sku, $seller, $to, $from, $exact, $page_no);
+            $data['count'] = $this->filterCount_shelve($quantity, $sku, $seller, $to, $from, $exact, $page_no, $shelve_no, $storage_id, $data);
             return $data;
             // return $page_no.$this->db->last_query();
         } else {
@@ -2321,6 +2428,104 @@ class ItemInventory_model extends CI_Model {
             $data['count'] = 0;
             return $data;
         }
+    }
+    
+    public function filterCount_shelve($quantity, $sku, $seller, $to, $from, $exact, $page_no, $shelve_no = null, $storage_id, $data = array())
+    {
+        
+          $this->db->where('item_inventory.super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->select('COUNT(item_inventory.id) as tcount');
+        $this->db->from('item_inventory');
+        $this->db->join('items_m', 'items_m.id = item_inventory.item_sku');
+        $this->db->join('customer as seller_m', 'seller_m.id = item_inventory.seller_id');
+        $this->db->join('warehouse_category', 'warehouse_category.id = item_inventory.wh_id');
+
+
+        if ($this->session->userdata('user_details')['user_type'] != 1) {
+            $this->db->where('item_inventory.wh_id', $this->session->userdata('user_details')['wh_id']);
+        }
+
+        if (!empty($exact)) {
+            $date = date("Y-m-d", strtotime($exact));
+            $this->db->where('DATE(item_inventory.update_date)', $exact);
+        }
+
+
+        if (!empty($from) && !empty($to)) {
+            $date = date("Y-m-d", strtotime($from));
+            $date = date("Y-m-d", strtotime($to));
+            $where = "DATE(item_inventory.update_date) BETWEEN '" . $from . "' AND '" . $to . "'";
+            $this->db->where($where);
+        }
+
+
+        //echo $quantity;
+        $this->db->where('item_inventory.shelve_no!=', '');
+        $this->db->group_by('item_inventory.shelve_no');
+
+        if ($quantity || $quantity == '0') {
+            $this->db->where('item_inventory.quantity', $quantity);
+        }
+
+        if (!empty($shelve_no)) {
+            $this->db->where('item_inventory.shelve_no', $shelve_no);
+        }
+
+        if (!empty($storage_id)) {
+            $this->db->where('items_m.storage_id', $storage_id);
+        }
+        if (!empty($sku)) {
+            $this->db->where('items_m.sku', $sku);
+        }
+
+        if (!empty($seller)) {
+            $this->db->where('seller_m.id', $seller);
+        }
+
+        if (!empty($data['stock_location'])) {
+            $this->db->where('item_inventory.stock_location', $data['stock_location']);
+        }
+
+        if (!empty($data['wh_name'])) {
+            $this->db->where('warehouse_category.name', $data['wh_name']);
+        }
+
+        if (!empty($data['item_description'])) {
+            $this->db->where('items_m.description', $data['item_description']);
+        }
+
+        if (!empty($data['update_date'])) {
+            $date = date("Y-m-d", strtotime($data['update_date']));
+            //$this->db->where("item_inventory.update_date like '".$date."%'"); 
+            $this->db->where('DATE(item_inventory.update_date)', $data['update_date']);
+        }
+
+        if (!empty($data['expity_date'])) {
+            $expity_date = date("Y-m-d", strtotime($data['expity_date']));
+            $this->db->where('DATE(item_inventory.expity_date)', $expity_date);
+        }
+
+        if (!empty($data['expiry'])) {
+            $this->db->where('item_inventory.expiry', $data['expiry']);
+        }
+        
+
+
+        $this->db->order_by('item_inventory.id', 'DESC');
+
+
+      
+
+        $query = $this->db->get();
+       // echo $this->db->last_query(); die;
+          if ($query->num_rows() > 0) {
+              return $query->num_rows();
+              
+          }
+          else{
+              return 0;
+          }
+        
     }
 
     public function filter_shelve_details_Query($data = array()) {
@@ -2339,10 +2544,14 @@ class ItemInventory_model extends CI_Model {
 
     public function inventoryCheckQry($data = array()) {
         $this->db->where('item_inventory.super_id', $this->session->userdata('user_details')['super_id']);
-        $this->db->select('item_inventory.*,customer.name as cust_name,items_m.sku,customer.id as cust_id');
+        $this->db->where('items_m.super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->where('storage_table.super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->select('item_inventory.*,customer.name as cust_name,items_m.sku,items_m.sku_size,customer.id as cust_id,storage_table.storage_type');
         $this->db->from('item_inventory');
         $this->db->join('customer', 'customer.id = item_inventory.seller_id');
         $this->db->join('items_m', 'items_m.id = item_inventory.item_sku');
+        $this->db->join('storage_table', 'storage_table.id = items_m.storage_id');
+
         $this->db->where('customer.id', $data['cust_name']);
         $this->db->where('item_inventory.stock_location!=', '');
         //$this->db->group_by('item_inventory.seller_id');

@@ -49,6 +49,20 @@ class Warehouse_model extends CI_Model {
             return $query->result();
         }
     }
+    
+      public function fetch_all_storage() {
+
+          $super_id=$this->session->userdata('user_details')['super_id'];
+          $citylist = Array('Riyadh','Jeddah','Dammam');
+          $this->db->select('`id`, `storage_type`, `no_of_pallet`, `rate`, `entrydate`');
+      
+         $this->db->where('super_id', $super_id);
+         $query = $this->db->get('storage_table');
+       // echo $this->db->last_query(); die;
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        }
+    }
 
     public function edit_msg_temp($id) {
         $this->db->select('*');
@@ -65,6 +79,7 @@ class Warehouse_model extends CI_Model {
 
     public function all() {
         $this->db->order_by('id', 'desc');
+         $this->db->where('deleted','N');
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $query = $this->db->get('warehouse_category');
         //echo $this->db->last_query(); die;
@@ -178,6 +193,14 @@ $this->db->where('super_id', $this->session->userdata('user_details')['super_id'
         if ($query->num_rows() > 0) {
             return $query->result();
         }
+    }
+    
+    public function insertstorageType($data=array(),$wh_id=null)
+    {
+        $this->db->query("delete from warehouse_storage where  wh_id='$wh_id' and super_id='".$this->session->userdata('user_details')['super_id']."'");
+      
+      return  $this->db->insert_batch('warehouse_storage',$data);
+        
     }
 
 }

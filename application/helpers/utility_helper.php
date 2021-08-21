@@ -37,6 +37,51 @@ if (!function_exists('todcount')) {
     }
 
 }  
+if (!function_exists('GetCheckPackingOrderBtn')) {
+
+    function GetCheckPackingOrderBtn($id = null) {
+        $ci = & get_instance();
+        $ci->load->database();
+
+        $sql = "SELECT id FROM pickuplist_tbl where pickupId='$id' and pickup_status='Y' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and deleted='N' group by pickupId  $cndition";
+        $query = $ci->db->query($sql);
+       if($query->num_rows()>0)
+       {
+           return 'N';
+       }
+       else
+       {
+          return 'Y';  
+       }
+    }
+
+}
+
+if (!function_exists('GetCheckpackStatus')) {
+
+    function GetCheckpackStatus($id = null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        $sql = "SELECT slip_no FROM shipment_fm where code='PK' and  slip_no='$id'";
+        $query = $ci->db->query($sql);
+        $result = $query->row_array();
+        return $result['slip_no'];
+    }
+
+}
+
+if (!function_exists('GetCheckPickupStatus')) {
+
+    function GetCheckPickupStatus($id = null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        $sql = "SELECT slip_no FROM pickuplist_tbl where deleted ='N' and  slip_no='$id' and super_id='".$ci->session->userdata('user_details')['super_id']."'";
+        $query = $ci->db->query($sql);
+        $result = $query->row_array();
+        return $result['slip_no'];
+    }
+
+}
 
 function remove_phone_format($number) {
 
@@ -439,7 +484,7 @@ if (!function_exists('GetCourCompanynameIdAll')) {
     function GetCourCompanynameIdAll($id = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT company,company_url FROM courier_company where cc_id='$id' and super_id='".$ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT company,company_url,auth_token,api_url FROM courier_company where cc_id='$id' and super_id='".$ci->session->userdata('user_details')['super_id'] . "'";
         $query = $ci->db->query($sql);
         // echo   $ci->db->last_query();
         // die; 
@@ -1082,6 +1127,20 @@ if (!function_exists('site_configTable')) {
 
 }
 
+if (!function_exists('site_configTableSuper_id')) {
+
+    function site_configTableSuper_id($field = null,$super_id=null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        $sql = "select $field from site_config where super_id='" . $super_id. "'";
+        $query = $ci->db->query($sql);
+        //echo $ci->db->last_query();exit;
+        $result = $query->row_array();
+        return $result[$field];
+    }
+
+}
+
 if (!function_exists('site_config')) {
 
     function site_config($url = null) {
@@ -1229,6 +1288,11 @@ if (!function_exists('PrintPiclist3PL')) {
             }
             else if (GetCourCompanynameIdbulkprint($frwd_company_id, 'company') == 'Barqfleet' || GetCourCompanynameIdbulkprint($frwd_company_id, 'company') == 'GLT' ) {
                 $pdf = new FPDI('P', 'mm', array(110, 160));
+            }
+            else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Bosta') {
+                $pdf = new FPDI('P', 'mm', array(170, 160));
+            }else if (GetCourCompanynameId($frwd_company_id, 'company') == 'DHL JONES'){
+                $pdf = new FPDI('P', 'mm', array(270, 210));
             } else {
                 $pdf = new FPDI('P', 'mm', array(102, 160));
             }
@@ -1267,6 +1331,7 @@ if (!function_exists('PrintPiclist3PL_bulk')) {
         if (!empty($frwd_company_id)) {
             // $ci->db->where('frwd_company_id',$frwd_company_id);
         }
+        $frwd_company_id=
         $ci->db->order_by('shipment_fm.id', 'ASC');
         // $this->db->limit($limit, $start);
         $query = $ci->db->get();
@@ -1281,18 +1346,38 @@ if (!function_exists('PrintPiclist3PL_bulk')) {
             $fileArray = array();
             $checkIds = array();
             foreach ($status_update_data as $key => $val) {
+                $frwd_company_id=$val['frwd_company_id'];
                 array_push($checkIds, $val['frwd_company_id']);
+                $awb_no = $val['frwd_company_awb'];
+                $slip_no = $val['slip_no'];
                 if ($val['label_type'] == 1) {
-                    $awb_no = $val['frwd_company_awb'];
+                  
 
-                    if (!file_exists("assets/all_labels/$awb_no.pdf") || filesize("assets/all_labels/$awb_no.pdf") <= 0) {
-                        //echo "ssssssss"; 
-                        $generated_pdf = file_get_contents($val['frwd_company_label']);
+                    if (!file_exists("assets/all_labels/$slip_no.pdf") || filesize("assets/all_labels/$slip_no.pdf") <= 0) 
+                    {
+                      
+                          $generated_pdf = file_get_contents($val['frwd_company_label']);
                         $encoded = base64_decode($generated_pdf);
                         //header('Content-Type: application/pdf');
-                        file_put_contents("assets/all_labels/$awb_no.pdf", $generated_pdf);
+                        file_put_contents("assets/all_labels/$slip_no.pdf", $generated_pdf); 
+                       
+                        
                     }
                 }
+                else
+                {
+                    $awb_no = $val['frwd_company_awb'];
+                // echo   '/var/www/html/diggipack_new/demofulfillment/assets/all_labels/'.$slip_no.'.pdf'; exit;
+                    if (!file_exists("assets/all_labels/$slip_no.pdf") || filesize("assets/all_labels/$slip_no.pdf") <= 0) {
+                    // echo "ssssssss";  exit;
+                       if(GetCourCompanynameId($frwd_company_id, 'company') == 'Shipadelivery')
+                       {header('Content-Type: application/pdf');
+                        $shipalable= ShipaDelLabelcURL($frwd_company_id,$awb_no);   
+                      
+                        file_put_contents("assets/all_labels/".$slip_no.".pdf", $shipalable);
+                       }
+                }
+            }
 
                 // $filePath='https://demosony.fastcoo-solutions.com/fm/assets/all_labels/SOF7362389516.pdf';
                 $filePath = '/var/www/html/diggipack_new/demofulfillment/assets/all_labels/' . $status_update_data[$key]['slip_no'] . '.pdf';
@@ -1327,6 +1412,11 @@ if (!function_exists('PrintPiclist3PL_bulk')) {
             }
             else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Barqfleet' || GetCourCompanynameId($frwd_company_id, 'company') == 'GLT' ) {
                 $pdf = new FPDI('P', 'mm', array(110, 160));
+            }
+            else if (GetCourCompanynameId($frwd_company_id, 'company') == 'Bosta') {
+                $pdf = new FPDI('P', 'mm', array(170, 160));
+            }else if (GetCourCompanynameId($frwd_company_id, 'company') == 'DHL JONES'){
+                $pdf = new FPDI('P', 'mm', array(270, 210));
             } else {
                 $pdf = new FPDI('P', 'mm', array(102, 160));
             }
@@ -1369,6 +1459,31 @@ if (!function_exists('GetcheckConditionsAddInventory')) {
         return $row['itemupdated'];
     }
 
+}
+ function ShipaDelLabelcURL(array $cc_id, $client_awb = null) 
+{
+
+    $counrierArr=GetCourCompanynameIdAll($cc_id);
+
+    $cURL12 = $counrierArr['api_url'].'/'.$client_awb."/pdf?apikey=".$counrierArr['auth_token']."&template=sticker-6x4&copies=1";
+  
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => $cURL12,
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => '',
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 0,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => 'GET',
+    ));
+
+    $response = curl_exec($curl);
+
+    curl_close($curl);
+    return $response;
 }
 if (!function_exists('getusertypedropdown')) {
 
@@ -1711,7 +1826,7 @@ if (!function_exists('GetCityAllDataByname')) {
     function GetCityAllDataByname($name = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT * FROM country where city='$name' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT * FROM country where city='".addslashes($name)."' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
         $query = $ci->db->query($sql);
         //echo $ci->db->last_query();exit;
         return $query->row_array();
@@ -1923,7 +2038,7 @@ if (!function_exists('CheckStockBackorder')) {
 
 if (!function_exists('CheckStockBackorder_ordergen')) {
 
-    function CheckStockBackorder_ordergen($seller_id = null, $sku = null, $pieces = null, $slip_no = null, $sku_id = null) {
+    function CheckStockBackorder_ordergen($seller_id = null, $sku = null, $pieces = null, $slip_no = null, $sku_id = null, $wh_id = null) {
         $ci = & get_instance();
         $ci->load->database();
 
@@ -1932,9 +2047,10 @@ if (!function_exists('CheckStockBackorder_ordergen')) {
             $current_date = date("Y-m-d");
             $conditionCheck = " and expiry='N' and expity_date>='$current_date'";
         }
-        $inventory_dataqry = "select item_inventory.*,items_m.sku,items_m.weight from item_inventory left join items_m on item_inventory.item_sku=items_m.id where item_inventory.seller_id='" . $seller_id . "' and items_m.sku like'" . trim($sku) . "' and item_inventory.super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and items_m.super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and item_inventory.quantity>0 $conditionCheck order by  item_inventory.id asc";
+        // and item_inventory.wh_id='" . $wh_id . "' added by bimal and then removed after discussion with ashar 
+        $inventory_dataqry = "select item_inventory.*,items_m.sku from item_inventory left join items_m on item_inventory.item_sku=items_m.id where item_inventory.seller_id='" . $seller_id . "' and items_m.sku like'" . trim($sku) . "' and item_inventory.super_id='" . $ci->session->userdata('user_details')['super_id'] . "'  and items_m.super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and item_inventory.quantity>0 $conditionCheck order by  item_inventory.id asc";
         $query = $ci->db->query($inventory_dataqry);
-       
+
 
 
 
@@ -1944,7 +2060,7 @@ if (!function_exists('CheckStockBackorder_ordergen')) {
             $returnarray = array();
             $totalqty = 0;
             $totalqty1 = 0;
-            $stock_location_new=array();
+            $stock_location_new = array();
             $locationarray = array();
             $error_array = array();
             $countInventry = count($inventory_data) - 1;
@@ -1968,6 +2084,8 @@ if (!function_exists('CheckStockBackorder_ordergen')) {
                     }
                 }
             }
+           // print_r($error_array); die;
+            
             if (empty($error_array)) {
                 if ($pieces <= $totalqty) {
                     $newpcs = $pieces;
@@ -2001,10 +2119,8 @@ if (!function_exists('CheckStockBackorder_ordergen')) {
                             $returnarray[$ii]['pieces'] = $pieces;
                             $returnarray[$ii]['oldPeice'] = $oldPeice;
                             $returnarray[$ii]['st_location'] = $rdata['stock_location'];
-                            $returnarray[$ii]['weight'] = $rdata['weight'];
 
-                            
-                             array_push($stock_location_new,array('slip_no'=>$slip_no,'sku'=>$rdata['sku'],'stock_location'=>$rdata['stock_location'],'shelve_no'=>$shelveno));
+                            array_push($stock_location_new, array('slip_no' => $slip_no, 'sku' => $rdata['sku'], 'stock_location' => $rdata['stock_location'], 'shelve_no' => $shelveno));
                         } else {
                             if ($pieces > 0) {
                                 $oldPeice = $pieces;
@@ -2021,9 +2137,8 @@ if (!function_exists('CheckStockBackorder_ordergen')) {
                                 $returnarray[$ii]['pieces'] = $pieces;
                                 $returnarray[$ii]['oldPeice'] = $oldPeice;
                                 $returnarray[$ii]['st_location'] = $rdata['stock_location'];
-                                $returnarray[$ii]['weight'] = $rdata['weight'];
-                                
-                              array_push($stock_location_new,array('slip_no'=>$slip_no,'sku'=>$rdata['sku'],'stock_location'=>$rdata['stock_location'],'shelve_no'=>$shelveno));
+
+                                array_push($stock_location_new, array('slip_no' => $slip_no, 'sku' => $rdata['sku'], 'stock_location' => $rdata['stock_location'], 'shelve_no' => $shelveno));
 
                                 $pieces = 0;
                             } else {
@@ -2054,6 +2169,7 @@ if (!function_exists('CheckStockBackorder_ordergen')) {
     }
 
 }
+
 
 if (!function_exists('CheckStockBackorder_ordergen_new')) {
 
@@ -2095,13 +2211,13 @@ if (!function_exists('CheckStockBackorder_ordergen_new')) {
 }
 if (!function_exists('UpdateStockBackorder_orderGen')) {
 
-    function UpdateStockBackorder_orderGen($data = array(),$stocklocation=array()) {
+    function UpdateStockBackorder_orderGen($data = array(), $stocklocation = array()) {
         $ci = & get_instance();
         $ci->load->database();
-        
-        
-      //  echo '<pre>';
-      // print_r($data);
+
+
+        //  echo '<pre>';
+        // print_r($data);
         foreach ($data as $rdata) {
             foreach ($rdata as $finaldata) {
 
@@ -2119,16 +2235,16 @@ if (!function_exists('UpdateStockBackorder_orderGen')) {
                         $qty = $finaldata['quantity'] - $finaldata['pieces'];
                         $qty_used = $finaldata['pieces'];
                     }
-                    
-                    $slip_no=$finaldata['slip_no'];
-                 $sku=$finaldata['sku'];
-                 $stock_location=$finaldata['st_location'];
-                $shelve_no=$finaldata['shelve_no'];
-                
-                 $stocklocation = "insert into locationDetails (slip_no,sku,stock_location,shelve_no) values('" . $slip_no. "','" . $sku . "','" . $stock_location . "','$shelve_no')";
-                 $ci->db->query($stocklocation);
 
-          
+                    $slip_no = $finaldata['slip_no'];
+                    $sku = $finaldata['sku'];
+                    $stock_location = $finaldata['st_location'];
+                    $shelve_no = $finaldata['shelve_no'];
+
+                    $stocklocation = "insert into locationDetails (slip_no,sku,stock_location,shelve_no) values('" . $slip_no . "','" . $sku . "','" . $stock_location . "','$shelve_no')";
+                    $ci->db->query($stocklocation);
+
+
 
                     //echo '<br>'. 
                     $insertdata = "insert into inventory_activity (user_id,seller_id,qty,p_qty,qty_used,item_sku,type,entrydate,awb_no,st_location,super_id) values('" . $ci->session->userdata('user_details')['user_id'] . "','" . $finaldata['seller_id'] . "','" . $qty . "','" . $p_qty . "','" . $qty_used . "','" . $finaldata['skuid'] . "','deducted','" . date('Y-m-d H:i:s') . "','" . $finaldata['slip_no'] . "','" . $finaldata['st_location'] . "','" . $ci->session->userdata('user_details')['super_id'] . "')";
@@ -2136,20 +2252,13 @@ if (!function_exists('UpdateStockBackorder_orderGen')) {
                 }
                 if (!empty($finaldata['shelve_no'])) {
                     $updates_dimation = "update diamention_fm set deducted_shelve='" . $finaldata['shelve_no'] . "' where slip_no='" . $finaldata['slip_no'] . "' and sku='" . $finaldata['sku'] . "' and deducted_shelve='' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
-                   $ci->db->query($updates_dimation);
+                    $ci->db->query($updates_dimation);
                 }
                 $updates_ship = "update shipment_fm set wh_id='" . $finaldata['wh_id'] . "' where slip_no='" . $finaldata['slip_no'] . "' and wh_id='0' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
                 $ci->db->query($updates_ship);
                 //echo $ci->db->last_query();
             }
         }
-        
-      
-        
-         
-        
-        
-        
     }
 
 }
@@ -3191,12 +3300,12 @@ function Zid_Order_Details($ZO_id, $manager_token, $user_Agent) {
     $result1 = json_decode($response, true);
     return $result1;
 }
-function makeTrackUrl($id, $awb,$slip_no)
+function makeTrackUrl($id=null, $awb=null,$slip_no=null)
 {
    
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT company_url FROM courier_company where id='$id' and deleted='N' and company_url!='' limit 1";
+        $sql = "SELECT company_url FROM courier_company where cc_id='$id' and deleted='N' and company_url!='' limit 1";
         $query = $ci->db->query($sql);
         if($query->num_rows()>0)
         {
@@ -3666,3 +3775,99 @@ if(!function_exists('getStatusByCode_fm')){
     }
 
 }   
+
+ if (!function_exists('GetStorageData')) {
+
+    function GetStorageData($wh_id = null,$storage_id=null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        $sql = "SELECT size FROM warehouse_storage where wh_id='$wh_id' and storage_id='$storage_id'";
+         $query = $ci->db->query($sql);
+        $result = $query->row_array();
+        return $result['size'];
+    }
+
+} 
+ if (!function_exists('GetAllwarehouseChartData')) {
+
+    function GetAllwarehouseChartData($wh_id = null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        $sql = "SELECT WS.storage_id,WS.size,ST.storage_type FROM warehouse_storage as WS LEFT JOIN storage_table as ST ON  ST.id=WS.storage_id where WS.wh_id='$wh_id' and WS.super_id='".$ci->session->userdata('user_details')['super_id']."'";
+         $query = $ci->db->query($sql);
+        $result = $query->result_array();
+        return $result;
+    }
+
+} 
+
+if(!function_exists('GetAllstorageusedSize'))
+{
+    function GetAllstorageusedSize($wh_id=null,$storage_id=null)
+    {
+        $ci = & get_instance();
+        $ci->load->database();
+        $ci->db->where('item_inventory.super_id', $ci->session->userdata('user_details')['super_id']);
+        $ci->db->select('count(item_inventory.id) as total');
+        $ci->db->from('item_inventory');
+        $ci->db->join('items_m', 'items_m.id = item_inventory.item_sku','LEFT');
+        $ci->db->where('items_m.storage_id',$storage_id);
+        $ci->db->where('item_inventory.wh_id',$wh_id);
+         $ci->db->group_by('items_m.storage_id');
+        $query = $ci->db->get();
+        $result = $query->row_array();
+        return $result['total'];
+       // print_r($result);
+       // echo $ci->db->last_query();  die;
+    }
+}
+
+function shopifyFulfill( $awb, $ref_id,$sellerDetail) {
+   // print_r($sellerDetail);
+    $url=$sellerDetail['shopify_url']; 
+    $location_id=$sellerDetail['location_id'];
+    $url = explode('orders.json', $url);
+    $url = $url[0];
+    $f_arr = array(
+        "fulfillment" => array(
+            "tracking_number" => $awb,
+            "tracking_url" => "https://track.diggipacks.com/result_detailfm/" . $awb,
+            "tracking_company" => "Diggipacks",
+            "location_id" => $location_id
+        )
+    );
+   
+
+
+   $furl = $url . "orders/$ref_id/fulfillments.json"; 
+    $data_string = json_encode($f_arr);
+
+    $cSession = curl_init();
+
+    $requestHeaders = array();
+    $requestHeaders[] = 'Content-Type:application/json';
+    curl_setopt($cSession, CURLOPT_URL, $furl);
+    curl_setopt($cSession, CURLOPT_HTTPHEADER, $requestHeaders);
+    curl_setopt($cSession, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($cSession, CURLOPT_VERBOSE, 0);
+    curl_setopt($cSession, CURLOPT_HEADER, true);
+    curl_setopt($cSession, CURLOPT_CUSTOMREQUEST, 'POST');
+    curl_setopt($cSession, CURLOPT_POSTFIELDS, $data_string);
+    curl_setopt($cSession, CURLOPT_SSL_VERIFYPEER, false);
+
+    $result = curl_exec($cSession);
+
+    // if ($result) {
+    //     $httpCode = curl_getinfo($cSession, CURLINFO_HTTP_CODE);
+    //     $aHeaderInfo = curl_getinfo($cSession);
+    //     $curlHeaderSize = $aHeaderInfo['header_size'];
+    //     $sBody = trim(mb_substr($result, $curlHeaderSize));
+
+    //     $ResponseHeader = explode("\n", trim(mb_substr($result, 0, $curlHeaderSize)));
+    //     $responseArray = json_decode($sBody, true);
+    //     echo "<pre>";
+    //     print_r($responseArray);
+    //     curl_close($cSession);
+    // }
+}
+

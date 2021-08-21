@@ -175,15 +175,17 @@
                                                 <th><?= lang('lang_TPL_AWB'); ?></th> 
                                                 <th><?= lang('lang_City'); ?></th> 
                                                 <th><?= lang('lang_Address'); ?></th> 
-                                            <!--<th>Status</th>
-                                            <th>Code</th>-->
+                                            <!--<th>Status</th>-->
+                                            <th>Manifest Type</th>
                                                  <th><?= lang('lang_Vehicle_type'); ?></th>
                                                 <th><?= lang('lang_Seller'); ?></th>
                                                 <th><?= lang('lang_On_Hold'); ?></th>
                                                 <th><?= lang('lang_Inventory_Updated'); ?></th>
                                                 <th><?= lang('lang_Request_Date'); ?></th>
+                                                <th><?= lang('lang_assign_date'); ?></th>
 
-
+                                                <th><?=lang('lang_Number_Of_Boxes');?></th>
+                                        <th><?=lang('lang_Storage_Type');?></th>
 
 
                                                 <th class="text-center" ><i class="icon-database-edit2"></i></th>
@@ -208,7 +210,9 @@
                                             </td>
                                             <td >{{data.city}}</td>
                                             <td >{{data.address}}</td>
-                                            
+                                          
+                                            <td ng-if="data.manifest_type == 'D'"><span class="badge badge-danger">Delivery By Seller</span></td>
+                                            <td ng-if="data.manifest_type == 'P'"><span class="badge badge-success">Pickup By Diggipacks </span></td>
                                               <td><img ng-if="data.vehicle_type != ''" src="<?= base_url(); ?>{{data.vehicle_type}}" width="65">
                                                 <img ng-if="data.vehicle_type == ''" src="<?= base_url(); ?>assets/nfd.png" width="65"></td>
                                             <td > {{data.seller_id}}</td>
@@ -223,9 +227,14 @@
 
 
                                             <td > {{data.req_date}}</td>
+                                            <td ><span ng-if="data.assign_date!='0000-00-00 00:00:00'">{{data.assign_date}}</span>
+                                              <span ng-if="data.assign_date=='0000-00-00 00:00:00'">--</span>
+                                              </td>
 
-
-
+                                            <td > {{data.boxes}}</td>
+                                           
+                                           <td ng-if="data.pack_type == 'B'"><span class="badge badge-danger"> Box</span></td>
+                                           <td ng-if="data.pack_type == 'P'"><span class="badge badge-success">Pallet </span></td>
 
                                             <td class="text-center">
                                                 <ul class="icons-list">

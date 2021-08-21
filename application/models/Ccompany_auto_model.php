@@ -1260,7 +1260,7 @@ public function BarqfleethArray(array $ShipArr, array $counrierArr, $complete_sk
                            </soapenv:Envelope>';   
                   
                    $headers = array(
-                       "Content-type: text/xml",
+                       "Content-type: text/xml; charset=utf-8",
                        "Content-length: ".strlen($xml_new),
                    );
    

@@ -140,6 +140,11 @@ class PickUp extends MY_Controller {
 	}
         
         foreach ($dataArray['shipData'] as $data) {
+			
+			$check_exist=GetCheckpackStatus($data['slip_no']);
+             
+             if(empty($check_exist))
+             {
             array_push($shippingArr, array('slip_no' => $data['slip_no']));
             array_push($slip_data, $data['slip_no']);
             $statusvalue[$key]['user_id'] = $this->session->userdata('user_details')['user_id'];
@@ -221,6 +226,7 @@ class PickUp extends MY_Controller {
             
 
             $key++;
+			 }
         }
 
         //print_r($dataArray['exportData']); die;
@@ -631,7 +637,7 @@ class PickUp extends MY_Controller {
             $url = $_SERVER['HTTP_HOST'];
             $url = ltrim($url, 'fm.');
             $companyName= 'Diggipacks';
-            $trackLink= 'https://track/'. $url.'/result_detailfm/'.$shData['slip_no'];
+            $trackLink= 'https://track'. $url.'/result_detailfm/'.$shData['slip_no'];
 
         }
        
@@ -662,7 +668,7 @@ class PickUp extends MY_Controller {
 
         $_POST = json_decode(file_get_contents('php://input'), true);
         //$_POST=array('awbArray'=>array('STF9252413194'));
-        // echo json_encode($_POST); exit;
+       // echo '<pre>';print_r($_POST);exit;
 
         
         
@@ -690,6 +696,10 @@ class PickUp extends MY_Controller {
         $key = 0;
         $key1 = 0;
         foreach ($shipments['result'] as $data) {
+        
+            
+        //  echo   $_POST[$data['slip_no']]['pallet'];
+         //   die;
 
             if ($new_status == 5) {
                 $d1 = $this->Shipment_model->filter($data['slip_no']); 
@@ -705,7 +715,11 @@ class PickUp extends MY_Controller {
             //print_r( $responseData);exit;
 
             if ($responseData['status'] == 200) {
-
+                if($_POST[$data['slip_no']]['pallet']>0)
+                $newUpdatePallet[$key]['pallet_count']=$_POST[$data['slip_no']]['pallet'];
+                else
+                   $newUpdatePallet[$key]['pallet_count']=0; 
+                $newUpdatePallet[$key]['slip_no']=$data['slip_no'];
                 $statusvalue[$key]['user_id'] = $this->session->userdata('user_details')['user_id'];
                 $statusvalue[$key]['user_type'] = 'fulfillment';
                 $statusvalue[$key]['slip_no'] = $data['slip_no'];
@@ -785,17 +799,22 @@ class PickUp extends MY_Controller {
                 $OutboundArray[$key]['pieces'] = $totalPieces;
                 $OutboundArray[$key]['super_id'] = $this->session->userdata('user_details')['super_id'];
 
-                $token = GetallCutomerBysellerId($seller_id, 'manager_token');
-                $salatoken = GetallCutomerBysellerId($seller_id, 'salla_athentication');
-if(!empty( $salatoken))
-{
-    $Salla_tracking_url = $data['frwd_company_label'];  
+                $sellerDetails=GetSinglesellerdata($seller_id,$this->session->userdata('user_details')['super_id']);
+                $token =  $sellerDetails['manager_token'];
+                $salatoken =  $sellerDetails['salla_athentication'];
+                if($sellerDetails['is_shopify_active']==1 && !empty($data['shopify_order_id']))
+                {
+                    shopifyFulfill($data['slip_no'],$data['shopify_order_id'],$sellerDetails);
+                }
+            if(!empty( $salatoken))
+            {
+                $Salla_tracking_url = $data['frwd_company_label'];  
                 $frwd_company_awb = ($data['frwd_company_awb'] != '')? $data['frwd_company_awb'] : '';
                 $Salla_status = "DL";
                 $Salla_note = "delivering";
                 $sallaStatus = Salla_StatusUpdate($data['booking_id'], $Salla_status, $Salla_note, $frwd_company_awb, $Salla_tracking_url);
 
-}
+            }
                 
                 
                 
@@ -808,17 +827,18 @@ if(!empty( $salatoken))
                     $slip_no = $data['slip_no'];
                     if(!empty($data['frwd_company_awb']))
                     {
-                       // $trackingurl=makeTrackUrl($data['frwd_company_id'],$data['frwd_company_awb']); 
+                        $trackingurl=makeTrackUrl($data['frwd_company_id'],$data['frwd_company_awb']); 
+                      
                         
                         $lable=$data['frwd_company_label'];
                     }else
                     {
                         $lable='https://api.diggipacks.com/API/print/'.$data['slip_no'];
                         
-
+                        $trackingurl = TRACKURL . $slip_no;
                     }
-                   $trackingurl = TRACKURL . $slip_no;
-                    
+                  
+                     
                     //updateZidStatus($orderID=null, $token=null, $status=null, $code=null, $label=null, $trackingurl=null)
                     updateZidStatus($data['booking_id'], $token, $zidStatus, $slip_no, $lable, $trackingurl);
                 }
@@ -840,6 +860,10 @@ if(!empty( $salatoken))
         if (!empty($statusvalue) && !empty($slip_data)) {
             $this->Status_model->insertStatus($statusvalue);
             $this->Shipment_model->updateStatusBatch($slip_data);
+            if(!empty($newUpdatePallet))
+            {
+                 $this->Shipment_model->updateStatusBatch($newUpdatePallet);
+            }
             $this->Pickup_model->GetalloutboundDataAdded($OutboundArray);
         }
 
@@ -880,6 +904,8 @@ if(!empty( $salatoken))
 
                 $slip_data[$key]['code'] = 'RTC';
                 $slip_data[$key]['delivered'] = '8';
+                $slip_data[$key]['close_date'] =date('Y-m-d H:i:s'); ;
+
 
                 $SkudataArray = Getallskudatadetails($data['slip_no']);
                 foreach ($SkudataArray as $UPdata) {
@@ -1511,7 +1537,7 @@ if(!empty( $salatoken))
                 //=========shipment update===================//
               
                 $shipupdateAray[$key]['code'] = 'C';
-                $shipupdateAray[$key]['deleted'] = 'Y';
+               // $shipupdateAray[$key]['deleted'] = 'Y';
                 $shipupdateAray[$key]['delivered'] = 9;
                 $shipupdateAray[$key]['cancel_fee'] = $shipmentChrg;
                 $shipupdateAray[$key]['slip_no'] = $val['slip_no'];
@@ -1692,6 +1718,15 @@ if(!empty( $salatoken))
 
 
         $this->load->view('pickup/dispatch');
+    }
+    public function dispatch_b2b() {
+        if (menuIdExitsInPrivilageArray(10) == 'N') {
+            redirect(base_url() . 'notfound');
+            die;
+        }
+
+
+        $this->load->view('pickup/dispatch_b2b');
     }
 
     public function returnLM() {
@@ -2177,6 +2212,9 @@ else
                 $E_city_button = 'N';
             }
             // print_r($forwardedArr);
+			$pack_button=GetCheckPackingOrderBtn($rdata['pickupId']);
+
+             $shiparray[$ii]['pack_button'] = $pack_button;
 
             $shiparray[$ii]['E_city_button'] = $E_city_button;
             $shiparray[$ii]['forwardedArr'] = $forwardedArr;

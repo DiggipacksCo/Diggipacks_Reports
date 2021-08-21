@@ -415,6 +415,133 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
 
         })
 
+        .controller('dispatch_b2b', function ($scope, $http, $interval, $window) {
+            $scope.shipData = [];
+            $scope.completeShip = [];
+            $scope.scan = {};
+            $scope.invalid = [];
+            $scope.awbArray = [];
+            $scope.shelve = null;
+            $scope.type = 'DL';
+            $scope.scan_awb = function () {
+                //$('#scan_awb').focus();
+                console.log($scope.scan);
+                $scope.scan.awbArray = removeDumplicateValue($scope.scan.slip_no.split("\n"));
+                console.log($scope.scan.awbArray);
+                $scope.scan.slip_no = $scope.scan.awbArray.join('\n');
+
+
+                $scope.validateOrder();
+            }
+
+            $scope.dispatchOrder = function ()
+            {
+  console.log($scope.scan);
+                $scope.scan.type = $scope.type;
+                $http({
+                    url: "PickUp/dispatchOrder",
+                    method: "POST",
+                    data: $scope.scan,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+
+
+                }).then(function (response) {
+                  
+                    // $scope.scan.awbArray={};
+                  
+                    if (response.data == 'null')
+                    {
+
+                        var sound = document.getElementById("audioSuccess");
+                        sound.play();
+                        $scope.Message = "Orders Dispatched !";
+                        responsiveVoice.speak($scope.Message);
+                        $scope.sendSms();
+
+                    } else
+                    {
+                        $scope.warning = response.data;
+                    }
+
+                })
+
+            }
+
+            $scope.sendSms=function()
+            {
+                $scope.scan.type = $scope.type;
+                $http({
+                    url: "PickUp/sendSms",
+                    method: "POST",
+                    data: $scope.scan,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+
+
+                }).then(function (response) {
+                    console.log(response);
+                    $scope.scan = {};
+                });
+
+            }
+            function removeDumplicateValue(myArray) {
+                var newArray = [];
+
+                angular.forEach(myArray, function (value, key) {
+                    var exists = false;
+                    angular.forEach(newArray, function (val2, key) {
+                        if (angular.equals(value, val2)) {
+                            exists = true
+                        }
+                        ;
+                    });
+                    if (exists == false && value != "") {
+                        newArray.push(value);
+                    }
+                });
+
+                return newArray;
+            }
+            $scope.validateOrder = function () {
+                $scope.invalid = [];
+                $scope.warning = null;
+                $scope.Message = null;
+                // alert("ss");
+
+                //console.log($scope.scan);
+                $http({
+                    url: "PickUp/validateDispatch",
+                    method: "POST",
+                    data: $scope.scan.awbArray,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+
+                }).then(function (response) {
+                    console.log(response);
+
+                    angular.forEach(response.data.invalid, function (value) {
+                        console.log(value)
+                        var index = $scope.scan.awbArray.indexOf(value.slip_no);
+                        if (index > -1) {
+                            $scope.scan.awbArray.splice(index, 1);
+                        }
+                        $scope.invalid.push(value.slip_no);
+
+
+                    });
+                    $scope.scan.slip_no = $scope.scan.awbArray.join('\n');
+                    $scope.invalidstring = $scope.invalid.join()
+
+
+                });
+
+
+
+
+            }
+
+
+        })
+
+
 //=====================return from LM======================//
         .controller('returnfromlm', function ($scope, $http, $interval, $window) {
             $scope.shipData = [];
@@ -1356,7 +1483,8 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
                 "pl3_close_date": false,
                 "transaction_days": false,
                 "no_of_attempt": false,
-                "cc_name": false
+                "cc_name": false,
+                 "last_status_n": false,
             };
 
 
@@ -1901,11 +2029,78 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
                 });
             }
         })
+        
+.controller('shipment_mapping', function ($scope, $http, $window) {
+            $scope.filterData = {};
+            $scope.mappingData = [];
+            $scope.responseError = {};
+            $scope.Success_msg = {};
+            $scope.loadMore = function (page_no, reset)
+            {
+                console.log(page_no);
+                // console.log($scope.selectedData);    
+                $scope.filterData.page_no = page_no;
+                if (reset == 1)
+                {
+                    $scope.mappingData = [];
+                }
+
+                $http({
+                    url: "Shipment/filterMapping",
+                    method: "POST",
+                    data: $scope.filterData,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+
+                }).then(function (response) {
+                    console.log(response.data.result)
+                    $scope.totalCount = response.data.count;
+                    if (response.data.result.length > 0) {
+                        angular.forEach(response.data.result, function (value) {
+                            //console.log(value.slip_no)
+
+                            $scope.mappingData.push(value);
+
+                        });
+                        //console.log( $scope.shipData)
+                        //$scope.$broadcast('scroll.infiniteScrollComplete');
+                    } else {
+                        $scope.nodata = true
+                    }
 
 
 
+                })
 
 
+            };
+            $scope.addNewMapping = function ()
+            {
+                $window.location.href = "add_new_mapping";
+            };
+            $scope.viewAlMapping = function ()
+            {
+                $window.location.href = "shipment_mapping";
+            };
+            $scope.saveMappingData = function(){
+                 $http({
+                    url: "Shipment/saveMapping",
+                    method: "POST",
+                    data: $scope.filterData,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+
+                }).then(function (response) {
+                    
+                    if(response.data.status == 'succ'){
+                        $scope.Success_msg[0] = response.data.Success_msg;
+                    }else{
+                        $scope.responseError = response.data.responseError;
+                        setTimeout(function() {
+                         $('.alert-danger').fadeOut();
+                        }, 10000 );
+                    }
+                })
+            };
+        })
         .controller('pickupList', function ($scope, $http, $window, Excel, $timeout) {
             $scope.AssignData = {};
             $scope.filterData = {};
@@ -2268,6 +2463,7 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
                 "messenger_name": false,
                 "close_date": false,
                 "transaction_days": false,
+                 "last_status_n": false,
             };
     $scope.slipnosdetails=function(val)
     {
@@ -2293,9 +2489,9 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
                 }
             };
     $scope.transferShiptracking = function () {
+        $scope.baseUrl = new $window.URL($location.absUrl()).origin;
 
-
-         $http({ url: "Shipment/getexceldatatracking",
+         $http({ url:  $scope.baseUrl+"/Shipment/getexceldatatracking",
                     method: "POST",
                     data: {slip_nos: $scope.slipnos,listData2: $scope.listData2,},
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}

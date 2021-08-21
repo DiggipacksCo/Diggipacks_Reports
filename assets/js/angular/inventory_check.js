@@ -128,9 +128,14 @@ var app = angular.module('InventoryCheckApp', [])
                         responsiveVoice.speak($scope.Message);
                         
                     }
+                    $scope.totalpiece=0;
                     angular.forEach(response.data, function (value) {
                         
-                        $scope.shipData.push({'cust_id': value.cust_id,'cust_name': value.cust_name, 'stock_location': value.stock_location, 'sku': value.sku, 'sku1': value.sku, 'piece': value.quantity, 'scaned': 0, 'extra': 0});
+                       
+                        $scope.totalpiece+=parseInt(value.quantity);
+                         //console.log($scope.totalpiece);
+                        
+                        $scope.shipData.push({'cust_id': value.cust_id,'cust_name': value.cust_name,'storage_type': value.storage_type, 'sku_size': value.sku_size,'stock_location': value.stock_location, 'sku': value.sku, 'sku1': value.sku, 'piece': value.quantity, 'scaned': 0, 'extra': 0});
 
                     });
                   
@@ -162,7 +167,7 @@ var app = angular.module('InventoryCheckApp', [])
             {
                
              
-              //console.log("ssssssss");
+              console.log("ssssssss");
               //console.log($scope.shipData);
                 
                 $scope.arrayIndexnew = $scope.shipData.findIndex(record => (record.stock_location.toUpperCase() === $scope.scan.stock_location.toUpperCase() && record.sku.toUpperCase() === $scope.scan.sku.toUpperCase()))

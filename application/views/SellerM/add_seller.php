@@ -7,13 +7,13 @@
 <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png');?>" type="image/x-icon">
 <title><?=lang('lang_Inventory');?></title>
 <?php $this->load->view('include/file'); ?>
-<!--  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">
- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>  
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>  -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>  
 <style type="text/css">
 .form-group.radiosection {
     display: inline-block;
-    width: 24%;
+    width: 23%;
 }
 </style>
 </head>
@@ -43,9 +43,14 @@
             <?php if($this->session->flashdata('err_msg')!=''){echo '<div class="alert alert-warning" role="alert">'.$this->session->flashdata('err_msg').'.</div>';}?>
             <form action="<?= base_url('Seller/add');?>" method="post"  name="add_customer" enctype="multipart/form-data">
              
+                
               <fieldset class="scheduler-border">
                 <legend class="scheduler-border"><?=lang('lang_Profile_Details');?></legend>
                 
+                 <div class="form-group radiosection">
+                      <label for="u_type"><strong>User Type B2B:</strong></label><br>
+                      <input type="radio" name="u_type" id="u_type" value="B2B"> Yes <input type="radio" name="u_type" id="u_type" checked="checked" value="B2C"> No      
+                  </div>
                  <div class="form-group radiosection">
                       <label for="access_lm"><strong><?=lang('lang_Access_LM');?>:</strong></label><br>
                       <input type="radio" name="access_lm" id="access_lm" value="Y">  <?= lang('lang_Yes'); ?> <input type="radio" name="access_lm" id="access_lm" checked="" value="N">  <?= lang('lang_No'); ?>                      
@@ -67,6 +72,7 @@
                       
                       <input type="radio" name="first_out" id="first_out" value="Y">  <?= lang('lang_Yes'); ?> <input type="radio" name="first_out" id="first_out" checked="" value="N">  <?= lang('lang_No'); ?>
                   </div>
+               
 
                 <div class="form-group">
                   <label><?=lang('lang_Name');?></label>
@@ -178,6 +184,23 @@
                   <input class="form-control" type="text" name="vat_no" id="vat_no"  value="<?=set_value('vat_no');?>"/>
                 </div>
               </fieldset>
+              <fieldset class="scheduler-border">
+                <legend class="scheduler-border">Discount</legend>
+                <div class="form-group ">
+                      <label for="first_out"><strong>Discount  :</strong></label><br>
+                      
+                      <input type="radio" name="discount" id="discount1" value="1">  <?= lang('lang_Yes'); ?>&nbsp;&nbsp; <input type="radio" name="discount" id="discount2" checked="" value="0">  <?= lang('lang_No'); ?>
+                  </div>
+                <div class="form-group radiosection">
+                  <label> From</label>
+                  <input class="form-control datepppp" type="text" placeholder="From" name="discount_f" id="discount_f"  value="<?=set_value('discount_f');?>"/>
+                </div>  
+                <div class="form-group radiosection">&nbsp;</div>
+                <div class="form-group radiosection">
+                  <label> To</label>
+                  <input class="form-control datepppp" type="text" placeholder="To" name="discount_to" id="discount_to"  value="<?=set_value('discount_to');?>"/>
+                </div>
+              </fieldset>
               
               <!-- <div class="form-group">
                             <strong>C2C Client</strong>&nbsp;&nbsp;<input type="radio"  name="VIP_user" />&nbsp;&nbsp;&nbsp;
@@ -198,56 +221,7 @@
                   <input type="password"  class="form-control" name="conf_password" id="alert_conf_password" value="<?=set_value('conf_password');?>"/>
                 </div>
               </fieldset>
-<!--			  <div class="form-group">
-                  <label> &nbsp;</label>
-                  <input class="custom-control-input" type="" name="zid_active" id="zid_active"  value="Y"/> Zid Account
-               </div>-->
 
- <?php if (menuIdExitsInPrivilageArray(107) == 'Y') { ?>
-			    <!-- <div class="form-group">
-                  <label> &nbsp;</label>
-                  <input class="custom-control-input" type="checkbox" name="zid_active" id="zid_active"  value="Y"/> Zid <?=lang('lang_Account');?>
-               </div> -->
-			   <!-- <fieldset class="scheduler-border" id="show_zid_details">   
-                <legend class="scheduler-border">Zid <?=lang('lang_Details');?></legend>
-                <div class="form-group">
-                  <label><?=lang('lang_X_MANAGER_TOKEN');?></label>
-                  <input type="text" class="form-control" name="manager_token" id="manager_token" value="<?=set_value('manager_token');?>"/>
-                </div>
-                <div class="form-group">
-                  <label><?=lang('lang_User_Agent');?></label>
-                  <input type="text"  class="form-control" name="user_Agent" id="user_Agent" value="<?=set_value('user_Agent');?>"/>
-                </div>
-              </fieldset> -->
-<?php } else { ?>
-<!-- <input class="custom-control-input" type="hidden" name="zid_active" id="zid_active"  value="N"/>
- <input type="hidden" class="form-control" name="manager_token" id="manager_token" value="<?=set_value('manager_token');?>"/>
-   <input type="hidden"  class="form-control" name="user_Agent" id="user_Agent" value="<?=set_value('user_Agent');?>"/> -->
-<?php } ?>
- <?php if (menuIdExitsInPrivilageArray(106) == 'Y') { ?>
-			 <!-- <div class="form-group">
-                  <label> &nbsp;</label>
-                  <input class="custom-control-input" type="checkbox" name="salla_active" id="salla_active"  value="Y"/> Salla <?=lang('lang_Account');?>   
-               </div> -->
-			    <!-- <fieldset class="scheduler-border" id="show_salla_details">   
-                <legend class="scheduler-border">Salla<?=lang('lang_Details');?></legend>
-                <div class="form-group">
-                  <label><?=lang('lang_X_MANAGER_TOKEN');?></label>
-                  <input type="text" class="form-control" name="salla_manager_token" id="salla_manager_token" value="<?=set_value('manager_token');?>"/>
-
-                </div>
-
-                 <div class="form-group" ><strong>From Date:</strong>
-                                                        <input type="text" class="form-control datepppp"  id="from" name="from" ng-model="filterData.from">
-
-                                                    </div>
-               
-              </fieldset> -->
-
-<?php } else { ?>
-<!-- <input class="custom-control-input" type="hidden" name="salla_active" id="salla_active"  value="N"/>
-<input type="hidden" class="form-control" name="salla_manager_token" id="salla_manager_token" value="<?=set_value('manager_token');?>"/> -->
-<?php } ?>
 			   
 
               <input name="id" type="hidden" />

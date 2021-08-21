@@ -5,8 +5,16 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
-        <title><?= lang('lang_All_Users'); ?></title>
+        <title>Update City List</title>
         <?php $this->load->view('include/file'); ?>
+        <style type="text/css">
+            .wrapper1, .wrapper2 { width: 100%; overflow-x: scroll; overflow-y: hidden; }
+            .wrapper1 { height: 20px; }
+            .wrapper2 {}
+            .div1 { height: 20px; }
+            .div2 { overflow: none; }
+
+        </style>
     </head>
 
     <body>
@@ -44,7 +52,12 @@
 <!--                            <form id="search_form" name="search_form" method="post" action="<?php //echo base_url('Country/cityList');   ?>">
                                 <input type="hidden" id="search_params" name="search_params" value="<?php //echo $search_val;   ?>" />
                             </form>-->
-                            <div class="table-responsive">
+                            <div class="wrapper1">
+                                <div class="div1">
+                                </div>
+                            </div>
+                            <div class="wrapper2">
+                            <div class="div2">
                                 <div class="loader logloder" id="loadershow" style="display:none;"></div>
                                 <table class="table datatable-show-all table-bordered table-hover datatable-highlight" id="city_list_paging">
                                     <thead>
@@ -171,15 +184,29 @@
                                             <?php if (GetCourierCompanyStausActive('Bosta') == 'Y') { ?>
                                                 <th class="head1">Bosta</th>
                                             <?php } ?>
-                                                
-                                                
-
+                                            <?php if (GetCourierCompanyStausActive('MMCCO') == 'Y') { ?>
+                                                <th class="head1">MMCCO</th>
+                                            <?php } ?>
+                                            <?php if (GetCourierCompanyStausActive('KwickBox') == 'Y') { ?>
+                                                <th class="head1">KwickBox</th>
+                                            <?php } ?>
+                                            <?php if (GetCourierCompanyStausActive('DHL JONES') == 'Y') { ?>
+                                                <th class="head1">DHL JONES</th>
+                                            <?php } ?>
+                                            <?php if (GetCourierCompanyStausActive('Thabit') == 'Y') { ?>
+                                                <th class="head1">Thabit</th>
+                                            <?php } ?>
+                                            <?php if (GetCourierCompanyStausActive('MICGO') == 'Y') { ?>
+                                                <th class="head1">MicGo</th>
+                                            <?php } ?>
+                                            <?php if (GetCourierCompanyStausActive('FDA') == 'Y') { ?>
+                                                <th class="head1">FDA</th>
+                                            <?php } ?>
+                                            <th class="head1">Country Code</th>
                                             <th class="head1">LAT</th>
-
                                             <th class="head1">LNG</th>
                                         </tr>
                                     </thead>
-
                                     <tbody>
                                         <?php
                                         //print "<pre>"; print_r($result);die;
@@ -426,7 +453,46 @@
                                                             <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'bosta_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
                                                         </td>
                                                      <?php } ?>
-                                                        
+                                                    <?php if (GetCourierCompanyStausActive('MMCCO') == 'Y') { ?>
+                                                    <td><input type="text" name="MMCCO_city" id="MMCCO_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['MMCCO_city']; ?>" class="form-control">
+                                                            <br>
+                                                            <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'MMCCO_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
+                                                        </td>
+                                                     <?php } ?>
+                                                    <?php if (GetCourierCompanyStausActive('KwickBox') == 'Y') { ?>
+                                                    <td><input type="text" name="kwickBox_city" id="kwickBox_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['kwickBox_city']; ?>" class="form-control">
+                                                            <br>
+                                                            <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'kwickBox_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
+                                                        </td>
+                                                     <?php } ?>
+                                                    <?php if (GetCourierCompanyStausActive('DHL JONES') == 'Y') { ?>
+                                                    <td><input type="text" name="dhl_jones_city" id="dhl_jones_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['dhl_jones_city']; ?>" class="form-control">
+                                                            <br>
+                                                            <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'dhl_jones_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
+                                                        </td>
+                                                     <?php } ?>
+                                                      <?php if (GetCourierCompanyStausActive('Thabit') == 'Y') { ?>
+                                                    <td><input type="text" name="thabit_city" id="thabit_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['thabit_city']; ?>" class="form-control">
+                                                            <br>
+                                                            <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'thabit_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
+                                                        </td>
+                                                     <?php } ?>
+                                                    <?php if (GetCourierCompanyStausActive('MICGO') == 'Y') { ?>
+                                                    <td><input type="text" name="MICGO_city" id="MICGO_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['MICGO_city']; ?>" class="form-control">
+                                                            <br>
+                                                            <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'MICGO_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
+                                                        </td>
+                                                     <?php } ?>
+                                                    <?php if (GetCourierCompanyStausActive('FDA') == 'Y') { ?>
+                                                    <td><input type="text" name="FDA_city" id="FDA_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['FDA_city']; ?>" class="form-control">
+                                                            <br>
+                                                            <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'FDA_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
+                                                        </td>
+                                                     <?php } ?>
+                                                    <td><input type="text" name="country_code" id="country_code<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['country_code']; ?>" class="form-control">
+                                                            <br>
+                                                            <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'country_code');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
+                                                        </td>    
                                                     <td><input type="text" name="latitute" id="latitute<?php echo $listdata['id']; ?>" placeholder="LAT" value="<?php echo $listdata['latitute']; ?>" class="form-control">
                                                         <br>
                                                         <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'latitute');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
@@ -449,6 +515,7 @@
 
                                 </table>
                             </div>  
+                            </div>
                             <?php if ($totalpages > $startcounter) { ?>
                                 <div class="mt-2 mb-4">
                                     <button  class="btn btn-danger" id="load_more_btn" onclick="loadMoreCityData(); return;"><?= lang('lang_Load_More'); ?></button>
@@ -477,7 +544,19 @@
 
         <!-- /page container -->
         <script type="text/javascript">
-            function loadMoreCityData() {
+             $(function () {
+                $('.wrapper1').on('scroll', function (e) {
+                    $('.wrapper2').scrollLeft($('.wrapper1').scrollLeft());
+                }); 
+                $('.wrapper2').on('scroll', function (e) {
+                    $('.wrapper1').scrollLeft($('.wrapper2').scrollLeft());
+                });
+            });
+            $(window).on('load', function (e) {
+                $('.div1').width($('table').width());
+                $('.div2').width($('table').width());
+            });
+            function loadMoreCityData() { 
                 var startcounter = parseInt($("#startcounter").val());
                 var perPageResult = parseInt($("#perPageResult").val());
                 var total_pages = parseInt($("#total_pages").val());

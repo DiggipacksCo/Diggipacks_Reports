@@ -101,15 +101,18 @@ function GetAllQtyforSeller_new($cust_id = null) {
 }
 
 //*************************Quantity Update function in Zid*************************//
+
+
 function update_zid_product($quantity = null, $pid = null, $token = null, $storeID = null,$cust_id=null,$sku) 
 {
     $param = array(
         'quantity' => $quantity,
         'id' => $pid,
     );
+    $bearer = site_configTable('zid_provider_token');
     $param = json_encode($param);
     $curl = curl_init();
-    $url = "https://api.zid.sa/v1/products/" . $pid . "/";
+    $url = "https://api.zid.dev/app/v2/products/" . $pid . "/";
     curl_setopt_array($curl, array(
         CURLOPT_URL => $url,
         CURLOPT_RETURNTRANSFER => true,
@@ -121,7 +124,8 @@ function update_zid_product($quantity = null, $pid = null, $token = null, $store
         CURLOPT_CUSTOMREQUEST => 'PATCH',
         CURLOPT_POSTFIELDS => $param,
         CURLOPT_HTTPHEADER => array(
-            'Access-Token: ' . $token,
+            'Authorization: Bearer '.$bearer,
+            'X-MANAGER-TOKEN: ' . $token,
             'STORE-ID: ' . $storeID,
             'ROLE: Manager',
             'Content-Type: application/json',
@@ -153,11 +157,12 @@ function update_zid_product($quantity = null, $pid = null, $token = null, $store
 
 //**************************************************************************//
 
+
 function updateZidStatus($orderID = null, $token = null, $status = null, $code = null, $label = null, $trackingurl = null,$cust_id=null) {
     //echo 'werwqerwqrewqerwqrwqerqew'.$token.'testerewrwrwerewrwererweer';
-    $url = 'https://api.zid.sa/v1/managers/store/orders/' . $orderID . '/change-order-status';
+    $url = 'https://api.zid.dev/app/v2/managers/store/orders/' . $orderID . '/change-order-status';
     $curl = curl_init();
-
+    $bearer = site_configTable('zid_provider_token');
     curl_setopt_array($curl, array(
         CURLOPT_URL => $url,
         CURLOPT_RETURNTRANSFER => true,
@@ -169,7 +174,7 @@ function updateZidStatus($orderID = null, $token = null, $status = null, $code =
         CURLOPT_CUSTOMREQUEST => 'POST',
         CURLOPT_POSTFIELDS => array('order_status' => $status, 'waybill_url' => $label, 'tracking_url' => $trackingurl, 'tracking_number' => $code),
         CURLOPT_HTTPHEADER => array(
-            'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI2NSIsImp0aSI6IjNmMzI5MTExM2Y3Y2U4NjkxNDcwMDgwMDJkMTY4NTY4YWZkNzU5OWEwZmFlMWRkYTk4ODgzMDUxMGU3MDQ0YTZhYTZjZjE0ODkwYjI0OGY1IiwiaWF0IjoxNTk5OTg5ODkwLCJuYmYiOjE1OTk5ODk4OTAsImV4cCI6MTYzMTUyNTg5MCwic3ViIjoiMzMiLCJzY29wZXMiOlsidGhpcmQtcGFydGllcy1hcGlzIl19.VFozu9O0PEUOCzIxbFdZSVQ-mbduyEvl7JqIHpsHGKMzKmwcd8M-CFw9WyKQ9-I9yxYnFLNgzfsw9JuISjMLqzj6ePyKJw88BlTaB74bSXpD5n6FTAWafhTGETAOUNh7Eswxri9fAb5U8LCIpHLXTy0dWWUEPBb8IubxSULyMh49r1kk2p0ZOfBvnHnDQEdNXzIQe4A53Cyhuh6y6IHehY8nE6rxuw5WIItLmgdZQr-2hvzbcdkyzzD8Su0TwaBzT4E5T5LQNwr7HawfMJWayk_k4kXvRSGu-riP1CpbN0dNeRXL2T6sD79qGxi50xCV75efOlUhk-lqBVOlzmjt-JAFVogDuiMvQSFfXi4tazkzZRGC_SVPrz1pPsIW8B_Rgmpp1hlVUOhS5ywph-dlqsCbyWQa_2mkhleFFs9zwTP_ZQkM3-wSnup3hed7iXQCPVttX244SkItWqA2HBElPRo-a82H03gzBt2lCDGUrxCl_uG1go2KxIopW0TbtpnTs_Ajp6QaTuHgouFW-9GcmyoUo75kQ5RMtzQ6svEEXnV87yEUzsD5DuELkDdENpB_vZVwU9VqAxlgZaSy-LLmteBxVpCmhmv14qCxNrZ95zqZ1bZ02r21CnLJtVDCmpHL-vhq4QCvRQQTAiO-cZ8eF3hYhv5vkVjgY3Cr6c-dO3w',
+            'Authorization: Bearer '.$bearer,
             'X-MANAGER-TOKEN: ' . $token,
             'User-Agent: Rashof/1.00.00 (web)',
             'Accept-Language: en',
@@ -200,26 +205,37 @@ function updateZidStatus($orderID = null, $token = null, $status = null, $code =
     $ci->db->insert('salla_out_log', $datalog);
 }
 
-function ZidPcURL($storeID, $store_link, $bearer) {
+function ZidPcURL($storeID, $store_link, $bearer,$token) {
 
+  
+    $curl = curl_init();
+    $header=array(
+        
+        'Authorization: Bearer ' . $bearer,
+        'STORE-ID: ' . $storeID,
+        'Content-Type: application/json',
+        'Accept-Language: ar',
+        'ROLE: manager',
+        'X-MANAGER-TOKEN: '.$token,
+
+
+    );
     $curl = curl_init();
 
-    curl_setopt_array($curl, array(
-        CURLOPT_URL => $store_link,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'GET',
-        CURLOPT_HTTPHEADER => array(
-            'Authorization: Bearer ' . $bearer,
-            'STORE-ID: ' . $storeID,
-        ),
-    ));
+curl_setopt_array($curl, array(
+  CURLOPT_URL => $store_link,
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => '',
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 0,
+  CURLOPT_FOLLOWLOCATION => true,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => 'GET',
+  CURLOPT_HTTPHEADER => $header
+));
 
-    $response = curl_exec($curl);
+     $response = curl_exec($curl); 
+
     curl_close($curl);
     return $response;
 }
@@ -244,6 +260,21 @@ function deliveryOption($cust_id) {
 $result=$query->row_array();
     
     return $result['zid_delivery_name'];
+}
+
+
+function deliveryOption_new($cust_id) {
+    $ci = & get_instance();
+    $ci->load->database();
+    $sql = "SELECT  `zid_delivery_name`FROM `zid_deliver_options` WHERE `cust_id` = '" . $cust_id . "'";
+    $query = $ci->db->query($sql);
+$result=$query->result_array();
+$retArray=array();
+foreach($result as $r)
+    {
+      array_push( $retArray,$r['zid_delivery_name']);
+    }
+    return $retArray;
 }
 
 

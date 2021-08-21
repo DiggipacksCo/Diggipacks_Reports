@@ -1945,11 +1945,13 @@ class Shipment extends MY_Controller {
 //echo "sssssss"; die;
         $searchids = $this->input->post('tracking_numbers');
 
-
+if(!empty( $searchids))
+{
         $data['traking_awb_no'] = preg_split('/\s+/', trim($searchids));
         // print_r($data['traking_awb_no']);
         $data['shipmentdata'] = $this->Shipment_model->getawbdataquery($data['traking_awb_no']);
         //print_r($data['shipmentdata']); die;
+}
         $this->load->view('ShipmentM/trackingresult', $data);
     }
 
@@ -1970,9 +1972,24 @@ class Shipment extends MY_Controller {
           foreach( $shipmentdata as $shData)
           {
             $slipRArray[]=$shData['slip_no'];
+            $StatusArray[$key]['user_type'] = 'fulfillment';
+            $StatusArray[$key]['slip_no'] = $shData['slip_no'];
+            $StatusArray[$key]['new_status'] = $shData['delivered'];
+            $StatusArray[$key]['pickup_time'] = date("H:i:s");
+            $StatusArray[$key]['pickup_date'] = date("Y-m-d H:i:s");
+            $StatusArray[$key]['Details'] = "Removed by ". getUserNameById($this->session->userdata('user_details')['user_id']);
+            $StatusArray[$key]['Activites'] = "Forwarding Removed";
+            $StatusArray[$key]['entry_date'] = date("Y-m-d H:i:s");
+            $StatusArray[$key]['user_id'] = $this->session->userdata('user_details')['user_id'];
+            $StatusArray[$key]['user_type'] = 'fulfillment';
+            $StatusArray[$key]['code'] = $shData['code'];
+            $StatusArray[$key]['super_id'] = $this->session->userdata('user_details')['super_id'];
+
           }
           if(!empty( $slipRArray))
           {
+            
+            $this->Shipment_model->DeleteUpdateShipmentData($StatusArray);
             $shipmentdata = $this->Shipment_model->removeForwarding($slipRArray);
            // print_r( $slipRArray); exit; 
            $this->session->set_flashdata('msg', 'Forwarding Removed successfully');
@@ -3495,7 +3512,7 @@ class Shipment extends MY_Controller {
                     //   print_r($data);
                     //die; 
                     
-                    $stock_check = CheckStockBackorder_ordergen($data['cust_id'], $skuDetails['sku'], $skuDetails['piece'], $data['slip_no']);
+                   $stock_check = CheckStockBackorder_ordergen($data['cust_id'], $skuDetails['sku'], $skuDetails['piece'], $data['slip_no'], $skuDetails['sku_id'], $data['wh_id']);
 
                     if ($stock_check['succ'] == 1) {
                         //array_push($ReturnstockArray,$stock_check['stArray']);
@@ -4016,6 +4033,9 @@ class Shipment extends MY_Controller {
         $statusvalue = array();
         $key = 0;
         foreach ($dataArray['listData'] as $data) {
+             $check_exist=GetCheckPickupStatus($data['slip_no']);
+              if(empty($check_exist))
+            {
             /* -------------Picklist Array----------- */
             $picklistValue[$key]['pickupId'] = $uid;
             $picklistValue[$key]['slip_no'] = $data['slip_no'];
@@ -4076,6 +4096,8 @@ class Shipment extends MY_Controller {
 
 
             $key++;
+            
+            }
         }
 
         $shipData = array();
@@ -4525,12 +4547,15 @@ class Shipment extends MY_Controller {
 
 
         $show_awb_no = trim($this->input->post('show_awb_no'));
+        if(!empty( $show_awb_no))
+        {
         //echo $show_awb_no;die;  
         $SlipNos = preg_replace('/\s+/', ',', $show_awb_no);
         $slip_arr = explode(",", $SlipNos);
         $slipData = array_unique($slip_arr);
          $data['traking_awb_no'] =$slipData;
          $data['shipmentdata'] = $this->Shipment_model->getawbdataquery($slipData);
+        }
          if(!empty($data['shipmentdata']))
          {
         //print_r($data['shipmentdata']); die;
@@ -4563,6 +4588,84 @@ class Shipment extends MY_Controller {
         echo json_encode($response);
     }
 
+     public function ViewShipmentMapping(){
+        
+        $this->load->view('ShipmentM/view_shipment_mapping');
+    }
+    
+    public function filterMapping(){
+  
+        $_POST = json_decode(file_get_contents('php://input'), true);
+        
+ 
+        
+        $page_no = $_POST['page_no'];
+        $cc_id = $_POST['cc_id'];
+        
+        $mappingData = $this->Shipment_model->filterViewMApping($page_no, $cc_id, $_POST);
+        
+        
+        $maparray = array();
+        $i=0;
+        foreach ($mappingData['result'] as $rdata) {
+            $maparray[$i] = $rdata;
+            $maparray[$i]['cc_name'] = GetCourCompanynameId($rdata['cc_id'], 'company');
+            $maparray[$i]['status'] = ($rdata['status']==1)?'Active':'De-Active';
+            $i++;
+        }
+
+        $dataArray['result'] = $maparray;
+        $dataArray['count'] = $mappingData['count'];
+        //print_r($shipments);
+        //exit();
+        echo json_encode($dataArray);
+    }
+    
+    public function addNewMapping(){
+        $this->load->view('ShipmentM/add_shipment_mapping');
+    }
+    
+    public function saveMapping(){
+        $postData = json_decode(file_get_contents('php://input'), true);
+        $returnArr = array();
+        if(empty($postData['cc_id'])){
+            $returnArr['responseError'][] = 'Please select Company Name';
+        }
+        if(empty($postData['map_data'])){
+            $returnArr['responseError'][] = 'Please enter Mapping Data';
+        }
+        if(!empty($returnArr)){
+            echo json_encode($returnArr); exit;
+        }
+        $dataCount = $this->Shipment_model->checkMappingCompany($postData);
+        if($dataCount >0){
+            $returnArr['responseError'][] = 'This Company already have mapping';
+            echo json_encode($returnArr); exit;
+        }
+        
+        $this->Shipment_model->saveMappingData($postData);
+        $returnArr = array('status' => "succ","Success_msg"=>'Mapping saved successfully');
+        echo json_encode($returnArr); exit;
+    }
+    
+    public function updateMapping(){
+        
+        $postData = $_REQUEST;
+        if(!empty($postData['cc_id']) && $postData['map_data']){
+            $id = $postData['id'];
+            unset($postData['id']);
+            $this->Shipment_model->updateMappingData($postData,$id);   
+            redirect(base_url().'shipment_mapping');
+        }
+        
+    }
+    
+    public function edit_mapping_view($id){
+        
+        $data['mapdata'] = $this->Shipment_model->getMappingData($id);
+        $this->load->view('ShipmentM/edit_shipment_mapping',$data);
+    }
+    
 }
 
 ?>

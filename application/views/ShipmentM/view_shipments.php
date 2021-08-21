@@ -83,18 +83,20 @@
                                                 <!-- Today's revenue -->
 
                                                 <!-- <div class="panel-body" > -->
-                                                <div class="col-md-3"> <div class="form-group" ><strong><?=lang('lang_AWB_or_SKU');?>:</strong>
+                                                <div class="col-md-3"> <div class="form-group" ><strong>Search Type:</strong>
                                                         <br>
                                                         <select  id="s_type" name="s_type" ng-model="filterData.s_type" class="selectpicker"  data-width="100%" >
 
                                                             <option value="AWB"><?=lang('lang_AWB');?></option>
-<!--                                                            <option value="SKU">SKU</option>-->
+<!--                                                            <option value="close_date">Close Date</option>-->
 
 
                                                         </select>
                                                     </div></div>
-                                                <div class="col-md-3"> <div class="form-group" ><strong><?=lang('lang_AWB_or_SKU_value');?>:</strong>
-                                                        <input type="text" id="s_type_val" name="s_type_val"  ng-model="filterData.s_type_val"  class="form-control" placeholder="Enter AWB no.">
+                                                <div class="col-md-3"> <div class="form-group" ><strong>Search Value:</strong>
+                                                        <input type="text" id="s_type_val"  name="s_type_val"  ng-model="filterData.s_type_val"  class="form-control" placeholder="Enter AWB no.">
+                                                        
+                                                        <input type="text" id="s_type_val_date" style="display:none;"  name="s_type_val"  ng-model="filterData.s_type_val"  class="form-control date" placeholder="Enter AWB no.">
                                                         <!--  <?php // if($condition!=null):      ?>
                                                          <input type="text" id="condition" name="condition" class="form-control" value="<?= $condition; ?>" >
                                                         <?php // endif;  ?> -->
@@ -180,6 +182,7 @@
 
                                                     </div>
                                                 </div>
+                                                
                                                 <div class="col-md-3">  <div class="form-group" ><strong><?=lang('lang_Main');?>  <?=lang('lang_Status');?>:</strong>
                                                         <br>
                                                         <select  id="status" name="status" ng-model="filterData.status" class="selectpicker" multiple data-show-subtext="true" data-live-search="true" data-width="100%" >
@@ -234,6 +237,18 @@
                                             </div>
                                             <div class="col-lg-12" style="padding-left: 20px;padding-right: 20px;">
                                                 
+                                                 <div class="col-md-3"> 
+                                                    <div class="form-group" ><strong><?=lang('lang_From');?>:</strong>
+                                                        <input class="form-control date" id="from" name="from" ng-model="filterData.from_c" placeholder="From Close Date" class="form-control"> 
+
+                                                    </div> 
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group" ><strong><?=lang('lang_To');?>:</strong>
+                                                        <input class="form-control date" id="to" name="to"  ng-model="filterData.to_c" placeholder="To Close Date" class="form-control"> 
+
+                                                    </div>
+                                                </div>
                                                  <div class="col-md-2" style="margin-top: 20px;"><div class="form-group" >
                                                         <select class="form-control"  ng-model="filterData.sort_list" ng-change="loadMore(1, 1);">
 
@@ -317,7 +332,9 @@
                                                 <th><?=lang('lang_No_of_Attempt');?></th>
                                                 <th><?=lang('lang_tpl_Pickup_Date');?></th>
                                                 <th><?=lang('lang_tpl_Closed_Date');?></th>
+                                                 <th>Close Date</th>
                                                 <th><?=lang('lang_Transaction');?> <?=lang('lang_Day');?></th>
+                                                 
                                                 <th>Transaction Timer</th>
                                                 <th class="text-center" ><i class="icon-database-edit2"></i></th>
                                             </tr>  
@@ -351,6 +368,7 @@
                                             <td>{{data.no_of_attempt}}</td>
                                             <td>{{data.pl3_pickup_date}}</td>
                                             <td>{{data.pl3_closed_date}}</td>
+                                             <td>{{data.close_date}}</td>
                                             <td>{{data.transaction_days}}</td>
                                             <td >
 
@@ -618,6 +636,12 @@
                                             <span class="checkmark"></span>
                                         </label>
                                     </div>
+                                      <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="last_status_n" value="last_status_n"  ng-model="listData2.last_status_n"> Last Status
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
                                     <div class="col-sm-4">
                                         <label class="container">
                                             <input type="checkbox" name="COD_Amount" value="COD_Amount"   ng-model="listData2.total_cod_amt"> <?= lang('lang_COD_Amount'); ?>
@@ -740,62 +764,41 @@
 
         </div>
      <script type="text/javascript">
-         
-//         $(document).ready(function(){
-//             $("#status").change(function(){
-//                 var selectedCode = $(this).val();
-//                     
-//                 if(selectedCode == '3PL'){
-//                     $(".other_status").removeClass("hidden");
-//                                    
-////                     var selectedTxt = '3PL Updates';
-////                     
-////                     $.ajax({
-////                            url: '<?php //echo base_url('Shipment/get_pl_status'); ?>',
-////                            data: {status_name:selectedTxt},
-////                            error: function () {},
-////                            dataType: 'html',
-////                            type: 'POST',
-////                            beforeSend:function(){$("#other_status").addClass("hidden");},
-////                            success: function (data) {
-////                                //alert(data.length)    
-////                                var jsonData = $.parseJSON(data);
-////                                if(jsonData.length >0){
-////                                    var option = "<option value='' >-select-</option>";
-////                                    for(i=0;i<jsonData.length;i++){
-////                                        option += "<option value='"+jsonData[i].code+"' >"+jsonData[i].sub_status+"</option>";
-////                                    }
-////                                    
-////                                    $(".other_status").removeClass("hidden");
-////                                    $("#status_o").html(option);
-////                                }
-//////                                if (jsonData.success) {
-//////                                    alert('Data updated successfully');
-//////                                }
-////                            }
-////
-////                        });
-//
-//                 }else{
-//                     $(".other_status").addClass("hidden");
-//                 } 
-//                
-//                
-//             });
-//             
-//         });
-                     
-                
-            // "order": [[0, "asc" ]]
+       
+       $("#s_type_val_date").hide();
+            $(document).ready(function() {
             $('#s_type').on('change', function () {
 //                if ($('#s_type').val() == "SKU") {
 //                    $('#s_type_val').attr('placeholder', 'Enter SKU no.');
 //                } else 
                if ($('#s_type').val() == "AWB") {
+                
                     $('#s_type_val').attr('placeholder', 'Enter AWB no.');
+                    $('#s_type_val').prop('readonly', false);
+                     // $("#s_type_val").removeClass("date_new");
+                      // $( ".date_new" ).datepicker( "option", "disabled", true );
+                   
+                      $('#s_type_val').val("");
+                       $("#s_type_val_date").hide();
+                         $("#s_type_val").show();
+                     
+                }
+                else if ($('#s_type').val() == "close_date") {
+                     $('#s_type_val_date').val("");
+                    $('#s_type_val_date').attr('placeholder', 'Enter Close Date.');
+                     $("#s_type_val_date").addClass("date_new");
+                     $('#s_type_val_date').prop('readonly', true);
+                     $("#s_type_val_date").show();
+                       $("#s_type_val").hide();
+                     $('.date_new').datepicker({
+
+                format: 'yyyy-mm-dd'
+
+            });
                 }
 
             });
+             });
 
 
         </script>
@@ -803,6 +806,13 @@
         <script type="text/javascript">
 
             $('.date').datepicker({
+
+                format: 'yyyy-mm-dd'
+
+            });
+
+
+ $('.date_new').datepicker({
 
                 format: 'yyyy-mm-dd'
 

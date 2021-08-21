@@ -45,7 +45,7 @@
                                 <?php if (menuIdExitsInPrivilageArray(101) == 'Y') { ?>
                                     <li><a href="<?= base_url('forwardshipments'); ?>"><?= lang('lang_Manual_Forward3PL'); ?></a></li>
                                 <?php } ?>
-                                <?php if (menuIdExitsInPrivilageArray(102) == 'Y') { ?>
+                                <?php if (menuIdExitsInPrivilageArray(141) == 'Y') { ?>
                                     <li><a href="<?= base_url('cancelOrder'); ?>"><?= lang('lang_Cancelling_orders3PL'); ?></a></li>
                                 <?php } ?>
                                 <?php if (menuIdExitsInPrivilageArray(82) == 'Y') { ?>
@@ -55,16 +55,16 @@
                                     <li><a href="<?= base_url('bulk_tracking'); ?>"><?= lang('lang_bulk_track'); ?></a></li>
                                 <?php } ?>
                                 <?php if (menuIdExitsInPrivilageArray(137) == 'Y') { ?>
-                                    <li><a href="<?= base_url('remove_forward'); ?>">Remove Forwarding</a></li>
+                                    <li><a href="<?= base_url('remove_forward'); ?>"><?= lang('lang_remove_forwarding'); ?></a></li>
                                 <?php } ?>
 
                                 <?php if (menuIdExitsInPrivilageArray(81) == 'Y') { ?>
-                                    <li><a href="<?= base_url('Reverse_Delivery_Station'); ?>">Reverse Shipment</a></li>
+                                    <li><a href="<?= base_url('Reverse_Delivery_Station'); ?>"><?= lang('lang_Reverse_Shipment'); ?></a></li>
                                 <?php } ?>
                                 <?php if (menuIdExitsInPrivilageArray(81) == 'Y') { ?>
-                                    <li><a href="<?= base_url('Reverse_Shipment'); ?>">View Reverse Shipment</a></li>
+                                    <li><a href="<?= base_url('Reverse_Shipment'); ?>"><?= lang('lang_View_Reverse_Shipment'); ?></a></li>
                                 <?php } ?>
-                                   
+                                    <li><a href="<?= base_url('shipment_mapping'); ?>">Shipment Mapping</a></li>
                                 <?php if (menuIdExitsInPrivilageArray(30) == 'Y') { ?>
 
                                     <li class="navigation-divider"></li>
@@ -365,7 +365,7 @@
                     <?php } ?>
                         
                          <?php if (menuIdExitsInPrivilageArray(9) == 'Y') { ?>
-                        <li <?php if ($this->uri->segment(1) == 'packing_b2b') echo 'class="active"'; ?>> <a href="<?= base_url('packing'); ?>"></i> <span><?= lang('lang_Packaging'); ?> B2B</span></a> </li>
+                        <li <?php if ($this->uri->segment(1) == 'packing_b2b') echo 'class="active"'; ?>> <a href="<?= base_url('packing_b2b'); ?>"></i> <span><?= lang('lang_Packaging'); ?> B2B</span></a> </li>
                     <?php } ?>
                         
                          <?php if (menuIdExitsInPrivilageArray(9) == 'Y') { ?>
@@ -384,6 +384,9 @@
 
                             <?php if (menuIdExitsInPrivilageArray(10) == 'Y') { ?>
                         <li  <?php if ($this->uri->segment(1) == 'dispatch') echo 'class="active"'; ?>> <a href="<?= base_url('dispatch'); ?>"></i> <span><?= lang('lang_Dispatching'); ?></span></a> </li>
+                    <?php } ?>
+                    <?php if (menuIdExitsInPrivilageArray(10) == 'Y') { ?>
+                        <li  <?php if ($this->uri->segment(1) == 'dispatch_b2b') echo 'class="active"'; ?>> <a href="<?= base_url('dispatch_b2b'); ?>"></i> <span><?= lang('lang_Dispatching'); ?> B2B</span></a> </li>
                     <?php } ?>
                          <?php if (menuIdExitsInPrivilageArray(10) == 'Y') { ?>
                         <li  <?php if ($this->uri->segment(1) == 'dispatch3pl') echo 'class="active"'; ?>> <a href="<?= base_url('dispatch3pl'); ?>"></i> <span> <?= lang('lang_Dispatch_To_tpl'); ?></span></a> </li>
@@ -486,7 +489,7 @@
                                 <?php if (menuIdExitsInPrivilageArray(54) == 'Y') { ?>
                                     <li><a href="<?= base_url('view_storage'); ?>"><?= lang('lang_All_Storage_Types'); ?></a></li>
                                 <?php } ?>
-                                <?php //if (menuIdExitsInPrivilageArray(82) == 'Y')
+                                <?php if (menuIdExitsInPrivilageArray(141) == 'Y')
                                     { ?>
                                     <li><a href="<?= base_url('cancelOrder'); ?>"><?= lang('lang_Cancel_Order'); ?></a></li>
                                 <?php } ?>

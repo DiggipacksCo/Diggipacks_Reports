@@ -115,6 +115,9 @@ $route['bulkprint']                = 'Shipment/BulkPrintPage';
 $route['Forward_Delivery_Station'] = 'Shipment/ForwardtoDeliveryStation';
 $route['Reverse_Delivery_Station'] = 'Shipment/ReversetoDeliveryStation';
 $route['Reverse_Shipment'] = 'Shipment/ViewReverseShipment';
+$route['shipment_mapping'] = 'Shipment/ViewShipmentMapping';
+$route['add_new_mapping'] = 'Shipment/addNewMapping';
+$route['update_mapping'] = 'Shipment/updateMapping';
 
 
 $route['generatePickup']   = 'Shipment/generatePickup';
@@ -132,6 +135,7 @@ $route['packing']                = 'PickUp/packing';
 $route['packing_tod']            = 'PickUp/packing_tod';
 $route['packing_b2b']                = 'Business/packing_b2b';
 $route['dispatch']               = 'PickUp/dispatch';
+$route['dispatch_b2b']               = 'PickUp/dispatch_b2b';
 $route['TrackingResult']         = 'Shipment/getshipmenttrackingresult';
 $route['TrackingDetails/(:any)'] = 'Shipment/getshipmentdetailshow/$1';
 $route['Staff_report']           = 'PickUp/Staff_report';
@@ -199,7 +203,7 @@ $route['stockLocationFilter']   = 'Shelve/stockLocationFilter';
 $route['GenerateTods'] = 'Shelve/GenerateTods';
 $route['generatetodsfrm']         = 'Shelve/generatetodsfrm';
 $route['showtods']             = 'Shelve/showtods';
-$route['showtods/(:any)']      = 'Shelve/showtods/$1';
+$route['showtods/(:any)']      = 'Shelve/showtods/$1'; 
 //========================================================//
 
 
@@ -244,9 +248,11 @@ $route['tickethistory/(:any)']      = 'Ticket/tickethistory/$1';
 $route['add_storage']     = 'Storage/add_storage';
 $route['view_storage']    = 'Storage/storageview';
 $route['editview/(:any)'] = 'Storage/add_storage/$1';
+
+
 $route['editviewstorage/(:any)'] = 'Seller/add_storagecharges/$1';
 $route['add_courier_company/(:any)'] = 'Seller/add_courier_company/$1';
-
+$route['active_seller/(:num)/(:any)'] = 'Seller/active_seller/$1/$2';
 $route['setStorageRate']  = 'Storage/setStorageRate';
 $route['CompanyDetails'] = 'Generalsetting/CompanyDetails';
 $route['defaultlist_view'] = 'Generalsetting/defaultlist_view';
@@ -256,7 +262,8 @@ $route['update_password'] = 'Generalsetting/update_password';
  
 
 $route['performance']                                     = 'CourierCompany/performance';
-$route['performance_details/(:any)/(:any)/(:any)/(:any)'] = 'CourierCompany/performance_details/$1/$2/$3/$4';
+$route['performance_details/(:any)/(:any)/(:any)/(:any)'] = 'Reports/performance_details_3pl/$1/$2/$3/$4';
+//$route['performance_details/(:any)/(:any)/(:any)/(:any)'] = 'CourierCompany/performance_details/$1/$2/$3/$4';
 
 $route['report_3pl'] = 'Reports/performance_3pl';
 $route['performance_details_3pl/(:any)/(:any)/(:any)/(:any)'] = 'Reports/performance_details_3pl/$1/$2/$3/$4';
@@ -316,6 +323,10 @@ $route['salla'] = 'Salla/add';
 $route['zid/(:any)']   = 'Zid/getOrder/$1';
 $route['bulk_tracking']= 'Shipment/bulk_tracking';
 $route['remove_forward']= 'Shipment/forward_remove';
+$route['setup_storage/(:any)']= 'Warehouse/setup_storage/$1';
+$route['warehouse_storage_report']= 'Warehouse/warehouse_stprage_report';
+
+
 
 //===================================================//
 

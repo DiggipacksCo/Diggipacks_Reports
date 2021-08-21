@@ -94,6 +94,7 @@ echo '<div class="alert alert-success">'.$this->session->flashdata('msg').' <but
 
                             <ul class="dropdown-menu dropdown-menu-right">
                               <li><a href="<?=base_url();?>editWarehouse/<?=$seller->id;?>"><i class="icon-pencil7"></i> <?=lang('lang_Edit');?> </a></li>      
+                               <li><a href="<?=base_url();?>setup_storage/<?=$seller->id;?>"><i class="fa fa-database"></i> Storage Setup </a></li>      
                                
                             </ul>
                           </li>
