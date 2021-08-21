@@ -2154,7 +2154,6 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                             }
                     
                     }elseif ($company_type== 'F') { // for all fastcoo clients treat as a CC 
-
                         if ($company=='Ejack' ) 
                         {
                                 $response = $this->Ccompany_model->Ejack($sellername,$ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$super_id);
