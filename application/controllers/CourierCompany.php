@@ -2096,18 +2096,18 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                         
                         
                     }elseif ($company== 'MICGO'){ 
-                                //print "<pre>"; print_r($sku_data);die;
+                                
                            $Auth_token = $this->Ccompany_model->MICGO_AUTH($counrierArr);
                            $responseArray = $this->Ccompany_model->MICGOarray($sellername, $ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$Auth_token,$super_id);  
+                           //print "<pre>"; print_r($responseArray);die;
                            $successres = $responseArray['error'];                        
-                            $error_status = $responseArray['message'];
-                            //print "<pre>"; print_r($responseArray);die; 
+                           $error_status = $responseArray['message'];
                         if (empty($successres))
                         {
                             sleep(2);
 
                             $client_awb = $responseArray['shipments'][0]['waybill']; 
-                            $Label = $responseArray['shipments'][0]['shippingLabelUrl']; 
+                            $Label = $responseArray['shipments'][0]['shippingLabelUrl'];
                              
                             $generated_pdf = file_get_contents($Label); 
                             
@@ -2154,11 +2154,9 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                             }
                     
                     }elseif ($company_type== 'F') { // for all fastcoo clients treat as a CC 
-                      
-                        
                         if ($company=='Ejack' ) 
                         {
-                                $response = $this->Ccompany_model->Ejack($sellername,$ShipArr,$counrierArr , $complete_sku,$c_id,$box_pieces1,$super_id);
+                                $response = $this->Ccompany_model->Ejack($sellername,$ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$super_id);
                                 $response = json_decode($response, true);
                                 if($response['error']=='')
                                 {
