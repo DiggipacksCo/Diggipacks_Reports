@@ -1713,7 +1713,7 @@ class Manifest extends CourierCompany_pickup {
                             $successres = $responseArray['error'];                        
                             $error_status = $responseArray['message'];
                         if (empty($successres))
-                        {
+                        {   sleep(2);
 
                             $client_awb = $responseArray['shipments'][0]['waybill'];
                             $Label = $responseArray['shipments'][0]['shippingLabelUrl'];
