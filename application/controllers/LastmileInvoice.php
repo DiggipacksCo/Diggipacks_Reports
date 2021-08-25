@@ -359,7 +359,7 @@ public function payableInvoice_update()
 		}
 		}
 		
-		if(!empty($invoiceArray))
+		if(!empty($invoiceArray) && empty($priceZero))
 		{
 			
 			$this->LastMile_model->updateShipmet($where_in); 

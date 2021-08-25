@@ -81,6 +81,8 @@ $scope.createInvoice=function()
     
   }).then(function (response) {
     
+   $scope.returnData= response.data;
+   if($scope.returnData.price_zero!=undefined)
    $scope.message="Invoice Genearted Successfully";
     
     });

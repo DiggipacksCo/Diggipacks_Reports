@@ -510,7 +510,7 @@ class PickUp extends MY_Controller {
             foreach ($shipments['result'] as $data) {
 
 
-                if (trim($data['code']) == 'PK') {
+                if (trim($data['code']) == 'PK' || trim($data['code']) == 'DL' ) {
 
                     if ($data['order_type'] == 'B2B') {
                         if ($data['stocklcount'] > 0) {

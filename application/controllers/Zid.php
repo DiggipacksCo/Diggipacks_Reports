@@ -12,7 +12,7 @@ class Zid extends CI_Controller {
         $this->load->helper('zid_helper');
         $this->load->model('Zid_model');
     }
-    public function getOrder($uniqueid) { 
+    public function getOrder($uniqueid,$shipId) { 
         $_POST = json_decode(file_get_contents('php://input'), true);
         $dataJson = json_encode($_POST);
         //==================log write start========
@@ -35,7 +35,7 @@ class Zid extends CI_Controller {
         {
             //Lock obtained, start doing some work now
            // sleep(10);//sleep for 10 seconds
-            $this->zidOrders($uniqueid,$_POST); exit;
+            $this->zidOrders($uniqueid,$_POST,$shipId); exit;
             echo "Work completed!";
              // release lock
             flock($file,LOCK_UN);
@@ -45,7 +45,7 @@ class Zid extends CI_Controller {
     }
 
 
-        private function zidOrders($uniqueid,$postData) {
+        private function zidOrders($uniqueid,$postData,$shipId) {
             $Order=$postData;
             $customers = $this->Zid_model->fetch_zid_customers($uniqueid);
            
@@ -73,12 +73,12 @@ class Zid extends CI_Controller {
                     if ($customers['access_fm'] == 'Y') {
                         $check_booking_id = exist_booking_id($booking_id, $customers['id']);
     
-                        print_r( $check_booking_id);
+                       // print_r( $check_booking_id);
                     }
     
                     if ($customers['access_lm'] == 'Y') {
                         $check_booking_id = $this->Zid_model->existLmBookingId($booking_id, $customers['id']);
-                        print_r( $check_booking_id);
+                       // print_r( $check_booking_id);
                     }
     
                     if (!empty($check_booking_id)) {
@@ -114,14 +114,22 @@ class Zid extends CI_Controller {
     
                         echo $booking_id . ' Exist<br>';
                     } else {
-    
+                        $addShipValid=false;
                        // echo 'xxxxx'; exit;
                         $result1['order'] = $Order; 
-                    
-                  //  echo  $customers['zid_status'];
-                  // print_r( $result1); exit;
-                 //echo $result1['order']['shipping']['method']['name']; exit;
-                    if ($result1['order']['order_status']['code'] == $customers['zid_status'] && ( in_array($result1['order']['shipping']['method']['name'],$deliveryOption)  || strpos(trim($result1['order']['shipping']['method']['name']),'DIGGIPACK')!==false ) ) 
+                    if(!empty($shipId))
+                    {
+                       if($shipId==$result1['order']['shipping']['method']['id']) 
+                       $addShipValid=true;
+                    }
+                    else
+                    {
+                        if(in_array($result1['order']['shipping']['method']['name'],$deliveryOption)  || strpos(trim($result1['order']['shipping']['method']['name']),'DIGGIPACK')!==false )
+                        $addShipValid=true;
+
+                    }
+                
+                    if ($result1['order']['order_status']['code'] == $customers['zid_status'] &&  $addShipValid==true ) 
                     {
                    
                         $weight = 0;
