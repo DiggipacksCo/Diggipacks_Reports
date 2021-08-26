@@ -747,7 +747,8 @@ if(!empty($awbids ))
         $this->db->where('shipment_fm.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->from('shipment_fm');
         $this->db->where('shipment_fm.deleted', 'N');
-        $this->db->where('shipment_fm.code', 'PK');
+        //$this->db->where('shipment_fm.code', 'PK');
+        $this->db->where_in('shipment_fm.code', array('DL','PK'));
         
         
 

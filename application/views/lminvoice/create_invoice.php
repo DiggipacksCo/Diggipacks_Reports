@@ -64,6 +64,10 @@
                                     Invoice Already Created
                                     <button class="float-right" ng-click="downloadexl(returnData.areadyExit,'Invoice Already Created')">><?=lang('lang_Download');?><</button>
                                     </div>
+                                    <div  ng-if="returnData.price_zero.length>0" class="alert alert-danger">
+                                   Shipment Price or zone not set (Shipment Price Zero)
+                                    <button class="float-right" ng-click="downloadexl(returnData.price_zero,'Shipment Price or zone not set (Shipment Price Zero)')">><?=lang('lang_Download');?><</button>
+                                    </div>
 
                                     
                                     <input type="submit" name="track_ready" class="btn btn-primary form-control "  ng-click="createInvoice()" value="<?=lang('lang_Create_Invoice');?>">	
