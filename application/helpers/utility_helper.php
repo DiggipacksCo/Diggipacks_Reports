@@ -1836,10 +1836,10 @@ if (!function_exists('GetCityAllDataByname')) {
 }
 if (!function_exists('Getallsellerdata')) {
 
-    function Getallsellerdata($ids = null) {
+    function Getallsellerdata($type = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT id,name,company FROM customer where  super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and company!='' and access_fm='Y'";
+        $sql = "SELECT id,name,company FROM customer where invoice_type='".$type."' and  super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and company!='' and access_fm='Y'";
         $query = $ci->db->query($sql);
         $result = $query->result_array();
         return $result;
