@@ -605,6 +605,7 @@ $u_type = $this->input->post('u_type');
     }
 
     public function ZidProducts($id) {
+
         $data['zidproducts'] = $this->Seller_model->zidproduct($id);
         $storeID = $data['zidproducts'];
         $token = GetallCutomerBysellerId($id, 'manager_token');
@@ -616,8 +617,8 @@ $u_type = $this->input->post('u_type');
         $ZidProductArr_total = json_decode($ZidProductRT, true);
 
         $total_pages = 1;
-        if ($ZidProductArr_total['count'] > 50) {
-            $total_pages = ceil($ZidProductArr_total['count'] / 50);
+        if ($ZidProductArr_total['count'] > 100) {
+            $total_pages = ceil($ZidProductArr_total['count'] / 100);
         }
          if(empty($this->input->post('i')))
          {
@@ -632,7 +633,7 @@ $u_type = $this->input->post('u_type');
         $p = 0;
         $s = 0;
        
-            $storlink_page = "https://api.zid.dev/app/v2/products?page=" . $i;
+            $storlink_page = "https://api.zid.dev/app/v2/products?page=" . $i."&page_size=100";
             $ZidProductArr = ZidPcURL($storeID, $storlink_page, $bearer,$token); 
             $ZidProductArr = json_decode($ZidProductArr, true);
 
@@ -678,9 +679,7 @@ $u_type = $this->input->post('u_type');
         
 
         $this->load->view('SellerM/view_zidp', $ZidProducts);
-
     }
-
     public function SaveZidProducts() {
               
         foreach ($this->input->post('selsku') as  $value) {
@@ -703,14 +702,15 @@ $u_type = $this->input->post('u_type');
                 'entry_date' => date("Y-m-d H:i:s"),
                 'item_path'=>'assets/item_uploads/'.$this->input->post('sku')[$value].'.jpg'
             );
+            //  'name' => $this->input->post('skuname')[$value],
             $editData= array(
-                'name' => $this->input->post('skuname')[$value],
+              
                 'zid_pid' => $this->input->post('pid')[$value],
                 'item_path'=>'assets/item_uploads/'.$this->input->post('sku')[$value].'.jpg'
                
             );
          
-           $exist_zidsku_id = exist_zidsku_id($this->input->post('sku')[$value], $this->session->userdata('user_details')['super_id']);
+           $exist_zidsku_id = exist_zidsku_id($this->input->post('sku')[$value], $this->session->userdata('user_details')['super_id']); 
             if ($exist_zidsku_id != '' || $exist_zidsku_id != 0) {
                 $this->Item_model->edit($exist_zidsku_id,$editData);
             } else {
