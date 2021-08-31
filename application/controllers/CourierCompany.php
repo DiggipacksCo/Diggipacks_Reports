@@ -368,13 +368,18 @@ class CourierCompany extends MY_Controller  {
                     $sku_data = $this->Ccompany_model->Getskudetails_forward($slipNo);
                     $sku_all_names = array();
                     $sku_total = 0;
+                    $total_weight = 0; 
                     $totalcustomerAmt=0;
                     foreach ($sku_data as $key => $val) {
-                            $totalcustomerAmt+=$sku_data[$key]['cod'];
+                            $totalcustomerAmt+= $sku_data[$key]['cod'];
                             $skunames_quantity = $sku_data[$key]['name'] . "/ Qty:" . $sku_data[$key]['piece'];
                             $sku_total = $sku_total + $sku_data[$key]['piece'];
+                            $total_weight += ($sku_data[$key]['weight'] * $sku_data[$key]['piece']);
+                         
                             array_push($sku_all_names, $skunames_quantity);
                     }
+
+                  
                     $sku_all_names = implode(",", $sku_all_names);
                     if ($sku_total != 0) {
                             $complete_sku = $sku_all_names;
@@ -393,6 +398,15 @@ class CourierCompany extends MY_Controller  {
                             $CashOnDeliveryAmount = NULL;
                             $services = '';
                     }
+                    
+                 
+                    if($total_weight > 0 ){
+                        $weight = $total_weight;
+                    }else{
+                        $weight = 1;
+                    }
+
+                   
                     
                     $CURRENT_TIME = date('H:i:s');
                     $CURRENT_DATE = date('Y-m-d H:i:s');
@@ -414,7 +428,7 @@ class CourierCompany extends MY_Controller  {
                         'total_cod_amt' => $ShipArr['total_cod_amt'],
                         'pieces' =>  $box_pieces1,
                         'status_describtion' => empty($complete_sku)?$ShipArr['status_describtion']:$complete_sku,
-                        'weight' => $ShipArr['weight'],
+                         'weight' => $weight,
                         'shippers_ac_no' => $ShipArr['shippers_ac_no'],
                         'cust_id' => $ShipArr['cust_id'],
                         'service_id' => $ShipArr['service'],

@@ -34,7 +34,7 @@ class Ccompany_model extends CI_Model {
         
         if(!empty($data['cc_id']))
         {
-        $this->db->where('id', $data['cc_id']);
+            $this->db->where('id', $data['cc_id']);
         }
         $this->db->where('deleted', 'N');
         $this->db->order_by('company');
@@ -61,7 +61,6 @@ class Ccompany_model extends CI_Model {
     public function GetCompanylistDropQry() {
 
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
-
         $this->db->select('id,cc_id,company');
         $this->db->from('courier_company');
         $this->db->where('deleted', 'N');
@@ -77,7 +76,6 @@ class Ccompany_model extends CI_Model {
     public function GetSlipNoDetailsQry($slip_no = null,$super_id=null) {
 
         $this->db->where('super_id', $super_id);
-
         $this->db->select('*');
         $this->db->from('shipment_fm');
         $this->db->where('slip_no', $slip_no);
@@ -97,7 +95,6 @@ class Ccompany_model extends CI_Model {
         $this->db->where('slip_no', $slip_no);
         $this->db->where('deleted', 'N');
         $this->db->where('code', 'POD');
-
         $this->db->where('reverse_forwarded', 0);
         $query = $this->db->get();
         //echo $this->db->last_query();exit;
@@ -427,7 +424,7 @@ class Ccompany_model extends CI_Model {
         $this->db->where('diamention_fm.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('items_m.super_id', $this->session->userdata('user_details')['super_id']);
 
-        $this->db->select('diamention_fm.sku,diamention_fm.description,diamention_fm.piece,diamention_fm.cod,items_m.name');
+        $this->db->select('diamention_fm.sku,diamention_fm.description,diamention_fm.piece,diamention_fm.cod,items_m.name,items_m.weight');
         $this->db->from('diamention_fm');
         $this->db->join('items_m', 'items_m.sku=diamention_fm.sku');
         $this->db->where('diamention_fm.slip_no',$slip_no);
@@ -3713,7 +3710,7 @@ class Ccompany_model extends CI_Model {
                     "weight"=> $weight,
                     "skudetails" => $skudetails,                    
                 );
-              
+            // echo "<pre>"; print_r($alldata); die;  
                 $sign = create_sign($alldata, $secKey, $customerId, $formate, $method, $signMethod);
                 $data_array = array(
                   "sign"       => $sign,
@@ -3741,6 +3738,8 @@ class Ccompany_model extends CI_Model {
        
 
             $response = json_decode($responsedata,TRUE); 
+
+
         $successres = $response['status'];
      
         if($successres ==200) 
