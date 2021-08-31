@@ -424,7 +424,7 @@ class Ccompany_model extends CI_Model {
         $this->db->where('diamention_fm.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('items_m.super_id', $this->session->userdata('user_details')['super_id']);
 
-        $this->db->select('diamention_fm.sku,diamention_fm.description,diamention_fm.piece,diamention_fm.cod,items_m.name,diamention_fm.wieght');
+        $this->db->select('diamention_fm.sku,diamention_fm.description,diamention_fm.piece,diamention_fm.cod,items_m.name,items_m.weight');
         $this->db->from('diamention_fm');
         $this->db->join('items_m', 'items_m.sku=diamention_fm.sku');
         $this->db->where('diamention_fm.slip_no',$slip_no);
@@ -3710,7 +3710,7 @@ class Ccompany_model extends CI_Model {
                     "weight"=> $weight,
                     "skudetails" => $skudetails,                    
                 );
-              
+            // echo "<pre>"; print_r($alldata); die;  
                 $sign = create_sign($alldata, $secKey, $customerId, $formate, $method, $signMethod);
                 $data_array = array(
                   "sign"       => $sign,
@@ -3738,6 +3738,8 @@ class Ccompany_model extends CI_Model {
        
 
             $response = json_decode($responsedata,TRUE); 
+
+
         $successres = $response['status'];
      
         if($successres ==200) 

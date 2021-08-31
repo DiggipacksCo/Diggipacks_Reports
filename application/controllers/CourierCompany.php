@@ -374,12 +374,12 @@ class CourierCompany extends MY_Controller  {
                             $totalcustomerAmt+= $sku_data[$key]['cod'];
                             $skunames_quantity = $sku_data[$key]['name'] . "/ Qty:" . $sku_data[$key]['piece'];
                             $sku_total = $sku_total + $sku_data[$key]['piece'];
-                            $total_weight += ($sku_data[$key]['wieght'] * $sku_data[$key]['piece']);
+                            $total_weight += ($sku_data[$key]['weight'] * $sku_data[$key]['piece']);
                          
                             array_push($sku_all_names, $skunames_quantity);
                     }
 
-                   
+                  
                     $sku_all_names = implode(",", $sku_all_names);
                     if ($sku_total != 0) {
                             $complete_sku = $sku_all_names;
@@ -399,12 +399,14 @@ class CourierCompany extends MY_Controller  {
                             $services = '';
                     }
                     
-                  
+                 
                     if($total_weight > 0 ){
                         $weight = $total_weight;
                     }else{
                         $weight = 1;
                     }
+
+                   
                     
                     $CURRENT_TIME = date('H:i:s');
                     $CURRENT_DATE = date('Y-m-d H:i:s');
