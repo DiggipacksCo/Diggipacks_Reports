@@ -368,14 +368,14 @@ class CourierCompany extends MY_Controller  {
                     $sku_data = $this->Ccompany_model->Getskudetails_forward($slipNo);
                     $sku_all_names = array();
                     $sku_total = 0;
-                    $total_weight = 0; $total_qty = 0;
+                    $total_weight = 0; 
                     $totalcustomerAmt=0;
                     foreach ($sku_data as $key => $val) {
                             $totalcustomerAmt+= $sku_data[$key]['cod'];
                             $skunames_quantity = $sku_data[$key]['name'] . "/ Qty:" . $sku_data[$key]['piece'];
                             $sku_total = $sku_total + $sku_data[$key]['piece'];
-                            $total_weight += $sku_data[$key]['wieght'];
-                            $total_qty += $sku_data[$key]['piece'];
+                            $total_weight += ($sku_data[$key]['wieght'] * $sku_data[$key]['piece']);
+                         
                             array_push($sku_all_names, $skunames_quantity);
                     }
 
@@ -399,9 +399,9 @@ class CourierCompany extends MY_Controller  {
                             $services = '';
                     }
                     
-                    $total_qty = ($total_qty >0)?$total_qty:1;
+                  
                     if($total_weight > 0 ){
-                        $weight = $total_weight * $total_qty;
+                        $weight = $total_weight;
                     }else{
                         $weight = 1;
                     }

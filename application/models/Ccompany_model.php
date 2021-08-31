@@ -34,7 +34,7 @@ class Ccompany_model extends CI_Model {
         
         if(!empty($data['cc_id']))
         {
-        $this->db->where('id', $data['cc_id']);
+            $this->db->where('id', $data['cc_id']);
         }
         $this->db->where('deleted', 'N');
         $this->db->order_by('company');
@@ -61,7 +61,6 @@ class Ccompany_model extends CI_Model {
     public function GetCompanylistDropQry() {
 
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
-
         $this->db->select('id,cc_id,company');
         $this->db->from('courier_company');
         $this->db->where('deleted', 'N');
@@ -77,7 +76,6 @@ class Ccompany_model extends CI_Model {
     public function GetSlipNoDetailsQry($slip_no = null,$super_id=null) {
 
         $this->db->where('super_id', $super_id);
-
         $this->db->select('*');
         $this->db->from('shipment_fm');
         $this->db->where('slip_no', $slip_no);
@@ -97,7 +95,6 @@ class Ccompany_model extends CI_Model {
         $this->db->where('slip_no', $slip_no);
         $this->db->where('deleted', 'N');
         $this->db->where('code', 'POD');
-
         $this->db->where('reverse_forwarded', 0);
         $query = $this->db->get();
         //echo $this->db->last_query();exit;
