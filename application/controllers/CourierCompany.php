@@ -1810,8 +1810,9 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                     }
                     elseif ($company == 'FDA')
                     {
-
-                        $Auth_token=$this->Ccompany_model->FDA_auth($counrierArr); 
+                       
+                         $Auth_token=$this->Ccompany_model->FDA_auth($counrierArr); 
+                       
                         $responseArray = $this->Ccompany_model->FDAArray($sellername, $ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1, $super_id, $complete_sku); 
 
                        // echo '<pre>'; print_r( $responseArray); die;
