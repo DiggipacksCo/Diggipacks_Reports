@@ -389,12 +389,12 @@ class CourierCompany extends MY_Controller  {
                     $pay_mode = trim($ShipArr['mode']);
                     $cod_amount = $ShipArr['total_cod_amt'];
                     if ($pay_mode == 'COD') {
-                            $pay_mode = 'P';
+                         //   $pay_mode = 'P';
                             $CashOnDeliveryAmount = array("Value" => $cod_amount,
                                     "CurrencyCode" => site_configTable("default_currency"));
                             $services = 'CODS';
                     } elseif ($pay_mode == 'CC') {
-                            $pay_mode = 'P';
+                            //$pay_mode = 'P';
                             $CashOnDeliveryAmount = NULL;
                             $services = '';
                     }
@@ -616,12 +616,12 @@ class CourierCompany extends MY_Controller  {
                             $pay_mode = trim($ShipArr['mode']);
                             $cod_amount = $ShipArr['total_cod_amt'];
                             if ($pay_mode == 'COD') {
-                                    $pay_mode = 'P';
+                                   // $pay_mode = 'P';
                                     $CashOnDeliveryAmount = array("Value" => $cod_amount,
                                             "CurrencyCode" => site_configTable("default_currency"));
                                     $services = 'CODS';
                             } elseif ($pay_mode == 'CC') {
-                                    $pay_mode = 'P';
+                                   // $pay_mode = 'P';
                                     $CashOnDeliveryAmount = NULL;
                                     $services = '';
                             }
@@ -1810,8 +1810,9 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                     }
                     elseif ($company == 'FDA')
                     {
-
-                        $Auth_token=$this->Ccompany_model->FDA_auth($counrierArr); 
+                       
+                         $Auth_token=$this->Ccompany_model->FDA_auth($counrierArr); 
+                       
                         $responseArray = $this->Ccompany_model->FDAArray($sellername, $ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1, $super_id, $complete_sku); 
 
                        // echo '<pre>'; print_r( $responseArray); die;
