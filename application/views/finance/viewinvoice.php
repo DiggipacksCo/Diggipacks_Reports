@@ -1,8 +1,8 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
-<script type="text/javascript" src="js/jszip.js"></script>
-<script type="text/javascript" src="assets/js/jszip-utils.js"></script>
-<script type="text/javascript" src="assets/js/FileSaver.js"></script>
+<script type="text/javascript" src="<?=base_url();?>/assets/jszip.js"></script>
+<script type="text/javascript" src="<?=base_url();?>assets/jszip-utils.js"></script>
+<script type="text/javascript" src="<?=base_url();?>assets/FileSaver.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"  />
 <div class="centercontent tables">
 	<div id="contentwrapper" class="contentwrapper">
