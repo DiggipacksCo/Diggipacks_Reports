@@ -249,6 +249,20 @@
 
                                                     </div>
                                                 </div>
+
+
+                                                <div class="col-md-3"> 
+                                                    <div class="form-group" ><strong>Forward Date <?=lang('lang_From');?>:</strong>
+                                                        <input class="form-control date" id="from" name="from" ng-model="filterData.f_from" placeholder="From Forward Date" class="form-control"> 
+
+                                                    </div> 
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group" ><strong>Forward Date <?=lang('lang_To');?>:</strong>
+                                                        <input class="form-control date" id="to" name="to"  ng-model="filterData.f_to" placeholder="To Forward Date" class="form-control"> 
+
+                                                    </div>
+                                                </div>
                                                  <div class="col-md-2" style="margin-top: 20px;"><div class="form-group" >
                                                         <select class="form-control"  ng-model="filterData.sort_list" ng-change="loadMore(1, 1);">
 
@@ -709,7 +723,7 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <label class="container">
-                                            <input type="checkbox" name="pl3_close_date" value="pl3_close_date"  ng-model="listData2.pl3_close_date"> <?=lang('lang_tpl_Closed_Date');?>
+                                            <input type="checkbox" name="frwd_date" value="frwd_date"  ng-model="listData2.frwd_date"> 3PL Forward Date
                                             <span class="checkmark"></span>    
                                         </label>
                                     </div>

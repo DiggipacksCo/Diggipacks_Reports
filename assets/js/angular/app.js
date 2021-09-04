@@ -1481,6 +1481,7 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
                 "invoice_details": false,
                 "pl3_pickup_date": false,
                 "pl3_close_date": false,
+                "frwd_date": false,
                 "transaction_days": false,
                 "no_of_attempt": false,
                 "cc_name": false,
