@@ -372,7 +372,7 @@
                                             <td>{{data.transaction_days}}</td>
                                             <td >
 
-                                            <span ng-if="data.delivered==19" bs-time-counter date="data.mydate" direction="'up'">
+                                            <span ng-if="data.pl3_pickup_date!=null && data.close_date==null" bs-time-counter date="data.mydate" direction="'up'">
       
                                            <div class="alert alert-success ">{{ days }} days, {{ hours }}:{{ minutes }}:{{ seconds }} </div> </span>
                                             </td>
