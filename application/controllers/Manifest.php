@@ -43,8 +43,8 @@ class Manifest extends CourierCompany_pickup {
 
         // echo $uniqueid;
         $data = $this->Manifest_model->filterUpdate(1, array("manifestid" => $uniqueid));
-        //    echo "<pre>";
-        //     print_r($data); exit;
+           echo "<pre>";
+            print_r($data); exit;
         $this->load->view('manifest/updateManifest', $data);
     }
 
