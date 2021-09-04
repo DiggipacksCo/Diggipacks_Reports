@@ -1294,9 +1294,32 @@ if(!empty($awbids ))
                 }
                 
                 }
-                $this->db->where_in('shipment_fm.code', $delivered);
+                if(in_array('DL',$delivered) || in_array('D3PL',$delivered) && !empty($data['f_from']) && !empty($data['f_to']) )
+                {
+                    $this->db->join('status_fm', 'status_fm.slip_no=shipment_fm.slip_no');
+                    $this->db->where_in('status_fm.code', $delivered);
+                    $this->db->where("DATE(status_fm.entry_date) BETWEEN '". $data['f_from']. "' AND '".$data['f_to']."' " );
+                    $this->db->select('status_fm.entry_date');
+                   
+                    $this->db->group_by('status_fm.slip_no');
+
+                }
+                else
+                {
+                    $this->db->where_in('shipment_fm.code', $delivered);
+                }
+                
             }
             
+        }
+        else
+        {
+            if (!empty($data['f_from']) && !empty($data['f_to'])) {
+                $where = "DATE(shipment_fm.frwd_date) BETWEEN '" . $data['f_from'] . "' AND '" . $data['f_to'] . "'";
+    
+    
+                $this->db->where($where);
+            }
         }
 
         if (!empty($destination)) {
@@ -1373,12 +1396,7 @@ if(!empty($awbids ))
                 $this->db->where_in('shipment_fm.cust_id', $seller);
             }
         }
-        if (!empty($data['f_from']) && !empty($data['f_to'])) {
-            $where = "DATE(shipment_fm.frwd_date) BETWEEN '" . $data['f_from'] . "' AND '" . $data['f_to'] . "'";
-
-
-            $this->db->where($where);
-        }
+        
 
 
          $this->db->order_by('shipment_fm.id', 'desc');
@@ -2242,12 +2260,12 @@ if(!empty($awbids ))
             $this->db->where('DATE(shipment_fm.entrydate)', $exact);
         }
 
-        if (!empty($data['f_from']) && !empty($data['f_to'])) {
-            $where = "DATE(shipment_fm.frwd_date) BETWEEN '" . $data['f_from'] . "' AND '" . $data['f_to'] . "'";
+        // if (!empty($data['f_from']) && !empty($data['f_to'])) {
+        //     $where = "DATE(shipment_fm.frwd_date) BETWEEN '" . $data['f_from'] . "' AND '" . $data['f_to'] . "'";
 
 
-            $this->db->where($where);
-        }
+        //     $this->db->where($where);
+        // }
         if ($backorder == 'back')
             $this->db->where('shipment_fm.backorder', 1);
         else {
@@ -2278,13 +2296,63 @@ if(!empty($awbids ))
              $this->db->where('shipment_fm.order_type','');  
         }
 
-        if (!empty($delivered)) {
-            if (array_key_exists(0, $delivered)) {
-                $delivered = array_filter(0, $delivered);
+        // if (!empty($delivered)) {
+        //     if (array_key_exists(0, $delivered)) {
+        //         $delivered = array_filter(0, $delivered);
+        //     }
+
+
+        //     $this->db->where_in('shipment_fm.delivered', $delivered);
+        // }
+
+
+        if (!empty($delivered) || !empty($data['status_o'])) {
+
+            // print_r($delivered);
+            if ($delivered == '1' || $delivered == '4' || $delivered == '5' || $delivered == '7' || $delivered == '8') {
+                if (array_key_exists(0, $delivered))
+                    $delivered = array_filter(0, $delivered);
+            } else
+                $delivered = array_filter($delivered);
+            
+            if(is_numeric($delivered)){
+                $this->db->where_in('shipment_fm.delivered', $delivered);
+            }else{
+                if(isset($data['status_o']) & !empty($data['status_o'])){
+                    $o_status = $data['status_o'];
+                    if(!empty($delivered)){
+                    $delivered = array_merge($o_status,$delivered);
+                    }else{
+                        $delivered = $o_status;
+                }
+                
+                }
+                if(in_array('DL',$delivered) || in_array('D3PL',$delivered) && !empty($data['f_from']) && !empty($data['f_to']) )
+                {
+                    $this->db->join('status_fm', 'shipment_fm.slip_no=status_fm.slip_no','LEFT');
+                    $this->db->where_in('status_fm.code', $delivered);
+                    $this->db->where("DATE(status_fm.entry_date) BETWEEN '". $data['f_from']. "' AND '".$data['f_to']."' " );
+                    $this->db->select('status_fm.entry_date');
+                   
+                    //$this->db->group_by('status_fm.slip_no');
+
+                }
+                else
+                {
+                    $this->db->where_in('shipment_fm.code', $delivered);
+                }
+                
             }
-
-
-            $this->db->where_in('shipment_fm.delivered', $delivered);
+            
+        }
+        else
+        {
+            if (!empty($data['f_from']) && !empty($data['f_to'])) {
+                $where = "DATE(shipment_fm.frwd_date) BETWEEN '" . $data['f_from'] . "' AND '" . $data['f_to'] . "'";
+    
+    
+                $this->db->where($where);
+            }
         }
 
         if (!empty($destination)) {
@@ -3850,12 +3918,12 @@ if(!empty($awbids ))
             $this->db->where($where);
         }
 
-        if (!empty($filterData['f_from']) && !empty($filterData['f_to'])) {
-            $where = "DATE(shipment_fm.frwd_date) BETWEEN '" . $filterData['f_from'] . "' AND '" . $filterData['f_to'] . "'";
+        // if (!empty($filterData['f_from']) && !empty($filterData['f_to'])) {
+        //     $where = "DATE(shipment_fm.frwd_date) BETWEEN '" . $filterData['f_from'] . "' AND '" . $filterData['f_to'] . "'";
 
 
-            $this->db->where($where);
-        }
+        //     $this->db->where($where);
+        // }
         
         if (!empty($filterData['from_c']) && !empty($filterData['to_c'])) {
             $where = "DATE(shipment_fm.close_date) BETWEEN '" . $filterData['from_c'] . "' AND '" . $filterData['to_c'] . "'";
@@ -3864,23 +3932,22 @@ if(!empty($awbids ))
             $this->db->where($where);
         }
 
-
-        if (!empty($filterData['status'])) {
-            $delivered = $filterData['status'];
+        // if (!empty($filterData['status'])) {
+        //     $delivered = $filterData['status'];
             
-            if(is_numeric($delivered)){
-            if ($delivered == '1' || $delivered == '4' || $delivered == '5') {
-                if (array_key_exists(0, $delivered))
-                    $delivered = array_filter(0, $delivered);
-            } else
-                $delivered = array_filter($delivered);
+        //     if(is_numeric($delivered)){
+        //     if ($delivered == '1' || $delivered == '4' || $delivered == '5') {
+        //         if (array_key_exists(0, $delivered))
+        //             $delivered = array_filter(0, $delivered);
+        //     } else
+        //         $delivered = array_filter($delivered);
 
-                $this->db->where_in('shipment_fm.delivered', $delivered);
+        //         $this->db->where_in('shipment_fm.delivered', $delivered);
              
-            }else{
-                $this->db->where_in('shipment_fm.code', $delivered);
-        }
-        }
+        //     }else{
+        //         $this->db->where_in('shipment_fm.code', $delivered);
+        // }
+        // }
         if (!empty($filterData['status_o'])) {
             $this->db->where_in('shipment_fm.code', $filterData['status_o']);
         }
@@ -4020,8 +4087,7 @@ if(!empty($awbids ))
         if ($data['pl3_close_date'] == 1)
             $selectQry .= " shipment_fm.3pl_close_date AS 3PL Closed Date,";
 
-            if ($data['frwd_date'] == 1)
-            $selectQry .= " shipment_fm.frwd_date AS 3PL_FORWORD_DATE,";   
+          
             if ($data['close_date'] == 1)
             $selectQry .= " shipment_fm.close_date AS CLOSE DATE,";
  
@@ -4039,6 +4105,61 @@ if(!empty($awbids ))
          if ($data['transaction_days'] == 1)
         $selectQry .= " IFNULL(DATEDIFF(close_date, 3pl_pickup_date) , DATEDIFF(CURRENT_TIMESTAMP() , 3pl_pickup_date)  )  AS transaction_days,";    
 
+
+        $delivered = $filterData['status'];
+
+        if (!empty($delivered) || !empty($filterData['status_o'])) {
+
+            // print_r($delivered);
+            if ($delivered == '1' || $delivered == '4' || $delivered == '5' || $delivered == '7' || $delivered == '8') {
+                if (array_key_exists(0, $delivered))
+                    $delivered = array_filter(0, $delivered);
+            } else
+                $delivered = array_filter($delivered);
+            
+            if(is_numeric($delivered)){
+                $this->db->where_in('shipment_fm.delivered', $delivered);
+            }else{
+                if(isset($data['status_o']) & !empty($filterData['status_o'])){
+                    $o_status = $filterData['status_o'];
+                    if(!empty($delivered)){
+                    $delivered = array_merge($o_status,$delivered);
+                    }else{
+                        $delivered = $o_status;
+                }
+                
+                }
+                if(in_array('DL',$delivered) || in_array('D3PL',$delivered) && !empty($filterData['f_from']) && !empty($filterData['f_to']) )
+                {
+                    $this->db->join('status_fm', 'status_fm.slip_no=shipment_fm.slip_no');
+                    $this->db->where_in('status_fm.code', $delivered);
+                    $this->db->where("DATE(status_fm.entry_date) BETWEEN '". $filterData['f_from']. "' AND '".$filterData['f_to']."' " );
+                    
+                   
+                    $this->db->group_by('status_fm.slip_no');
+                    if ($data['frwd_date'] == 1)
+                    $selectQry .= " status_fm.entry_date AS 3PL_FORWORD_DATE,";   
+                }
+                else
+                {
+                    $this->db->where_in('shipment_fm.code', $delivered);
+                }
+                
+            }
+            
+        }
+        else
+        {
+            if (!empty($filterData['f_from']) && !empty($filterData['f_to'])) {
+                $where = "DATE(shipment_fm.frwd_date) BETWEEN '" . $filterData['f_from'] . "' AND '" . $filterData['f_to'] . "'";
+    
+    
+                $this->db->where($where);
+
+                if ($data['frwd_date'] == 1)
+                $selectQry .= " shipment_fm.frwd_date AS 3PL_FORWORD_DATE,";   
+            }
+        }
         $selectQry = rtrim($selectQry, ',');
         
         
@@ -4054,7 +4175,7 @@ if(!empty($awbids ))
         }
 
         $query = $this->db->get();
-       // echo $this->db->last_query(); die;
+     //echo $this->db->last_query(); die;
         $delimiter = ",";
         $newline = "\r\n";
 
