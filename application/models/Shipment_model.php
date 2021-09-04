@@ -1250,7 +1250,7 @@ if(!empty($awbids ))
 
             $this->db->where($where);
         }
-        
+       
         if (!empty($data['from_c']) && !empty($data['to_c'])) {
             $where = "DATE(shipment_fm.close_date) BETWEEN '" . $data['from_c'] . "' AND '" . $data['to_c'] . "'";
 
@@ -1373,7 +1373,12 @@ if(!empty($awbids ))
                 $this->db->where_in('shipment_fm.cust_id', $seller);
             }
         }
+        if (!empty($data['f_from']) && !empty($data['f_to'])) {
+            $where = "DATE(shipment_fm.frwd_date) BETWEEN '" . $data['f_from'] . "' AND '" . $data['f_to'] . "'";
 
+
+            $this->db->where($where);
+        }
 
 
          $this->db->order_by('shipment_fm.id', 'desc');
@@ -1386,7 +1391,7 @@ if(!empty($awbids ))
 
         $query = $this->db->get();
 
-       //echo $this->db->last_query(); die;
+      // echo $this->db->last_query(); die;
 
         if ($query->num_rows() > 0) {
 
@@ -2237,7 +2242,12 @@ if(!empty($awbids ))
             $this->db->where('DATE(shipment_fm.entrydate)', $exact);
         }
 
+        if (!empty($data['f_from']) && !empty($data['f_to'])) {
+            $where = "DATE(shipment_fm.frwd_date) BETWEEN '" . $data['f_from'] . "' AND '" . $data['f_to'] . "'";
 
+
+            $this->db->where($where);
+        }
         if ($backorder == 'back')
             $this->db->where('shipment_fm.backorder', 1);
         else {
@@ -3839,6 +3849,13 @@ if(!empty($awbids ))
 
             $this->db->where($where);
         }
+
+        if (!empty($filterData['f_from']) && !empty($filterData['f_to'])) {
+            $where = "DATE(shipment_fm.frwd_date) BETWEEN '" . $filterData['f_from'] . "' AND '" . $filterData['f_to'] . "'";
+
+
+            $this->db->where($where);
+        }
         
         if (!empty($filterData['from_c']) && !empty($filterData['to_c'])) {
             $where = "DATE(shipment_fm.close_date) BETWEEN '" . $filterData['from_c'] . "' AND '" . $filterData['to_c'] . "'";
@@ -4002,6 +4019,9 @@ if(!empty($awbids ))
 
         if ($data['pl3_close_date'] == 1)
             $selectQry .= " shipment_fm.3pl_close_date AS 3PL Closed Date,";
+
+            if ($data['frwd_date'] == 1)
+            $selectQry .= " shipment_fm.frwd_date AS 3PL_FORWORD_DATE,";   
             if ($data['close_date'] == 1)
             $selectQry .= " shipment_fm.close_date AS CLOSE DATE,";
  
