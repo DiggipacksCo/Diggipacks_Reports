@@ -197,7 +197,7 @@
 				
 					<br>
 					<?php 
-						$TOTAL =round(($totalValue['pallet_charge']+ $totalValue['pickup_charge']+$totalValue['storage_charge']+$totalValue['onhold_charges']+$totalValue['inventory_charge']+$totalValue['portal_charge']+$totalValue['sku_barcode_print']+$totalValue['packing_charge']+$totalValue['picking_charge']+$totalValue['special_packing']+$totalValue['inbound_charge']+$totalValue['outbound_charge']+$totalValue['box_charge']),2);
+						$TOTAL =round(($totalValue['pallet_charge']+$totalValue['storage_charge']+$totalValue['onhold_charges']+$totalValue['inventory_charge']+$totalValue['portal_charge']+$totalValue['sku_barcode_print']+$totalValue['packing_charge']+$totalValue['picking_charge']+$totalValue['special_packing']+$totalValue['inbound_charge']+$totalValue['outbound_charge']+$totalValue['box_charge']),2);
 						$TOTALvat    =round( (($TOTAL * 15)/100),2) ;
 						$TOTAL_with_vat  =round( ($TOTAL + $TOTALvat),2);
 					?>
