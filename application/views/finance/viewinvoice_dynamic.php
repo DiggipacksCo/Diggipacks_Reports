@@ -223,12 +223,12 @@
 							<th colspan="2">Summary - ملخص</th>
 						</tr>
 
-						<tr>
+						<!-- <tr>
 							<td align="justify"> Total Pickup Charges / مجموع رسوم البيك اب </td>
 							<td align="center"><?= $currency; ?>
 								<?=$totalValue['pickup_charge'];?>
 							</td>
-						</tr>
+						</tr> -->
 						<tr>
 							<td align="justify"> Total Packing Charges /  مجموع سعر التغليف</td>
 							<td align="center"><?= $currency; ?>

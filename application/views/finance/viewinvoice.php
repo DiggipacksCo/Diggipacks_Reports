@@ -181,7 +181,7 @@
 				
 				
 					<?php 
-					$TOTAL = round(($tot + $totalValue['pickup_charge']+$totalValue['storage_charges']+$totalValue['onhold_charges']),2);
+					$TOTAL = round(($tot +$totalValue['storage_charges']+$totalValue['onhold_charges']),2);
 					$TOTALvat    = round((($TOTAL * 15)/100),2) ;
  					$TOTAL_with_vat  = round(($TOTAL + $TOTALvat),2);
 					?>
@@ -198,12 +198,12 @@
 						<tr>
 							<th colspan="2">Summary - ملخص</th>
 						</tr>
-						<tr>
+						<!-- <tr>
 							<td align="justify"> Total Pickup Charges</td>
 							<td align="center"><?= $currency; ?>
 								<?=$totalValue['pickup_charge'];?>
 							</td>
-						</tr>
+						</tr> -->
 						<tr>
 							<td align="justify"> Total Handling Fees - إجمالي رسوم التحضير </td>
 							<td align="center"><?= $currency; ?>
