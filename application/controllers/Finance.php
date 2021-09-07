@@ -18,6 +18,26 @@ class Finance extends MY_Controller {
 		// $this->user_id = isset($this->session->get_userdata()['user_details'][0]->id)?$this->session->get_userdata()['user_details'][0]->users_id:'1';
 	}
 
+
+		public function getWeight($slipNo)
+		{
+			$this->load->model('Ccompany_model');
+			$sku_data = $this->Ccompany_model->Getskudetails_forward($slipNo);
+			$sku_all_names = array();
+			$sku_total = 0;
+			$total_weight = 0; 
+			$totalcustomerAmt=0;
+			foreach ($sku_data as $key => $val) {
+
+			$total_weight += ($sku_data[$key]['weight'] * $sku_data[$key]['piece']);
+
+			}
+			return $total_weight;
+		}
+
+		
+
+
 	public function run_shell_dynamic() {
 		
 		exec("php /var/www/html/diggipack_new/fs_files/fm-track/dynamic_invoice.php > /dev/null 2>&1 &"); //dynamic_invoice
@@ -62,6 +82,7 @@ class Finance extends MY_Controller {
 			  $viewInfo=array();
 		foreach($ItemArray as $key=>$val)
 		 {
+			
 			 if($key==0);
 			 {
 				array_push($viewInfo,$val); 
@@ -80,7 +101,17 @@ class Finance extends MY_Controller {
 			 }
 			 else
 			 {
-				 			 
+				 if($val['weight']==0)
+				 {
+					$weight=$this->getWeight($val['slip_no']); 
+					$updateData=array('slip_no'=>$val['slip_no'],'weight'=>$weight);
+					$this->Finance_model->updateTable('fixrate_invoice',$updateData);
+					$this->Finance_model->updateTable('shipment_fm',$updateData); 
+					$val['weight']=  $weight;
+
+				 }
+				
+				
 				$chargesArray['cancel_charge']=$chargesArray['cancel_charge']+$val['cancel_charge'];
 				$chargesArray['handline_fees']=$chargesArray['handline_fees']+$val['handline_fees'];
 				$chargesArray['return_charge']=$chargesArray['return_charge']+$val['return_charge'];
@@ -148,6 +179,15 @@ public function ViewinvoiceDynamic($invoiceNo = null){
 			 else
 			 {
 
+				if($val['weight']==0)
+				{
+				   $weight=$this->getWeight($val['slip_no']); 
+				   $updateData=array('slip_no'=>$val['slip_no'],'weight'=>$weight);
+				   $this->Finance_model->updateTable('dynamic_invoice',$updateData);
+				   $this->Finance_model->updateTable('shipment_fm',$updateData);
+				   $val['weight']=  $weight;
+
+				}
 			 	
 				$chargesArray['cancel_charge']=($chargesArray['cancel_charge']+$val['cancel_charge']);
 				$chargesArray['packing_charge']=$chargesArray['packing_charge']+$val['packing_charge'];

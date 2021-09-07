@@ -20,6 +20,11 @@ class Finance_model extends CI_Model {
         //echo $this->db->last_query(); die;
     }
 
+    public function updateTable($table=null,$dataArray=array()) {
+        $this->db->update($table, $dataArray, array('slip_no' => $dataArray['slip_no']));
+       // echo $this->db->last_query();
+        return true;
+    }
     public function getdeleteupdate($id = null) {
         $this->db->update('finance_cat', array('deleted' => 'Y'), array('id' => $id));
         return true;
