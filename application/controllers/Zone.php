@@ -558,7 +558,7 @@ class Zone extends MY_Controller {
                $cNanme = $cRetsult['company'];
                $cityColumn = $this->Zone_model->getCityColumnByCname($cNanme);
             }
-            
+           
             if(!empty($cityColumn)){
                 
                 $masterCity = $this->Zone_model->get_cities_by_cc_city($cityColumn);

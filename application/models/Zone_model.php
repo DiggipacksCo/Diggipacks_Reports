@@ -303,8 +303,8 @@ public function previousCity_customer($id=null){
       //strtolower
       $cityColumnArray = array(
                 'smsa'=>'samsa_city',
-                //''=>'ubreem_city',
-                'aramex'=>'aramex_city',
+                'micgo'=>'MICGO_city',
+                'aramex'=>'aramex_city', 
                 //''=>'dots_city',
                 'imile'=>'imile_city',
                 'naqel'=>'naqel_city_code',
