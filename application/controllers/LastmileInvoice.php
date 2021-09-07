@@ -204,6 +204,7 @@ public function payableInvoice_update()
 
 	public function CreateInvoiceCalulation()
 	{
+		$this->load->model('Finance_model');
 		$_POST = json_decode(file_get_contents('php://input'), true);
 		$show_awb_no=$_POST['slip_no'];
 		$cust_id=$_POST['cust_id'];
@@ -248,6 +249,16 @@ public function payableInvoice_update()
 		//print_r($shipmentdata);
 		foreach($shipmentdata as $key=>$val)
 		{
+
+			if($val['weight']==0)
+			{
+			   $weight=$this->getWeight($val['slip_no']); 
+			   $updateData=array('slip_no'=>$val['slip_no'],'weight'=>$weight);
+			 
+			   $this->Finance_model->updateTable('shipment_fm',$updateData); 
+			   $val['weight']=  $weight;
+
+			}
 			$keyCheck=null;
 			if($val['code']=='POD')
 			{
