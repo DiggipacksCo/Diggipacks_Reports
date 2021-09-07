@@ -201,7 +201,21 @@ public function payableInvoice_update()
 	
 		$this->load->view('lminvoice/bulkallinvoice',$view);
 	}
+	public function getWeight($slipNo)
+		{
+			$this->load->model('Ccompany_model');
+			$sku_data = $this->Ccompany_model->Getskudetails_forward($slipNo);
+			$sku_all_names = array();
+			$sku_total = 0;
+			$total_weight = 0; 
+			$totalcustomerAmt=0;
+			foreach ($sku_data as $key => $val) {
 
+			$total_weight += ($sku_data[$key]['weight'] * $sku_data[$key]['piece']);
+
+			}
+			return $total_weight;
+		}
 	public function CreateInvoiceCalulation()
 	{
 		$this->load->model('Finance_model');
