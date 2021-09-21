@@ -12,7 +12,7 @@ class SallaTrackOrderUpdate {
     public function __construct() {
 
         $this->api_url = "http://s.salla.sa/webhook/track/order/"; 
-        $this->super_id = 256;
+        $this->super_id = 5;
 
 
         $db_host = 'ajouldb-db-instance-1.ctikm53hr4st.us-east-1.rds.amazonaws.com';
@@ -31,7 +31,7 @@ class SallaTrackOrderUpdate {
     public function allOrders() {
         $customers = $this->fetchSallaCustomers();
  echo '<pre>';
-//        print_r( $customers); exit;
+      //  print_r( $customers); exit;
 
         if ($customers) {
             foreach ($customers as $customer) {
@@ -58,7 +58,7 @@ class SallaTrackOrderUpdate {
                                 $status = 9;
                                 $note = 'delivered';
                                 $this->Salla_StatusUpdate($shippers_ref_no, $status, $note, $tracking_number, $tracking_url, $customer);
-                            } else if ($order['code'] == 'RTC') {
+                            } else if ($order['code'] == 'RTC' || $order['code'] == 'C') {
                                 $status = 5;
                                 $note = 'cancelled';
                                 $this->Salla_StatusUpdate($shippers_ref_no, $status, $note, $tracking_number, $tracking_url, $customer);
@@ -95,7 +95,7 @@ class SallaTrackOrderUpdate {
         $today = date('Y-m-d');
         $sql = "select sh.*,s.entry_date from shipment_fm sh left join status_fm s on s.slip_no = sh.slip_no where sh.cust_id='" . $customers['cust_id'] . "' "
                 . "and sh.deleted='N' and (sh.code='RTC' or sh.code='POD' or sh.code ='D3PL' or sh.code='DL') "
-                . "and sh.deliver_status='0' and date(entry_date) = '" . $today . "' ";
+                . "and sh.deliver_status='0'  ";
         $result = $this->db->query($sql);
         $orders = mysqli_fetch_all($result, MYSQLI_ASSOC);
         return $orders;
@@ -190,7 +190,7 @@ class SallaTrackOrderUpdate {
      */
     private function fetchSallaCustomers() {
 
-        $sql = "select c.id as cust_id,s.salla_provider,s.site_url,s.salla_provider_token,c.email,c.phone,c.user_Agent,c.address,c.seller_id,c.super_id,salla_athentication,salla_active,uniqueid,name,city, order_status,salla_city,company from customer c "
+      echo  $sql = "select c.id as cust_id,s.salla_provider,s.site_url,s.salla_provider_token,c.email,c.phone,c.user_Agent,c.address,c.seller_id,c.super_id,salla_athentication,salla_active,uniqueid,name,city, order_status,company from customer c "
                 . " left join site_config s on s.super_id = c.super_id where  s.super_id= '" . $this->super_id . "' and s.salla_provider='1' ";
 
         $result = $this->db->query($sql);

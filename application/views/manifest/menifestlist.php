@@ -236,6 +236,7 @@
                                            <td ng-if="data.pack_type == 'B'"><span class="badge badge-danger"> Box</span></td>
                                            <td ng-if="data.pack_type == 'P'"><span class="badge badge-success">Pallet </span></td>
 
+                                           
                                             <td class="text-center">
                                                 <ul class="icons-list">
                                                     <li class="dropdown">
@@ -249,8 +250,8 @@
                                                             <li ><a href="manifestview/{{data.uniqueid}}/DM"><i class="icon-eye" ></i><?= lang('lang_Damage'); ?> Or <?= lang('lang_Missing'); ?> <?= lang('lang_Sku'); ?></a></li>
 
                                                             <li ><a ng-click="Getpickupimgview(data.pickimg);"><i class="icon-eye" ></i><?= lang('lang_Proof_Of_Pickup'); ?></a></li>
-
-                                                            <li ng-if="data.qtyall > data.complatedqty && data.confirmO == 'N'"><a ng-click="updatemanifeststatus(data.id, data.uniqueid, data.sid, data.qtyall, data.complatedqty, data.totalqtycount);"  ><i class="icon-pencil7"></i><?= lang('lang_Update_stock'); ?></a></li> 
+<!--data.qtyall > data.complatedqty && -->
+                                                            <li ng-if="data.confirmO == 'N'"><a ng-click="updatemanifeststatus(data.id, data.uniqueid, data.sid, data.qtyall, data.complatedqty, data.totalqtycount);"  ><i class="icon-pencil7"></i><?= lang('lang_Update_stock'); ?></a></li> 
                                                             <li ng-if="data.confirmO == 'N' && data.on_hold == 'N' && data.totalqtycount > 0"><a ng-confirm-click="Are you sure you want to Update On Hold?"  confirmed-click="showonholdorder_pop(data.uniqueid,data.sid);" ><i class="icon-pencil7"></i> <?= lang('lang_Update_On_Hold'); ?></a></li>
                                                             <li ng-if="data.confirmO == 'N' && data.addBtnI == 'N' && data.complatedqty == data.qtyall && data.error == '0' && data.staff_id==0"><a  ng-click="GetpopAssignStafflist(data.uniqueid);"><i class="icon-user"></i><?= lang('lang_assign_Staff'); ?></a></li>
                                                             <li ng-if="data.addBtnI == 'Y' && (data.complatedqty == data.qtyall || itemupdated == 'Y')"><a ng-confirm-click="are you sure want to Add Sku?" confirmed-click="addskufielddata_pop(data.sku,data.uniqueid);"><i class="icon-pencil7"></i><?= lang('lang_Update_Sku'); ?></a></li>
