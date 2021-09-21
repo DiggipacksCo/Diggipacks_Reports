@@ -731,6 +731,7 @@ class Manifest_model extends CI_Model {
         $this->db->from('pickup_request');
         $this->db->join('items_m', 'items_m.sku=pickup_request.sku');
         $this->db->where('pickup_request.uniqueid', $mid);
+         $this->db->where("pickup_request.received_qty=0");
        // $this->db->where_not_in('pickup_request.code', array('DI', 'MSI', 'RI'));
         $this->db->group_by('pickup_request.sku');
         $query2 = $this->db->get();
