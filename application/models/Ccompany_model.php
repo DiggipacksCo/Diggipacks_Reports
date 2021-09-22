@@ -716,7 +716,13 @@ class Ccompany_model extends CI_Model {
         $reciever_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'aramex_city',$super_id);
         $date = (int) microtime(true) * 1000;
         
-        
+        if ($pay_mode == 'COD') {
+            $pay_mode = 'P';
+           
+    } elseif ($pay_mode == 'CC') {
+            $pay_mode = 'P';
+            
+    }
         if(empty($box_pieces1)){
             $box_pieces = 1;
         }

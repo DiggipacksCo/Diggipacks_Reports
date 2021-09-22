@@ -867,60 +867,29 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
     //print "<pre>"; print_r($ShipArr);die;
     $slipNo =$ShipArr['slip_no'];  
     
-    if($company=='Aramex'){
+                        if($company=='Aramex'){
                             $params = $this->Ccompany_model->AramexArray($sellername,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id);
-                            
-
                             $dataJson = json_encode($params);
                             //echo $dataJson;die;
                             $headers = array("Content-type:application/json");
-                            $url = $api_url;
+                           $url = $api_url;
                             
                             $awb_array = $this->Ccompany_model->AxamexCurl($url, $headers, $dataJson,$c_id,$ShipArr);
-                            //print "<pre>"; print_r($awb_array);die;
+                            //print "<pre>"; print_r($awb_array);// die;
                             $check_error = $awb_array['HasErrors'];
-                            if ($check_error == 'true' || $check_error == TRUE) {
-                                
-                                    if (empty($awb_array['Shipments'])) {
-                                            $error_response = $awb_array['Notifications']['Notification'];
-                                            $error_response = json_encode($error_response);
-                                            //array_push($error_array, $slipNo . ':' . $error_response);
-                                            $returnArr['responseError']= $slipNo . ':' . $error_response;
-                                            $return= array('status'=>201); 
-                                            return $return;  
-                                    } else {
-                                            if ($awb_array['Shipments']['ProcessedShipment']['Notifications']['Notification']['Message'] == '') {
-                                                 
-                                                    foreach ($awb_array['Shipments']['ProcessedShipment']['Notifications']['Notification'] as $error_response) {
-                                                        //echo $error_response['Message'];die;
-                                                        //print "<pre>"; print_r($error_response);die;
-                                                       // array_push($error_array, $slipNo . ':' . $error_response['Message']);
-                                                        $returnArr['responseError'] = $slipNo . ':' . $error_response['Message'];
-                                                        //$return= array('status'=>201); 
-                                                        $return= array('status'=>201,'error'=> $returnArr); 
-                                                        return $return;  
-                                                    }
-                                            } else {
-                                                    $error_response = $awb_array['Shipments']['ProcessedShipment']['Notifications']['Notification']['Message'];
-                                                    
-                                                    $error_response = json_encode($error_response);
-                                                  //  array_push($error_array, $slipNo . ':' . $error_response);
-                                                    $returnArr['responseError']= $slipNo . ':' . $error_response;
-                                                    $return= array('status'=>201,'error'=> $returnArr); 
-                                                     return $return;  
-                                            }
-                                    }
-
+                            if ($check_error == 'true') {
                                     $return= array('status'=>201,'error'=> $returnArr); 
                                     return $return;
 
                             } else {
+                                   
                                 $main_result = $awb_array['Shipments']['ProcessedShipment'];
 
                                 $Check_inner_error = $main_result['HasErrors'];
-                                if ($Check_inner_error == 'false') {
-                                        $client_awb = $main_result['ID'];
-                                        $awb_label = $main_result['ShipmentLabel']['LabelURL'];
+                                
+                               // if ($Check_inner_error == 'false') {
+                                        $client_awb = $awb_array['Shipments']['ProcessedShipment']['ID'];
+                                        $awb_label = $awb_array['Shipments']['ProcessedShipment']['ShipmentLabel']['LabelURL'];
 
                                         $generated_pdf = file_get_contents($awb_label);
                                         $encoded = base64_decode($generated_pdf);
@@ -930,7 +899,7 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                                         $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
                                         $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
                                         return $return;
-                                }
+                               // }
                             }
                     }
                     elseif($company=='Aramex International')
