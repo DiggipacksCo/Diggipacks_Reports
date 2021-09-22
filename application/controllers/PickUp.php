@@ -623,7 +623,7 @@ class PickUp extends MY_Controller {
          //print_r( $shipData); die;
         foreach( $shipData['result'] as $shData)
         {
-
+          $sender_name=  getallsellerdatabyID($shData['cust_id'],'company');
         
         $cc_id= $shData['frwd_company_id'];
         if($cc_id>0)
@@ -650,7 +650,7 @@ class PickUp extends MY_Controller {
        
         $param['CUST_CARE_MOBILE'] = '1234567890';
       
-        $param['SENDER_NAME'] = $shData['sender_name'];
+        $param['SENDER_NAME'] = $sender_name;
         $param['AWB_NO'] = $shData['slip_no'];
         $messageAr = $messageData['arabic_sms'];
  
