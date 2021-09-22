@@ -7,7 +7,7 @@
         <link rel="icon" href="<?= base_url('assets/if_box_download_48_10266.png'); ?>" type="image/x-icon">
         <title>Inventory</title>
         <?php $this->load->view('include/file'); ?>
-        <script type="text/javascript" src="<?= base_url(); ?>assets/js/angular/manifest.app.js"></script>
+        <script type="text/javascript" src="<?= base_url(); ?>assets/js/angular/manifest.app.js?token=<?=time();?>"></script>
     </head>
 
     <body ng-app="AppManifest" > 
@@ -44,12 +44,9 @@
                         ?>
 
 
-                        <!-- Dashboard content -->
-                        <div class="row" >
-                            <div class="col-lg-12" >
+               
 
-                                <!-- Marketing campaigns -->
-                                <div class="panel panel-flat">
+                        <div class="panel panel-flat">
                                     <div class="panel-heading">
                                         <h1>
 
@@ -62,9 +59,7 @@
                                     <input type="hidden" name="manifest_id" ng-model="filterData.manifest_id" value="<?= $manifest_id ?>">
                                     <form ng-submit="dataFilter();">
 
-<!-- href="<? // base_url('Excel_export/shipments');  ?>" -->
-<!-- href="<? //base_url('Pdf_export/all_report_view');  ?>" -->
-                                        <!-- Quick stats boxes -->
+
                                         <div class="table-responsive " >
                                             <div class="col-lg-12" style="padding-left: 20px;padding-right: 20px;">
 
@@ -115,11 +110,6 @@
 
                                         <!-- /quick stats boxes -->
                                 </div>
-                            </div>
-                        </div>
-
-                        <!-- /dashboard content -->
-                        <!-- Basic responsive table -->
                         <div class="panel panel-flat" >
 
                             <div class="panel-body" >
@@ -130,7 +120,9 @@
                                     <table class="table table-striped table-hover table-bordered dataTable bg-*" style="width:100%;">
                                         <thead>
                                             <tr>
-                                                <th>Sr.No.<br><input type="checkbox" ng-model="selectedAll"  ng-change="selectAll();" /></th>
+                                                <th>Sr.No.<br>
+<!--                                                    <input type="checkbox" ng-model="selectedAll"  ng-change="selectAll();" />-->
+                                                </th>
                                                 <th>Manifest ID</th>
                                                 <th>Item Image</th>
                                                
@@ -138,6 +130,7 @@
                                                 <th>QTY</th>  
                                                 <th>Damage Qty</th>
                                                 <th>Missing Qty</th>
+                                                 <th>Received</th>
                                                 <th>Expire Date</th>
                                                 <th>Status</th>
                                                 <th>Code</th>
@@ -153,17 +146,21 @@
                                         <tr ng-if='shipData != 0' ng-repeat="data in shipData"> 
 
                                             <td>{{$index + 1}}<br>
-                                                    <input ng-if="data.code=='PU'" type="checkbox" value="{{data.id}}" check-list='Items' ng-model="data.Selected" ng-click="checkIfAllSelected()" />
-                                                    <input ng-if="data.code!='PU'" type="checkbox" disabled="disabled" />
+<!--                                                    <input ng-if="data.code=='PU'" type="checkbox" value="{{data.id}}" check-list='Items' ng-model="data.Selected" ng-click="checkIfAllSelected()" />
+                                                    <input ng-if="data.code!='PU'" type="checkbox" disabled="disabled" />-->
                                             </td>
                                             <td>{{data.uniqueid}}</td>
                                             <td><img ng-if="data.item_path != ''" src="<?= base_url(); ?>{{data.item_path}}" width="100">
                                                 <img ng-if="data.item_path == ''" src="<?= base_url(); ?>assets/nfd.png" width="100">
                                             </td>
                                             <td>{{data.sku}}</td>
-                                            <td>{{data.qty}}</td>
+                                            <td><span class="badge badge-primary">{{data.qty}}</span></td>
                                             <td><span class="badge badge-danger"  ng-if="data.editdamage==0"  ng-click="shipData[$index].editdamage=1">{{data.damage_qty}}</span><input type="number"  ng-if="data.editdamage==1" ng-model="shipData[$index].damage_qty" ng-blur="shipData[$index].editdamage=0" string-to-number max="{{data.qty}}"></td>
                                             <td><span class="badge badge-warning"  ng-if="data.editmissing==0"  ng-click="shipData[$index].editmissing=1"  >{{data.missing_qty}}</span> <input type="number" ng-if="data.editmissing==1" value="shipData[$index].missing_qty" ng-model="shipData[$index].missing_qty" ng-blur="shipData[$index].editmissing=0" string-to-number max="{{data.qty}}"> </td>
+                                             <td><span class="badge badge-success"  ng-if="data.editreceived==0"  ng-click="shipData[$index].editreceived=1"  >{{data.received_qty}}</span> <input type="number" ng-if="data.editreceived==1" value="shipData[$index].received_qty" ng-model="shipData[$index].received_qty" ng-blur="shipData[$index].editreceived=0" string-to-number max="{{data.qty}}"> </td>
+                                            
+                                           
+                                          
                                             <td>{{data.expire_date}}</td>
                                             <td>{{data.pstatus}}</td>
                                             <td>{{data.code}}</td>
@@ -175,8 +172,8 @@
                                             <td ng-if="data.itemupdated == 'N'"><span class="badge badge-danger"> NO</span></td>
                                             <td ng-if="data.itemupdated == 'Y'"><span class="badge badge-success"> Yes</span></td>
 
-                                            <td ng-if="data.code!='MSI' &&  data.code!='DI'" > <button  class="btn btn-success" ng-click="savedata($index)" >Save</button></td>
-                                            <td  ng-if="data.code=='MSI' ||  data.code=='DI'" > <button  class="btn btn-danger"  >Saved</button></td>
+                                            <td ng-if="data.save_button=='Y'" > <button  class="btn btn-success" ng-click="savedata($index)" >Save</button></td>
+                                            <td  ng-if="data.save_button=='N'" > <button  class="btn btn-danger"  >Saved</button></td>
 
                                             <!-- <td ng-if="data.code == 'PU'"><select name="notfoundstatus" class="form-control" ng-model="UpdateData.upstatus" ng-change="getUpdatenotfoundStatus(data.id);"><option value="">Select Status</option><option value="MSI">Missing Item</option><option value="DI">Damage Item</option></select></td>
                                             <td ng-if="data.code != 'PU'">--</td> -->
@@ -189,7 +186,11 @@
                                                 <tr>
                                                     <th>Sr.No.</th>
                                                     <th>Manifest ID</th>
-                                                    <th>SKU</th>  
+                                                    <th>SKU</th> 
+                                                     <th>QTY</th>  
+                                                <th>Damage Qty</th>
+                                                <th>Missing Qty</th>
+                                                 <th>Received</th>
                                                     <th>Expire Date</th>
                                                     <th>Status</th>
                                                     <th>Code</th>
@@ -207,6 +208,10 @@
                                                 <td>{{$index + 1}}</td>
                                                 <td>{{data.uniqueid}}</td>
                                                 <td>{{data.sku}}</td>
+                                                <td><span class="badge badge-primary">{{data.qty}}</span></td>
+                                            <td><span class="badge badge-danger" >{{data.damage_qty}}</span></td>
+                                            <td><span class="badge badge-warning"   >{{data.missing_qty}}</span>  </td>
+                                            <td><span class="badge badge-success">{{data.received_qty}}</span></td>
                                                 <td>{{data.expire_date}}</td>
                                                 <td>{{data.pstatus}}</td>
                                                 <td>{{data.code}}</td>

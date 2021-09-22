@@ -245,9 +245,9 @@
                                                         </a>
 
                                                         <ul class="dropdown-menu dropdown-menu-right">
-                                                            <li ><a href="manifestview/{{data.uniqueid}}/PS"><i class="icon-eye" ></i><?= lang('lang_Pending'); ?> <?= lang('lang_Sku'); ?></a></li>
-                                                            <li ><a href="manifestview/{{data.uniqueid}}/RS"><i class="icon-eye" ></i> <?= lang('lang_Received'); ?> <?= lang('lang_Sku'); ?></a></li>
-                                                            <li ><a href="manifestview/{{data.uniqueid}}/DM"><i class="icon-eye" ></i><?= lang('lang_Damage'); ?> Or <?= lang('lang_Missing'); ?> <?= lang('lang_Sku'); ?></a></li>
+<!--                                                            <li ><a href="manifestview/{{data.uniqueid}}/PS"><i class="icon-eye" ></i><?= lang('lang_Pending'); ?> <?= lang('lang_Sku'); ?></a></li>-->
+                                                            <li ><a href="manifestview/{{data.uniqueid}}/RS"><i class="icon-eye" ></i>View <?= lang('lang_Sku'); ?></a></li>
+<!--                                                            <li ><a href="manifestview/{{data.uniqueid}}/DM"><i class="icon-eye" ></i><?= lang('lang_Damage'); ?> Or <?= lang('lang_Missing'); ?> <?= lang('lang_Sku'); ?></a></li>-->
 
                                                             <li ><a ng-click="Getpickupimgview(data.pickimg);"><i class="icon-eye" ></i><?= lang('lang_Proof_Of_Pickup'); ?></a></li>
 <!--data.qtyall > data.complatedqty && -->

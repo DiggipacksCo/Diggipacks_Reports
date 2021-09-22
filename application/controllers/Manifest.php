@@ -258,11 +258,26 @@ class Manifest extends CourierCompany_pickup {
         $manifestarray = $shipments['result'];
         $ii = 0;
         foreach ($shipments['result'] as $rdata) {
-
+            
+            $total_sku=$rdata['damage_qty']+$rdata['missing_qty']+$rdata['received_qty'];
+            $missing_total=$rdata['damage_qty']+$rdata['missing_qty'];
+           
+           
+            if($rdata['qty']>$total_sku)
+            {
+            $manifestarray[$ii]['save_button']='Y';
+            }
+            else
+            {
+               $manifestarray[$ii]['save_button']='N'; 
+            }
+             $manifestarray[$ii]['missing_total']=$missing_total;
+            $manifestarray[$ii]['total_sku']=$total_sku;
             $manifestarray[$ii]['item_path'] = getalldataitemtablesSKU($rdata['sku'], 'item_path');
 
             $manifestarray[$ii]['editdamage'] =0;
             $manifestarray[$ii]['editmissing'] =0;
+            $manifestarray[$ii]['editreceived'] =0;
 
 
             $manifestarray[$ii]['pstatus'] = GetpickupStatus($rdata['pstatus']);
@@ -395,33 +410,30 @@ class Manifest extends CourierCompany_pickup {
 
     function updateMissingDamage() {
         $_POST = json_decode(file_get_contents('php://input'), true);
+        //print_r($_POST); die;
         $dataArray = $_POST;
         $id = $dataArray['id'];
         $missing_qty = $dataArray['missing_qty'];
         $damage_qty = $dataArray['damage_qty'];
+        $received_qty = $dataArray['received_qty'];
         $sku = $dataArray['skuno'];
-
-       
-        if($missing_qty>0)
+         $missing_total=$missing_qty+$damage_qty;
+         $total_sku=$damage_qty+$missing_qty+$received_qty;
+         $total_QTY=$dataArray['qty'];
+         //echo "{$total_QTY}=={$total_sku}";
+         
+        if($total_QTY>=$total_sku)
         {
-        $code='MSI';
-        $pstatus=3;
+            $updateArray = array('received_qty' =>  $received_qty,'missing_qty' =>  $missing_qty, 'damage_qty' => $damage_qty, 'id' =>$id);
+            $result = $this->Manifest_model->ManifestDMUpdate($updateArray, $id);
+            $return_arr=array('show_alert' => 'successfully Updated');
         }
-
-        if($damage_qty>0)
-
-        {
-        $code='DI';
-        $pstatus = 4;
-        }
-      
-        $updateArray = array('missing_qty' =>  $missing_qty, 'code'=>$code,'pstatus' => $pstatus, 'damage_qty' => $damage_qty, 'id' =>$id);
-        $result = $this->Manifest_model->ManifestDMUpdate($updateArray, $id);
-        echo json_encode($result); die;
-        if ($result == true)
-            echo json_encode(array('success' => 'successfully Updated'));
         else
-            echo json_encode(array('error' => 'Please Enter Valid SKU No.'));
+        {
+           $return_arr=array('show_alert' => 'Invalid Quantity'); 
+        }
+        echo json_encode($return_arr); die;
+       
     }
     function getupdateManifestStatus() {
         $_POST = json_decode(file_get_contents('php://input'), true);

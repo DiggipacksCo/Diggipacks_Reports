@@ -1115,8 +1115,10 @@ $scope.data={};
             
 
 
+
             $scope.savedata = function (id)
             {
+              //  alert($scope.filterData.type);
                 console.log(id);
                 $scope.shipData[id];
                 console.log( $scope.shipData[id]);
@@ -1127,7 +1129,8 @@ $scope.data={};
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 
                 }).then(function (response) {
-                     alert("Successfully Updated");
+                     alert(response.data.show_alert);
+                     $scope.loadMore(1,1,$scope.filterData.manifest_id,$scope.filterData.type);
                        // location.reload();
 
                 });

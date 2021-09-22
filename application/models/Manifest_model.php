@@ -25,6 +25,7 @@ class Manifest_model extends CI_Model {
         $this->db->where('items_m.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('pickup_request.confirmO', 'N');
          $this->db->where('pickup_request.code', 'RI');
+         $this->db->where("pickup_request.received_qty>0");
 
 
         if ($filterarray['manifestid'])
@@ -354,20 +355,20 @@ class Manifest_model extends CI_Model {
         $this->db->select('*');
         $this->db->from('pickup_request');
         $this->db->where('uniqueid', $data['manifest_id']);
-        if ($data['sku']) {
-            $this->db->where('sku', $data['sku']);
-        }
-        if ($data['type'] == 'PS') {
-            $this->db->where('code', 'PU');
-        }
-        if ($data['type'] == 'RS') {
-            $this->db->where('code', 'RI');
-            $this->db->group_by('sku', 'code');
-        }
-        if ($data['type'] == 'DM') {
-            //   $this->db->group_by('sku','code');
-           // $this->db->where_in('code', array('MSI', 'DI'));
-        }
+//        if ($data['sku']) {
+//            $this->db->where('sku', $data['sku']);
+//        }
+//        if ($data['type'] == 'PS') {
+//            $this->db->where('code', 'PU');
+//        }
+//        if ($data['type'] == 'RS') {
+//            $this->db->where('code', 'RI');
+//            $this->db->group_by('sku', 'code');
+//        }
+//        if ($data['type'] == 'DM') {
+//            //   $this->db->group_by('sku','code');
+//           // $this->db->where_in('code', array('MSI', 'DI'));
+//        }
 
         $this->db->order_by('id', 'desc');
         $this->db->limit($limit, $start);
@@ -445,7 +446,7 @@ class Manifest_model extends CI_Model {
     public function ManifestDMUpdate($data = array(), $id = null) {
 
             $query = $this->db->update('pickup_request', $data, array('id' => $id));
-            echo $this->db->last_query(); die; 
+            //echo $this->db->last_query(); die; 
             return true;
        
     }
