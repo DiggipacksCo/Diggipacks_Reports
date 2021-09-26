@@ -3109,6 +3109,7 @@ if(!empty($awbids ))
         $this->db->where('deleted', 'N');
         $this->db->limit($limit, $start);
         $this->db->group_by('m_id');
+        $this->db->order_by('id desc');
 
         $query = $this->db->get();
 
@@ -3165,6 +3166,9 @@ if(!empty($awbids ))
     
     
     public function manifestListFilter($filer_data = array(), $page_no = null) {
+        
+        // error_reporting(-1);
+		// ini_set('display_errors', 1);
         $page_no;
         $limit = 100;
         unset($filer_data['status']);
@@ -3204,11 +3208,50 @@ if(!empty($awbids ))
 
         if ($query->num_rows() > 0) {
             $data['result'] = $query->result_array();
-            $data['count'] = $query->num_rows();
+            $data['count'] = $this->manifestListFilterCount($filer_data , $page_no);
             return $data;
         } else {
             $data['result'] = '';
             $data['count'] = 0;
+            return $data;
+        }
+    }
+
+    public function manifestListFilterCount($filer_data = array(), $page_no = null) {
+       
+
+        if ($filer_data) {
+            foreach ($filer_data as $key => $filter) {
+              if(!empty($filter))
+              {
+                if($key == "booking_id"){
+                    $this->db->where("s.$key", $filter);
+                }
+                else{
+                    $this->db->where("d.$key", $filter);
+                }
+              }
+                
+            }
+        }
+        $this->db->select('COUNT(d.m_id) AS tcount');
+        $this->db->from('delivery_manifest d');
+        $this->db->join('shipment_fm s','s.slip_no = d.slip_no','left');
+
+        
+
+        $query = $this->db->get();
+        //echo $this->db->last_query();  exit; 
+
+                          
+
+        if ($query->num_rows() > 0) {
+            $dataCount= $query->result_array();
+            $data = $dataCount[0]['tcount'];
+            return $data;
+        } else {
+         
+            $data = 0;
             return $data;
         }
     }
