@@ -3,6 +3,7 @@
 
 $lang['lang_Welcome_Back']="مرحبا بعوديتك";
 $lang['lang_User_Name']="اسم المستخدم";
+$lang['lang_Legal_Name']="Legal Name";
 $lang['lang_Password']="كلمة المرور";
 $lang['lang_Keep_me_logged_in']="تذكرني";
 $lang['lang_Login']="تسجيل الدخول"; 

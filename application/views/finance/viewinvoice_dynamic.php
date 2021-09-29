@@ -60,7 +60,7 @@
 
 					<td colspan="5" style="padding:2%;"> 
 						<b>UID Account Number:-&nbsp;<?=GetalldashboardClientField($invoiceDatainfo[0]['cust_id'], 'uniqueid');?> - رقم الحساب</b>
-						<br/> <b>Customers Name:-&nbsp;<?=GetalldashboardClientField($invoiceDatainfo[0]['cust_id'], 'company');?> - اسم العميل</b>
+						<br/> <b>Customers Name:-&nbsp;<?=GetalldashboardClientField($invoiceDatainfo[0]['cust_id'], 'name');?> - اسم العميل</b>
 						<br/> <b>Address:-&nbsp;<?=GetalldashboardClientField($invoiceDatainfo[0]['cust_id'], 'address');?>  - عنوان</b>
 						<br/> <b>Bank Account Number:-<?=GetalldashboardClientField($invoiceDatainfo[0]['cust_id'], 'account_number');?> - الحساب البنكي</b>
 						<br/> <b>Account Manager:-<?=GetalldashboardClientField($invoiceDatainfo[0]['cust_id'], 'account_manager');?></b>
