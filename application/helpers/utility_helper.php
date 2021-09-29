@@ -1842,6 +1842,7 @@ if (!function_exists('Getallsellerdata')) {
         $sql = "SELECT id,name,company FROM customer where invoice_type='".$type."' and  super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and company!='' and access_fm='Y'";
         $query = $ci->db->query($sql);
         $result = $query->result_array();
+     
         return $result;
     }
 

@@ -14,7 +14,7 @@ if ($query->num_rows > 0) {
     while ($row = mysqli_fetch_assoc($query)) {
 
         //echo "<pre>";print_r($row);die;
-        $url = $row['shopify_url'];
+     echo '<br>'.   $url = $row['shopify_url'];
        // if (!empty($row['shopify_tag'])) {
             //$url .= "?tags=" . $row['shopify_tag'];
 
@@ -133,7 +133,7 @@ if ($query->num_rows > 0) {
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
 
-        $result = curl_exec($ch);
+       echo $result = curl_exec($ch);
         return $result;
     }
 
