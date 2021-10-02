@@ -3779,7 +3779,8 @@ if(!empty( $searchids))
 
                 $DatafileArray[$i]['main_status'] = $data['main_status'];
 
-                $DatafileArray[$i]['name'] = $data['name'];
+                //$DatafileArray[$i]['name'] = $data['name'];
+                $DatafileArray[$i]['name'] = $data['company'];
                 $DatafileArray[$i]['entrydate'] = $data['entrydate'];
                 $DatafileArray[$i]['sku'] = $val['sku'];
                 $DatafileArray[$i]['piece'] = $val['piece'];

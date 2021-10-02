@@ -140,7 +140,8 @@ class Manifest extends CourierCompany_pickup {
 
             $ii++;
         }
-        $sellers = Getallsellerdata($seller_ids);
+        //$sellers = Getallsellerdata($seller_ids);
+        $sellers = Getallsellerdata();
         $dataArray['result'] = $manifestarray;
         $dataArray['count'] = $shipments['count'];
         $dataArray['assignuser'] = $assignuser;
@@ -2096,7 +2097,8 @@ class Manifest extends CourierCompany_pickup {
         }
 
         	
-        $sellers = Getallsellerdata($seller_ids);
+        //$sellers = Getallsellerdata($seller_ids);
+        $sellers = Getallsellerdata();
         $dataArray['result'] = $manifestarray;
         $dataArray['count'] = $shipments['count'];
         $dataArray['assignuser'] = $assignuser;
@@ -2167,7 +2169,8 @@ class Manifest extends CourierCompany_pickup {
             $manifestarray[$ii]['company_label'] = $rdata['3pl_label'];
             $ii++;
         }
-        $sellers = Getallsellerdata($seller_ids);
+        //$sellers = Getallsellerdata($seller_ids);
+        $sellers = Getallsellerdata();
         //echo json_encode($sellers); die;
         $dataArray['result'] = $manifestarray;
         $dataArray['count'] = $shipments['count'];

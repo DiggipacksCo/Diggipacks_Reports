@@ -2917,7 +2917,9 @@ if(!empty($awbids ))
 
 
         $this->db->order_by('shipment_fm.id', 'desc');
-        $this->db->limit($limit, $start);
+        if (isset($filterData['exportlimit']) && !empty($filterData['exportlimit'] )) {
+            $this->db->limit($limit, $start);
+        }
 
         $tempdb = clone $this->db;
 //now we run the count method on this copy
@@ -3262,7 +3264,7 @@ if(!empty($awbids ))
           $start = ($filterData['exportlimit']-1)*$limit;
           } */
         
-		   $limit = 2000;   
+           $limit = 2000;   
         $start = $filterData['exportlimit'] - $limit; 
         if ($this->session->userdata('user_details')['user_type'] != 1) {
             $this->db->where('shipment.wh_id', $this->session->userdata('user_details')['wh_id']);
@@ -3314,7 +3316,7 @@ if(!empty($awbids ))
             $selectQry .= " shipment_fm.shippers_ref_no AS SHIPPER REF No,";
             $selectQry .= " (select city from country where country.id=shipment_fm.origin) AS ORIGIN ,";
             $selectQry .= " (select city from country where country.id=shipment_fm.destination) AS DESTINATION ,";
-			$selectQry .= " shipment_fm.reciever_phone AS RECEIVER PHONE,";
+            $selectQry .= " shipment_fm.reciever_phone AS RECEIVER PHONE,";
             $selectQry .= " shipment_fm.reciever_name AS RECEIVER NAME,";
             $selectQry .= " shipment_fm.reciever_address AS RECEIVER ADDRESS,";
             $selectQry .= " (select main_status from status_main_cat_fm where status_main_cat_fm.id=shipment_fm.delivered) AS STATUS ,";
@@ -3381,7 +3383,10 @@ if(!empty($awbids ))
         $this->db->where('shipment_fm.status', 'Y');
         $this->db->where('shipment_fm.deleted', 'N');
         $this->db->order_by('shipment_fm.id', 'desc');
-        $this->db->limit($limit, $start);     
+        if (isset($filterData['exportlimit']) && !empty($filterData['exportlimit'] )) {
+            $this->db->limit($limit, $start);     
+        }
+        
         $query = $this->db->get();
      //echo $this->db->last_query(); die();      
         $delimiter = ",";
@@ -3511,7 +3516,9 @@ if(!empty($awbids ))
             $selectQry .= " (select city from country where country.id=shipment_fm.destination) AS DESTINATION ,";
             $selectQry .= " (select company from customer  where customer.id=shipment_fm.cust_id)  AS SELLER,";
             $selectQry .= " (select name from warehouse_category where warehouse_category.id=shipment_fm.wh_id) AS WAREHOUSE ,";
-            $selectQry .= " shipment_fm.sender_name AS SENDER NAME,";
+            //$selectQry .= " shipment_fm.sender_name AS SENDER NAME,";
+            $selectQry .= " (select customer.company from customer where customer.id=shipment_fm.cust_id) AS SENDER_NAME ,";
+
             $selectQry .= " shipment_fm.sender_address AS SENDER ADDRESS,";
             $selectQry .= " shipment_fm.sender_phone AS SENDER PHONE,";
             $selectQry .= " shipment_fm.reciever_name AS RECEIVER NAME,";
@@ -3586,7 +3593,10 @@ if(!empty($awbids ))
                     //$this->db->join('country','country.id=shipment_fm.destination');    
                 }
                 if ($data['sender_name'] == 1)
-                    $selectQry .= " shipment_fm.sender_name AS SENDER NAME,";
+                    $selectQry .= " (select customer.company from customer where customer.id=shipment_fm.cust_id) AS SENDER_NAME ,";
+                    //$selectQry .= " shipment_fm.sender_name AS SENDER NAME,";
+                    
+
                 if ($data['sender_address'] == 1)
                     $selectQry .= " shipment_fm.sender_address AS SENDER ADDRESS,";
                 if ($data['sender_phone'] == 1)
@@ -3696,7 +3706,7 @@ if(!empty($awbids ))
           $start = ($filterData['exportlimit']-1)*$limit;
           } */
         
-		   $limit = 2000;   
+           $limit = 2000;   
         $start = $filterData['exportlimit'] - $limit; 
      
 	 $fulfillment = 'Y';
@@ -3798,7 +3808,8 @@ if(!empty($awbids ))
                          $selectQry .= " (select Details from status_fm where status_fm.slip_no=shipment_fm.slip_no order by status_fm.id desc limit 1) AS LastStatus ,";
             $selectQry .= " shipment_fm.total_cod_amt AS COD AMOUNT,";
             $selectQry .= " shipment_fm.sku AS SKU,";
-			$selectQry .= " (select name from customer where customer.id=shipment_fm.cust_id) AS SELLER ,";
+            //$selectQry .= " (select name from customer where customer.id=shipment_fm.cust_id) AS SELLER ,";
+            $selectQry .= " (select customer.company from customer where customer.id=shipment_fm.cust_id) AS SENDER_NAME ,";
             $selectQry .= " shipment_fm.pieces AS ON PIECES,";
             $selectQry .= " shipment_fm.weight AS ON WEIGHT,";   
             $selectQry .= " (select company from courier_company where courier_company.id=shipment_fm.frwd_company_id) AS FORWARD_COMPANY ,"; 
@@ -3863,7 +3874,10 @@ if(!empty($awbids ))
         $this->db->where('shipment_fm.status', 'Y');
         $this->db->where('shipment_fm.deleted', 'N');
         $this->db->order_by('shipment_fm.id', 'desc');
-        $this->db->limit($limit, $start);     
+        if (isset($filterData['exportlimit']) && !empty($filterData['exportlimit'])) {
+            $this->db->limit($filterData['exportlimit']);
+        }
+        //$this->db->limit($limit, $start);     
         $query = $this->db->get();
     // echo $this->db->last_query(); die();      
         $delimiter = ",";
@@ -4036,7 +4050,8 @@ if(!empty($awbids ))
             //$this->db->join('country','country.id=shipment_fm.destination');    
         }
         if ($data['sender_name'] == 1)
-            $selectQry .= " shipment_fm.sender_name AS SENDER NAME,";
+            //$selectQry .= " shipment_fm.sender_name AS SENDER NAME,";
+            $selectQry .= " (select customer.company from customer where customer.id=shipment_fm.cust_id) AS SENDER_NAME ,";
         if ($data['sender_address'] == 1)
             $selectQry .= " shipment_fm.sender_address AS SENDER ADDRESS,";
         if ($data['sender_phone'] == 1)
