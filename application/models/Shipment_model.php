@@ -1175,7 +1175,6 @@ if(!empty($awbids ))
     }
 
     public function filter($awb= null, $sku= null, $delivered= null, $seller= null, $to= null, $from= null, $exact= null, $page_no= null, $destination= null, $booking_id= null, $cc_id = null,$is_menifest = null,$refsno=null,$mobileno=null,$wh_id=null,$data=array()) {
-
         if(!empty($data['sort_limit']))
         {
           $LimitArr= explode('-', $data['sort_limit']); 
@@ -1256,6 +1255,12 @@ if(!empty($awbids ))
 
 
             $this->db->where($where);
+        }
+        if (!empty($data['reciever_phone'])) {
+            $where = "REPLACE(shipment_fm.reciever_phone, ' ' , '' ) LIKE '%" . $data['reciever_phone'] . "%'";
+            
+            $this->db->where($where);
+            //$this->db->where('shipment_fm.reciever_phone',$data['reciever_phone']);
         }
 
         // $this->db->where('shipment_fm.slip_no','FST5116125078');
@@ -1409,7 +1414,7 @@ if(!empty($awbids ))
 
         $query = $this->db->get();
 
-      // echo $this->db->last_query(); die;
+       //echo $this->db->last_query(); die;
 
         if ($query->num_rows() > 0) {
 

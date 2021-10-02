@@ -263,27 +263,32 @@
 
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="col-lg-12" style="padding-left: 20px;padding-right: 20px;">
+                                                <div class="col-md-2">
+                                                    <div class="form-group" ><strong><?=lang('lang_Mobile');?>:</strong>
+                                                        <input class="form-control" id="reciever_phone" name="reciever_phone"  ng-model="filterData.reciever_phone" class="form-control" placeholder="Enter Mobile No."> 
+                                                    </div>
+                                                </div>
                                                  <div class="col-md-2" style="margin-top: 20px;"><div class="form-group" >
                                                         <select class="form-control"  ng-model="filterData.sort_list" ng-change="loadMore(1, 1);">
-
-                                                        <option value=""><?=lang('lang_Short_List');?></option>
-
-
-                                                        <option value="NO"><?=lang('lang_Newest_Order');?></option>
-                                                        <option value="OLD"><?=lang('lang_Oldest_Order');?></option>
-                                                        <option value="OBD"><?=lang('lang_Order_By_Date');?></option>
+                                                            <option value=""><?=lang('lang_Short_List');?></option>
+                                                            <option value="NO"><?=lang('lang_Newest_Order');?></option>
+                                                            <option value="OLD"><?=lang('lang_Oldest_Order');?></option>
+                                                            <option value="OBD"><?=lang('lang_Order_By_Date');?></option>
                                                         </select>
-
-                                                    </div></div>
-                                                
-                                                    <div class="col-md-2" style="margin-top: 20px;"><div class="form-group" >
-                                                        <select class="form-control"  ng-model="filterData.order_type">
-                                                            <option value="">Order Type</option>
-                                                            <option  value="B2B">B2B</option>
-                                                            <option  value="B2C">B2C</option>
-                                                        </select>
-                                                    </div></div>
-                                                <div class="col-md-8"><div class="form-group" >
+                                                    </div>
+                                                 </div>
+                                                    <div class="col-md-2" style="margin-top: 20px;">
+                                                        <div class="form-group" >
+                                                            <select class="form-control"  ng-model="filterData.order_type">
+                                                                <option value="">Order Type</option>
+                                                                <option  value="B2B">B2B</option>
+                                                                <option  value="B2C">B2C</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                <div class="col-md-5"><div class="form-group" >
                                                         <button  class="btn btn-danger" ng-click="loadMore(1, 1);" ><?=lang('lang_Search');?></button>
                                                         <button type="button" class="btn btn-success" style="margin-left: 7%"><?=lang('lang_Total');?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button>
                                                         
