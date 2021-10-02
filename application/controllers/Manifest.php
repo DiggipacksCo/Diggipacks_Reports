@@ -228,7 +228,8 @@ class Manifest extends CourierCompany_pickup {
 
             $ii++;
         }
-        $sellers = Getallsellerdata($seller_ids);
+        //$sellers = Getallsellerdata($seller_ids);
+        $sellers = Getallsellerdata();
         $dataArray['result'] = $manifestarray;
         $dataArray['count'] = $shipments['count'];
         $dataArray['assignuser'] = $assignuser;
