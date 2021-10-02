@@ -434,7 +434,7 @@ class CourierCompany extends MY_Controller  {
                         'service_id' => $ShipArr['service'],
                         'reciever_name' => $ShipArr['reciever_name'],
                         'reciever_address' =>   $ShipArr['reciever_address'],
-                        'reciever_phone' =>  $ShipArr['reciever_phone'],
+                        'reciever_phone' => preg_replace('/\s+/', '', $ShipArr['reciever_phone']) ,
                         'reciever_email' => $ShipArr['reciever_email'],
                         'destination' => $ShipArr['destination'],
                         'sku' => $ShipArr['sku'],

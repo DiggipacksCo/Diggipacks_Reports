@@ -73,7 +73,7 @@
                                                 <th><?= lang('lang_SrNo'); ?>.</th>
                                                 <th>User Type</th>
                                                 <th><?= lang('lang_secret_key'); ?></th>
-                                                <th><?= lang('lang_Name'); ?></th>
+                                                <th><?= lang('lang_Legal_Name'); ?></th>
                                                 <th><?= lang('lang_Company_name'); ?></th>
                                                 <th><?= lang('lang_Email'); ?></th>
                                                 <th><?= lang('lang_Account_No'); ?>#</th>

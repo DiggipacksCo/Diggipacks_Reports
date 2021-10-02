@@ -108,7 +108,7 @@
 
                                                             <option value=""><?=lang('lang_SelectSeller');?></option>
                                                             <?php foreach ($sellers as $seller_detail): ?>
-                                                                <option value="<?= $seller_detail->id; ?>"><?= $seller_detail->name; ?></option>
+                                                                <option value="<?= $seller_detail->id; ?>"><?= $seller_detail->company; ?></option>
                                                             <?php endforeach; ?>
 
                                                         </select>
@@ -381,7 +381,7 @@
 <!--                                            <td>{{data.main_status}}</td>-->
                                             <td>{{data.status}}</td>
                                             <!--<td>{{data.piece}}</td>-->
-                                            <td>{{data.name}}</td>
+                                            <td>{{data.company}}</td>
                                             <td>{{data.wh_id}}</td>
                                             <td>{{data.entrydate}}</td>
                                             <td>{{data.no_of_attempt}}</td>

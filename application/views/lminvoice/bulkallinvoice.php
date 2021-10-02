@@ -98,7 +98,7 @@ thead.report-header {
       <td colspan="6" align="left" >
 			<b>UID Account Number:-&nbsp;<?=GetalldashboardClientField($invoiceData[0]['cust_id'],'uniqueid');?> - رقم الحساب</b><br/> 
 			
-			<b>Customers Name:-&nbsp;<?=GetalldashboardClientField($invoiceData[0]['cust_id'],'company');?> - اسم العميل</b> <br/>
+			<b>Customers Name:-&nbsp;<?=GetalldashboardClientField($invoiceData[0]['cust_id'],'name');?> - اسم العميل</b> <br/>
 			
 			<b>Address:-&nbsp;<?=GetalldashboardClientField($invoiceData[0]['cust_id'],'address');?>,<?=getdestinationfieldshow(GetalldashboardClientField($invoiceData[0]['cust_id'],'city'),'city');?> , <?=getdestinationfieldshow(GetalldashboardClientField($invoiceData[0]['cust_id'],'city'),'country');?>  - عنوان</b><br/>
 			
