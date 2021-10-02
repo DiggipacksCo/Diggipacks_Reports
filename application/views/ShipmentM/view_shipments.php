@@ -265,7 +265,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-lg-12" style="padding-left: 20px;padding-right: 20px;">
-                                                <div class="col-md-2"> 
+                                                <div class="col-md-2">
                                                     <div class="form-group" ><strong><?=lang('lang_Mobile');?>:</strong>
                                                         <input class="form-control" id="reciever_phone" name="reciever_phone"  ng-model="filterData.reciever_phone" class="form-control" placeholder="Enter Mobile No."> 
                                                     </div>

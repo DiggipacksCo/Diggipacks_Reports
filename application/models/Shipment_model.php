@@ -1257,7 +1257,10 @@ if(!empty($awbids ))
             $this->db->where($where);
         }
         if (!empty($data['reciever_phone'])) {
-            $this->db->where('shipment_fm.reciever_phone',$data['reciever_phone']);
+            $where = "REPLACE(shipment_fm.reciever_phone, ' ' , '' ) LIKE '%" . $data['reciever_phone'] . "%'";
+            
+            $this->db->where($where);
+            //$this->db->where('shipment_fm.reciever_phone',$data['reciever_phone']);
         }
 
         // $this->db->where('shipment_fm.slip_no','FST5116125078');
@@ -1411,7 +1414,7 @@ if(!empty($awbids ))
 
         $query = $this->db->get();
 
-      // echo $this->db->last_query(); die;
+       //echo $this->db->last_query(); die;
 
         if ($query->num_rows() > 0) {
 
