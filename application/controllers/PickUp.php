@@ -619,8 +619,9 @@ class PickUp extends MY_Controller {
         $this->load->model('Templates_model');
         $messageData=$this->Templates_model-> getTempateByStatus(5);
         // print_r( $messageData); die;
-        $shipData = $this->Shipment_model->shipmetsInAwbAll($_POST['awbArray']);
+        $shipData = $this->Shipment_model->shipmetsInAwbAll_sms($_POST['awbArray']);
          //print_r( $shipData); die;
+         $smsSentArray=array();
         foreach( $shipData['result'] as $shData)
         {
           $sender_name=  getallsellerdatabyID($shData['cust_id'],'company');
@@ -659,6 +660,7 @@ class PickUp extends MY_Controller {
 
         $datamSMS = makeSms($messageAr, $param);
         SEND_SMS($phone_no, $datamSMS);
+        $this->Shipment_model-> updateStatusSms($shData['slip_no']);
         }
         echo json_encode($datamSMS); exit;
 
