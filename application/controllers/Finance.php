@@ -326,7 +326,7 @@ public function ViewinvoiceDynamic($invoiceNo = null){
 		//echo'<pre>';
 		 foreach($QueryData['result'] as $rdata)
 		 {
-			 $returnArray[$ii]['seller_name']=getallsellerdatabyID($rdata['seller_id'],'name');
+			 $returnArray[$ii]['seller_name']=getallsellerdatabyID($rdata['seller_id'],'company');
 			 $typedataArray=$this->Finance_model->GetallStorageTypesData($rdata['seller_id'],$rdata['entrydate']);
 			 $typesArray=$typedataArray;
 			// print_r($typesArray);
@@ -361,7 +361,7 @@ public function ViewinvoiceDynamic($invoiceNo = null){
 		// $jj=0;
 		 foreach($QueryData['result'] as $rdata)
 		 {
-			 $returnArray[$ii]['seller_name']=getallsellerdatabyID($rdata['seller_id'],'name');
+			 $returnArray[$ii]['seller_name']=getallsellerdatabyID($rdata['seller_id'],'company');
 			/* $typedataArray=$this->Finance_model->GetallStorageTypesData($rdata['seller_id'],$rdata['entrydate']);
 			 $typesArray=$typedataArray;
 			  $jj=0;
@@ -805,7 +805,7 @@ public function getallinvoicedata()
 		   $_POST = json_decode(file_get_contents('php://input'), true);
 		   $returndata=$this->Finance_model->invoice_report($_POST); 
 		   foreach ($returndata as $key => $custname) {
-		   		$returndata[$key]['customerName'] =  getallsellerdatabyID($custname['cust_id'],'name');
+		   		$returndata[$key]['customerName'] =  getallsellerdatabyID($custname['cust_id'],'company');
 		   		$returndata[$key]['username'] =  getUserNameById($custname['super_id'],'username');
 		   		$returndata[$key]['payby'] =  getUserNameById($custname['pay_update_by'],'username');
 		   	
@@ -821,7 +821,7 @@ public function getallinvoicedata()
 		   $returndata=$this->Finance_model->dynamic_invoice_report($_POST); 
 		   foreach ($returndata as $key => $custname) {
 		   		//echo "<pre>"; print_r($custname);
-		   		$returndata[$key]['customerName'] =  getallsellerdatabyID($custname['cust_id'],'name');
+		   		$returndata[$key]['customerName'] =  getallsellerdatabyID($custname['cust_id'],'company');
 		   		$returndata[$key]['username'] =  getUserNameById($custname['super_id'],'username');
 		   		$returndata[$key]['payby'] =  getUserNameById($custname['pay_updated_by'],'username');
 		   		 $returndata[$key]['month'] =   date("F", strtotime($custname['invoice_date']));
