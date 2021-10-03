@@ -1846,6 +1846,7 @@ if (!function_exists('Getallsellerdata')) {
         
         $query = $ci->db->query($sql);
         $result = $query->result_array();
+     
         return $result;
     }
 

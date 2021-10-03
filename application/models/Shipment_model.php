@@ -38,6 +38,13 @@ class Shipment_model extends CI_Model {
        // echo  $this->db->last_query(); //exit;
     }
 
+    public function updateStatusSms($slip_no=null) {
+        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->where('slip_no', $slip_no);
+        $query2 = $this->db->update('shipment_fm', array('sms_sent'=>1) );
+       // echo  $this->db->last_query(); //exit;
+    }
+
     public function GetupdatepalletnoShipment($data = array(), $slip_no = null) {
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where_in('slip_no', $slip_no);
@@ -739,6 +746,40 @@ if(!empty($awbids ))
         }
     }
     
+    public function shipmetsInAwbAll_sms($awb) {
+        if ($this->session->userdata('user_details')['user_type'] != 1) {
+            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
+        }
+        $this->db->select('*');
+        $this->db->where('shipment_fm.super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->from('shipment_fm');
+        $this->db->where('shipment_fm.deleted', 'N');
+        $this->db->where('shipment_fm.code', 'DL');
+        $this->db->where('shipment_fm.sms_sent', 0);
+
+
+       // if (!empty($awb)) {
+          //  $awb = array_filter($awb);
+
+            $this->db->where_in('slip_no', $awb);
+        //}
+
+
+        $query = $this->db->get();
+
+        //return $this->db->last_query(); die;
+        if ($query->num_rows() > 0) {
+
+            $data['result'] = $query->result_array();
+            $data['count'] = $query->num_rows();
+            return $data;
+            // return $page_no.$this->db->last_query();
+        } else {
+            $data['result'] = array();
+            $data['count'] = 0;
+            return $data;
+        }
+    }
     public function shipmetsInAwbAll_dishpacth($awb) {
         if ($this->session->userdata('user_details')['user_type'] != 1) {
             $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
@@ -3116,6 +3157,7 @@ if(!empty($awbids ))
         $this->db->where('deleted', 'N');
         $this->db->limit($limit, $start);
         $this->db->group_by('m_id');
+        $this->db->order_by('id desc');
 
         $query = $this->db->get();
 
@@ -3172,6 +3214,9 @@ if(!empty($awbids ))
     
     
     public function manifestListFilter($filer_data = array(), $page_no = null) {
+        
+        // error_reporting(-1);
+		// ini_set('display_errors', 1);
         $page_no;
         $limit = 100;
         unset($filer_data['status']);
@@ -3211,11 +3256,50 @@ if(!empty($awbids ))
 
         if ($query->num_rows() > 0) {
             $data['result'] = $query->result_array();
-            $data['count'] = $query->num_rows();
+            $data['count'] = $this->manifestListFilterCount($filer_data , $page_no);
             return $data;
         } else {
             $data['result'] = '';
             $data['count'] = 0;
+            return $data;
+        }
+    }
+
+    public function manifestListFilterCount($filer_data = array(), $page_no = null) {
+       
+
+        if ($filer_data) {
+            foreach ($filer_data as $key => $filter) {
+              if(!empty($filter))
+              {
+                if($key == "booking_id"){
+                    $this->db->where("s.$key", $filter);
+                }
+                else{
+                    $this->db->where("d.$key", $filter);
+                }
+              }
+                
+            }
+        }
+        $this->db->select('COUNT(d.m_id) AS tcount');
+        $this->db->from('delivery_manifest d');
+        $this->db->join('shipment_fm s','s.slip_no = d.slip_no','left');
+
+        
+
+        $query = $this->db->get();
+        //echo $this->db->last_query();  exit; 
+
+                          
+
+        if ($query->num_rows() > 0) {
+            $dataCount= $query->result_array();
+            $data = $dataCount[0]['tcount'];
+            return $data;
+        } else {
+         
+            $data = 0;
             return $data;
         }
     }
@@ -4348,7 +4432,12 @@ if(!empty($awbids ))
         $this->db->where('shipment_fm.status', 'Y');
       //  $this->db->where('shipment_fm.deleted', 'N');
         //$this->db->where('diamention_fm.deleted', 'N');
-         $this->db->where_in('shipment_fm.slip_no', $slip_no);
+         //$this->db->where_in('shipment_fm.slip_no', $slip_no);
+         $this->db->group_start();
+         $this->db->where_in("shipment_fm.slip_no", $slip_no)
+         ->or_where_in('shipment_fm.frwd_company_awb',$slip_no)
+         ->or_where_in('shipment_fm.booking_id',$slip_no);
+         $this->db->group_end();
         $this->db->order_by('shipment_fm.id', 'desc');
         
 
