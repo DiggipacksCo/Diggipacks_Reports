@@ -3880,7 +3880,7 @@ if(!empty( $searchids))
 
             $DatafileArray[$i]['main_status'] = $data['main_status'];
 
-            $DatafileArray[$i]['name'] = $data['name'];
+            $DatafileArray[$i]['name'] = $data['company'];
             $DatafileArray[$i]['entrydate'] = $data['entrydate'];
             /* $skuDetails= $this->Shipment_model->get_deducted_shelve_no($data['slip_no']); 
               foreach($skuDetails as $key1=>$val)
