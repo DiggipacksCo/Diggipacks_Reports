@@ -311,7 +311,8 @@ class Excel_export_model extends CI_Model {
             $selectQry[] = " item_inventory.quantity AS QUANTITY";
         }
         if (isset($filter['listData2']['seller_name']) && !empty($filter['listData2']['seller_name'])) {
-            $selectQry[] = " (select name from customer where customer.id=item_inventory.seller_id) AS SellerName";
+            //$selectQry[] = " (select name from customer where customer.id=item_inventory.seller_id) AS SellerName";
+            $selectQry[] = " (select company from customer where customer.id=item_inventory.seller_id) AS SellerName";
         }
         if (isset($filter['listData2']['item_description']) && !empty($filter['listData2']['item_description'])) {
             $selectQry[] = " (select description from items_m where items_m.id=item_inventory.item_sku) AS Description,";
