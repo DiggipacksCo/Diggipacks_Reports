@@ -94,10 +94,11 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('something').
                 <div class="table-responsive " >
                  
 
+                    
                    <form ng-submit="dispatchOrder();" method="post" >
             <div class="col-md-12">
             <div class="form-group">
-            <textarea rows="8" id="show_awb_no" ng-change="scan_awb();"   ng-model="scan.slip_no" required class="form-control"></textarea>
+            <textarea rows="8" placeholder="AWB | 3PL" id="show_awb_no" ng-change="scan_awb();"   ng-model="scan.slip_no" required class="form-control"></textarea>
 				
             </div>
             </div>

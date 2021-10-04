@@ -63,7 +63,7 @@ class PickUp extends MY_Controller {
         $this->load->view('pickup/pickedSingleView', $view);
     }
     public function dispacth3pl() {
-        
+        redirect(base_url().'dispatch');
         $view['result'] = array();
         $this->load->view('pickup/dispacth3pl', $view);
     }
@@ -501,7 +501,7 @@ class PickUp extends MY_Controller {
 
         $_POST = json_decode(file_get_contents('php://input'), true);
         $DataArray = $_POST;
-        $shipments = $this->Shipment_model->shipmetsInAwb($DataArray);
+        $shipments = $this->Shipment_model->shipmetsInAwb_valid($DataArray);
         $valid = array();
         $invalid = array();
         $invalidpallet = array();
@@ -672,6 +672,7 @@ class PickUp extends MY_Controller {
         //$_POST=array('awbArray'=>array('STF9252413194'));
        // echo '<pre>';print_r($_POST);exit;
 
+        
         
         
         $shipments = $this->Shipment_model->shipmetsInAwbAll_dishpacth($_POST['awbArray']);
