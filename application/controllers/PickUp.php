@@ -1732,6 +1732,7 @@ class PickUp extends MY_Controller {
         $this->load->view('pickup/dispatch_b2b');
     }
 
+    
     public function returnLM() {
         if (menuIdExitsInPrivilageArray(78) == 'N') {
             redirect(base_url() . 'notfound');
@@ -1744,7 +1745,7 @@ class PickUp extends MY_Controller {
     
     
      public function CancelOrderView() {
-        if (menuIdExitsInPrivilageArray(78) == 'N') {
+        if (menuIdExitsInPrivilageArray(142) == 'N') {
             redirect(base_url() . 'notfound');
             die;
         }

@@ -102,9 +102,17 @@ class Shipment extends MY_Controller {
         $this->load->view('ShipmentM/forward_client', $bulk);
     }
     public function ReversetoDeliveryStation() {
+         if (menuIdExitsInPrivilageArray(144) == 'N') {
+            redirect(base_url() . 'notfound');
+            die;
+        }
         $this->load->view('ShipmentM/reverse_client');
     }
     public function ViewReverseShipment() {
+         if (menuIdExitsInPrivilageArray(146) == 'N') {
+            redirect(base_url() . 'notfound');
+            die;
+        }
         $this->load->view('ShipmentM/view_reverse_shipments');
     }
 
@@ -4536,6 +4544,10 @@ if(!empty( $searchids))
     }
     
       public function forward_remove() {
+          if (menuIdExitsInPrivilageArray(143) == 'N') {
+            redirect(base_url() . 'notfound');
+            die;
+        }
         $this->load->view('ShipmentM/bulk_forward_remove', $bulk);
     }
 
@@ -4590,7 +4602,10 @@ if(!empty( $searchids))
     }
 
      public function ViewShipmentMapping(){
-        
+        if (menuIdExitsInPrivilageArray(145) == 'N') {
+            redirect(base_url() . 'notfound');
+            die;
+        }
         $this->load->view('ShipmentM/view_shipment_mapping');
     }
     

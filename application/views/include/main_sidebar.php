@@ -45,7 +45,7 @@
                                 <?php if (menuIdExitsInPrivilageArray(101) == 'Y') { ?>
                                     <li><a href="<?= base_url('forwardshipments'); ?>"><?= lang('lang_Manual_Forward3PL'); ?></a></li>
                                 <?php } ?>
-                                <?php if (menuIdExitsInPrivilageArray(141) == 'Y') { ?>
+                                <?php if (menuIdExitsInPrivilageArray(142) == 'Y') { ?>
                                     <li><a href="<?= base_url('cancelOrder'); ?>"><?= lang('lang_Cancelling_orders3PL'); ?></a></li>
                                 <?php } ?>
                                 <?php if (menuIdExitsInPrivilageArray(82) == 'Y') { ?>
@@ -54,17 +54,19 @@
                                      <?php if (menuIdExitsInPrivilageArray(137) == 'Y') { ?>
                                     <li><a href="<?= base_url('bulk_tracking'); ?>"><?= lang('lang_bulk_track'); ?></a></li>
                                 <?php } ?>
-                                <?php if (menuIdExitsInPrivilageArray(137) == 'Y') { ?>
+                                <?php if (menuIdExitsInPrivilageArray(143) == 'Y') { ?>
                                     <li><a href="<?= base_url('remove_forward'); ?>"><?= lang('lang_remove_forwarding'); ?></a></li>
                                 <?php } ?>
 
-                                <?php if (menuIdExitsInPrivilageArray(81) == 'Y') { ?>
+                                <?php if (menuIdExitsInPrivilageArray(144) == 'Y') { ?>
                                     <li><a href="<?= base_url('Reverse_Delivery_Station'); ?>"><?= lang('lang_Reverse_Shipment'); ?></a></li>
                                 <?php } ?>
-                                <?php if (menuIdExitsInPrivilageArray(81) == 'Y') { ?>
+                                <?php if (menuIdExitsInPrivilageArray(146) == 'Y') { ?>
                                     <li><a href="<?= base_url('Reverse_Shipment'); ?>"><?= lang('lang_View_Reverse_Shipment'); ?></a></li>
                                 <?php } ?>
+                                     <?php if (menuIdExitsInPrivilageArray(145) == 'Y') { ?>
                                     <li><a href="<?= base_url('shipment_mapping'); ?>">Shipment Mapping</a></li>
+                                     <?php } ?>
                                 <?php if (menuIdExitsInPrivilageArray(30) == 'Y') { ?>
 
                                     <li class="navigation-divider"></li>
