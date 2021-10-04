@@ -60,6 +60,7 @@
                                         <thead>
                                             <tr>
                                                 <th><b class="size-2"><?=lang('lang_Date');?></b></th>
+                                                <th><b class="size-2">AWB</b></th>
                                                 <th><b class="size-2"><?=lang('lang_Origin');?></b></th>
                                                 <th><b class="size-2"><?=lang('lang_Destination');?></b></th>
                                                 <th><b class="size-2"><?=lang('lang_Pieces');?></b></th>
@@ -74,6 +75,7 @@
                                                 foreach ($shipmentdata as $awbdata) {
                                                     echo '<tr>
                                                         <td>' . $awbdata['entrydate'] . '</td>
+                                                             <td>' . $awbdata['slip_no'] . '</td>
                                                         <td>' . getdestinationfieldshow($awbdata['origin'], 'city') . '</td>
                                                         <td>' . getdestinationfieldshow($awbdata['destination'], 'city') . '</td>
                                                         <td>' . $awbdata['pieces'] . '</td>

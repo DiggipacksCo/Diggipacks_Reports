@@ -687,6 +687,32 @@ if(!empty($awbids ))
             return $data;
         }
     }
+    public function shipmetsInAwb_valid($awb = array()) {
+        if ($this->session->userdata('user_details')['user_type'] != 1) {
+            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
+        }
+        $this->db->where('shipment_fm.super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->select('*');
+        $this->db->from('shipment_fm');
+        $this->db->where('shipment_fm.deleted', 'N');
+        //$this->db->where_in('slip_no', $awb);
+        $this->db->where("slip_no in('".implode("','",$awb)."') or frwd_company_awb in('".implode("','",$awb)."')");
+
+        $query = $this->db->get();
+
+        // return $this->db->last_query(); die;
+        if ($query->num_rows() > 0) {
+
+            $data['result'] = $query->result_array();
+            $data['count'] = $query->num_rows();
+            return $data;
+            // return $page_no.$this->db->last_query();
+        } else {
+            $data['result'] = array();
+            $data['count'] = 0;
+            return $data;
+        }
+    }
      public function shipmetsInAwb_picklist($awb=array()) {
         if ($this->session->userdata('user_details')['user_type'] != 1) {
             $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
@@ -797,7 +823,7 @@ if(!empty($awbids ))
        // if (!empty($awb)) {
           //  $awb = array_filter($awb);
 
-            $this->db->where_in('slip_no', $awb);
+           $this->db->where("slip_no in('".implode("','",$awb)."') or frwd_company_awb in('".implode("','",$awb)."')");
         //}
 
 
