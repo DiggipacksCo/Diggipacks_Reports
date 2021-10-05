@@ -99,7 +99,7 @@
 					<th>Packing Charge / سعر التغليف </th>
 					<th>Special Packing / التغليف الخاص  </th>
 					<th>Pallet Charge / سعر الطبليه </th>
-					
+					<th>Return Charges </th>
 				
 					
 					<th>Outbound Charge / سعر الشحنات الصادره </th> 
@@ -152,6 +152,7 @@
 						        <td align="center">' . $special_packing . '</td>
 						       
 								<td align="center">' . $rowData['pallet_charge'] . '</td>
+								<td align="center">' . $rowData['return_charge'] . '</td>
 						       
 						        <td align="center">' . $rowData['outbound_charge'] . '</td>
 						      						
@@ -170,7 +171,7 @@
 					<tr>	
 						
 					<?php  
-					$tot = round(($totalValue['pallet_charge']+$totalValue['picking_charge']+$totalValue['packing_charge']+$totalValue['special_packing']+$totalValue['outbound_charge']+$totalValue['box_charge']),2);  
+					$tot = round(($totalValue['pallet_charge']+$totalValue['return_charge']+$totalValue['picking_charge']+$totalValue['packing_charge']+$totalValue['special_packing']+$totalValue['outbound_charge']+$totalValue['box_charge']),2);  
 					$totvat  = round((($tot * 15)/100),2) ;
  					$tot_with_vat  = round(($tot + $totvat),2);
  					$bank_fees = GetalldashboardClientField($invoiceData[0]['cust_id'], 'bank_fees');
@@ -179,7 +180,8 @@
 					<th><?=$totalValue['picking_charge'];?></th>
 					<th><?=$totalValue['packing_charge'];?></th>
 					<th><?=$totalValue['special_packing'];?></th>	
-					<th><?=$totalValue['pallet_charge'];?></th>				
+					<th><?=$totalValue['pallet_charge'];?></th>	
+					<th><?=$totalValue['return_charge'];?></th>					
 				
 				
 					<th><?=$totalValue['outbound_charge'];?></th>
@@ -192,12 +194,12 @@
 				</tr>
 				
 				<tr>
-					<td colspan="13" align="justify">&nbsp;</td>
+					<td colspan="14" align="justify">&nbsp;</td>
 				</tr>
 				
 					<br>
 					<?php 
-						$TOTAL =round(($totalValue['pallet_charge']+$totalValue['storage_charge']+$totalValue['onhold_charges']+$totalValue['inventory_charge']+$totalValue['portal_charge']+$totalValue['sku_barcode_print']+$totalValue['packing_charge']+$totalValue['picking_charge']+$totalValue['special_packing']+$totalValue['inbound_charge']+$totalValue['outbound_charge']+$totalValue['box_charge']),2);
+						$TOTAL =round(($totalValue['pallet_charge']+$totalValue['return_charge']+$totalValue['storage_charge']+$totalValue['onhold_charges']+$totalValue['inventory_charge']+$totalValue['portal_charge']+$totalValue['sku_barcode_print']+$totalValue['packing_charge']+$totalValue['picking_charge']+$totalValue['special_packing']+$totalValue['inbound_charge']+$totalValue['outbound_charge']+$totalValue['box_charge']),2);
 						$TOTALvat    =round( (($TOTAL * 15)/100),2) ;
 						$TOTAL_with_vat  =round( ($TOTAL + $TOTALvat),2);
 					?>
@@ -302,6 +304,12 @@
 							<td align="justify"> Total Pallet Charges / مجموع سعر الطبليات</td>
 							<td align="center"><?= $currency; ?>
 								<?=$totalValue['pallet_charge'];?>
+							</td>
+						</tr>
+						<tr>
+							<td align="justify">Total Return Charges</td>
+							<td align="center"><?= $currency; ?>
+								<?=$totalValue['return_charge'];?>
 							</td>
 						</tr>
 						<tr>
