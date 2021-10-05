@@ -97,7 +97,7 @@
                               <option value=""><?=lang('lang_SelectSeller');?></option>
                               <?php foreach($sellers as $seller_detail):?>
                               <option value="<?= $seller_detail->id;?>">
-                              <?= $seller_detail->name;?>
+                              <?= $seller_detail->company;?>
                               </option>
                               <?php endforeach;?>
                             </select>
@@ -159,7 +159,7 @@
                     <td>{{$index+1}}  </td>
                  
                    
-                    <td>{{data.name}}</td>
+                    <td>{{data.company}}</td>
                   
                     <td ><span class="badge badge-warning">{{data.sku}}</span></td>
                   

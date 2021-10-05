@@ -277,7 +277,7 @@
                                                   </tr>
                                                 </tbody>
                                               </table></td>-->
-                                            <td>{{data.sender_name}}</td>
+                                            <td>{{data.company}}</td>
                                             <td > {{data.wh_id}}</td>
                                             <td > {{data.DispatchDate}}</td>
                                             
