@@ -73,7 +73,7 @@
                                                             <select ng-disabled="cust_nameBtn"  class="form-control" ng-model="scan.cust_name" ng-change="scan_customer();">
                                                                 
                                                                 <option value=""><?=lang('lang_Select_Customer');?></option>
-                                                                <option ng-repeat="cust_data in CustDropArr" value="{{cust_data.id}}">{{cust_data.name}}</option>
+                                                                <option ng-repeat="cust_data in CustDropArr" value="{{cust_data.id}}">{{cust_data.company}}</option>
                                                                 
                                                             </select>
 

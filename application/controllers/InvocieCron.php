@@ -75,7 +75,7 @@ class InvocieCron extends CI_Controller {
         $t_date = date('Y-m-d');
         $check_date = strtotime($res_date);
         $today_date = strtotime($t_date);
-        if ($check_date != $today_date) {
+        if ($check_date != $today_date ) {
 
 
 
@@ -83,7 +83,7 @@ class InvocieCron extends CI_Controller {
             $this->db->from('customer');
              $this->db->where('access_fm', 'Y');
              $this->db->where('deleted', 'N');
-              // $this->db->where('id', '53');
+            // $this->db->where('id', '760');
             $querySeller = $this->db->get();
             $SellerArray = $querySeller->result();
             $whole_Data = array();
@@ -100,54 +100,47 @@ class InvocieCron extends CI_Controller {
                 //$this->db->join('seller_m','seller_m.id=item_inventory.seller_id');
                 $this->db->group_by(array('items_m.storage_id'));
                 $query = $query = $this->db->get();
+                //echo $this->db->last_query(); die;
                 $resultData=$query->result_array();
                 $totalPallet=0;
                 $totalRates=0;
                 foreach($resultData as $key=>$InventoryRows)
                 {
-                    $totalPallet+=$InventoryRows['total_sku'];
+                   $InventoryRows['total_sku'];
                     
                     // $storage_date = $this->get_sku_storage_id($InventoryRows['item_sku'],$InventoryRows['super_id']);
                        $rate = $this->get_rate_by_st_sellid($InventoryRows['seller_id'], $InventoryRows['storage_id'],$InventoryRows['super_id']);
                         $storage_total_rate = $rate *$InventoryRows['total_sku'];
                         $totalRates+=$storage_total_rate;
+
+                        $storage_date = $this->get_sku_storage_id($InventoryRows['item_sku'],$InventoryRows['super_id']); 
+                    
+                        $storage_id = $storage_date->storage_id;
+                        $sku_name = $storage_date->sku;
+                       
+                       // $rate = $this->get_rate_by_st_sellid($items_data->seller_id, $storage_id,$rdata->super_id);
+                        //$storage_total_rate = $rate * $total_sku;
+                        $invoic_data = array("storage_id" => $storage_id,
+                            "seller_id" => $InventoryRows['seller_id'],
+                            "storagerate" => $totalRates,
+                            "entrydate" => date("Y-m-d"),
+                            "sku" => $sku_name,
+                            "pallets" => $InventoryRows['total_sku'],
+                             "super_id" => $InventoryRows['super_id'],);
+                        array_push($whole_Data, $invoic_data);
                 }
                 
                // echo $totalPallet; 
                  //echo $this->db->last_query(); die;
-                if ($query->num_rows() > 0) {
-                    $total_sku = $query->num_rows();
-                   
-
-
-                    $items_data = $query->row();
-
-
-
-                   
-                    $storage_date = $this->get_sku_storage_id($items_data->item_sku,$rdata->super_id);
-                    
-                    $storage_id = $storage_date->storage_id;
-                    $sku_name = $storage_date->sku;
-                    $items_data->seller_id;
-                   // $rate = $this->get_rate_by_st_sellid($items_data->seller_id, $storage_id,$rdata->super_id);
-                    //$storage_total_rate = $rate * $total_sku;
-                    $invoic_data = array("storage_id" => $storage_id,
-                        "seller_id" => $items_data->seller_id,
-                        "storagerate" => $totalRates,
-                        "entrydate" => date("Y-m-d"),
-                        "sku" => $sku_name,
-                        "pallets" => $totalPallet,
-                         "super_id" => $rdata->super_id);
-                    array_push($whole_Data, $invoic_data);
-                }
+              
             }
 
 
-          //  echo '<pre>';
-           // print_r($whole_Data); die;
+            // echo '<pre>';
+            // print_r($whole_Data); die;
 
-            echo $this->db->insert_batch('storagesinvoices', $whole_Data);
+             $this->db->insert_batch('storagesinvoices', $whole_Data);
+              echo $this->db->last_query()."<br>";
         }
     }
 

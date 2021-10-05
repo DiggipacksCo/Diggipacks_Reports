@@ -242,7 +242,7 @@
 
                                             <td><a  ng-click="GetInventoryPopup(data.slip_no);"><span class="label label" style="background-color:<?= DEFAULTCOLOR; ?>;"><?= lang('lang_Get_Details'); ?></span></a></td>
 
-                                            <td>{{data.name}}</td>
+                                            <td>{{data.company}}</td>
                                             <td > {{data.wh_id}}</td>
                                             <td>{{data.entrydate}}</td>
                                         </tr>

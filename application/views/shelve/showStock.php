@@ -73,7 +73,7 @@ if(!empty($type))
                                                         <option value=""><?= lang('lang_SelectSeller'); ?></option>
                                                                             <?php foreach ($sellers as $seller_detail): ?>
                                                                                 <option value="<?= $seller_detail->id; ?>">
-                                                                                    <?= $seller_detail->name; ?>
+                                                                                    <?= $seller_detail->company; ?>
                                                                                 </option>
                                                                             <?php endforeach; ?>
                                                                         </select></td>
@@ -101,7 +101,7 @@ if(!empty($type))
                                             <td>{{$index + 1}}</td>
                                             <td><img src="{{data.barcode}}"/><br>
                                                 {{data.stock_location}}</td>
-                                            <td><span class="label label-info">{{data.name}}</span></td>
+                                            <td><span class="label label-info">{{data.company}}</span></td>
                                         </tr>
                                     </table>
                                     <button ng-hide="shipData.length == totalCount" class="btn btn-info" ng-click="loadMore(count = count + 1, 0<?=$type;?>);" ng-init="count = 1"><?= lang('lang_LoadMore'); ?></button>

@@ -77,7 +77,7 @@
                                                                     <option value=""><?= lang('lang_SelectSeller'); ?></option>
                                                                     <?php foreach ($sellers as $seller_detail): ?>
                                                                         <option value="<?= $seller_detail->id; ?>">
-                                                                            <?= $seller_detail->name; ?>
+                                                                            <?= $seller_detail->company; ?>
                                                                         </option>
                                                                     <?php endforeach; ?>
                                                                 </select>

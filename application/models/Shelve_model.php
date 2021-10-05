@@ -41,7 +41,7 @@ class Shelve_model extends CI_Model {
         if ($data['type'] == 'UN') {
             $this->db->where('`stock_location` NOT IN (SELECT `stock_location` FROM `item_inventory`)', NULL, FALSE);
         }
-        $this->db->select('`stockLocation`.`stock_location`,seller_m.name');
+        $this->db->select('`stockLocation`.`stock_location`,seller_m.company');
         $this->db->from('stockLocation');
         $this->db->join('customer as seller_m', 'seller_m.id = stockLocation.seller_id');
         // if(!empty($seller_id))

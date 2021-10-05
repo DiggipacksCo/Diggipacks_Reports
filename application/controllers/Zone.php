@@ -31,7 +31,7 @@ class Zone extends MY_Controller {
        
         foreach($sellers as $key=>$val)
         {
-            $sellers[$key]->cust_name=getallsellerdatabyID(  $sellers[$key]->cust_id,'name',$sellers[$key]->super_id);
+            $sellers[$key]->cust_name=getallsellerdatabyID(  $sellers[$key]->cust_id,'company',$sellers[$key]->super_id);
             //cust_name=
         }
          $data['sellers']=$sellers;
@@ -199,7 +199,7 @@ class Zone extends MY_Controller {
 
                //print "<pre>";  print_r( $precity); exit;
                 
-                $data['EditData'][0]->cust_name = getallsellerdatabyID(  $data['EditData'][0]->cust_id,'name',$data['EditData'][0]->super_id);
+                $data['EditData'][0]->cust_name = getallsellerdatabyID(  $data['EditData'][0]->cust_id,'company',$data['EditData'][0]->super_id);
             
             //cust_name=
     

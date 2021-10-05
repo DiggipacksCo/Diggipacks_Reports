@@ -31,7 +31,7 @@
                         <!--style="background-color: red;"-->
 
                       
-                            <div ng-if="message!=undefined" class="alert alert-success">{{message}}<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></div>';
+                            <div ng-if="message!=undefined" class="alert alert-success">{{message}}<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></div>'
 
                       
                         <!-- Dashboard content -->
@@ -60,7 +60,7 @@
                                     <button class="float-right" ng-click="downloadexl(returnData.statusNotcorrect,' Status Incorrect ')">><?=lang('lang_Download');?><</button>
                                     </div>
 
-                                    <div  ng-if="returnData.areadyExit.length>0" class="alert alert-danger">
+                                    <div  ng-if="returnData.areadyExit.length>0 && returnData.price_zero.length==0" class="alert alert-danger">
                                     Invoice Already Created
                                     <button class="float-right" ng-click="downloadexl(returnData.areadyExit,'Invoice Already Created')">><?=lang('lang_Download');?><</button>
                                     </div>
@@ -82,7 +82,7 @@
                                                             <option value=""><?=lang('lang_SelectSeller');?></option>
                                                             <?php foreach ($sellers as $seller_detail): ?>
                                                                 <option value="<?= $seller_detail->id; ?>">
-                                                                    <?= $seller_detail->name; ?>
+                                                                    <?= $seller_detail->company; ?>
                                                                 </option>
                                                             <?php endforeach; ?>
                                                         </select>

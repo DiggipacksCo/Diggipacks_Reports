@@ -232,7 +232,7 @@ if(!empty($awbids ))
             $counter++;
         }
 
-        $query = $this->db->query("select * from shipment_fm where (slip_no IN('$conditions') or booking_id IN('$conditions') or frwd_company_awb IN('$conditions')) and super_id='" . $this->session->userdata('user_details')['super_id'] . "'");
+        $query = $this->db->query("select * from shipment_fm where (slip_no IN('$conditions') or frwd_company_awb IN('$conditions')) and super_id='" . $this->session->userdata('user_details')['super_id'] . "'");
         // echo $this->db->last_query();
         if ($query->num_rows() > 0) {
             return $query->result_array();
@@ -255,7 +255,7 @@ if(!empty($awbids ))
             $counter++;
         }
 
-        $query = $this->db->query("select * from shipment_fm where (slip_no IN('$conditions') or booking_id IN('$conditions') or frwd_company_awb IN('$conditions')) and cust_id='".$cust_id."' and code In ('POD','RTC') and super_id='" . $this->session->userdata('user_details')['super_id'] . "'");
+        $query = $this->db->query("select * from shipment_fm where (slip_no IN('$conditions')  or frwd_company_awb IN('$conditions')) and cust_id='".$cust_id."' and code In ('POD','RTC') and super_id='" . $this->session->userdata('user_details')['super_id'] . "'");
         // echo $this->db->last_query();
         if ($query->num_rows() > 0) {
             return $query->result_array();

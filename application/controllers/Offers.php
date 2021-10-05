@@ -80,7 +80,7 @@ class Offers extends MY_Controller {
         }
           $data['main_itemsArr']= json_encode($main_json);
            $data['offer_itemsArr']=  $data['editData']['gift_item'];
-          $data['seller_name']= getallsellerdatabyID( $data['editData']['seller_id'],'name');
+          $data['seller_name']= getallsellerdatabyID( $data['editData']['seller_id'],'company');
 
         $this->load->view('offerM_gift/edit_offer', $data);
     }
@@ -105,7 +105,7 @@ class Offers extends MY_Controller {
             $SkuArr = $this->Offers_model->GetALlskuAQtyQry($row['promocode']);
             $newlistArray[$key]['SkuArr'] = $SkuArr;
             $newlistArray[$key]['firstSku'] = getalldataitemtables($row['main_item'], 'sku');
-            $newlistArray[$key]['seller_name'] = getallsellerdatabyID($row['seller_id'], 'name');
+            $newlistArray[$key]['seller_name'] = getallsellerdatabyID($row['seller_id'], 'company');
 
             $offer_itemArr = explode(',', $row['offer_item']);
             //print_r($offer_itemArr);
@@ -140,7 +140,7 @@ class Offers extends MY_Controller {
            
              $SkuArr = $this->Offers_model->GetALlskuAQtyQry_gift($row['promocode']);
             $newlistArray[$key]['SkuArr'] = $SkuArr;
-            $newlistArray[$key]['seller_name'] = getallsellerdatabyID($row['seller_id'], 'name');
+            $newlistArray[$key]['seller_name'] = getallsellerdatabyID($row['seller_id'], 'company');
 
            
            
@@ -163,7 +163,7 @@ class Offers extends MY_Controller {
         foreach ($newlistArray as $key => $row) {
             $SkuArr = $this->Offers_model->GetALlskuAQtyQry_orders($row['slip_no']);
             $newlistArray[$key]['SkuArr'] = $SkuArr;
-            $newlistArray[$key]['seller_name'] = getallsellerdatabyID($row['seller_id'], 'name');
+            $newlistArray[$key]['seller_name'] = getallsellerdatabyID($row['seller_id'], 'company');
         }
         $return['result'] = $newlistArray;
         $return['count'] = $listArr['count'];
@@ -180,7 +180,7 @@ class Offers extends MY_Controller {
         foreach ($newlistArray as $key => $row) {
             $SkuArr = $this->Offers_model->GetALlskuAQtyQry_orders_gift($row['slip_no']);
             $newlistArray[$key]['SkuArr'] = $SkuArr;
-            $newlistArray[$key]['seller_name'] = getallsellerdatabyID($row['seller_id'], 'name');
+            $newlistArray[$key]['seller_name'] = getallsellerdatabyID($row['seller_id'], 'company');
         }
         $return['result'] = $newlistArray;
         $return['count'] = $listArr['count'];

@@ -372,7 +372,7 @@ class ItemInventory_model extends CI_Model {
     public function all() {
 
 
-        $this->db->select('item_inventory.id , items_m.sku , item_inventory.quantity,item_inventory.update_date , items_m.name,seller_m.name as seller_name,items_m.description as item_description');
+        $this->db->select('item_inventory.id , items_m.sku , item_inventory.quantity,item_inventory.update_date , items_m.name,seller_m.company as seller_name,items_m.description as item_description');
         $this->db->from('item_inventory');
         $this->db->join('items_m', 'items_m.id = item_inventory.item_sku');
         $this->db->join('customer as seller_m', 'seller_m.id = item_inventory.seller_id');
@@ -410,7 +410,7 @@ class ItemInventory_model extends CI_Model {
 
     public function edit_view($id) {
         $this->db->where('item_inventory.id', $id);
-        $this->db->select('item_inventory.id , items_m.sku , item_inventory.quantity,item_inventory.update_date , items_m.name,seller_m.name as seller_name');
+        $this->db->select('item_inventory.id , items_m.sku , item_inventory.quantity,item_inventory.update_date , items_m.name,seller_m.company as seller_name');
         $this->db->from('item_inventory');
         $this->db->join('items_m', 'items_m.id = item_inventory.item_sku');
         $this->db->join('customer as seller_m', 'seller_m.id = item_inventory.seller_id');
@@ -497,7 +497,7 @@ class ItemInventory_model extends CI_Model {
     public function find_by_sku($sku) {
 
         $this->db->where('item_inventory.super_id', $this->session->userdata('user_details')['super_id']);
-        $this->db->select('item_inventory.id , items_m.sku , item_inventory.quantity,item_inventory.update_date , items_m.name,seller_m.name as seller_name,items_m.description as item_description');
+        $this->db->select('item_inventory.id , items_m.sku , item_inventory.quantity,item_inventory.update_date , items_m.name,seller_m.company as seller_name,items_m.description as item_description');
         $this->db->from('item_inventory');
         $this->db->join('items_m', 'items_m.id = item_inventory.item_sku');
         $this->db->join('customer as seller_m', 'seller_m.id = item_inventory.seller_id');
@@ -642,7 +642,7 @@ class ItemInventory_model extends CI_Model {
         //   print_r($array);
         //   exit();
         $this->db->where($array);
-        $this->db->select('item_inventory.id , items_m.sku , item_inventory.quantity,item_inventory.update_date , items_m.name,seller_m.name as seller_name,items_m.description as item_description');
+        $this->db->select('item_inventory.id , items_m.sku , item_inventory.quantity,item_inventory.update_date , items_m.name,seller_m.company as seller_name,items_m.description as item_description');
         $this->db->from('item_inventory');
         $this->db->join('items_m', 'items_m.id = item_inventory.item_sku');
         $this->db->join('customer as seller_m', 'seller_m.id = item_inventory.seller_id');
@@ -669,7 +669,7 @@ class ItemInventory_model extends CI_Model {
             $start = ($page_no - 1) * $limit;
         }
         $this->db->where('inventory_activity.super_id', $this->session->userdata('user_details')['super_id']);
-        $this->db->select('inventory_activity.id,inventory_activity.p_qty,inventory_activity.type,items_m.sku , inventory_activity.qty,inventory_activity.qty_used,inventory_activity.entrydate,items_m.name,seller_m.name as seller_name,items_m.description as item_description,users.username,inventory_activity.awb_no,users.id,inventory_activity.user_id as iuser_id,inventory_activity.st_location,items_m.item_path,inventory_activity.shelve_no');
+        $this->db->select('inventory_activity.id,inventory_activity.p_qty,inventory_activity.type,items_m.sku , inventory_activity.qty,inventory_activity.qty_used,inventory_activity.entrydate,items_m.name,seller_m.company as seller_name,items_m.description as item_description,users.username,inventory_activity.awb_no,users.id,inventory_activity.user_id as iuser_id,inventory_activity.st_location,items_m.item_path,inventory_activity.shelve_no');
         $this->db->from('inventory_activity');
         $this->db->join('items_m', 'items_m.id = inventory_activity.item_sku');
         $this->db->join('customer as seller_m', 'seller_m.id = inventory_activity.seller_id');
@@ -791,7 +791,7 @@ class ItemInventory_model extends CI_Model {
             $start = ($page_no - 1) * $limit;
         }
         $this->db->where('item_inventory.super_id', $this->session->userdata('user_details')['super_id']);
-        $this->db->select('item_inventory.id,item_inventory.item_sku,item_inventory.shelve_no,item_inventory.stock_location , items_m.sku , item_inventory.quantity,item_inventory.update_date,item_inventory.expity_date,item_inventory.expiry , items_m.name,seller_m.name as seller_name,items_m.description as item_description,seller_m.id as sid,item_inventory.wh_id,item_inventory.seller_id,items_m.item_path');
+        $this->db->select('item_inventory.id,item_inventory.item_sku,item_inventory.shelve_no,item_inventory.stock_location , items_m.sku , item_inventory.quantity,item_inventory.update_date,item_inventory.expity_date,item_inventory.expiry , items_m.name,seller_m.company as seller_name,items_m.description as item_description,seller_m.id as sid,item_inventory.wh_id,item_inventory.seller_id,items_m.item_path');
         $this->db->from('item_inventory');
         $this->db->join('items_m', 'items_m.id = item_inventory.item_sku');
         $this->db->join('customer as seller_m', 'seller_m.id = item_inventory.seller_id');
@@ -896,7 +896,7 @@ class ItemInventory_model extends CI_Model {
             $start = ($page_no - 1) * $limit;
         }
         $this->db->where('item_inventory.super_id', $this->session->userdata('user_details')['super_id']);
-        $this->db->select('item_inventory.id,item_inventory.item_sku,item_inventory.shelve_no,item_inventory.stock_location , items_m.sku , SUM(item_inventory.quantity) as quantity,item_inventory.update_date,item_inventory.expity_date,item_inventory.expiry , items_m.name,seller_m.name as seller_name,items_m.description as item_description,seller_m.id as sid,item_inventory.wh_id,items_m.item_path');
+        $this->db->select('item_inventory.id,item_inventory.item_sku,item_inventory.shelve_no,item_inventory.stock_location , items_m.sku , SUM(item_inventory.quantity) as quantity,item_inventory.update_date,item_inventory.expity_date,item_inventory.expiry , items_m.name,seller_m.company as seller_name,items_m.description as item_description,seller_m.id as sid,item_inventory.wh_id,items_m.item_path');
         $this->db->from('item_inventory');
         $this->db->join('items_m', 'items_m.id = item_inventory.item_sku');
         $this->db->join('customer as seller_m', 'seller_m.id = item_inventory.seller_id');
@@ -940,7 +940,7 @@ class ItemInventory_model extends CI_Model {
 
 
 
-        $this->db->order_by('seller_m.name');
+        $this->db->order_by('seller_m.company');
 
 
         $this->db->limit($limit, $start);
@@ -1241,7 +1241,7 @@ class ItemInventory_model extends CI_Model {
         }
         //`id`, `pickup_id`, `pickupcharge`, `seller_id`, `entrydate`, `storage_id`, `no_of_pallets`, `inbound_charge`, `qty_count`, `inventory_charge`, `sku_id` 
         $this->db->where('orderpickupinvoice.super_id', $this->session->userdata('user_details')['super_id']);
-        $this->db->select('orderpickupinvoice.id,orderpickupinvoice.sku_id,orderpickupinvoice.inbound_charge ,orderpickupinvoice.inventory_charge, items_m.sku , orderpickupinvoice.qty_count,DATE(orderpickupinvoice.entrydate) as entrydate,orderpickupinvoice.no_of_pallets , items_m.name,seller_m.name as seller_name,items_m.sku_size as size,seller_m.id as sid,items_m.item_path');
+        $this->db->select('orderpickupinvoice.id,orderpickupinvoice.sku_id,orderpickupinvoice.inbound_charge ,orderpickupinvoice.inventory_charge, items_m.sku , orderpickupinvoice.qty_count,DATE(orderpickupinvoice.entrydate) as entrydate,orderpickupinvoice.no_of_pallets , items_m.name,seller_m.company as seller_name,items_m.sku_size as size,seller_m.id as sid,items_m.item_path');
         $this->db->from('orderpickupinvoice');
         $this->db->join('items_m', 'items_m.id = orderpickupinvoice.sku_id');
         $this->db->join('customer as seller_m', 'seller_m.id = orderpickupinvoice.seller_id');
@@ -1370,7 +1370,7 @@ class ItemInventory_model extends CI_Model {
 
         //echo "ssssss"; die;
         $this->db->where('item_inventory.super_id', $this->session->userdata('user_details')['super_id']);
-        $this->db->select('item_inventory.*,items_m.sku ,items_m.name,seller_m.name as seller_name,items_m.description as item_description,seller_m.id as sid');
+        $this->db->select('item_inventory.*,items_m.sku ,items_m.name,seller_m.company as seller_name,items_m.description as item_description,seller_m.id as sid');
         $this->db->from('item_inventory');
         $this->db->join('items_m', 'items_m.id = item_inventory.item_sku');
         $this->db->join('customer as seller_m', 'seller_m.id = item_inventory.seller_id');
@@ -1439,7 +1439,7 @@ class ItemInventory_model extends CI_Model {
 
         //echo "ssssss"; die;
         $this->db->where('item_inventory.super_id', $this->session->userdata('user_details')['super_id']);
-        $this->db->select('item_inventory.id,item_inventory.item_sku,item_inventory.shelve_no,item_inventory.stock_location , items_m.sku , SUM(item_inventory.quantity) as quantity,item_inventory.update_date,item_inventory.expity_date,item_inventory.expiry , items_m.name,seller_m.name as seller_name,items_m.description as item_description,seller_m.id as sid,item_inventory.wh_id');
+        $this->db->select('item_inventory.id,item_inventory.item_sku,item_inventory.shelve_no,item_inventory.stock_location , items_m.sku , SUM(item_inventory.quantity) as quantity,item_inventory.update_date,item_inventory.expity_date,item_inventory.expiry , items_m.name,seller_m.company as seller_name,items_m.description as item_description,seller_m.id as sid,item_inventory.wh_id');
         $this->db->from('item_inventory');
         $this->db->join('items_m', 'items_m.id = item_inventory.item_sku');
         $this->db->join('customer as seller_m', 'seller_m.id = item_inventory.seller_id');
@@ -1479,7 +1479,7 @@ class ItemInventory_model extends CI_Model {
 
 
 
-        $this->db->order_by('seller_m.name');
+        $this->db->order_by('seller_m.company');
 
         $this->db->limit($limit, $start);
         $tempdb = clone $this->db;
@@ -1509,7 +1509,7 @@ class ItemInventory_model extends CI_Model {
         $start = $filterArr['exportlimit'] - $limit;
 
         $this->db->where('inventory_activity.super_id', $this->session->userdata('user_details')['super_id']);
-        $this->db->select('inventory_activity.id,inventory_activity.p_qty,inventory_activity.type,items_m.sku , inventory_activity.qty,inventory_activity.qty_used,inventory_activity.entrydate,items_m.name,seller_m.name as seller_name,items_m.description as item_description,users.username,inventory_activity.awb_no,users.user_id,inventory_activity.user_id as iuser_id');
+        $this->db->select('inventory_activity.id,inventory_activity.p_qty,inventory_activity.type,items_m.sku , inventory_activity.qty,inventory_activity.qty_used,inventory_activity.entrydate,items_m.name,seller_m.company as seller_name,items_m.description as item_description,users.username,inventory_activity.awb_no,users.user_id,inventory_activity.user_id as iuser_id');
         $this->db->from('inventory_activity');
         $this->db->join('items_m', 'items_m.id = inventory_activity.item_sku');
         $this->db->join('customer as seller_m', 'seller_m.id = inventory_activity.seller_id');
@@ -1791,7 +1791,7 @@ class ItemInventory_model extends CI_Model {
             $selectQry .= " inventory_activity.p_qty AS PREVIOUSQUANTITY,";
             $selectQry .= " inventory_activity.qty AS NEWQUANTITY,";
             $selectQry .= " inventory_activity.qty_used AS QUANTITYUSED,";
-            $selectQry .= " (select name from customer where customer.id=inventory_activity.seller_id) AS SELLERNAME,";
+            $selectQry .= " (select company from customer where customer.id=inventory_activity.seller_id) AS SELLERNAME,";
             $selectQry .= " (select username from user where user.id=inventory_activity.user_id) AS UPDATEDBY,";
             $selectQry .= " inventory_activity.entrydate AS ENTRYDATE,";
             $selectQry .= " inventory_activity.type AS STATUS,";
@@ -1822,7 +1822,7 @@ class ItemInventory_model extends CI_Model {
             if ($data['entrydate'] == 1)
                 $selectQry .= " inventory_activity.entrydate AS ENTRYDATE,";
             if ($data['seller_name'] == 1)
-                $selectQry .= " (select name from customer where customer.id=inventory_activity.seller_id) AS SELLERNAME,";
+                $selectQry .= " (select  company from customer where customer.id=inventory_activity.seller_id) AS SELLERNAME,";
             if ($data['type'] == 1)
                 $selectQry .= " inventory_activity.type AS STATUS,";
             if ($data['awb_no'] == 1)
@@ -1912,7 +1912,7 @@ class ItemInventory_model extends CI_Model {
             $selectQry .= " item_inventory.stock_location AS STOCKLOCATION,";
             $selectQry .= " (select name from warehouse_category where warehouse_category.id=item_inventory.wh_id) AS WAREHOUSE ,";
             $selectQry .= " item_inventory.quantity AS QUANTITY,";
-            $selectQry .= " (select name from customer where customer.id=item_inventory.seller_id) AS SELLERNAME,";
+            $selectQry .= " (select company from customer where customer.id=item_inventory.seller_id) AS SELLERNAME,";
             $selectQry .= "(select description from items_m where items_m.id=item_inventory.item_sku) AS DESCRIPTION,";
             $selectQry .= " item_inventory.update_date AS UPDATEDDATE,";
             $selectQry .= " item_inventory.expiry AS EXPIRY STATUS,";
@@ -1948,7 +1948,7 @@ class ItemInventory_model extends CI_Model {
             if ($data['quantity'] == 1)
                 $selectQry .= " item_inventory.quantity AS QUANTITY,";
             if ($data['seller_name'] == 1)
-                $selectQry .= " (select name from customer where customer.id=item_inventory.seller_id) AS SELLERNAME,";
+                $selectQry .= " (select company from customer where customer.id=item_inventory.seller_id) AS SELLERNAME,";
             if ($data['item_description'] == 1)
                 $selectQry .= " (select description from items_m where items_m.id=item_inventory.item_sku) AS DESCRIPTION,";
             if ($data['update_date'] == 1)
@@ -1987,7 +1987,7 @@ class ItemInventory_model extends CI_Model {
         }
         $this->db->where('item_inventory.super_id', $this->session->userdata('user_details')['super_id']);
 
-        $this->db->select('item_inventory.id,item_inventory.item_sku ,items_m.less_qty, items_m.sku , SUM(item_inventory.quantity) as quantity,item_inventory.expity_date,item_inventory.expiry , items_m.name,seller_m.name as seller_name,seller_m.id as sid');
+        $this->db->select('item_inventory.id,item_inventory.item_sku ,items_m.less_qty, items_m.sku , SUM(item_inventory.quantity) as quantity,item_inventory.expity_date,item_inventory.expiry , items_m.name,seller_m.company as seller_name,seller_m.id as sid');
         $this->db->from('item_inventory');
         $this->db->join('items_m', 'items_m.id = item_inventory.item_sku');
         $this->db->join('customer as seller_m', 'seller_m.id = item_inventory.seller_id');
@@ -2109,7 +2109,7 @@ class ItemInventory_model extends CI_Model {
 
 
         $this->db->where('item_inventory.super_id', $this->session->userdata('user_details')['super_id']);
-        $this->db->select('item_inventory.id,item_inventory.item_sku ,items_m.less_qty, items_m.sku ,item_inventory.quantity,item_inventory.expity_date,item_inventory.expiry , items_m.name,seller_m.name as seller_name,seller_m.id as sid');
+        $this->db->select('item_inventory.id,item_inventory.item_sku ,items_m.less_qty, items_m.sku ,item_inventory.quantity,item_inventory.expity_date,item_inventory.expiry , items_m.name,seller_m.company as seller_name,seller_m.id as sid');
         $this->db->from('item_inventory');
         $this->db->join('items_m', 'items_m.id = item_inventory.item_sku');
         $this->db->join('customer as seller_m', 'seller_m.id = item_inventory.seller_id');
@@ -2242,7 +2242,7 @@ class ItemInventory_model extends CI_Model {
         }
 
         $this->db->where('diamention.super_id', $this->session->userdata('user_details')['super_id']);
-        $this->db->select('SUM(diamention.piece) as tqty,diamention.sku,seller_m.name');
+        $this->db->select('SUM(diamention.piece) as tqty,diamention.sku,seller_m.company');
         $this->db->from('diamention_fm as diamention');
         //  $this->db->join('items_m', 'items_m.id = diamention.sku');
         $this->db->join('customer as seller_m', 'seller_m.id = diamention.cust_id');
@@ -2333,7 +2333,7 @@ class ItemInventory_model extends CI_Model {
             $start = ($page_no - 1) * $limit;
         }
         $this->db->where('item_inventory.super_id', $this->session->userdata('user_details')['super_id']);
-        $this->db->select('item_inventory.id,item_inventory.item_sku,item_inventory.shelve_no,item_inventory.stock_location , items_m.sku , SUM(item_inventory.quantity) as quantity,item_inventory.update_date,item_inventory.expity_date,item_inventory.expiry , items_m.name,seller_m.name as seller_name,items_m.description as item_description,seller_m.id as sid,item_inventory.wh_id,item_inventory.seller_id');
+        $this->db->select('item_inventory.id,item_inventory.item_sku,item_inventory.shelve_no,item_inventory.stock_location , items_m.sku , SUM(item_inventory.quantity) as quantity,item_inventory.update_date,item_inventory.expity_date,item_inventory.expiry , items_m.name,seller_m.company as seller_name,items_m.description as item_description,seller_m.id as sid,item_inventory.wh_id,item_inventory.seller_id');
         $this->db->from('item_inventory');
         $this->db->join('items_m', 'items_m.id = item_inventory.item_sku');
         $this->db->join('customer as seller_m', 'seller_m.id = item_inventory.seller_id');
@@ -2530,7 +2530,7 @@ class ItemInventory_model extends CI_Model {
 
     public function filter_shelve_details_Query($data = array()) {
         $this->db->where('item_inventory.super_id', $this->session->userdata('user_details')['super_id']);
-        $this->db->select('item_inventory.id,item_inventory.shelve_no,item_inventory.stock_location , items_m.sku , item_inventory.quantity,item_inventory.expity_date,item_inventory.expiry ,items_m.name,seller_m.name as seller_name,items_m.description as item_description,seller_m.id as sid,item_inventory.wh_id,item_inventory.seller_id,warehouse_category.name as w_name');
+        $this->db->select('item_inventory.id,item_inventory.shelve_no,item_inventory.stock_location , items_m.sku , item_inventory.quantity,item_inventory.expity_date,item_inventory.expiry ,items_m.name,seller_m.company as seller_name,items_m.description as item_description,seller_m.id as sid,item_inventory.wh_id,item_inventory.seller_id,warehouse_category.name as w_name');
         $this->db->from('item_inventory');
         $this->db->where('item_inventory.seller_id', $data['seller_id']);
         $this->db->where('item_inventory.shelve_no', $data['shelve_no']);
@@ -2546,7 +2546,7 @@ class ItemInventory_model extends CI_Model {
         $this->db->where('item_inventory.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('items_m.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('storage_table.super_id', $this->session->userdata('user_details')['super_id']);
-        $this->db->select('item_inventory.*,customer.name as cust_name,items_m.sku,items_m.sku_size,customer.id as cust_id,storage_table.storage_type');
+        $this->db->select('item_inventory.*,customer.company as cust_name,items_m.sku,items_m.sku_size,customer.id as cust_id,storage_table.storage_type');
         $this->db->from('item_inventory');
         $this->db->join('customer', 'customer.id = item_inventory.seller_id');
         $this->db->join('items_m', 'items_m.id = item_inventory.item_sku');
@@ -2590,7 +2590,7 @@ class ItemInventory_model extends CI_Model {
             $start = ($data['page_no'] - 1) * $limit;
         }
         $this->db->where('inventory_damage.super_id', $this->session->userdata('user_details')['super_id']);
-        $this->db->select('inventory_damage.id,inventory_damage.quantity, inventory_damage.item_sku,items_m.sku,items_m.name,seller_m.name as seller_name,seller_m.id as sid,inventory_damage.seller_id,items_m.item_path,inventory_damage.order_type,inventory_damage.return_update');
+        $this->db->select('inventory_damage.id,inventory_damage.quantity, inventory_damage.item_sku,items_m.sku,items_m.name,seller_m.company as seller_name,seller_m.id as sid,inventory_damage.seller_id,items_m.item_path,inventory_damage.order_type,inventory_damage.return_update');
         $this->db->from('inventory_damage');
         $this->db->join('items_m', 'items_m.id = inventory_damage.item_sku');
         $this->db->join('customer as seller_m', 'seller_m.id = inventory_damage.seller_id');
@@ -2631,7 +2631,7 @@ class ItemInventory_model extends CI_Model {
 
 
         $this->db->where('inventory_damage.super_id', $this->session->userdata('user_details')['super_id']);
-        $this->db->select('SUM(inventory_damage.quantity) as quantity ,inventory_damage.id, inventory_damage.item_sku,items_m.sku,items_m.name,seller_m.name as seller_name,seller_m.id as sid,inventory_damage.seller_id,inventory_damage.order_type');
+        $this->db->select('SUM(inventory_damage.quantity) as quantity ,inventory_damage.id, inventory_damage.item_sku,items_m.sku,items_m.name,seller_m.company as seller_name,seller_m.id as sid,inventory_damage.seller_id,inventory_damage.order_type');
         $this->db->from('inventory_damage');
         $this->db->join('items_m', 'items_m.id = inventory_damage.item_sku');
         $this->db->join('customer as seller_m', 'seller_m.id = inventory_damage.seller_id');
