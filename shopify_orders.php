@@ -19,13 +19,14 @@ if ($query->num_rows > 0) {
             //$url .= "?tags=" . $row['shopify_tag'];
 
             getOrders($url, $row);
+            
         //}
         
     }
 }
 
     function getOrders($url, $customer) {
-       
+    
         $orders = file_get_contents($url);
         $orders = json_decode($orders)->orders;
         $location_id = $customer['location_id'];
@@ -35,6 +36,7 @@ if ($query->num_rows > 0) {
 
             $origin_city = "";
             foreach ($orders as $order) {
+                sleep(1);
                 if ($order->line_items) {
                     $product_arr = array();
                     foreach ($order->line_items as $items) {
@@ -110,8 +112,11 @@ if ($query->num_rows > 0) {
                  
                 $response = requestSend($url, $params);
                 $response = json_decode($response);
-                
+                echo '<br>'.$order->order_number;
                 if ($response->status == 200 && $customer['shopify_fulfill'] == 1) {
+                    //fulfillment($url, $response->awb_no, $order->id,$location_id); its now at dis[atch to fm its working not by mistake]
+                }
+                if ($response->status == 140 && $customer['shopify_fulfill'] == 1) {
                    // fulfillment($url, $response->awb_no, $order->id,$location_id);
                 }
             }
