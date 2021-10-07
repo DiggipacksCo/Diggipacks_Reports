@@ -81,7 +81,7 @@ thead.report-header {
           <td><div class="form-group" ><strong><?=lang('lang_Seller');?>:</strong>
               <select id="seller_id"name="seller_id" ng-model="filterData.seller_id" class="form-control">
                 <option value=""><?=lang('lang_SelectSeller');?></option>
-                <option ng-repeat="sdata in sellerdata"  value="{{sdata.id}}">{{sdata.name}}</option>
+                <option ng-repeat="sdata in sellerdata"  value="{{sdata.id}}">{{sdata.company}}</option>
               </select>
             </div></td>
              <td><div class="form-group" ><strong><?=lang('lang_Year');?>:</strong>

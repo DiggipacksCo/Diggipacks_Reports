@@ -461,14 +461,14 @@ class Ccompany_model extends CI_Model {
         if ($pay_mode == 'COD') {
             $cod_amount=$totalcustomerAmt;
             $shipment_value = $ShipArr['total_cod_amt'];
-            $pay_mode = 'P';
+            $pay_mode = '3';
             $CashOnDeliveryAmount = array("Value" => $cod_amount,
                 "CurrencyCode" => $currency);
             $services = 'CODS';
         } elseif ($pay_mode == 'CC') {
             $cod_amount=0;
 
-            $pay_mode = 'P';
+            $pay_mode = '3';
             $CashOnDeliveryAmount = NULL;
             $services = '';
             $shipment_value = $ShipArr['shipment_value'];  
@@ -639,7 +639,7 @@ class Ccompany_model extends CI_Model {
                                                             'PersonName' => '',
                                                             'Title' => '',
                                                             'CompanyName' => '',
-                                                            'PhoneNumber1' => '',
+                                                            'PhoneNumber1' => $ShipArr['sender_phone'],
                                                             'PhoneNumber1Ext' => '',
                                                             'PhoneNumber2' => '',
                                                             'PhoneNumber2Ext' => '',
@@ -706,6 +706,8 @@ class Ccompany_model extends CI_Model {
     public function AramexArray($sellername = null, array $ShipArr, array $counrierArr, $complete_sku = null, $pay_mode = null, $CashOnDeliveryAmount = null, $services = null,$box_pieces1= null,$super_id = null ) 
     {
         
+        $siteData=Getsite_configData();
+      // print_r($ShipArr); exit;
         //$sender_default_city= Getselletdetails_new($super_id);
         //$sender_address = $sender_default_city['0']['address'];
         //$sender_city = getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
@@ -717,10 +719,10 @@ class Ccompany_model extends CI_Model {
         $date = (int) microtime(true) * 1000;
         
         if ($pay_mode == 'COD') {
-            $pay_mode = 'P';
+            $pay_mode = '3';
            
     } elseif ($pay_mode == 'CC') {
-            $pay_mode = 'P';
+            $pay_mode = '3';
             
     }
         if(empty($box_pieces1)){
@@ -824,15 +826,15 @@ class Ccompany_model extends CI_Model {
                     'ThirdParty' => array(
                         'Reference1' => '',
                         'Reference2' => '',
-                        'AccountNumber' => '',
+                        'AccountNumber' => $counrierArr['courier_account_no'],
                         'PartyAddress' => array(
-                            'Line1' => '',
+                            'Line1' => $siteData['company_address'],
                             'Line2' => '',
                             'Line3' => '',
-                            'City' => '',
+                            'City' => $sender_city,
                             'StateOrProvinceCode' => '',
-                            'PostCode' => '',
-                            'CountryCode' => '',
+                            'PostCode' => '0000',
+                            'CountryCode' => 'SA',
                             'Longitude' => 0,
                             'Latitude' => 0,
                             'BuildingNumber' => NULL,
@@ -844,16 +846,16 @@ class Ccompany_model extends CI_Model {
                         ),
                         'Contact' => array(
                             'Department' => '',
-                            'PersonName' => '',
+                            'PersonName' => $siteData['company_name'],
                             'Title' => '',
-                            'CompanyName' => '',
-                            'PhoneNumber1' => '',
+                            'CompanyName' =>$siteData['company_name'],
+                            'PhoneNumber1' => $siteData['phone'],
                             'PhoneNumber1Ext' => '',
                             'PhoneNumber2' => '',
                             'PhoneNumber2Ext' => '',
                             'FaxNumber' => '',
-                            'CellPhone' => '',
-                            'EmailAddress' => '',
+                            'CellPhone' =>$siteData['phone'],
+                            'EmailAddress' => $siteData['email'],
                             'Type' => '',
                         ),
                     ),
@@ -903,7 +905,7 @@ class Ccompany_model extends CI_Model {
                 'Reference5' => '',
             )
         );
-       //echo "<pre>"; print_r($params); exit; 
+      // echo "<pre>"; print_r($params); exit; 
         return $params;
     }
 

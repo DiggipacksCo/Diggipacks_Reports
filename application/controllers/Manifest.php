@@ -101,7 +101,7 @@ class Manifest extends CourierCompany_pickup {
 
             if ($rdata['seller_id'] > 0)
            
-                $manifestarray[$ii]['seller_id'] =  getallsellerdatabyID($rdata['seller_id'], 'name',$super_id);
+                $manifestarray[$ii]['seller_id'] =  getallsellerdatabyID($rdata['seller_id'], 'company',$super_id);
             else
                 $manifestarray[$ii]['seller_id'] = 'N/A';
                 
