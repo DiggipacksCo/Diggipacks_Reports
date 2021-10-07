@@ -461,14 +461,14 @@ class Ccompany_model extends CI_Model {
         if ($pay_mode == 'COD') {
             $cod_amount=$totalcustomerAmt;
             $shipment_value = $ShipArr['total_cod_amt'];
-            $pay_mode = 'P';
+            $pay_mode = '3';
             $CashOnDeliveryAmount = array("Value" => $cod_amount,
                 "CurrencyCode" => $currency);
             $services = 'CODS';
         } elseif ($pay_mode == 'CC') {
             $cod_amount=0;
 
-            $pay_mode = 'P';
+            $pay_mode = '3';
             $CashOnDeliveryAmount = NULL;
             $services = '';
             $shipment_value = $ShipArr['shipment_value'];  
@@ -717,10 +717,10 @@ class Ccompany_model extends CI_Model {
         $date = (int) microtime(true) * 1000;
         
         if ($pay_mode == 'COD') {
-            $pay_mode = 'P';
+            $pay_mode = '3';
            
     } elseif ($pay_mode == 'CC') {
-            $pay_mode = 'P';
+            $pay_mode = '3';
             
     }
         if(empty($box_pieces1)){
