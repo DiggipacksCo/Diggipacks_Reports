@@ -36,4 +36,21 @@ class Login_model extends CI_Model {
 			return false;
 		}
 	}
+
+	public function changeSystem($super_id=null) {
+		
+		
+		$this->db->where("is_deleted='0'");
+		$this->db->where("id",$super_id);
+              
+		$result = $this->db->get('user')->result();
+            
+		if(!empty($result)){       
+			 
+				return $result;
+
+		} else {
+			return false;
+		}
+	}
 }

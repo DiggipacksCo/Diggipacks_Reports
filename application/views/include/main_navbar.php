@@ -94,6 +94,29 @@ $margin_left=$marginArr_new[3];
                     <li><a href="<?= base_url('Home/logout'); ?>"><i class="icon-switch2"></i> <?= lang('lang_Logout'); ?></a></li>
                 </ul>
             </li>
+            <?php if($this->session->userdata('user_details')['changeSystem']==true) { ?>
+            <li class="dropdown dropdown-user" style="padding-top:7px;"> 
+                <a class="dropdown-toggle" data-toggle="dropdown">
+                   
+                       Select System
+                 
+                    <i class="caret"></i>
+                </a>
+
+                <ul class="dropdown-menu dropdown-menu-right">
+            <?php 
+            $systemList=systemList();
+
+            foreach($systemList as $ssval)
+            {
+            
+            ?>
+
+                <li><a href="<?= base_url().'System/select/'.$ssval[id]; ?>"><i class="fa fa-language" aria-hidden="true"></i> <?=$ssval['company'];?> </a></li>
+
+                <?php } ?>
+                </ul>   
+                <?php } ?>
             <li class="dropdown dropdown-user" style="padding-top:7px;"> 
                 <a class="dropdown-toggle" data-toggle="dropdown">
                     <?php

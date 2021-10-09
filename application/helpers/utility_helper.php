@@ -1058,6 +1058,20 @@ if (!function_exists('getstaff_multycreated')) {
     }
 
 }
+
+if (!function_exists('systemList')) {
+
+    function systemList() {
+        $ci = & get_instance();
+        $ci->load->database();
+        $siteQry = "select company ,name,id from user where status='Y' and deleted='N' and super_id=0  order by id DESC"; 
+
+        $query = $ci->db->query($siteQry);
+        $result = $query->result_array();
+        return $result;
+    }
+
+}
 if (!function_exists('invoiceDetailnew')) {
 
     function invoiceDetailnew($invoice_no = null) {
