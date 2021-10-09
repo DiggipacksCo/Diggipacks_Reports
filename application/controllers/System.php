@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Login extends MY_Controller {
+class System extends MY_Controller {
 
     function __construct() {
         parent::__construct();
@@ -19,13 +19,13 @@ class Login extends MY_Controller {
         //}
     }
 
-    public function auth_user() {
+    public function select($super_id=null) {
         //echo password_hash(123456, PASSWORD_BCRYPT); die;
 
-        $username = $this->input->post('username');
-        $password = $this->input->post('password');
-
-        $return = $this->Login_model->auth_user($username, $password);
+      if($this->session->userdata('user_details')['changeSystem']==1 && $super_id!=null)
+      {
+        $return = $this->Login_model->changeSystem($super_id);
+       
         if (empty($return)) {
             $this->session->set_flashdata('Error', 'Invalid details');
             redirect(base_url() . 'Login', 'refresh');
@@ -35,24 +35,11 @@ class Login extends MY_Controller {
                 
                  $this->session->set_flashdata('Error', 'This account is Inactive. Please contact to your admin..');
 
-                redirect(base_url() . 'Login', 'refresh');
+                redirect(base_url() . 'Home', 'refresh');
             }
             else
             {
 
-            if ($return == 'not_verified') {
-                $this->session->set_flashdata('Error', 'This account is Inactive. Please contact to your admin..');
-
-                redirect(base_url() . 'Login', 'refresh');
-            } else {
-
-                // print_r($return);
-                // exit();
-                $changeSystem=0;
-                if( $return[0]->id==65)
-                {
-                    $changeSystem=1;
-                }
                 if ($return[0]->super_id == 0) {
                     $user_details = array(
                         'username' => $return[0]->username,
@@ -66,23 +53,9 @@ class Login extends MY_Controller {
                         'super_id' => $return[0]->id,
                         'wh_id' => $return[0]->wh_id,
                         'is_logged_in' => TRUE,
-                        'changeSystem'=>$changeSystem
+                        'changeSystem'=>1
                     );
-                } else {
-                    $user_details = array(
-                        'username' => $return[0]->username,
-                        'user_id' => $return[0]->id,
-                        'city' => $return[0]->city,
-                        'status' => $return[0]->status,
-                        'is_deleted' => $return[0]->is_deleted,
-                        'email' => $return[0]->email,
-                        'user_type' => $return[0]->user_type,
-                        'profile_pic' => $return[0]->logopath,
-                        'super_id' => $return[0]->super_id,
-                        'wh_id' => $return[0]->wh_id,
-                        'is_logged_in' => TRUE
-                    );
-                }
+                } 
                 // print_r($user_details);
                 // exit();
 
@@ -91,15 +64,13 @@ class Login extends MY_Controller {
                 $logstattus = "login";
                 $logArray = array('user_id' => $this->session->userdata('user_details')['user_id'], 'details' => $actdetails, 'status' => $logstattus, 'ip_address' => $_SERVER['REMOTE_ADDR'], 'super_id' => $this->session->userdata('user_details')['super_id']);
                 $this->db->insert('activities_log', $logArray);
-                // print_r($return);
-                //       print_r($this->session->userdata('user_details'));
-                // exit();
+               
             }
-            }
-            // $name= $this->session->userdata->('username'); 
+          
 
             redirect(base_url() . 'Home', 'refresh'); //.$name);
         }
+    }
     }
 
     public function sign_up() {
