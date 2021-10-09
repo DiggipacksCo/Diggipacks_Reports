@@ -4300,10 +4300,13 @@ if(!empty($awbids ))
         $this->db->where('shipment_fm.status', 'Y');
         $this->db->where('shipment_fm.deleted', 'N');
         $this->db->order_by('shipment_fm.id', 'desc');
-        if (isset($filterData['exportlimit']) && !empty($filterData['exportlimit'])) {
-            $this->db->limit($filterData['exportlimit']);
-        }
-
+        // if (isset($filterData['exportlimit']) && !empty($filterData['exportlimit'])) {
+        //     $this->db->limit($filterData['exportlimit'],2000);
+        // }
+        $limit = 2000;   
+        $start = $filterData['exportlimit'] - $limit; 
+        $this->db->limit($limit, $start);     
+     // echo  $this->db->get_compiled_select(); exit;
         $query = $this->db->get();
      //echo $this->db->last_query(); die;
         $delimiter = ",";
