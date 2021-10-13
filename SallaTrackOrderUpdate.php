@@ -11,7 +11,8 @@ class SallaTrackOrderUpdate {
 
     public function __construct() {
 
-        $this->api_url = "http://s.salla.sa/webhook/track/order/"; 
+        $this->api_url = "https://s.salla.sa/webhook/diggipacks/order/"; 
+      
         $this->super_id = 5;
 
 
@@ -37,13 +38,11 @@ class SallaTrackOrderUpdate {
             foreach ($customers as $customer) {
                 if ($customer['salla_provider'] == 1) {
                     $auth_token = $customer['salla_provider_token'];
-                    $tracking_url = $customer['site_url'];
-
-                    if (!$this->is_valid_domain_name($tracking_url)) {
-                        $tracking_url = "https://fastcoo-tech.com";
-                    }
+                   
+                        $t_url = "https://track.diggipacks.com";
                     
-                    $tracking_url = $this->addhttp($tracking_url);
+                    
+                    $t_url = $this->addhttp($t_url);
                     $orders = $this->sallaOrders($customer);
 
                   //  print_r( $orders); exit;
@@ -52,7 +51,7 @@ class SallaTrackOrderUpdate {
                         foreach ($orders as $order) {
                             $shippers_ref_no = $order['booking_id'];
                             $tracking_number = $order['frwd_company_awb'];
-                            $tracking_url = $tracking_url . '/' . $order['slip_no']; 
+                          echo '<br>'. $tracking_url = $t_url . '/' . $order['slip_no']; 
 
                             if ($order['code'] == 'POD') {
                                 $status = 9;
@@ -75,7 +74,7 @@ class SallaTrackOrderUpdate {
                                 $note = 'delivering';
                                 $this->Salla_StatusUpdate($shippers_ref_no, $status, $note, $tracking_number, $tracking_url, $customer);
                                 //Quantity update here
-                                $this->sendQuantityupdatetosalla($order['slip_no'], $order['super_id'], $order['cust_id'], $customer);
+                                //$this->sendQuantityupdatetosalla($order['slip_no'], $order['super_id'], $order['cust_id'], $customer);
                             }
                         }
                     }
@@ -109,7 +108,7 @@ class SallaTrackOrderUpdate {
 
     function Salla_StatusUpdate($shippers_ref_no, $status, $note, $tracking_number, $tracking_url, $customer) {
         $data = array(
-            'auth-token' => $customer['salla_provider_token'],
+            'auth-token' => '$2y$04$rncDoc3yqrue9Fc6Ey29JOs1Qws4J6yVr9UbF2kDMKWv//xAhJ72y',
             'status' => $status,
             'note' => $note,
             'tracking_url' => $tracking_url,
@@ -117,8 +116,8 @@ class SallaTrackOrderUpdate {
         );
 
 
-      $url ='https://s.salla.sa/webhook/track/order/' . $shippers_ref_no; 
-        $dataJson = json_encode($data);
+   echo  $url ='https://s.salla.sa/webhook/diggipacks/order/' . $shippers_ref_no; 
+      echo  $dataJson = json_encode($data,JSON_UNESCAPED_SLASHES);
         $headers = array(
             "Content-type: application/json",
         );
@@ -134,7 +133,7 @@ class SallaTrackOrderUpdate {
         $response = curl_exec($ch);
 
         echo '<pre>';
-        echo ($response); 
+        echo ($response);  
     }
 
     function sendQuantityupdatetosalla($slip_no, $super_id, $seller_id, $customer) {

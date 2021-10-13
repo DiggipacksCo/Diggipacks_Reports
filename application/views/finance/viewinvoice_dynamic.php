@@ -58,7 +58,7 @@
 				</tr>
 				<tr>
 
-					<td colspan="5" style="padding:2%;"> 
+					<td colspan="3" width='35%' style="padding:2%;"> 
 						<b>UID Account Number:-&nbsp;<?=GetalldashboardClientField($invoiceDatainfo[0]['cust_id'], 'uniqueid');?> - رقم الحساب</b>
 						<br/> <b>Customers Name:-&nbsp;<?=GetalldashboardClientField($invoiceDatainfo[0]['cust_id'], 'name');?> - اسم العميل</b>
 						<br/> <b>Address:-&nbsp;<?=GetalldashboardClientField($invoiceDatainfo[0]['cust_id'], 'address');?>  - عنوان</b>
@@ -69,12 +69,12 @@
 						<br/> <b>Currency:-<?= $currency; ?></b> 
 					</td>
 
-					<td colspan="3" align="center"> 
+					<td colspan="2" align="center" width='30%'> 
 						 <img src="<?= SUPERPATH . Getsite_configData_field('logo'); ?>"  height="70px;"/>
 						<!-- <img src="https://super.fastcoo-tech.com/assets/331.png.webp" height="70px;" />  -->
 					</td>
 
-					<td colspan="5"style="padding:2%;" ><b align="left">Name Of Company -   اسم الشركة -  <?= Getsite_configData_field('ligal_name'); ?> </b>
+					<td colspan="8"style="padding:2%;" width='35%' ><b align="left">Name Of Company -   اسم الشركة -  <?= Getsite_configData_field('ligal_name'); ?> </b>
 						
 						<br/> <b>Vat Id No.:-&nbsp;<?= Getsite_configData_field('vat'); ?>- الرقم الضريبي </b>
 						<br/> <b>IBAN #:-&nbsp;<?=GetalldashboardClientField($invoiceData[0]['cust_id'], 'iban_number');?> </b>
@@ -115,6 +115,7 @@
 				<tbody>
 				<?php
 					$discount=$invoiceDatainfo[0]['discount'];
+					
 					foreach ($invoiceData as $key => $rowData) {
 					  //	$pickup_charge += $rowData['pickup_charge'];
  						$invoice_no = $rowData['invoice_no'];
@@ -228,25 +229,28 @@
 						<!-- <tr>
 							<td align="justify"> Total Pickup Charges / مجموع رسوم البيك اب </td>
 							<td align="center"><?= $currency; ?>
-								<?=$totalValue['pickup_charge'];?>
+								<?= ($totalValue['pickup_charge']>0)?$totalValue['pickup_charge']:0;?>
 							</td>
 						</tr> -->
 						<tr>
 							<td align="justify"> Total Packing Charges /  مجموع سعر التغليف</td>
 							<td align="center"><?= $currency; ?>
-								<?=$totalValue['packing_charge'];?>
+								
+								<?=($totalValue['packing_charge']>0)?$totalValue['packing_charge']:0;?>
 							</td>
 						</tr>
 						<tr>
 							<td align="justify"> Total Picking Charges / مجموع سعر التقاط المنتجات</td>
 							<td align="center"><?= $currency; ?>
-								<?=$totalValue['picking_charge'];?>
+							
+								<?= ($totalValue['picking_charge']>0)?$totalValue['picking_charge']:0;?>
 							</td>
 						</tr>
 						<tr>
 							<td align="justify"> Total Special Packing Charges / مجموع سعر التغليف الخاص</td>
 							<td align="center"><?= $currency; ?>
-								<?=$totalValue['special_packing'] ;?> 
+								
+								<?= ($totalValue['special_packing']>0)?$totalValue['special_packing']:0;?>
 								
 							</td>
 						</tr>
@@ -254,62 +258,73 @@
 						<tr>
 							<td align="justify"> Total Inbound Charges / مجموع سعر الوارد </td>
 							<td align="center"><?= $currency; ?>
-								<?=$totalValue['inbound_charge'];?>
+							
+								<?= ($totalValue['inbound_charge']>0)?$totalValue['inbound_charge']:0;?>
 							</td>
 						</tr>
 						<tr>
 							<td align="justify"> Total Outbound Charges / مجموع سعر الصادر </td>
 							<td align="center"><?= $currency; ?>
-								<?=$totalValue['outbound_charge'];?>
+							
+								<?= ($totalValue['outbound_charge']>0)?$totalValue['outbound_charge']:0;?>
+
 							</td>
 						</tr>
 					
 						<tr>
 							<td align="justify"> Total Inventory Charges /مجموع رسوم الجرد</td>
 							<td align="center"><?= $currency; ?>
-								<?=$totalValue['inventory_charge'];?>
+							
+								<?= ($totalValue['inventory_charge']>0)?$totalValue['inventory_charge']:0;?>
 							</td>
 						</tr>
 							<tr>
 							<td align="justify"> Total Portal Charges / مجموع سعر لوحة تحكم العميل</td>
 							<td align="center"><?= $currency; ?>
-								<?=$totalValue['portal_charge'];?>
+							<?=($totalValue['portal_charge']>0)?$totalValue['portal_charge']:0;?>
+								
 							</td>
 						</tr>
 						<tr>
 							<td align="justify"> Total Sku Barcode Print / مجموع سعر طباعه الباركود </td>
 							<td align="center"><?= $currency; ?>
-								<?=$totalValue['sku_barcode_print'];?>
+								
+								<?= ($totalValue['sku_barcode_print']>0)?$totalValue['sku_barcode_print']:0;?>
 							</td>
 						</tr>
 						<tr>
 							<td align="justify"> Total Box Charges / مجموع سعر الكرتون </td>
 							<td align="center"><?= $currency; ?>
-								<?=$totalValue['box_charge'];?>
+							
+								<?= ($totalValue['box_charge']>0)?$totalValue['box_charge']:0;?>
 							</td>
 						</tr>
 							<tr>
 							<td align="justify"> Total Onhold Charges / مجموع سعر الشحنات المعلقه</td>
 							<td align="center"><?= $currency; ?>
-								<?=$totalValue['onhold_charges'];?>
+								
+								<?= ($totalValue['onhold_charges']>0)?$totalValue['onhold_charges']:0;?>
 							</td>
 						</tr>
 						<tr>
 							<td align="justify"> Total Storage Charges / مجموع سعر التخزين</td>
 							<td align="center"><?= $currency; ?>
-								<?=$totalValue['storage_charge'];?>
+								
+								<?= ($totalValue['storage_charge']>0)?$totalValue['storage_charge']:0;?>
 							</td>
 						</tr>
 						<tr>
 							<td align="justify"> Total Pallet Charges / مجموع سعر الطبليات</td>
 							<td align="center"><?= $currency; ?>
-								<?=$totalValue['pallet_charge'];?>
+								
+								<?= ($totalValue['pallet_charge']>0)?$totalValue['pallet_charge']:0;?>
 							</td>
 						</tr>
 						<tr>
 							<td align="justify">Total Return Charges</td>
 							<td align="center"><?= $currency; ?>
-								<?=$totalValue['return_charge'];?>
+								
+								<?= ($totalValue['return_charge']>0)?$totalValue['return_charge']:0;?>
 							</td>
 						</tr>
 						<tr>
