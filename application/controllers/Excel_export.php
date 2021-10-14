@@ -329,6 +329,7 @@ class Excel_export extends MY_Controller {
         $object->setActiveSheetIndex(0);
 
         $table_columns = array(
+            "Country",
             "Hub",
             "City",
             "City Code",
@@ -705,15 +706,17 @@ class Excel_export extends MY_Controller {
                 $checkdulicateCity = array();
                 for ($row = 2; $row <= $highestRow; $row++) {
 
-                    $state = trim($worksheet->getCellByColumnAndRow(0, $row)->getValue());
-                    $city = trim($worksheet->getCellByColumnAndRow(1, $row)->getValue());
-                    $city_code = trim($worksheet->getCellByColumnAndRow(2, $row)->getValue());
-                    $arabic_city = trim($worksheet->getCellByColumnAndRow(3, $row)->getValue());
-                    if (!empty($state) && !empty($city) && !empty($city_code)) {
+                    $country = trim($worksheet->getCellByColumnAndRow(0, $row)->getValue());
+                    $state = trim($worksheet->getCellByColumnAndRow(1, $row)->getValue());
+                    $city = trim($worksheet->getCellByColumnAndRow(2, $row)->getValue());
+                    $city_code = trim($worksheet->getCellByColumnAndRow(3, $row)->getValue());
+                    $arabic_city = trim($worksheet->getCellByColumnAndRow(4, $row)->getValue());
+                    if (!empty($country) && !empty($city) && !empty($city_code && !empty($state))) {
                         if (in_array($city, $checkdulicateCity)) {
                             $alertArray['duplicatefile_city'][] = $row;
                         } else {
-                            $countryName = $this->Country_model->GetsuperIdForCountry();
+                            $countryName = $country ;
+                          
                             $checkstateData = $this->Country_model->GetCountryDatacheck($countryName, $state, 'state');
                             if ($checkstateData['state'] == $state) {
 
