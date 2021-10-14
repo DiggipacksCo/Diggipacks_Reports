@@ -1154,7 +1154,9 @@ class PickUp extends MY_Controller {
         $token = GetallCutomerBysellerId($check_slipNo['cust_id'], 'manager_token');
         $salatoken = GetallCutomerBysellerId($check_slipNo['cust_id'], 'salla_athentication');
       
-        if ($check_slipNo['code'] == 'DL' || $check_slipNo['code'] == 'D3PL' || $check_slipNo['code'] == 'POD' || $check_slipNo['code'] == 'ROP' || $check_slipNo['code'] == 'OFD' || $check_slipNo['code'] == 'DOP' || $check_slipNo['code'] == 'FD' || $check_slipNo['delivered'] == '16') {
+        
+        
+        if ($check_slipNo['code'] == 'DL' || $check_slipNo['code'] == 'D3PL' || $check_slipNo['code'] == 'POD' || $check_slipNo['code'] == 'ROP' || $check_slipNo['code'] == 'OFD' || $check_slipNo['code'] == 'DOP' || $check_slipNo['code'] == 'FD' || $check_slipNo['code'] == 'PC' || $check_slipNo['delivered'] == '16' || $check_slipNo['code'] == 'IT' || $check_slipNo['code'] == 'DLM' || $check_slipNo['code'] == 'OP' || $check_slipNo['code'] == 'RI' || $check_slipNo['code'] == 'OH' || $check_slipNo['code'] == 'OU' || $check_slipNo['code'] == 'UAR' || $check_slipNo['code'] == 'RSD' || $check_slipNo['code'] == 'UK' || $check_slipNo['code'] == 'CANC' || $check_slipNo['code'] == 'PDD') {
             foreach ($postData as $SaveStock) {
 
                 foreach ($SaveStock['local'] as $fzArray) {
