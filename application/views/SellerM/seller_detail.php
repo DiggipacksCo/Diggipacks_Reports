@@ -320,45 +320,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         </div>
 
                                     </fieldset>
-                                    <?php if($customer['zid_active']=='N'){ ?>
-                                       <div class="form-group">
-                  <label> &nbsp;</label>
-                  <input class="custom-control-input" type="checkbox" name="zid_active" id="zid_active"  value="Y"/> Zid <?=lang('lang_Account');?>
-               </div>
-                                    <?php  } ?>
+                                  
                                  
-                                    <fieldset class="scheduler-border" id="show_zid_details" <?php echo ($customer['zid_active'] == 'Y' ? 'style="display:block"' : 'style="display:none"'); ?>>   
-                                        <legend class="scheduler-border">Zid <?= lang('lang_DETAILS'); ?> </legend>
-                                        <div class="form-group">
-                                            <label>X-MANAGER-TOKEN</label>
-                                            <input type="text" class="form-control" name="manager_token" id="manager_token" value="<?= $customer['manager_token']; ?>"/>
-                                        </div>
-                                        <div class="form-group">
-                                            <label><?= lang('lang_User_Agent'); ?>t</label>
-                                            <input type="text"  class="form-control" name="user_Agent" id="user_Agent" value="<?= $customer['user_Agent']; ?>"/>
-                                        </div>
-                                        
-                                        
-                                    </fieldset>
-                                     <?php if($customer['salla_active']=='N'){ ?>
-                                     <div class="form-group">
-                  <label> &nbsp;</label>
-                  <input class="custom-control-input" type="checkbox" name="salla_active" id="salla_active"  value="Y"/> Salla <?=lang('lang_Account');?>   
-               </div>
-
-                                    <?php  } ?>
-									 <fieldset class="scheduler-border" id="show_salla_details" <?php echo ($customer['salla_active'] == 'Y' ? 'style="display:block"' : 'style="display:none"'); ?>>   
-                                        <legend class="scheduler-border">Salla <?= lang('lang_DETAILS'); ?></legend>
-                                        <div class="form-group">
-                                            <label>X-MANAGER-TOKEN</label>
-                                            <input type="text" class="form-control" name="salla_manager_token" id="salla_manager_token" value="<?= $customer['salla_athentication']; ?>"/>
-                                        </div>
-                                          <div class="form-group" ><strong><?= lang('lang_From_Date'); ?>:</strong>
-                                                        <input type="text" class="form-control datepppp"  id="from" name="from" ng-model="filterData.from">
-
-                                                    </div>
-                                        
-                                    </fieldset>
+                                   
+                                  
+								
 
 
                                     <button type="submit" class="btn btn-primary pull-right"><?= lang('lang_Edit'); ?></button>
@@ -408,26 +374,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     $('form').attr('autocomplete', 'off');
 $('input').attr('autocomplete', 'off');
 
-	$(document).ready(function() {
-		
-		$('#zid_active').change(function() {
-			if(this.checked) {
-				$("#show_zid_details").show();    
-			}else{    
-				$("#show_zid_details").hide();
-			}
-		});
-		
-		$('#salla_active').change(function() {
-                    //alert("sssssss");
-			if(this.checked) {
-				$("#show_salla_details").show();    
-			}else{    
-				$("#show_salla_details").hide();
-			}
-		});
-		
-	});    
+	
 </script>  
 <script type="text/javascript">
 

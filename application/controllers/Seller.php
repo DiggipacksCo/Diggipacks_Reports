@@ -336,6 +336,7 @@ class Seller extends MY_Controller {
         
         $this->load->view('SellerM/seller_detail', $data);
     }
+    
 
     public function edit($id) {
         //$id=$this->input->post('id');
@@ -447,16 +448,16 @@ $u_type = $this->input->post('u_type');
                 'city' => $this->input->post('city_drop'),
                 'store_link' => $this->input->post('store_link'),
                 'access_lm' => $this->input->post('access_lm'),
-                'bank_name' => $this->input->post('bank_name'),
-                'zid_active' => $this->input->post('zid_active'),
-                'manager_token' => $this->input->post('manager_token'),
-                'user_Agent' => $this->input->post('user_Agent'),
+                //'bank_name' => $this->input->post('bank_name'),
+                //'zid_active' => $this->input->post('zid_active'),
+                //'manager_token' => $this->input->post('manager_token'),
+                //'user_Agent' => $this->input->post('user_Agent'),
                 'auto_forward' => $this->input->post('auto_forward'),
                 //'salla_athentication' => $this->input->post('salla_manager_token'),
                 // 'salla_from_date' => $this->input->post('from'),
                 // 'invoice_type' => $this->input->post('invoice_type'),
                 'first_out' => $first_out,
-                'zid_access' => $zid_access,
+                //'zid_access' => $zid_access,
                 'discount'=>$discount,
                  'discount_f'=>$discount_f,
                 'discount_to'=>$discount_to
@@ -487,15 +488,15 @@ $u_type = $this->input->post('u_type');
                 'store_link' => $this->input->post('store_link'),
                 'access_lm' => $this->input->post('access_lm'),
                 'bank_name' => $this->input->post('bank_name'),
-                'zid_active' => $this->input->post('zid_active'),
-                'manager_token' => $this->input->post('manager_token'),
-                'user_Agent' => $this->input->post('user_Agent'),
+                //'zid_active' => $this->input->post('zid_active'),
+               // 'manager_token' => $this->input->post('manager_token'),
+               // 'user_Agent' => $this->input->post('user_Agent'),
                 'auto_forward' => $this->input->post('auto_forward'),
                 //'salla_athentication' => $this->input->post('salla_manager_token'),
                 //'salla_from_date' => $this->input->post('from'),
                 //'invoice_type' => $this->input->post('invoice_type'),
                 'first_out' => $first_out,
-                'zid_access' => $zid_access,
+                //'zid_access' => $zid_access,
                 'discount'=>$discount,
                  'discount_f'=>$discount_f,
                 'discount_to'=>$discount_to
