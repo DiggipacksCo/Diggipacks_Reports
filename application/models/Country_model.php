@@ -226,14 +226,15 @@ class Country_model extends CI_Model {
         return $query->row_array()['country'];
     }
     
-     public function GetCountryDatacheck($name=null,$value=null,$match)
+     public function GetCountryDatacheck($name=null,$value=null,$match=null)
     {
     
           $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('deleted', 'N');
         $this->db->where('status', 'Y');
         $this->db->where("country",$name);
-         $this->db->where("city=''");
+        // $this->db->where("city=''");
+        if($match!=null)
          $this->db->where($match,$value);
         $this->db->select('id,country,state');
         $this->db->from('country');

@@ -96,10 +96,10 @@
                                     <tbody>
                                         <tr>
 
-                                         
-                                        <td>(1)  <?=lang('lang_Hub');?><span style="color:#F00"><strong>*</strong></span></td>
-                                             <td>(2)  <?=lang('lang_City');?><span style="color:#F00"><strong>*</strong></span></td>
-                                              <td>(3) <?=lang('lang_City_Code');?> <span style="color:#F00"><strong>*</strong></span></td>
+                                        <td>(1)  <?=lang('lang_Country');?><span style="color:#F00"><strong>*</strong></span></td>
+                                        <td>(2)  <?=lang('lang_Hub');?><span style="color:#F00"><strong>*</strong></span></td>
+                                             <td>(3)  <?=lang('lang_City');?><span style="color:#F00"><strong>*</strong></span></td>
+                                              <td>(4) <?=lang('lang_City_Code');?> <span style="color:#F00"><strong>*</strong></span></td>
 
                                         </tr>
                                         <tr>

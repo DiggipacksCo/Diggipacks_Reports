@@ -262,28 +262,7 @@ legend.scheduler-border {
 }
 </style>
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		$("#show_zid_details").hide();
-		$("#show_salla_details").hide();
-		$('#zid_active').change(function() {
-			if(this.checked) {
-				$("#show_zid_details").show();    
-			}else{    
-				$("#show_zid_details").hide();
-			}
-		});
-		
-		$('#salla_active').change(function() {
-			if(this.checked) {
-				$("#show_salla_details").show();    
-			}else{    
-				$("#show_salla_details").hide();
-			}
-		});
-		
-	});    
-</script>  
+
       <script type="text/javascript">
 
                                     $('.datepppp').datepicker({
