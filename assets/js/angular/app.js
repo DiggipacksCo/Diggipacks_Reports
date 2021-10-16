@@ -1488,7 +1488,25 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
                  "last_status_n": false,
             };
 
+            $scope.showCity = function ()
+            {
 
+             
+                $http({
+                    url: "Country/showCity",
+                    method: "POST",
+                    data: $scope.filterData,
+                    headers: {'Content-Type': 'application/json'}
+
+                }).then(function (response) {
+
+                     console.log(response);
+                    $scope.citylist = response.data;
+                    $('.selectpicker').selectpicker('refresh');
+
+                })
+
+            }
             $scope.setFocus=function(id,type)
             { 
                /// console.log();
@@ -1957,6 +1975,7 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
                     alert("please select export limit");
                 }
             }
+           
         })
 
 
@@ -2028,6 +2047,24 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
 
 
                 });
+            }
+            $scope.showCity = function ()
+            {
+
+                $http({
+                    url: "Country/showCity",
+                    method: "POST",
+                    data: $scope.filterData,
+                    headers: {'Content-Type': 'application/json'}
+
+                }).then(function (response) {
+
+                    // console.log(response);
+                    $scope.citylist = response.data;
+                    $('.selectpicker').selectpicker('refresh');
+
+                })
+
             }
         })
         
@@ -2109,7 +2146,24 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
             $scope.Items = [];
             $scope.pickerArray = [];
             $scope.loadershow = false;
+            $scope.showCity = function ()
+            {
 
+                $http({
+                    url: "Country/showCity",
+                    method: "POST",
+                    data: $scope.filterData,
+                    headers: {'Content-Type': 'application/json'}
+
+                }).then(function (response) {
+
+                    // console.log(response);
+                    $scope.citylist = response.data;
+                    $('.selectpicker').selectpicker('refresh');
+
+                })
+
+            }
             $scope.assignPicker = function (pickup_id)
             {
                 console.log(pickup_id);
@@ -2413,6 +2467,24 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
 
                 });
             }
+            $scope.showCity = function ()
+            {
+
+                $http({
+                    url: "Country/showCity",
+                    method: "POST",
+                    data: $scope.filterData,
+                    headers: {'Content-Type': 'application/json'}
+
+                }).then(function (response) {
+
+                    // console.log(response);
+                    $scope.citylist = response.data;
+                    $('.selectpicker').selectpicker('refresh');
+
+                })
+
+            }
         })
 
  .controller('ExportCtrl', function ($scope, $http, $window, $location) {
@@ -2511,7 +2583,24 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
         });
         $('#excelcolumn').modal('hide');
     };
-     
+    $scope.showCity = function ()
+    {
+
+        $http({
+            url: "Country/showCity",
+            method: "POST",
+            data: $scope.filterData,
+            headers: {'Content-Type': 'application/json'}
+
+        }).then(function (response) {
+
+            // console.log(response);
+            $scope.citylist = response.data;
+            $('.selectpicker').selectpicker('refresh');
+
+        })
+
+    }
         })
         .controller('deliveryManifest', function ($scope, $http, $window, Excel, $timeout) {
             $scope.AssignData = {};
@@ -2656,6 +2745,24 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
                     location.href = exportHref;
                 }, 50000); // trigger download         
             }
+            $scope.showCity = function ()
+            {
+
+                $http({
+                    url: "Country/showCity",
+                    method: "POST",
+                    data: $scope.filterData,
+                    headers: {'Content-Type': 'application/json'}
+
+                }).then(function (response) {
+
+                    // console.log(response);
+                    $scope.citylist = response.data;
+                    $('.selectpicker').selectpicker('refresh');
+
+                })
+
+            }
         })
         .factory('Excel', function ($window) {
             var uri = 'data:application/vnd.ms-excel;base64,',
@@ -2751,3 +2858,16 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
             }
         ])
 /*------ /show shipments-----*/
+.directive('selectWatcher', function ($timeout) {
+    return {
+        link: function (scope, element, attr) {
+            var last = attr.last;
+            if (last === "true") {
+                $timeout(function () {
+                    $(element).parent().selectpicker('val', 'any');
+                    $(element).parent().selectpicker('refresh');
+                });
+            }
+        }
+    };
+});

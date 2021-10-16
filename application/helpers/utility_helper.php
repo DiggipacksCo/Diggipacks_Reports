@@ -3889,4 +3889,30 @@ function shopifyFulfill( $awb, $ref_id,$sellerDetail) {
     //     curl_close($cSession);
     // }
 }
+if (!function_exists('cityList')) {
+
+    function cityList($country = null) {
+        $ci = & get_instance();
+        $ci->load->database();
+    
+        $sql = "SELECT city,id FROM country where deleted='N' and city!='' and `country`='" . $country . "' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $query = $ci->db->query($sql);
+        $result = $query->result_array();
+        return $result;
+    }
+    
+    }
+    if (!function_exists('countryList')) {
+
+        function countryList() {
+            $ci = & get_instance();
+            $ci->load->database();
+    
+           $sql = "SELECT DISTINCT `country` as country FROM country where deleted='N' and `country`!='' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+            $query = $ci->db->query($sql);
+            $result = $query->result_array();
+            return $result;
+        }
+    
+    }    
 

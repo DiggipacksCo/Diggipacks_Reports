@@ -367,7 +367,11 @@ class Country extends MY_Controller {
          echo json_encode(array('success'=>true));
     }
 
-
+    public function showCity() {
+        $_POST = json_decode(file_get_contents('php://input'), true);
+        $dataArray = cityList($_POST['country']);
+        echo json_encode($dataArray);
+    }
 
 }
 
