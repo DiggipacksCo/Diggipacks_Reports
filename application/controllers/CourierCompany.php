@@ -600,11 +600,13 @@ class CourierCompany extends MY_Controller  {
                             $sku_data = $this->Ccompany_model->Getskudetails_forward($slipNo);
                             $sku_all_names = array();
                             $sku_total = 0;
+                            $total_weight = 0; 
                             $totalcustomerAmt=0;
                             foreach ($sku_data as $key => $val) {
                                 $totalcustomerAmt+=$sku_data[$key]['cod'];
                                 $skunames_quantity = $sku_data[$key]['name'] . "/ Qty:" . $sku_data[$key]['piece'];
                                 $sku_total = $sku_total + $sku_data[$key]['piece'];
+                                $total_weight += ($sku_data[$key]['weight'] * $sku_data[$key]['piece']);
                                 array_push($sku_all_names, $skunames_quantity);
                             }
                             $sku_all_names = implode(",", $sku_all_names);
@@ -633,6 +635,12 @@ class CourierCompany extends MY_Controller  {
                             $receiver_address = $recDetail['0']['address'];
                             $receiver_mobile = $recDetail['0']['phone'];
 
+                            if($total_weight > 0 ){
+                                $weight = $total_weight;
+                            }else{
+                                $weight = 1;
+                            }
+
                             $ShipArr = array(
                                 'sender_name' =>  $ShipArr['reciever_name'],
                                 'sender_address' =>  $ShipArr['reciever_address'],
@@ -645,7 +653,7 @@ class CourierCompany extends MY_Controller  {
                                 'total_cod_amt' => $ShipArr['total_cod_amt'],
                                 'pieces' =>  $box_pieces1,
                                 'status_describtion' => $complete_sku,
-                                'weight' => $ShipArr['weight'],
+                                'weight' => $weight,//$ShipArr['weight'],
                                 'shippers_ac_no' => $ShipArr['shippers_ac_no'],
                                 'cust_id' => $ShipArr['cust_id'],
                                 'service_id' => $ShipArr['service'],
@@ -1429,7 +1437,8 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                             $response = $this->Ccompany_model->AymakanArray($sellername,$ShipArr, $counrierArr, $Auth_token,$c_id,$box_pieces1,$complete_sku,$super_id);
                             $responseArray = json_decode($response, true);
 
-                            if (empty($responseArray['message'])) 
+                            //if (empty($responseArray['message'])) 
+                            if ($responseArray['success']) 
                             {
                                 $client_awb = $responseArray['data']['shipping']['tracking_number'];
                                 $tracking_url= $counrierArr['api_url']."bulk_awb/trackings/";
@@ -1441,17 +1450,16 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                                // $generated_pdf = file_get_contents($mediaData);
                                 file_put_contents("assets/all_labels/$slipNo.pdf", file_get_contents($mediaData));
                                 $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
-
                                 //****************************aymakan label print cURL****************************
                                 $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
                                 return $return;
                                 }   
-                                 else{
+                            else
+                            {
                                   
                                 $returnArr['responseError'] = $slipNo . ':' . $responseArray['message'].':'.json_encode($responseArray['errors']);
                                 $return= array('status'=>201,'error'=> $returnArr); 
                                 return $return;
-                                    
                             }    
                     
                     }elseif($company == 'Shipsy'){
