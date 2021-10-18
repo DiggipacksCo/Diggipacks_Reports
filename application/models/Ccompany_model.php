@@ -2521,7 +2521,8 @@ class Ccompany_model extends CI_Model {
         $successres = $responseArray['message'];
         $successreserror = $responseArray['error'];
 
-        if(empty($successres) && ($successreserror !=true))
+        //if(empty($successres) && ($successreserror !=true))
+        if ($responseArray['success']) 
         {
             $successstatus  = "Success";
         }else {
