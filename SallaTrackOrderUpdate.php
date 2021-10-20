@@ -3,16 +3,17 @@
 date_default_timezone_set("Asia/Riyadh");
 
 class SallaTrackOrderUpdate {
-
+ 
 // Properties
     public $db;
     public $api_url;
     public $super_id;
 
     public function __construct() {
-
-        $this->api_url = "https://s.salla.sa/webhook/diggipacks/order/"; 
-      
+        error_reporting(-1);
+        ini_set('display_errors', 1);
+        ini_set('memory_limit',-1);
+        $this->api_url = "http://s.salla.sa/webhook/diggipacks/order/";
         $this->super_id = 5;
 
 
@@ -31,56 +32,89 @@ class SallaTrackOrderUpdate {
 
     public function allOrders() {
         $customers = $this->fetchSallaCustomers();
- echo '<pre>';
-      //  print_r( $customers); exit;
-
+        echo '<pre>';
+     
+       
         if ($customers) {
             foreach ($customers as $customer) {
-                if ($customer['salla_provider'] == 1) {
+                if ($customer['salla_provider'] == 1 ) {
                     $auth_token = $customer['salla_provider_token'];
-                   
-                        $t_url = "https://track.diggipacks.com";
-                    
-                    
-                    $t_url = $this->addhttp($t_url);
+                    $tracking_url1 = $customer['site_url'];
+
+                    if (!$this->is_valid_domain_name($tracking_url1)) {
+                        $tracking_url1 = "https://track.diggipacks.com";
+                    }
+
+                    $new_tracking_url = $this->addhttp($tracking_url1);
                     $orders = $this->sallaOrders($customer);
 
-                  //  print_r( $orders); exit;
-                    
+                    //  print_r( $orders); exit;
+                        $DL_array=array('5','16','17','19','21') ;
+                        $RTC_array=array('8','18') ;
+                        
                     if ($orders) {
                         foreach ($orders as $order) {
-                            $shippers_ref_no = $order['booking_id'];
-                            $tracking_number = $order['frwd_company_awb'];
-                          echo '<br>'. $tracking_url = $t_url . '/' . $order['slip_no']; 
 
-                            if ($order['code'] == 'POD') {
+                            if(in_array($order['delivered'],$DL_array))
+                            {
+                                $order['code']='DL';
+                            }
+                            if(in_array($order['delivered'],$RTC_array))
+                            {
+                                $order['code']='RTC';
+                            }
+                            echo '<pre>';
+                          //  print_r($order); exit;
+                            $shippers_ref_no = $order['booking_id'];
+                            echo $tracking_number = $order['frwd_company_awb'];
+                            echo'<br>' . $tracking_url = $new_tracking_url . '/' . $order['slip_no'];
+
+                            if ($order['code'] == 'POD' && $order['salla_track_status_updated'] != 1) {
+                                //echo 'ty'; exit;
                                 $status = 9;
                                 $note = 'delivered';
                                 $this->Salla_StatusUpdate($shippers_ref_no, $status, $note, $tracking_number, $tracking_url, $customer);
-                            } else if ($order['code'] == 'RTC' || $order['code'] == 'C') {
+                                $this->shipmentUpdate($order['slip_no'], 1);
+                            } else if ($order['code'] == 'RTC' && $order['salla_track_status_updated'] != 0) {
+                              
                                 $status = 5;
                                 $note = 'cancelled';
                                 $this->Salla_StatusUpdate($shippers_ref_no, $status, $note, $tracking_number, $tracking_url, $customer);
+
                                 //Quantity update here
-                                $this->sendQuantityupdatetosalla($order['slip_no'], $order['super_id'], $order['cust_id'], $customer);
-                            } else if ($order['code'] == 'DL') {
-                                $status = 8;
-                                $note = 'delivering';
-                                $this->Salla_StatusUpdate($shippers_ref_no, $status, $note, $tracking_number, $tracking_url, $customer);
-                                //Quantity update here
-                                $this->sendQuantityupdatetosalla($order['slip_no'], $order['super_id'], $order['cust_id'], $customer);
-                            } else if ($order['code'] == 'D3PL') {
+                                //$this->sendQuantityupdatetosalla($order['slip_no'], $order['super_id'], $order['cust_id'], $customer);
+                                $this->shipmentUpdate($order['slip_no'], 0);
+                            } else if ($order['code'] == 'DL' && $order['salla_track_status_updated'] != 3) {
                                 $status = 8;
                                 $note = 'delivering';
                                 $this->Salla_StatusUpdate($shippers_ref_no, $status, $note, $tracking_number, $tracking_url, $customer);
                                 //Quantity update here
                                 //$this->sendQuantityupdatetosalla($order['slip_no'], $order['super_id'], $order['cust_id'], $customer);
+                                $this->shipmentUpdate($order['slip_no'], 3);
+                            } else if ($order['code'] == 'D3PL' && $order['salla_track_status_updated'] != 2) {
+                                $status = 8;
+                                $note = 'delivering';
+                                $this->Salla_StatusUpdate($shippers_ref_no, $status, $note, $tracking_number, $tracking_url, $customer);
+                                //Quantity update here
+                               // $this->sendQuantityupdatetosalla($order['slip_no'], $order['super_id'], $order['cust_id'], $customer);
+                                $this->shipmentUpdate($order['slip_no'], 2);
                             }
+                            //}
                         }
                     }
                 }
             }
         }
+    }
+
+    private function shipmentUpdate($slip_no, $salla_track_status_updated) {
+        $cond='';
+        if($salla_track_status_updated==1 || $salla_track_status_updated==5)
+        {
+            $cond=" ,deliver_status=1";
+        }
+        $sql = "update shipment_fm set salla_track_status_updated = '" . $salla_track_status_updated . "' ". $cond." where slip_no='" . $slip_no . "' ";
+        $result = $this->db->query($sql);
     }
 
     private function addhttp($url) {
@@ -92,11 +126,11 @@ class SallaTrackOrderUpdate {
 
     private function sallaOrders($customers) {
         $today = date('Y-m-d');
-        $sql = "select sh.*,s.entry_date from shipment_fm sh left join status_fm s on s.slip_no = sh.slip_no where sh.cust_id='" . $customers['cust_id'] . "' "
-                . "and sh.deleted='N' and (sh.code='RTC' or sh.code='POD' or sh.code ='D3PL' or sh.code='DL') "
-                . "and sh.deliver_status='0'  ";
-        $result = $this->db->query($sql);
+        $lastdate = date('Y-m-d',strtotime('-30 days'));
+       echo '<br>'. $sql = "select * from shipment_fm where cust_id='" . $customers['cust_id'] . "' and delivered NOT IN ('1','2','3','4','9','11') and deleted='N' and deliver_status='0' ";
+        $result = $this->db->query($sql); 
         $orders = mysqli_fetch_all($result, MYSQLI_ASSOC);
+       
         return $orders;
     }
 
@@ -114,10 +148,10 @@ class SallaTrackOrderUpdate {
             'tracking_url' => $tracking_url,
             'tracking_number' => $tracking_number
         );
+echo 'xxx';
 
-
-   echo  $url ='https://s.salla.sa/webhook/diggipacks/order/' . $shippers_ref_no; 
-      echo  $dataJson = json_encode($data,JSON_UNESCAPED_SLASHES);
+        $url = 'https://s.salla.sa/webhook/diggipacks/order/' . $shippers_ref_no;
+        $dataJson = json_encode($data);
         $headers = array(
             "Content-type: application/json",
         );
@@ -133,7 +167,7 @@ class SallaTrackOrderUpdate {
         $response = curl_exec($ch);
 
         echo '<pre>';
-        echo ($response);  
+        echo ($response); 
     }
 
     function sendQuantityupdatetosalla($slip_no, $super_id, $seller_id, $customer) {
@@ -141,21 +175,23 @@ class SallaTrackOrderUpdate {
         $result = $this->db->query($sql);
         $skus = mysqli_fetch_all($result, MYSQLI_ASSOC);
         $auth_token = $customer['salla_provider_token'];
+        $customerId= $customer['uniqueid'];
 
         foreach ($skus as $sku) {
             $query = "select SUM(iv.quantity) as quantity,im.sku from items_m im "
                     . " left join item_inventory iv on iv.item_sku = im.id "
-                    . " where im.sku = '" . $sku . "' and im.super_id='" . $super_id . "' "
+                    . " where im.sku = '" . $sku['sku'] . "' and im.super_id='" . $super_id . "' "
                     . " and iv.seller_id ='" . $seller_id . "'";
+
             $result = $this->db->query($query);
             $skuQtys = mysqli_fetch_all($result, MYSQLI_ASSOC);
             foreach ($skuQtys as $sku) {
                 $request_array = array('auth-token' => $auth_token,
-                    'customerId' => $seller_id,
-                    'quantity' => $sku->quantity
+                    'customerId' =>  $customerId,
+                    'quantity' => $sku['quantity']
                 );
-
-                $url = $customer['salla_track_url'] . "/product/" . $sku->sku;
+                $url = "https://s.salla.sa/webhook/diggipacks/product/" . $sku['sku']; 
+            
                 $json_data = json_encode($request_array);
                 $this->qtyUpdate($url, $json_data);
             }
@@ -177,7 +213,7 @@ class SallaTrackOrderUpdate {
         );
 
         curl_setopt_array($curl_req, $curl_options);
-        $response = curl_exec($curl_req);
+       echo $response = curl_exec($curl_req); 
         //print_r($response);exit;
         curl_close($curl_req);
         return $response;
@@ -189,8 +225,7 @@ class SallaTrackOrderUpdate {
      */
     private function fetchSallaCustomers() {
 
-      echo  $sql = "select c.id as cust_id,s.salla_provider,s.site_url,s.salla_provider_token,c.email,c.phone,c.user_Agent,c.address,c.seller_id,c.super_id,salla_athentication,salla_active,uniqueid,name,city, order_status,company from customer c "
-                . " left join site_config s on s.super_id = c.super_id where  s.super_id= '" . $this->super_id . "' and s.salla_provider='1' ";
+      echo  $sql = "select c.id as cust_id,c.uniqueid,s.salla_provider,s.site_url,s.salla_provider_token,c.email,c.phone,c.user_Agent,c.address,c.seller_id,c.super_id,salla_athentication,salla_active,uniqueid,name,city, order_status,company from customer c  left join site_config s on s.super_id = c.super_id where  s.super_id= '" . $this->super_id . "'   and s.salla_provider='1'  ";
 
         $result = $this->db->query($sql);
         $customers = mysqli_fetch_all($result, MYSQLI_ASSOC);
