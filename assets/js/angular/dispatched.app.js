@@ -2,8 +2,8 @@ var app = angular.module('Appdispatched', [])
 
 
 
-.controller('dispatchForLM', function($scope,$http,$window,Excel,$timeout) {
-  
+.controller('dispatchForLM', function($scope,$http,$window,Excel,$timeout,$location) {
+  $scope.baseUrl = new $window.URL($location.absUrl()).origin;
   $scope.filterData={};
   $scope.shipData=[];
   $scope.Items=[]
@@ -11,6 +11,25 @@ var app = angular.module('Appdispatched', [])
  $scope.dropshort={};
  $scope.loadershow=false; 
   $scope.filterData.s_type="AWB";
+  $scope.showCity = function ()
+  {
+
+   
+      $http({
+          url: $scope.baseUrl+ "/Country/showCity",
+          method: "POST",
+          data: $scope.filterData,
+          headers: {'Content-Type': 'application/json'}
+
+      }).then(function (response) {
+
+           console.log(response);
+          $scope.citylist = response.data;
+          $('.selectpicker').selectpicker('refresh');
+
+      })
+
+  }
  $scope.loadMore=function(page_no,reset)
     {
 		 disableScreen(1);
@@ -277,8 +296,9 @@ var app = angular.module('Appdispatched', [])
    
   
 })
-.controller('CTLRdelivered', function($scope,$http,$window,Excel,$timeout) {
+.controller('CTLRdelivered', function($scope,$http,$window,Excel,$timeout,$location) {
   
+  $scope.baseUrl = new $window.URL($location.absUrl()).origin;
   $scope.filterData={};
   $scope.shipData=[];
   $scope.Items=[]
@@ -339,7 +359,25 @@ var app = angular.module('Appdispatched', [])
     "last_status_n": false
 };
 
+$scope.showCity = function ()
+  {
 
+   
+      $http({
+          url: $scope.baseUrl+ "/Country/showCity",
+          method: "POST",
+          data: $scope.filterData,
+          headers: {'Content-Type': 'application/json'}
+
+      }).then(function (response) {
+
+           console.log(response);
+          $scope.citylist = response.data;
+          $('.selectpicker').selectpicker('refresh');
+
+      })
+
+  }
  $scope.loadMore=function(page_no,reset)
     {
 		 disableScreen(1);
@@ -564,8 +602,8 @@ var app = angular.module('Appdispatched', [])
   
 })
 
-.controller('CTLRreturned', function($scope,$http,$window,Excel,$timeout) {
-  
+.controller('CTLRreturned', function($scope,$http,$window,Excel,$timeout,$location) {
+  $scope.baseUrl = new $window.URL($location.absUrl()).origin;
   $scope.filterData={};
   $scope.shipData=[];
   $scope.Items=[]
@@ -575,7 +613,25 @@ var app = angular.module('Appdispatched', [])
  $scope.filterData.s_type="AWB";
  $scope.filterData.seller="";
  
+ $scope.showCity = function ()
+ {
+
   
+     $http({
+         url: $scope.baseUrl+ "/Country/showCity",
+         method: "POST",
+         data: $scope.filterData,
+         headers: {'Content-Type': 'application/json'}
+
+     }).then(function (response) {
+
+          console.log(response);
+         $scope.citylist = response.data;
+         $('.selectpicker').selectpicker('refresh');
+
+     })
+
+ }
  $scope.loadMore=function(page_no,reset)
     {
 		 disableScreen(1);
@@ -875,3 +931,16 @@ var app = angular.module('Appdispatched', [])
         });
     };
 })
+.directive('selectWatcher', function ($timeout) {
+  return {
+      link: function (scope, element, attr) {
+          var last = attr.last;
+          if (last === "true") {
+              $timeout(function () {
+                  $(element).parent().selectpicker('val', 'any');
+                  $(element).parent().selectpicker('refresh');
+              });
+          }
+      }
+  };
+});

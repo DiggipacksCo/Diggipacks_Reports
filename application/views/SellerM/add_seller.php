@@ -17,11 +17,11 @@
 }
 </style>
 </head>
-<body>
+<body  ng-app="fulfill">
 <?php $this->load->view('include/main_navbar');?>
 
 <!-- Page container -->
-<div class="page-container"> 
+<div class="page-container"  ng-controller="shipment_view" > 
   
   <!-- Page content -->
   <div class="page-content">
@@ -95,19 +95,33 @@
                   <input type="text" class="form-control"id="sender_zip" name="pincode" value="<?=set_value('pincode');?>"/>
                   <input type="hidden" name="city_id" class="form-control" id="city_send_id"/>
                 </div>
-                <div class="form-group">
-                  <label><?=lang('lang_City');?></label>
-                  <span id="city"></span>
-                  <select name="city_drop" id="city_drop" required class="form-control">
-                    <option value="" ><?=lang('lang_Please_Select_City');?></option>  
-                      <?php if(!empty($city_drp))
-                          {
-                            foreach($city_drp as $cry)
-                              { ?>
-                                  <option value="<?php echo $cry->id;?>" <?php if($cry->id== $ctr_id) {echo "selected=selected";}?>><?php echo $cry->city?></option>
-                    <?php }}?>
-                  </select>
+               
+
+                <div class="form-group" >
+                <strong> Country/HUB:</strong>
+
+                <?php
+                $destData = countryList();
+
+                //print_r($destData);
+                ?>
+                <select   ng-change="showCity();" ng-model="filterData.country"  data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%">
+
+                  <option value="">Country/HUB</option>
+                  <?php foreach ($destData as $data) { ?>
+                  <option value="<?= $data['country']; ?>"><?= $data['country']; ?></option>
+                  <?php } ?>
+
+                </select>
                 </div>
+                <div class="form-group" ><strong>City:</strong>
+                        
+                        
+                        <select  name="city_drop" id="city_drop" required  data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%" ng-model="filterData.destination"   >
+
+                <option ng-repeat="cData in citylist"  data-select-watcher data-last="{{$last}}" value="{{cData.id}}" >{{cData.city}}</option>
+                        </select>
+                    </div>
                 <div class="form-group">
                   <label><?=lang('lang_Address');?></label>
                   <input type="text" class="form-control" id="address" name="address" value="<?=set_value('address');?>"/>

@@ -1424,7 +1424,7 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
 
 
         /*------ show shipments-----*/
-        .controller('shipment_view', function ($scope, $http, $window) {
+        .controller('shipment_view', function ($scope, $http, $window,$location) {
             $scope.filterData = {};
             $scope.shipData = [];
             $scope.excelshipData = [];
@@ -1434,7 +1434,7 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
             $scope.loadershow = false;
             $scope.filterData.s_type = 'AWB';
             $scope.filterData.status_o = '';
-
+            $scope.baseUrl = new $window.URL($location.absUrl()).origin;
             $scope.listData2 = {
                 "entrydate": false,
                 "booking_id": false,
@@ -1493,7 +1493,7 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
 
              
                 $http({
-                    url: "Country/showCity",
+                    url: $scope.baseUrl+ "/Country/showCity",
                     method: "POST",
                     data: $scope.filterData,
                     headers: {'Content-Type': 'application/json'}

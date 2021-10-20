@@ -2336,10 +2336,10 @@ if(!empty( $searchids))
         $conditions = array(
             'seller_id' => $data['seller'][0]->id,
         );
-        $data['seller_inventory'] = $this->ItemInventory_model->find($conditions);
-        $data['sellers'] = $this->Seller_model->all();
-        $data['items'] = $this->Item_model->all();
-        $data['city'] = $this->Shipment_model->countryList();
+        //$data['seller_inventory'] = $this->ItemInventory_model->find($conditions);
+        ////$data['sellers'] = $this->Seller_model->all();
+       // $data['items'] = $this->Item_model->all();
+       // $data['city'] = $this->Shipment_model->countryList();
         $this->load->view('ShipmentM/shipment_detail', $data);
     }
 

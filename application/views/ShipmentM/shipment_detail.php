@@ -15,13 +15,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 </head>
 
-<body>
+<body  ng-app="fulfill">
 
 	<?php $this->load->view('include/main_navbar'); ?>
 
 
 	<!-- Page container -->
-	<div class="page-container">
+	<div class="page-container" ng-controller="shipment_view" >
 
 		<!-- Page content -->
 		<div class="page-content">
@@ -48,18 +48,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						
 								
 								<div class="form-group">
-									
-									<label for="exampleInputEmail1"><strong>Destination:</strong></label>
-									<select name="destination" id="destination" class="selectpicker"  data-width="100%" required>
-										<option value="" disabled>Select Seller</option>
-                                        <?php foreach($city as $citylist):?>
-                                    
-											<option value="<?= $citylist->id;?>" selected><?= $citylist->city; ?></option>
-										
-                                        <?php endforeach; ?>	  
-									</select>
+								<div class="col-md-3"> <div class="form-group" ><strong><?= lang('lang_Destination'); ?> Country/HUB:</strong>
+                                                        <br>
+                                                        <?php
+                                                        $destData = countryList();
 
-								</div>
+                                                        //print_r($destData);
+                                                        ?>
+                                                        <select   ng-change="showCity();" ng-model="filterData.country"  data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%">
+
+                                                            <option value=""><?= lang('lang_Select_Destination'); ?></option>
+                                                            <?php foreach ($destData as $data) { ?>
+                                                                <option value="<?= $data['country']; ?>"><?= $data['country']; ?></option>
+                                                            <?php } ?>
+
+                                                        </select>
+                                                    </div></div>
+                                                 <div class="col-md-3"> <div class="form-group" ><strong><?=lang('lang_Destination');?> City:</strong>
+                                                        <br>
+                                                       
+                                                        <select   id="destination" name="destination"   data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%" ng-model="filterData.destination"   >
+                       
+                     <option ng-repeat="cData in citylist"  data-select-watcher data-last="{{$last}}" value="{{cData.id}}" >{{cData.city}}</option>
+                                                        </select>
+                                                    </div></div>
+                                            
 								
 
 

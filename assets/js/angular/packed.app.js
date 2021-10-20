@@ -2,8 +2,9 @@ var app = angular.module('AppPacked', [])
 
 
 
-.controller('orderPacked', function($scope,$http,$window,Excel,$timeout) {
+.controller('orderPacked', function($scope,$http,$window,Excel,$timeout,$location) {
   
+  $scope.baseUrl = new $window.URL($location.absUrl()).origin;
   $scope.filterData={};
   $scope.shipData=[];
   $scope.Items=[]
@@ -11,6 +12,26 @@ var app = angular.module('AppPacked', [])
   $scope.dropshort={};
    $scope.loadershow=false; 
    $scope.filterData.s_type="AWB";
+
+   $scope.showCity = function ()
+ {
+
+  
+     $http({
+         url: $scope.baseUrl+ "/Country/showCity",
+         method: "POST",
+         data: $scope.filterData,
+         headers: {'Content-Type': 'application/json'}
+
+     }).then(function (response) {
+
+          console.log(response);
+         $scope.citylist = response.data;
+         $('.selectpicker').selectpicker('refresh');
+
+     })
+
+ }
  $scope.loadMore=function(page_no,reset)
     {
 		 disableScreen(1);
@@ -497,3 +518,16 @@ $scope.checkAll = function () {
         });
     };
 })
+.directive('selectWatcher', function ($timeout) {
+  return {
+      link: function (scope, element, attr) {
+          var last = attr.last;
+          if (last === "true") {
+              $timeout(function () {
+                  $(element).parent().selectpicker('val', 'any');
+                  $(element).parent().selectpicker('refresh');
+              });
+          }
+      }
+  };
+});
