@@ -4183,7 +4183,7 @@ if(!empty($awbids ))
         if ($data['mode'] == 1)
             $selectQry .= " shipment_fm.mode AS RECEIVER MODE,";
         if ($data['delivered'] == 1) {
-            $selectQry .= " (select main_status from status_main_cat_fm where status_main_cat_fm.id=shipment_fm.delivered) AS MAINSTATUS,";
+            $selectQry .= " (select main_status from status_main_cat_fm where  status_main_cat_fm.id=shipment_fm.delivered) AS MAINSTATUS,";
             //$this->db->join('status_main_cat','status_main_cat.id=shipment_fm.delivery');    
         }
         if ($data['status_o'] == 1) {
@@ -4191,7 +4191,7 @@ if(!empty($awbids ))
         }
         
         if ($data['last_status_n'] == 1) {
-            $selectQry .= " (select Details from status_fm where status_fm.slip_no=shipment_fm.slip_no order by status_fm.id desc limit 1) AS LastStatus ,";
+            $selectQry .= " IF (shipment_fm.delivered='19', (select Details from status_fm where status_fm.slip_no=shipment_fm.slip_no order by status_fm.id desc limit 1),'') AS LastStatus ,";
         }
         if ($data['total_cod_amt'] == 1)
             $selectQry .= " shipment_fm.total_cod_amt AS COD AMOUNT,";
@@ -4306,7 +4306,7 @@ if(!empty($awbids ))
         $limit = 2000;   
         $start = $filterData['exportlimit'] - $limit; 
         $this->db->limit($limit, $start);     
-     // echo  $this->db->get_compiled_select(); exit;
+      //echo  $this->db->get_compiled_select(); exit;
         $query = $this->db->get();
      //echo $this->db->last_query(); die;
         $delimiter = ",";
