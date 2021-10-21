@@ -1037,7 +1037,7 @@ if (!function_exists('GetcustomerDropdata')) {
         $ci = & get_instance();
         $ci->load->database();
 
-        $sql = "SELECT id,uniqueid,name as company FROM customer WHERE  status='Y' and deleted='N' and access_fm='Y' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT id,uniqueid, company FROM customer WHERE  status='Y' and deleted='N' and access_fm='Y' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
         $query = $ci->db->query($sql);
         $statusData = $query->result_array();
         return $statusData;
@@ -3889,4 +3889,34 @@ function shopifyFulfill( $awb, $ref_id,$sellerDetail) {
     //     curl_close($cSession);
     // }
 }
+if (!function_exists('cityList')) {
+
+    function cityList($country = null) {
+        $ci = & get_instance();
+        $ci->load->database();
+    
+        $sql = "SELECT city,id FROM country where deleted='N' and city!='' and `country`='" . $country . "' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $query = $ci->db->query($sql);
+        $result = $query->result_array();
+        return $result;
+    }
+    
+    }
+    if (!function_exists('countryList')) {
+
+        function countryList($city=null) {
+            $ci = & get_instance();
+            $ci->load->database();
+            $condition="";
+            if($city!=null)
+            {
+                $condition=" and id='".$city."'";
+            }
+           $sql = "SELECT DISTINCT `country` as country FROM country where deleted='N' and `country`!='' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'" .$condition;
+            $query = $ci->db->query($sql);
+            $result = $query->result_array();
+            return $result;
+        }
+    
+    }    
 

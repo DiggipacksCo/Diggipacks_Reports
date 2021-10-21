@@ -120,19 +120,29 @@
 <?php endforeach; ?>
                                                         </select>
                                                     </div></div>
-                                                <div class="col-md-3"><div class="form-group" ><strong><?=lang('lang_Destination');?>:</strong> <br>
+                                             
+                                                    <div class="col-md-3"> <div class="form-group" ><strong><?= lang('lang_Destination'); ?> Country/HUB:</strong>
+                                                        <br>
                                                         <?php
-                                                        $destData = getAllDestination();
+                                                        $destData = countryList();
 
                                                         //print_r($destData);
                                                         ?>
-                                                        <select  id="destination" name="destination"  ng-model="filterData.destination" multiple data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%" >
-                                                            <option value=""><?=lang('lang_Select_Destination');?></option>
-                                                                <?php foreach ($destData as $data): ?>
-                                                                <option value="<?= $data['id']; ?>">
-                                                                <?= $data['city']; ?>
-                                                                </option>
-<?php endforeach; ?>
+                                                        <select   ng-change="showCity();" ng-model="filterData.country"  data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%">
+
+                                                            <option value=""><?= lang('lang_Select_Destination'); ?></option>
+                                                            <?php foreach ($destData as $data) { ?>
+                                                                <option value="<?= $data['country']; ?>"><?= $data['country']; ?></option>
+                                                            <?php } ?>
+
+                                                        </select>
+                                                    </div></div>
+                                                    <div class="col-md-3"> <div class="form-group" ><strong><?=lang('lang_Destination');?> City:</strong>
+                                                        <br>
+                                                       
+                                                        <select   id="destination" name="destination"  multiple  data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%" ng-model="filterData.destination"   >
+                       
+                     <option ng-repeat="cData in citylist"  data-select-watcher data-last="{{$last}}" value="{{cData.id}}" >{{cData.city}}</option>
                                                         </select>
                                                     </div></div>
                                                 <div class="col-md-3"><div class="form-group" ><strong><?=lang('lang_Exactdate');?>:</strong>
@@ -144,7 +154,7 @@
                                                 <div class="col-md-3"><div class="form-group" ><strong><?=lang('lang_To');?>:</strong>
                                                         <input type="date" id="to"name="to"  ng-model="filterData.to" class="form-control">
                                                     </div></div>
-                                                     <div class="col-md-2"><div class="form-group" >
+                                                     <div class="col-md-2"><div class="form-group" ><strong><?=lang('lang_Short_List');?>:</strong>
                                                         <select class="form-control"  ng-model="filterData.sort_list" ng-change="loadMore(1, 1);">
 
                                                             <option value=""><?=lang('lang_Short_List');?></option>
@@ -158,14 +168,14 @@
                                                         </select>
 
                                                     </div></div>
-                                                <div class="col-md-2"><div class="form-group" >
+                                                <div class="col-md-2"><div class="form-group" ><strong>Order Type:</strong>
                                                         <select class="form-control"  ng-model="filterData.order_type">
                                                             <option value="">Order Type</option>
                                                             <option  value="B2B">B2B</option>
                                                             <option  value="B2C">B2C</option>
                                                         </select>
                                                     </div></div>
-                                                <div class="col-md-2"><div class="form-group" >
+                                                <div class="col-md-2"><div class="form-group" ><strong>Limit:</strong>
                                                         <select class="form-control"  ng-model="filterData.sort_limit" ng-change="loadMore(1, 1);">
 
                                                             <option value=""><?=lang('lang_Short');?></option>
@@ -176,9 +186,8 @@
                                                         </select>
 
                                                     </div></div>
-                                                <div class="col-md-4">
-                                                </div> 
-                                                <div class="col-md-12"><div class="form-group" > <button  class="btn btn-danger ml-10" ng-click="loadMore(1, 1);" ><?=lang('lang_Search');?></button>
+                                               
+                                                    <div class="col-lg-12" style="padding-left: 0px;padding-right: 20px;"> <div class="form-group" > <button  class="btn btn-danger ml-10" ng-click="loadMore(1, 1);" ><?=lang('lang_Search');?></button>
                                                         <button type="button" class="btn btn-success ml-10"><?=lang('lang_Total');?>  <span class="badge">{{shipData.length}}/{{totalCount}}</span></button>
                                                         <button  class="btn btn-info ml-10" ng-confirm-click="You are going to Create Order, This Action will change the Order status! Are you sure?" ng-click="CreateOrderCheck();" ><?=lang('lang_Create_Order');?></button>
                                                         

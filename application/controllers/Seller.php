@@ -330,7 +330,7 @@ class Seller extends MY_Controller {
     public function edit_view($id) {
         // $id = $this->input->get('id');
         $data['seller'] = $this->Seller_model->edit_view($id);
-        $data['city_drp'] = $this->Seller_model->fetch_all_cities();
+        //$data['city_drp'] = $this->Seller_model->fetch_all_cities();
         $data['customer'] = $this->Seller_model->edit_view_customerdata($id);
 
         

@@ -11,13 +11,13 @@
 
     </head>
 
-    <body>
+    <body  ng-app="fulfill">
 
         <?php $this->load->view('include/main_navbar'); ?>
 
 
         <!-- Page container -->
-        <div class="page-container">
+        <div class="page-container" ng-controller="shipment_view">
 
             <!-- Page content -->
             <div class="page-content">
@@ -88,23 +88,35 @@
                                         <input type="text" class="form-control" name='mobile_no' id="mobile_no" placeholder="Mobile No." value="<?= $editdata['phone']; ?>">
                                     </div>
                                     
-                                    <div class="form-group">
-                                        <label for="branch_location"><strong><?= lang('lang_Branch_Location'); ?>:</strong></label>
-                                        <select name="branch_location" class="form-control" id="branch_location">
-                                 <?php 
-                                 
-                                   echo' <option value="">Select Branch Location</option>';  
-                                 
-                                 foreach(getAllDestination() as $citydata)
-                                 {
-                                     if($citydata['id']== $editdata['branch_location'])
-                                     echo' <option value="'.$citydata['id'].'" selected>'.$citydata['city'].'</option>';  
-                                     else
-                                          echo' <option value="'.$citydata['id'].'">'.$citydata['city'].'</option>';  
-                                 }
-                                 ?>
-                                            </select>
-                                    </div>
+                                  
+
+                                    <div class="form-group" >
+                <strong> Country/HUB:</strong>
+
+                <?php
+                $destData = countryList($editdata['branch_location']);
+
+                //print_r($destData);
+                ?>
+                <select   ng-change="showCity();" ng-model="filterData.country" ng-init="filterData.country='<?=$destData[0]['country'];?>' " data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%">
+
+                
+                  <?php foreach ($destData as $data) { ?>
+                  <option value="<?= $data['country']; ?>"><?= $data['country']; ?></option>
+                  <?php } ?>
+
+                </select>
+                </div>
+                <div class="form-group" ng-init="showCity()" ><strong>City:</strong>
+                        
+                        
+                        <select  name="branch_location" id="branch_location" required  data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%"  ng-init="filterData.destination='<?=$editdata['branch_location'];?>'" ng-model="filterData.destination" >
+
+                <option ng-repeat="cData in citylist"  ng-if="cData.id=='<?=$editdata['branch_location'];?>'" seleted data-select-watcher data-last="{{$last}}" value="{{cData.id}}" >{{cData.city}}</option>
+                <option ng-repeat="cData in citylist"  ng-if="cData.id!='<?=$editdata['branch_location'];?>'"  data-select-watcher data-last="{{$last}}" value="{{cData.id}}" >{{cData.city}}</option>
+                        </select>
+                       
+                    </div>
                                     <div class="form-group">
                                         <label for="address"><strong><?= lang('lang_Address'); ?>:</strong></label>
                                         <input type="text" class="form-control" name='address' id="address" placeholder="Address" value="<?= $editdata['address']; ?>">

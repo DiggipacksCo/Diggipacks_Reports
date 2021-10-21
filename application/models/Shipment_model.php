@@ -1018,7 +1018,11 @@ if(!empty($awbids ))
             $this->db->where_in('shipment.cust_id', $data['seller']);
         }
 
+        if (!empty($data['destination'])) {
+            $destination = array_filter($data['destination']);
 
+            $this->db->where_in('shipment.destination', $data['destination']);
+        }
 
        
 
@@ -1031,7 +1035,7 @@ if(!empty($awbids ))
 
         $query = $this->db->get();
 
-      // echo $this->db->last_query(); 
+       //echo $this->db->last_query(); 
         if ($query->num_rows() > 0) {
 
             $data['result'] = $query->result_array();
@@ -1426,8 +1430,10 @@ if(!empty($awbids ))
             $this->db->where('shipment_fm.wh_id', $wh_id);
         }
         if (!empty($refsno)) {
-            $this->db->where('shipment.booking_id', $refsno)
+            $this->db->group_start();
+            $this->db->where('shipment_fm.booking_id', $refsno)
             ->or_where('shipment_fm.frwd_company_awb',$refsno);
+            $this->db->group_end();
         }
          if (!empty($mobileno)) {
             $this->db->where('shipment_fm.reciever_phone', $mobileno);

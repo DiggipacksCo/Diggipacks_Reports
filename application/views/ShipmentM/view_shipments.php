@@ -83,16 +83,15 @@
                                                 <!-- Today's revenue -->
 
                                                 <!-- <div class="panel-body" > -->
-                                                <div class="col-md-3"> <div class="form-group" ><strong>Search Type:</strong>
+                                                <!-- <div class="col-md-3"> <div class="form-group" ><strong>Search Type:</strong>
                                                         <br>
                                                         <select  id="s_type" name="s_type" ng-model="filterData.s_type" class="selectpicker"  data-width="100%" >
 
-                                                            <option value="AWB"><?=lang('lang_AWB');?></option>
-<!--                                                            <option value="close_date">Close Date</option>-->
+                                                            <option value="AWB"><?=lang('lang_AWB');?></option>                                                        <option value="close_date">Close Date</option>
 
 
                                                         </select>
-                                                    </div></div>
+                                                    </div></div> -->
                                                 <div class="col-md-3"> <div class="form-group" ><strong>Search Value:</strong>
                                                         <input type="text" id="s_type_val"  name="s_type_val"  ng-model="filterData.s_type_val"  class="form-control" placeholder="Enter AWB no.">
                                                         
@@ -114,22 +113,30 @@
                                                         </select>
                                                     </div> 
                                                 </div>
-                                                <div class="col-md-3"> <div class="form-group" ><strong><?=lang('lang_Destination');?>:</strong>
+                                                <div class="col-md-3"> <div class="form-group" ><strong><?= lang('lang_Destination'); ?> Country/HUB:</strong>
                                                         <br>
                                                         <?php
-                                                        $destData = getAllDestination();
+                                                        $destData = countryList();
 
                                                         //print_r($destData);
                                                         ?>
-                                                        <select  id="destination" name="destination"  ng-model="filterData.destination" multiple data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%" >
+                                                        <select  id="destination" name="destination"  ng-change="showCity();" ng-model="filterData.country"  data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%">
 
-                                                            <option value=""><?=lang('lang_Select_Destination');?></option>
-                                                            <?php foreach ($destData as $data): ?>
-                                                                <option value="<?= $data['id']; ?>"><?= $data['city']; ?></option>
-                                                            <?php endforeach; ?>
+                                                            <option value=""><?= lang('lang_Select_Destination'); ?></option>
+                                                            <?php foreach ($destData as $data) { ?>
+                                                                <option value="<?= $data['country']; ?>"><?= $data['country']; ?></option>
+                                                            <?php } ?>
 
                                                         </select>
-                                                    </div> </div>
+                                                    </div></div>
+                                                 <div class="col-md-3"> <div class="form-group" ><strong><?=lang('lang_Destination');?> City:</strong>
+                                                        <br>
+                                                       
+                                                        <select  id="city" name="city" multiple  data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%" ng-model="filterData.destination"   >
+                       
+                     <option ng-repeat="cData in citylist"  data-select-watcher data-last="{{$last}}" value="{{cData.id}}" >{{cData.city}}</option>
+                                                        </select>
+                                                    </div></div>
                                             </div>
                                             <div class="col-lg-12" style="padding-left: 20px;padding-right: 20px;">
                                                 <div class="col-md-3"><div class="form-group" ><strong><?=lang('lang_Ref_No');?>:</strong>
