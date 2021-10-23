@@ -304,7 +304,8 @@ public function previousCity_customer($id=null){
       $cityColumnArray = array(
                 'smsa'=>'samsa_city',
                 'micgo'=>'MICGO_city',
-                'aramex'=>'aramex_city', 
+                'aramex'=>'aramex_city',
+				'aramex international'=>'aramex_city', 
                 //''=>'dots_city',
                 'imile'=>'imile_city',
                 'naqel'=>'naqel_city_code',
@@ -313,6 +314,7 @@ public function previousCity_customer($id=null){
                 //''=>'agility_city',
                 'safearrival'=>'safe_arrival',
                 'aymakan'=>'aymakan',
+				
                 'zajil'=>'zajil',
                 'clex'=>'clex',
                 //''=>'rabel_city',

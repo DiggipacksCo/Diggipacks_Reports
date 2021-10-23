@@ -193,7 +193,10 @@
                                                
                                                     <div class="col-lg-12" style="padding-left: 0px;padding-right: 20px;"> <div class="form-group" > <button  class="btn btn-danger ml-10" ng-click="loadMore(1, 1);" ><?=lang('lang_Search');?></button>
                                                         <button type="button" class="btn btn-success ml-10"><?=lang('lang_Total');?>  <span class="badge">{{shipData.length}}/{{totalCount}}</span></button>
-                                                      
+                                                        <button  class="btn btn-info ml-10" ng-click="createManifest();" ><?=lang('lang_Create_Manifest');?></button>
+
+
+
                                                     </div>
                                                 </div>
                                                 

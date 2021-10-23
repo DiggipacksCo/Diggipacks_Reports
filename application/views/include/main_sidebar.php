@@ -658,6 +658,10 @@
                                  <?php if (menuIdExitsInPrivilageArray(76) == 'Y') { ?>
                                     <li><a href="<?= base_url('ItemInventory/historyview'); ?>"><?= lang('lang_Inventory_History'); ?></a></li>
                                 <?php } ?>
+                                <?php if (menuIdExitsInPrivilageArray(76) == 'Y') { ?>
+                                    <li><a href="<?= base_url('warehouse_storage_report'); ?>">Warehouse Storage Report</a></li>
+                                <?php } ?>
+                           
                                       
 
 
