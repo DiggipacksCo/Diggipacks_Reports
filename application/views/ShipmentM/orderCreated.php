@@ -198,16 +198,14 @@
 
                                                     </div></div>
                                                
-                                                    <div class="col-lg-12" style="padding-left: 0px;padding-right: 20px;"> <div class="form-group" > <button  class="btn btn-danger ml-10" ng-click="loadMore(1, 1);" ><?=lang('lang_Search');?></button>
-                                                        <button type="button" class="btn btn-success ml-10"><?=lang('lang_Total');?>  <span class="badge">{{shipData.length}}/{{totalCount}}</span></button>
-                                                        <button  class="btn btn-info ml-10" ng-confirm-click="You are going to Create Order, This Action will change the Order status! Are you sure?" ng-click="CreateOrderCheck();" ><?=lang('lang_Create_Order');?></button>
-                                                        
-                                                          <?php if (menuIdExitsInPrivilageArray(122) == 'Y') { ?>
-                                                        <button  class="btn btn-danger ml-10" ng-confirm-click="Are you sure want delete Orders?" ng-click="removemultipleorder();" ><?=lang('lang_Delete');?></button>
-                                                          <?php  } ?>          
-                                                    </div>
-                                                </div>
-                                                
+                                                    <div class="col-md-12">
+                                                    <div class="form-group" >
+                                                    <button  class="btn btn-danger ml-10" ng-click="loadMore(1, 1);" ><?=lang('lang_Search');?></button>
+                                                    <button type="button" class="btn btn-success ml-10" ><?=lang('lang_Total');?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button>
+                                                    
+                                                    <button  class="btn btn-info ml-10" ng-click="GetOpenPopPicker();" ><?=lang('lang_Generate_Pickup_List');?></button>
+                                                        <a ng-click ="runshell();"class="btn btn-danger ml-10" > <?=lang('lang_AUTO_SYNC_FRWD');?> </a>
+                                                    </div></div>
 
 
 

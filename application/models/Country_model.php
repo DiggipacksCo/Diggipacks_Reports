@@ -356,7 +356,7 @@ class Country_model extends CI_Model {
         
 
         $query = $this->db->get();
-       //echo $this->db->last_query()."<br>";
+      // echo $this->db->last_query()."<br>";
        $count =  $this->cityRecordsCount($filterKey); 
        $totalpages = ceil($count / $limit);
 

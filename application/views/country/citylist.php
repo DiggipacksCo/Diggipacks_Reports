@@ -78,12 +78,14 @@
                                             <?php if (GetCourierCompanyStausActive('SMSA') == 'Y') { ?>
                                                 <th class="head1">SMSA </th>
                                             <?php } ?>
+                                          
                                             <?php if (GetCourierCompanyStausActive('UBREEM') == 'Y') { ?>
                                                 <th class="head1">UBREEM</th>
                                             <?php } ?>
-                                            <?php if (GetCourierCompanyStausActive('ARAMEX') == 'Y') { ?>
+                                            <?php if (GetCourierCompanyStausActive('ARAMEX') == 'Y' || GetCourierCompanyStausActive('Aramex International') == 'Y') { ?>
                                                 <th class="head1">ARAMEX </th>
                                             <?php } ?>
+                                          
                                             <?php if (GetCourierCompanyStausActive('DOTS') == 'Y') { ?>
                                                 <th class="head1">DOTS </th>
                                             <?php } ?>
@@ -231,13 +233,14 @@
                                                         <a class="remove-photo btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'ubreem_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
                                                     </td>
                                                       <?php } ?>
-                                                       <?php if (GetCourierCompanyStausActive('ARAMEX') == 'Y') { ?>
+                                                       <?php if ((GetCourierCompanyStausActive('ARAMEX') == 'Y')||(GetCourierCompanyStausActive('Aramex International') == 'Y')){ ?>
                                                     <td>
                                                         <input type="text" name="aramex_city_name" id="aramex_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['aramex_city']; ?>" class="form-control">
                                                         <br>    
                                                         <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'aramex_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>  
                                                     </td>
                                                       <?php } ?>
+                                                      
                                                     <?php if (GetCourierCompanyStausActive('DOTS') == 'Y') { ?>
                                                     <td>
                                                         <input type="text" name="dots_city_name" id="dots_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['dots_city']; ?>" class="form-control">
