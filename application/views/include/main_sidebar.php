@@ -223,7 +223,7 @@
                         
                     <?php if (menuIdExitsInPrivilageArray(77) == 'Y') { ?>
 
-                        <li <?php if ($this->uri->segment(1) == 'GenerateTods' || $this->uri->segment(1) == 'showtods' || $this->uri->segment(1) == 'addWarehouse'|| $this->uri->segment(1) =='viewWarehouse') echo 'class="active"'; ?>> <a href="#"><i class="icon-stack2"></i> <span><?= lang('lang_Warehouse_Management'); ?></span></a>
+                        <li <?php if ($this->uri->segment(1) == 'GenerateTods' || $this->uri->segment(1) == 'showtods' || $this->uri->segment(1) == 'addWarehouse'|| $this->uri->segment(1) =='viewWarehouse' || $this->uri->segment(1) =='warehouse_storage_report') echo 'class="active"'; ?>> <a href="#"><i class="icon-stack2"></i> <span><?= lang('lang_Warehouse_Management'); ?></span></a>
                         
                             <ul>
                              <?php if (menuIdExitsInPrivilageArray(126) == 'Y') { ?>
@@ -238,6 +238,9 @@
                                 <?php } ?>
                                 <?php if (menuIdExitsInPrivilageArray(85) == 'Y') { ?>
                                     <li><a href="<?= base_url('viewWarehouse'); ?>"><?= lang('lang_View_Warehouse'); ?></a></li>
+                                <?php } ?>
+                                     <?php if (menuIdExitsInPrivilageArray(147) == 'Y') { ?>
+                                    <li><a href="<?= base_url('warehouse_storage_report'); ?>">Warehouse Storage Report</a></li>
                                 <?php } ?>
                             </ul> 
                         </li>

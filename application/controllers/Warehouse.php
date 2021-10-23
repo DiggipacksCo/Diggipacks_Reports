@@ -244,7 +244,10 @@ class Warehouse extends MY_Controller {
     
     public function warehouse_stprage_report()
     {
-        
+         if (menuIdExitsInPrivilageArray(147) == 'N') {
+            redirect(base_url() . 'notfound');
+            die;
+        } 
         $data['warehouseArr']= $this->Warehouse_model->all();
         $this->load->view('Warehouse/storage_graph_report', $data);
     }
