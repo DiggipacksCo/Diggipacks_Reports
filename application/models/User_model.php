@@ -44,7 +44,18 @@ class User_model extends CI_Model {
 
     public function all() {
         $this->db->where('system_access_fm', 'Y');
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        if( $this->session->userdata('user_details')['super_id']== $this->session->userdata('user_details')['user_id'])
+        {
+            $this->db->group_start();
+            $this->db->where('super_id', $this->session->userdata('user_details')['super_id'])
+            ->or_where('id', $this->session->userdata('user_details')['super_id']); 
+            $this->db->group_end();
+        }
+        else
+        {
+            $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        }
+       
         $this->db->where('is_deleted', '0');
         $this->db->order_by('id', 'desc');
         $query = $this->db->get('user');
@@ -75,7 +86,10 @@ class User_model extends CI_Model {
 
     public function edit_view($id = null) {
         $this->db->where('system_access_fm', 'Y');
+        if( $this->session->userdata('user_details')['super_id']!= $this->session->userdata('user_details')['user_id'])
+        {
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        }
         $this->db->where('id', $id);
         // $this->db->get_where('seller_m',array('id'=>$id));
         $query = $this->db->get('user');
@@ -99,7 +113,10 @@ class User_model extends CI_Model {
 
     public function edit($id, $data) {
         $this->db->where('system_access_fm', 'Y');
+        if( $this->session->userdata('user_details')['super_id']!= $this->session->userdata('user_details')['user_id'])
+        {
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        }
         $this->db->where('id', $id);
         return $this->db->update('user', $data);
         //] print_r($this->db->last_query()); die;   
