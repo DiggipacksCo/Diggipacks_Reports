@@ -1304,6 +1304,16 @@ class Excel_export extends MY_Controller {
                                     $dynmicColumn = 'FDA_city';
                                 if ($colimn == 'Dots')
                                     $dynmicColumn = 'dots_city';
+                                if ($colimn == 'Lastpoint')
+                                    $dynmicColumn = 'lastpoint_city';
+                                if ($colimn == 'SMB')
+                                    $dynmicColumn = 'smb_city';
+                                if ($colimn == 'LAFASTA')
+                                    $dynmicColumn = 'lafasta_city';
+                                if ($colimn == 'AJA')
+                                    $dynmicColumn = 'AJA_city';
+                                if ($colimn == 'Bawani')
+                                    $dynmicColumn = 'BAWANI_city';
 
                                  
                                 if (!empty($cityArrayName)) {

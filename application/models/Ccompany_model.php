@@ -532,7 +532,7 @@ class Ccompany_model extends CI_Model {
                                     array(
                                         0 =>
                                         array(
-                                            'Reference1' => '',
+                                            'Reference1' => $ShipArr['slip_no'],
                                             'Reference2' => '',
                                             'Reference3' => '',
                                             'Shipper' =>
@@ -613,41 +613,41 @@ class Ccompany_model extends CI_Model {
                                                     'Type' => '',
                                                 ),
                                             ),
-                                           'ThirdParty' => array(
-                                                        'Reference1' => '',
-                                                        'Reference2' => '',
-                                                        'AccountNumber' => '',
-                                                        'PartyAddress' => array(
-                                                            'Line1' => '',
-                                                            'Line2' => '',
-                                                            'Line3' => '',
-                                                            'City' => '',
-                                                            'StateOrProvinceCode' => '',
-                                                            'PostCode' => '',
-                                                            'CountryCode' => '',
-                                                            'Longitude' => 0,
-                                                            'Latitude' => 0,
-                                                            'BuildingNumber' => null,
-                                                            'BuildingName' => null,
-                                                            'Floor' => null,
-                                                            'Apartment' => null,
-                                                            'POBox' => null,
-                                                            'Description' => null,
-                                                        ),
-                                                        'Contact' => array(
-                                                            'Department' => '',
-                                                            'PersonName' => '',
-                                                            'Title' => '',
-                                                            'CompanyName' => '',
-                                                            'PhoneNumber1' => $ShipArr['sender_phone'],
-                                                            'PhoneNumber1Ext' => '',
-                                                            'PhoneNumber2' => '',
-                                                            'PhoneNumber2Ext' => '',
-                                                            'FaxNumber' => '',
-                                                            'CellPhone' => '',
-                                                            'EmailAddress' => '',
-                                                            'Type' => '',
-                                                        ),
+                                            'ThirdParty' => array(
+                                                'Reference1' => '',
+                                                'Reference2' => '',
+                                                'AccountNumber' => $counrierArr['courier_account_no'],
+                                                'PartyAddress' => array(
+                                                    'Line1' => $sender_address,
+                                                    'Line2' => '',
+                                                    'Line3' => '', 
+                                                    'City' => $sender_city,
+                                                    'StateOrProvinceCode' => '',
+                                                    'PostCode' => '',
+                                                    'CountryCode' =>'SA',
+                                                    'Longitude' => 0,
+                                                    'Latitude' => 0,
+                                                    'BuildingNumber' => NULL,
+                                                    'BuildingName' => NULL,
+                                                    'Floor' => NULL,
+                                                    'Apartment' => NULL,
+                                                    'POBox' => NULL,
+                                                    'Description' => NULL,
+                                                ),
+                                                'Contact' => array(
+                                                    'Department' => '',
+                                                    'PersonName' => $sender_name,
+                                                    'Title' => '',
+                                                    'CompanyName' => $sender_name,
+                                                    'PhoneNumber1' => $ShipArr['sender_phone'],
+                                                    'PhoneNumber1Ext' => '',
+                                                    'PhoneNumber2' => '',
+                                                    'PhoneNumber2Ext' => '',
+                                                    'FaxNumber' => '',
+                                                    'CellPhone' => $ShipArr['sender_phone'],
+                                                    'EmailAddress' => 'support@diggipacks.com',
+                                                    'Type' => '',
+                                                ),
                                             ),
                                             'ShippingDateTime' => "/Date(" . $date . ")/",
                                             'DueDate' => "/Date(" . $date . ")/",
@@ -684,7 +684,7 @@ class Ccompany_model extends CI_Model {
                                             ),
                                             'Attachments' =>
                                             array(),
-                                            'ForeignHAWB' => $ShipArr['slip_no'],
+                                            'ForeignHAWB' =>'',// $ShipArr['slip_no'],
                                             'TransportType ' => 0,
                                             'PickupGUID' => '',
                                             'Number' => NULL,
@@ -6962,6 +6962,974 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
             }
             $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
             return $responseArray;
+    }
+    
+    public function BAWANI_AUTH($counrierArr = array()){
+
+      
+        $param= array(  'username'=>$counrierArr['user_name'],
+                        'password'=>$counrierArr['password'],
+                        'remember_me'=>true
+                    );
+        $dataJson =json_encode($param);
+      
+        $curl = curl_init();
+        
+            curl_setopt_array($curl, array(
+            CURLOPT_URL => $counrierArr['api_url']."v1/customer/authenticate",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS =>$dataJson,
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json',
+                'Accept: application/json'
+            ),
+            ));
+    
+            $Auth_response = curl_exec($curl);
+            curl_close($curl);
+            $responseArray = json_decode($Auth_response, true);
+            $Auth_token = $responseArray['data']['id_token'];
+            return $Auth_token;
+    
+    }
+
+    public function BAWANIArray($sellername = null,array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null, $box_pieces1 = null,  $complete_sku = null, $super_id= null) 
+    {
+
+                $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'BAWANI_city', $super_id);
+                $receiver_city= getdestinationfieldshow_auto_array($ShipArr['destination'], 'BAWANI_city', $super_id);                
+                
+                $store_address =$ShipArr['sender_address'];
+                $senderemail =$ShipArr['sender_email'];
+                $senderphone =$ShipArr['sender_phone'];
+                
+                $API_URL = $counrierArr['api_url'] . "v2/customer/order";
+                
+                if (empty($box_pieces1)) {
+
+                    $box_pieces = 1;
+                } else {
+                    $box_pieces = $box_pieces1;
+                }
+                
+                if ($ShipArr['weight'] == 0) {
+                    $weight = 1;
+                } else {
+                    $weight = $ShipArr['weight'];
+                }
+
+
+               if($receiver_city == 'Riyadh'){
+                   $courier_type= "SAME_DAY";
+                }
+                else{
+                    $courier_type= "NEXT_DAY";
+                }
+                if($ShipArr['mode'] == "COD"){
+
+                    //$pay_mode = "cash";
+                    $pay_mode = "credit_balance"; //"cash";
+
+                    $paid = FALSE;
+                    $cod_amount = $ShipArr['total_cod_amt'];
+                    
+                }
+                elseif ($ShipArr['mode'] == 'CC'){
+                    //$pay_mode = "cash";
+                    $pay_mode = "credit_balance"; //"cash";
+
+                    $paid = TRUE;
+                    $cod_amount = 0;
+                }
+
+                $receiverdata = array(
+                    'address_type' => 'business',
+                    'name'=> $ShipArr['reciever_name'],
+                    'street' => $ShipArr['reciever_address'],
+                    'city' => array(
+                            'name' => $receiver_city
+                        ),
+                    'phone' => $ShipArr['reciever_phone'],
+                    'landmark' => $ShipArr['reciever_address']
+                );
+    
+
+    
+            $sender_data = array(
+                    'address_type' => 'business',
+                    'name' =>$sellername,
+                    'email' => $senderemail,
+                    'apartment'=> '',
+                    'building' => '',
+                    'street' => $store_address,
+                    "city" => array(
+                        "name" =>$sender_city
+                    ),
+                    "country" => array(
+                        "id" => 191
+                    ),
+                        'phone' =>$senderphone,
+                );
+                  
+    
+               
+            $dimensions = array(
+                'weight' => $weight,
+                'width' =>  '',
+                'length' => '',
+                'height' =>'' ,
+                'unit' => '',
+                'domestic' => true
+            );
+
+
+        $package_type = array(
+                'courier_type' =>$courier_type
+
+        );
+        $charge_items[] = array(
+            'payer' => 'recipient',
+            'charge' => 0,
+            'charge_type' => 'service_custom'
+        );
+
+        $details = array(
+            'sender_data' => $sender_data,
+            'recipient_data' => $receiverdata,
+            'dimensions' => $dimensions,
+            'package_type' => $package_type,
+            'charge_items' => $charge_items,
+            'recipient_not_available' => 'do_not_deliver',
+            'payment_type' => $pay_mode,
+            'payer' => 'recipient',
+            'parcel_value' => $cod_amount,
+            'fragile' => true,
+            'note' => $complete_sku,
+            'piece_count' => $box_pieces,
+            'force_create' => true,
+            "reference_id" => $ShipArr['slip_no']
+        );
+
+            $json_final_date = json_encode($details);
+            //echo $json_final_date;  die;
+              
+                     
+            if (empty($receiver_city))
+            {
+                 $response = array('message'=> 'Receiver city empty' ); 
+                 $response = json_encode($response);
+            }
+            else {
+                $curl = curl_init();    
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => $API_URL,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => $json_final_date,
+                    CURLOPT_HTTPHEADER => array(
+                        'Content-Type: application/json',
+                        'Accept: application/json',
+                        'Authorization:Bearer ' .$Auth_token),
+                ));
+                $response = curl_exec($curl);
+                curl_close($curl);
+            }
+
+            $responseArray = json_decode($response, true);
+            //print_r($responseArray);die;
+       
+            $logresponse =   json_encode($response);  
+            
+            $successres = $responseArray['status'];
+            //print_r($successres);die;
+    
+             if ($successres == 'success') 
+                {
+                        $successstatus = "Success";
+                } else {
+                        $successstatus = "Fail";
+                }
+                $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
+                return $responseArray;
+    }
+
+    public function BAWANI_label($client_awb = null,$counrierArr= null, $Auth_token=null) {
+        
+            $curl = curl_init();
+    
+            curl_setopt_array($curl, array(
+            CURLOPT_URL => $counrierArr['api_url']."v1/customer/orders/airwaybill_mini?ids=&order_numbers=".$client_awb,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array(
+                        'Content-Type: application/json',
+                        'Accept: application/json',
+                        'Authorization:Bearer ' .$Auth_token),
+                ));
+    
+    
+    
+            $label_response = curl_exec($curl);
+            
+            curl_close($curl);
+            return  $label_response;
+    }
+    
+    public function shipox_auth(array $counrierArr)
+    {
+        $user_name = $counrierArr['user_name'] ;
+        $password =  $counrierArr['password'] ;
+        $api_url = $counrierArr['api_url'];
+        
+        $param= array(  'username'=>$user_name,
+                        'password'=>  $password,
+                        'remember_me'=>true
+                    );
+         $dataJson =json_encode($param);
+         
+        $curl = curl_init();
+    
+            curl_setopt_array($curl, array(
+            CURLOPT_URL => $api_url."v1/customer/authenticate",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS =>$dataJson,
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json',
+                'Accept: application/json'
+            ),
+            ));
+    
+            $Auth_response = curl_exec($curl);
+            
+            curl_close($curl);
+            $responseArray = json_decode($Auth_response, true);
+            $Auth_token = $responseArray['data']['id_token'];
+            return $Auth_token;
+    }
+    
+    public function lastpointArray($sellername= null, array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null, $box_pieces1 = null, $super_id=null) 
+    {
+        
+                $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'lastpoint_city', $super_id);
+                $receiver_city= getdestinationfieldshow_auto_array($ShipArr['destination'], 'lastpoint_city', $super_id);
+                
+                $store_address =$ShipArr['sender_address'];
+                $senderemail =$ShipArr['sender_email'];
+                $senderphone =$ShipArr['sender_phone'];
+                
+                $API_URL = $counrierArr['api_url'] . "v2/customer/order";               
+                $currency = "SAR";
+                
+                if (empty($box_pieces1)){
+                $box_pieces = 1;
+                } else {
+                $box_pieces = $box_pieces1;
+                }
+                
+                if ($ShipArr['weight'] == 0) {
+                $weight = 1;
+                } else {
+                $weight = $ShipArr['weight'];
+                }
+
+
+                if($ShipArr['mode'] == "COD"){
+                    $pay_mode = "credit_balance";
+                    $cod_amount = $ShipArr['total_cod_amt'];
+                    $paid = FALSE;
+                }
+                elseif ($ShipArr['mode'] == 'CC'){
+                    $pay_mode = "credit_balance";
+                    $paid = TRUE;
+                    $cod_amount = 0;
+                }
+
+               
+    
+            $sender_data = array(
+                'address_type' => 'residential',
+                'name' =>$sellername,
+                'email' => $senderemail,
+                'apartment'=> 221,
+                'building' => 'B',
+                'street' => $store_address,
+                "city" => array(
+                    "name" =>$sender_city
+                ),
+                "country" => array(
+                    "id" => 191
+                ),
+                
+    
+                    'phone' =>$senderphone,
+                    );
+                  
+    
+                $receiverdata = array(
+                'address_type' => 'residential',
+				'name'=> $ShipArr['reciever_name'],
+                'street' => $ShipArr['reciever_address'],
+                'city' => array(
+                        'name' => $receiver_city
+                    ),
+                    'phone' => $ShipArr['reciever_phone'],
+                    'landmark' => $ShipArr['reciever_address']);
+    
+    
+            $dimensions = array(
+                'weight' => $weight,
+                'width' =>  '',
+                'length' => '',
+                'height' =>'' ,
+                'unit' => '',
+                'domestic' => true
+            );
+            $package_type = array(
+                'courier_type' => 'NEXT_DAY_DELIVERY'
+            );
+
+            $charge_items[] = array(
+                'paid' => $paid,
+                'charge' => $cod_amount,
+                'charge_type' => "COD"               
+            );
+    
+            $details = array(
+                'sender_data' => $sender_data,
+                'recipient_data' => $receiverdata,
+                'dimensions' => $dimensions,
+                'package_type' => $package_type,
+                'charge_items' => $charge_items,
+                'recipient_not_available' => 'do_not_deliver',
+                'payment_type' => $pay_mode,
+                'payer' => 'sender',
+                'parcel_value' => $cod_amount,
+                'fragile' => true,
+                'note' => 'mobile phone',
+                'piece_count' => $box_pieces,
+                'force_create' => true,
+                "reference_id" => $ShipArr['slip_no']
+            );
+
+            $json_final_date = json_encode($details);
+            //  echo "<pre>";  print_r($json_final_date);  die;
+              
+                     
+            if (empty($receiver_city))
+            {
+                 $response = array('message'=> 'Receiver city empty' ); 
+                 $response = json_encode($response);
+            }
+            else {
+                $curl = curl_init();    
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => $API_URL,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => $json_final_date,
+                    CURLOPT_HTTPHEADER => array(
+                        'Content-Type: application/json',
+                        'Accept: application/json',
+                        'Authorization:Bearer ' .$Auth_token),
+                ));
+                $response = curl_exec($curl);
+                curl_close($curl);
+            }
+
+            $responseArray = json_decode($response, true);
+       
+            $logresponse =   json_encode($response);  
+            
+            $successres = $responseArray['status'];
+            //print_r($successres);die;
+    
+             if ($successres == 'success') 
+                {
+                        $successstatus = "Success";
+                } else {
+                        $successstatus = "Fail";
+                }
+                $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no']);
+                return $responseArray;
+    }
+    
+        
+        
+    public function shipox_label($client_awb = null,$counrierArr= null, $Auth_token=null) 
+    {
+        
+            $curl = curl_init();
+    
+            curl_setopt_array($curl, array(
+            CURLOPT_URL => $counrierArr['api_url']."v1/customer/orders/airwaybill_mini?ids=&order_numbers=".$client_awb,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array(
+                        'Content-Type: application/json',
+                        'Accept: application/json',
+                        'Authorization:Bearer ' .$Auth_token),
+                ));
+    
+    
+    
+            $label_response = curl_exec($curl);
+            
+            curl_close($curl);
+            return  $label_response;
+    } 
+    
+    public function LAFASTA_AUTH($username=null,$password=null, $apiurl=null){
+       
+        $apiurl = $apiurl."Login/GetAccessToken";
+        
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => $apiurl,
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'POST',
+          CURLOPT_POSTFIELDS => 'UserName='.$username.'&Password='.$password.'',
+          CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/x-www-form-urlencoded'
+          ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        
+        $responseArray = json_decode($response,TRUE);
+        $token = '';
+        if($responseArray['isSuccess']){
+            $token = $responseArray['resultData']['access_token'];
+        }
+    
+        return $token;
+    }
+    
+    public function LAFASTA_Array($sellername= null, $ShipArr = array(), $counrierArr = array(), $Auth_token=null, $c_id=null, $box_pieces1=null, $complete_sku=null, $sku_data=array(), $super_id= null){
+        
+        $api_url = $counrierArr['api_url'].'V3/Store/Shipment';
+        $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'lafasta_city',$super_id);
+        $receiver_country = getdestinationfieldshow_auto_array($ShipArr['destination'], 'country', $super_id);
+        
+        $API_URL = $counrierArr['api_url'] . "create";
+        $item_array = array();
+        foreach ($sku_data as $key => $val) {
+                $item_array[] = array('SKU'=>$sku_data[$key]['name'], 'Quantity'=>$sku_data[$key]['piece']);
+                //$item_array[] = array('SKU'=>"K156", 'Quantity'=>$sku_data[$key]['piece']);
+        }
+        
+        
+        $box_pieces = empty($box_pieces)?1:$box_pieces;
+        $weight= ($ShipArr['weight']==0)?1:$ShipArr['weight'];
+        if(empty($complete_sku)){
+            $complete_sku = "QTY-".$box_pieces; 
+
+        }else {
+            $complete_sku = $complete_sku;
+        }
+        if ($ShipArr['mode'] == 'COD') {
+            $codValue = $ShipArr['total_cod_amt'];
+            $pay_method = 4;
+        } elseif ($ShipArr['mode'] == 'CC') {
+            $codValue = 0;
+            $pay_method = 1;
+        }
+        
+        
+        
+        $json_array = array(
+                        //"SandboxMode"=>false,
+                        "CustomerName"=>$ShipArr['reciever_name'],
+                        "CustomerPhoneNumber"=>$ShipArr['reciever_phone'],
+                        "PreferredReceiptTime"=>"",
+                        "PreferredDeliveryTime"=>date("Y/m/d h:m"),
+                        "NotesFromStore"=>$complete_sku,
+                        "PaymentMethodId"=>$pay_method,  // Prepaid =1 and Cash on delivery =4
+                        "ShipmentContentValueSAR"=>$codValue,
+                        "ShipmentContentTypeId"=>5, // Food =1, Clothes=2, Electonic Device=3 , Breakable Item=4 and Other = 5
+                        "AddedServicesIds"=>array(6), // Packaging= 6 , Insurance=7, Heat preserve box=8 , Express shipping service= 13, Print shipping label service= 14
+                        "CustomerLocation"=>array(
+                            "Desciption"=>$ShipArr['reciever_address'],
+                            //"Longitude"=>"name",
+                            //"Latitude"=> "46.6067715",
+                            //"GoogleMapsFullLink"=> "https://www.google.com/maps/place/",
+                            //"CountryId"=> 1, // 1= SA
+                            "CityAsString"=> $receiver_city,
+                            //"CityId"=> 1 //Riyadh
+                        ),
+                         "ExternalStoreShipmentIdRef"=> $ShipArr['slip_no'],
+                         "Currency"=>"SAR",
+                         "UseQuickInventory"=>array(
+                             "Items"=>$item_array
+//                                 array(
+//                                        "SKU"=>'K156',
+//                                        "Quantity"=>$box_pieces
+//                                      )  
+                                 
+                         )
+                        
+                    );
+        
+        if(!empty($receiver_city)){
+            $json_string = json_encode($json_array);
+            //echo $json_string;die;
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => $api_url,
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => '',
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 0,
+              CURLOPT_FOLLOWLOCATION => true,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => 'POST',
+              CURLOPT_POSTFIELDS =>$json_string,
+              CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json',
+                'Authorization: Bearer '.$Auth_token
+              ),
+            ));
+
+            $response = curl_exec($curl);
+
+            curl_close($curl);
+
+            $responseData = json_decode($response,TRUE);
+            if($responseData['isSuccess']){
+                $successstatus = 'Success';
+            }else{
+                $successstatus = 'Fail';
+            }
+        }else{
+            $successstatus = 'Fail';
+            $responseData = array('isSuccess'=>'false','messageEn'=>'Receiver City Not Found.');
+            $response = json_encode($responseData);
+        }
+        
+        $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no']);
+        return $responseData;
+        
+    }
+    
+    
+    public function LAFASTA_Label($frwd_awb = null, $auth_token = null, $api_url = null){
+        
+        $api_url = $api_url.'V3/Store/Shipment/ShippingLabel/PDF/Url/'.$frwd_awb;
+        
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => $api_url,
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'GET',
+          CURLOPT_HTTPHEADER => array(
+            'Authorization: Bearer '.$auth_token
+          ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        
+        $responseData = json_decode($response,TRUE);
+        //print "<pre>"; print_r($responseData);die;
+        return $responseData;
+        
+        
+    }
+    
+    public function SMB_Array($sellername=null, $ShipArr = array(), $counrierArr = array(), $c_id=null, $box_pieces1=null, $complete_sku=null, $super_id = null){
+        
+        $api_url = $counrierArr['api_url'].'shipments';
+
+        
+        
+        $store_name = $sellername;  
+        $store_address =$ShipArr['sender_address'];
+        $store_email =$ShipArr['sender_email'];
+        $store_phone =$ShipArr['sender_phone'];
+        
+        
+        
+        
+        
+        
+        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city', $super_id);
+        
+        $sender_country = getdestinationfieldshow_auto_array($ShipArr['origin'], 'country_code', $super_id);
+        
+        $sender_array = array('street'=>$store_address,'name'=>$store_name,'email'=>$store_email,'city'=>$sender_city,'country'=>$sender_country,'phone'=>$store_phone);
+        
+        $sender_address_id = $this->get_smb_address_id($sender_array,$counrierArr);
+        
+        
+        
+        $reciever_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'smb_city', $super_id);
+        
+        $receiver_country = getdestinationfieldshow_auto_array($ShipArr['destination'], 'country_code', $super_id);
+        $reciever_name = $ShipArr['reciever_name'];
+        $reciever_phone = $ShipArr['reciever_phone'];
+        $reciever_street = $ShipArr['reciever_address'];
+        $receiver_email = !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com';        
+        
+        
+        $receiver_array = array('street'=>$reciever_street,'name'=>$reciever_name,'email'=>$receiver_email,'city'=>$reciever_city,'country'=>$receiver_country,'phone'=>$reciever_phone);
+        
+        $receiver_address_id = $this->get_smb_address_id($receiver_array, $counrierArr);
+        
+        
+        
+        $box_pieces = empty($box_pieces)?1:$box_pieces;
+        $weight= ($ShipArr['weight']==0)?1:$ShipArr['weight'];
+        if(empty($complete_sku)){
+            $complete_sku = "QTY-".$box_pieces; 
+
+        }else {
+            $complete_sku = $complete_sku;
+        }
+        if ($ShipArr['mode'] == 'COD') {
+            $codValue = $ShipArr['total_cod_amt'];
+        } elseif ($ShipArr['mode'] == 'CC') {
+            $codValue = 1;
+        }
+        
+        $data_array = array(
+                            'reference'=>$ShipArr['slip_no'],
+                            'from_address'=>$sender_address_id,
+                            'to_address'=>$receiver_address_id,
+                            'src_location'=>$sender_city,
+                            'dest_location'=>$reciever_city,
+                            'package_type'=>'',
+                            'currency'=>'SAR',
+                            'cod'=>round($codValue),
+                            'cod_currency'=>'SAR',
+                            'content'=>$complete_sku,
+                            'parcels'=>array(array('weight'=>$weight)),
+                            'invoice_no'=>$ShipArr['slip_no'],
+                            'status'=>'',
+                            'order_date'=>date('Y-m-d h:i'),
+                            'origin_country'=>$sender_country
+                        );
+        
+        if(!empty($reciever_city)){
+            $json_string = json_encode($data_array);
+            //echo $json_string;die;
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => $api_url,
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => '',
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 0,
+              CURLOPT_FOLLOWLOCATION => true,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => 'POST',
+              CURLOPT_POSTFIELDS =>$json_string,
+              CURLOPT_HTTPHEADER => array(
+                'X-API-AUTH-TOKEN: '.$counrierArr['auth_token'],
+                'Content-Type: application/json'
+              ),
+            ));  
+
+            $response = curl_exec($curl);
+
+            curl_close($curl);
+
+            $responseData = json_decode($response,TRUE);
+            
+            if(!empty($responseData['data']['id'])){
+                $successstatus = 'Success';
+                $responseData = array('isSuccess'=>'true','messageEn'=>'','orderID'=>$responseData['data']['id']);
+            }else{
+                $responseData = array('isSuccess'=>'false','messageEn'=>json_encode($responseData['error']));
+                $successstatus = 'Fail';
+            }
+        }else{
+            $successstatus = 'Fail';
+            $responseData = array('isSuccess'=>'false','messageEn'=>'Receiver City Not Found.');
+            $response = json_encode($responseData);
+        }
+        
+        $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no']);
+        return $responseData;
+        
+    }
+    
+    public function get_smb_address_id($address_arr = array(), $counrierArr = array()){
+        
+        $api_url = $counrierArr['api_url'].'addresses';
+        $address_details  = array(
+                              'name'=>$address_arr['name'],
+                              'email'=>$address_arr['email'],
+                              'city'=>$address_arr['city'],
+                              'country'=>$address_arr['country'],
+                              'phone'=>$address_arr['phone'],
+                              'street'=>$address_arr['street']
+                            );
+        $json_string = json_encode($address_details);
+        
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => $api_url,
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'POST',
+          CURLOPT_POSTFIELDS =>$json_string,
+          CURLOPT_HTTPHEADER => array(
+            'X-API-AUTH-TOKEN: '.$counrierArr['auth_token'],
+            'Content-Type: application/json'
+          ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        $response_array = json_decode($response,true);
+        if(!empty($response_array['data'])){
+            return $response_array['data']['id'];
+        }
+        return 0;
+        
+    }
+    
+    public function SMB_confirm($orderID = null, $counrierArr= array()){
+        $api_url = $counrierArr['api_url'].'shipments/'.$orderID.'/confirm';
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => $api_url,
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'POST',
+          CURLOPT_HTTPHEADER => array(
+            'X-API-AUTH-TOKEN: '.$counrierArr['auth_token'],
+          ),
+        ));
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+        $responseArray = json_decode($response,TRUE);
+        return $responseArray;
+    }
+    public function SMB_Label($orderID = null, $counrierArr= array()){
+        $api_url = $counrierArr['api_url'].'web/media/shipments/'.$orderID.'/print_label';
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => $api_url,
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'POST',
+          CURLOPT_HTTPHEADER => array(
+            'X-API-AUTH-TOKEN: '.$counrierArr['auth_token'],
+          ),
+        ));
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+        
+        return $response;
+    }
+    
+     public function AJA_AUTH($user_name= null,$password= null,$api_url= null){
+            $api_url = $api_url.'account/Authenticate';
+            $param= array(  'UsernameOrEmailAddress'=>$user_name,
+                            'Password'=>  $password,
+                        );
+            
+            $dataJson =json_encode($param);
+            $curl = curl_init();
+            
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => $api_url,
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => '',
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 0,
+              CURLOPT_FOLLOWLOCATION => true,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => 'POST',
+              CURLOPT_POSTFIELDS =>$dataJson,
+              CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json',
+                'Cookie: Abp.Localization.CultureName=ar-EG'
+              ),
+            ));
+
+            $Auth_response = curl_exec($curl);
+            curl_close($curl);
+            $responseArray = json_decode($Auth_response, true);
+            return $responseArray;        
+        
+    }
+    
+    public function AJAArray($sellername= null,array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null, $box_pieces1 = null,  $complete_sku = null, $super_id=null){
+        
+                $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'AJA_city', $super_id);
+                $receiver_city= getdestinationfieldshow_auto_array($ShipArr['destination'], 'AJA_city', $super_id);
+                
+                $senderphone = $ShipArr['sender_phone'];
+
+                $API_URL = $counrierArr['api_url'] . "account/SendShipment";
+
+
+                if (empty($box_pieces1)) {
+                    $box_pieces = 1;
+                } else {
+                    $box_pieces = $box_pieces1;
+                }
+
+                if ($ShipArr['weight'] == 0) {
+                    $weight = 1;
+                } else {
+                    $weight = $ShipArr['weight'];
+                }
+
+               
+                if($ShipArr['mode'] == "COD"){
+                    $tranceportationsMode = 4;
+                    $cod_amount = $ShipArr['total_cod_amt'];
+
+                }
+                elseif ($ShipArr['mode'] == 'CC'){
+                    $tranceportationsMode = 2;
+                    $cod_amount = 0;
+                }
+
+                
+
+            $details = array(
+                'SenderCityId' => $sender_city, // Riyadh: 2
+                'SenderTelephone' => $senderphone,
+                'SenderMobile' => $senderphone,
+                'RecipiantName' => $ShipArr['reciever_name'],
+                'ReceiverCode' => "",
+                'CityId' => $receiver_city, // Riyadh:2
+                'ShipmentDate' => date('Y-m-d h:i'),
+                'RecipiantTelephone' => $ShipArr['reciever_phone'],
+                'RecipiantMobile' => $ShipArr['reciever_phone'],
+                'RecipiantCompanyName' => "",
+                'RecipiantAddress' => $ShipArr['reciever_address'],
+                'RecipiantEmail' => $ShipArr['reciever_email'],
+                'ServiceId' => 65,  // for Riyadh= 65
+                "Weight" => $weight,
+                "Pieces" => $box_pieces,
+                "ShipmentDescription" => $complete_sku,
+                "TotalValue" => $cod_amount,
+                "TranceportationsMode" => $tranceportationsMode,
+                "TaxesPercent" => "0",
+                "Taxes" => "0",
+                "Net" => "0",
+                "CodValue" => $cod_amount,
+                
+            );
+
+            $json_final_date = json_encode($details);
+            //echo $json_final_date;  die;
+
+
+            if (empty($receiver_city))
+            {
+                 $response = array('message'=> 'Receiver city empty' ); 
+                 $response = json_encode($response);
+            }
+            else {
+                $curl = curl_init();    
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => $API_URL,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => $json_final_date,
+                    CURLOPT_HTTPHEADER => array(
+                        'Content-Type: application/json',
+                        'Accept: application/json',
+                        'Authorization:Bearer ' .$Auth_token),
+                ));
+                $response = curl_exec($curl);
+                curl_close($curl);
+            }
+
+            $responseArray = json_decode($response, true);
+            //print_r($responseArray);die;
+
+            $logresponse =   json_encode($response);  
+
+            $successres = $responseArray['success'];
+            //print_r($successres);die;
+
+             if ($successres) 
+                {
+                        $successstatus = "Success";
+                } else {
+                        $successstatus = "Fail";
+                }
+            $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
+            return $responseArray;
+        
     }
 
 
