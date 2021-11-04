@@ -444,46 +444,67 @@ class Ccompany_model extends CI_Model {
         //echo $this->db->last_query();
     }
     
-    public function AramexArrayAdvance($sellername = null, array $ShipArr, array $counrierArr, $complete_sku = null, $pay_mode = null, $CashOnDeliveryAmount = null, $services = null,$box_pieces1= null,$super_id = null, $totalcustomerAmt=null )
+   
+
+    public function AramexArrayAdvance($sellername = null, array $ShipArr, array $counrierArr, $complete_sku = null, $pay_mode = null, $CashOnDeliveryAmount = null, $services = null,$box_pieces1= null, $totalcustomerAmt=null,$super_id = null )
     {    
        
         $sender_address = $ShipArr['sender_address'];
         $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city', $super_id);
         $sender_name =  $ShipArr['sender_name'];
-
+        $sender_country_code = getdestinationfieldshow_auto_array($ShipArr['origin'], 'country_code',$super_id);
         $reciever_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'aramex_city',$super_id);       
-        $C_code = getdestinationfieldshow_auto_array($ShipArr['destination'], 'aramex_country_code',$super_id);
+        $C_code = getdestinationfieldshow_auto_array($ShipArr['destination'], 'country_code',$super_id);
         $ic_no = getdestinationfieldshow_auto_array($ShipArr['destination'], 'ic_no',$super_id);
         
         $date = (int) microtime(true) * 1000;
-        $currency = site_configTable("default_currency");
-        
-        if ($pay_mode == 'COD') {
-            $cod_amount=$totalcustomerAmt;
-            $shipment_value = $ShipArr['total_cod_amt'];
-            $pay_mode = '3';
-            $CashOnDeliveryAmount = array("Value" => $cod_amount,
-                "CurrencyCode" => $currency);
-            $services = 'CODS';
-        } elseif ($pay_mode == 'CC') {
-            $cod_amount=0;
+        $default_currency = site_configTable("default_currency");
 
-            $pay_mode = '3';
-            $CashOnDeliveryAmount = NULL;
-            $services = '';
-            $shipment_value = $ShipArr['shipment_value'];  
+        if($totalcustomerAmt== NULL){
+            $totalcustomerAmt= $ShipArr['total_cod_amt'];
         }
         
-        if ($C_code != 'SA' && $C_code != '') {
+
+
+        if ($pay_mode == 'COD') {
+            $cod_amount= $totalcustomerAmt;
+            $shipment_value = $ShipArr['total_cod_amt'];
+            $pay_mode = 'P';
+            //$CashOnDeliveryAmount = array("Value" => $cod_amount,                "CurrencyCode" => $currency);            $services = 'CODS';
+        } elseif ($pay_mode == 'CC') {
+            $cod_amount= "1.00"; 
+            $pay_mode = 'P';
+            $CashOnDeliveryAmount = NULL;
+            $services = '';
+           // $shipment_value = $ShipArr['shipment_value'];  
+            $shipment_value = "1.00";   
+        }
+
+        if ($C_code != $default_currency && $C_code != '') {
             $reciever_country = $C_code;
-            $ProductGroup = 'EXP';
-              //$currency =getdestinationfieldshow_auto_array($ShipArr['destination'], 'currency');//"USD";// getdestinationfieldshow($shipmentData[0]['destination'], 'currency');
-              if($currency=='BHD' || $currency=='QAR' || $currency=='EGP')
-              {
-                  $currency='USD';
-              }
-             // echo $currency; die;  
-            $ProductType = 'EPX';
+                $ProductGroup = 'EXP';
+              $ProductType = 'EPX';
+            $currency = getdestinationfieldshow($ShipArr['destination'], 'currency'); //"USD";
+            if($currency=='BHD' || $currency=='QAR' || $currency=='EGP')
+            {
+                $currency='USD';
+            }
+            if($C_code == 'EG'){
+                $currency='USD';
+            }
+
+            if ($ShipArr['mode'] == 'COD') {
+                $cod_amount=$cod_amount;
+                $CashOnDeliveryAmount = array("Value" => $totalcustomerAmt,
+                    "CurrencyCode" => $currency);
+            }else{
+               $CashOnDeliveryAmount = NULL;
+   
+            }
+
+
+
+
             if(!empty($shipment_value))
             {
                  $CustomsValueAmount = array("Value" => $shipment_value,
@@ -499,12 +520,12 @@ class Ccompany_model extends CI_Model {
         } else {
             $reciever_country = 'SA';
             $ProductGroup = 'DOM';
-            $currency = site_configTable("default_currency");
-            $ProductType = 'OND';
+            $currency = $default_currency;
+            $ProductType = 'CDS';
             $CustomsValueAmount = array("Value" => 0,
-                "CurrencyCode" =>'SAR');
+                "CurrencyCode" =>$default_currency);
         }
-        
+
         if(empty($box_pieces1)){
             $box_pieces = 1;
         }
@@ -623,8 +644,8 @@ class Ccompany_model extends CI_Model {
                                                     'Line3' => '', 
                                                     'City' => $sender_city,
                                                     'StateOrProvinceCode' => '',
-                                                    'PostCode' => '',
-                                                    'CountryCode' =>'SA',
+                                                    'PostCode' => '0000',
+                                                    'CountryCode' =>$sender_country_code,
                                                     'Longitude' => 0,
                                                     'Latitude' => 0,
                                                     'BuildingNumber' => NULL,
@@ -700,6 +721,7 @@ class Ccompany_model extends CI_Model {
                                         'Reference5' => '',
                                     )
                                 );
+               // echo "<pre>"; print_r(json_encode($params)); 
         return $params;
     }
 
@@ -910,16 +932,26 @@ class Ccompany_model extends CI_Model {
     }
 
     public function AxamexCurl($url = null, array $headers, $dataJson = null, $c_id = null, array $ShipArr) {
+       
+    // echo    $url; die; 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $dataJson);
-        $response = curl_exec($ch);
-        curl_close($ch);
+         $response = curl_exec($ch);
+       
+       curl_close($ch);
         $xml2 = new SimpleXMLElement($response);
         $awb_array = json_decode(json_encode((array) $xml2), TRUE);
+
+       // echo  $response; 
+
+        //print_r($awb_array);
+        
+        
+        //die; 
         $logresponse =   json_encode($awb_array);
         $successres = $awb_array['HasErrors'];
        
