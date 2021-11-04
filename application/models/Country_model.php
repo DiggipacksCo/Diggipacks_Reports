@@ -343,7 +343,7 @@ class Country_model extends CI_Model {
     public function CitylistData($start,$limit,$filterKey){
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']); 
         //$this->db->select('id,city,samsa_city,ubreem_city,aramex_city,dots_city,imile_city,naqel_city_code,esnad_city,samana_city,agility_city,descen,aymakan,zajil,clex,rabel_city,speedzi_city,barq_city,labaih,makhdoom,saee_city,ajeek_city,emdad_city,shipsy_city,shipsa_city,tamex_city,alamalkon,latitute,longitute');
-        $this->db->select('id,city,samsa_city,ubreem_city,aramex_city,dots_city,imile_city,naqel_city_code,esnad_city,esnad_city_code,samana_city,agility_city,descen,aymakan,zajil,clex,rabel_city,speedzi_city,barq_city,labaih,makhdoom,saee_city,ajeek_city,emdad_city,shipsy_city,shipsa_city,tamex_city,zid,sala,alamalkon,latitute,longitute,saudipost_id,beez_city,fedex_city,momentsKsa_city,Postagexp_city,smsa_egypt_city,fedex_city_code,bosta_city,MMCCO_city,kwickBox_city,dhl_jones_city,thabit_city,country_code,MICGO_city,FDA_city');
+        $this->db->select('id,city,samsa_city,ubreem_city,aramex_city,dots_city,imile_city,naqel_city_code,esnad_city,esnad_city_code,samana_city,agility_city,descen,aymakan,zajil,clex,rabel_city,speedzi_city,barq_city,labaih,makhdoom,saee_city,ajeek_city,emdad_city,shipsy_city,shipsa_city,tamex_city,zid,sala,alamalkon,latitute,longitute,saudipost_id,beez_city,fedex_city,momentsKsa_city,Postagexp_city,smsa_egypt_city,fedex_city_code,bosta_city,MMCCO_city,kwickBox_city,dhl_jones_city,thabit_city,country_code,MICGO_city,FDA_city,currency');
         $this->db->from('country'); 
         if(!empty($filterKey)){
             $this->db->where("city like '%".$filterKey."%'",NULL,FALSE );

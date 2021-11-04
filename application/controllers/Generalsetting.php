@@ -266,6 +266,7 @@ public function addsmssetting($id=null) {
                     'font_color'=>$this->input->post('font_color'),
                     'vat'=>$this->input->post('vat'),
                     //'dropoff_option'=>$this->input->post('dropoff_option'),
+                    'default_service_tax'=>$this->input->post('default_service_tax'),
                     'default_currency'=>$this->input->post('default_currency'),
                     'default_time_zone'=>$this->input->post('default_time_zone'),
                     'country_code'=>$this->input->post('country_code'),
