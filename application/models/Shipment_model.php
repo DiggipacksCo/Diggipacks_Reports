@@ -1370,8 +1370,10 @@ if(!empty($awbids ))
                 }
                 
                 }
-                if(in_array('DL',$delivered) || in_array('D3PL',$delivered) && !empty($data['f_from']) && !empty($data['f_to']) )
+              
+                if((in_array('DL',$delivered) || in_array('D3PL',$delivered) || in_array('FWD',$delivered))  && !empty($data['f_from']) && !empty($data['f_to']) )
                 {
+                   
                     $this->db->join('status_fm', 'status_fm.slip_no=shipment_fm.slip_no');
                     $this->db->where_in('status_fm.code', $delivered);
                     $this->db->where("DATE(status_fm.entry_date) BETWEEN '". $data['f_from']. "' AND '".$data['f_to']."' " );
@@ -1487,7 +1489,7 @@ if(!empty($awbids ))
 
         $query = $this->db->get();
 
-       //echo $this->db->last_query(); die;
+      // echo $this->db->last_query(); die;
 
         if ($query->num_rows() > 0) {
 
@@ -2405,7 +2407,7 @@ if(!empty($awbids ))
                 }
                 
                 }
-                if(in_array('DL',$delivered) || in_array('D3PL',$delivered) && !empty($data['f_from']) && !empty($data['f_to']) )
+                if((in_array('DL',$delivered) || in_array('D3PL',$delivered) ||  in_array('FWD',$delivered)) && !empty($data['f_from']) && !empty($data['f_to']) )
                 {
                     $this->db->join('status_fm', 'shipment_fm.slip_no=status_fm.slip_no','LEFT');
                     $this->db->where_in('status_fm.code', $delivered);
@@ -4265,7 +4267,7 @@ if(!empty($awbids ))
                 }
                 
                 }
-                if(in_array('DL',$delivered) || in_array('D3PL',$delivered) && !empty($filterData['f_from']) && !empty($filterData['f_to']) )
+                if(in_array('DL',$delivered) || in_array('D3PL',$delivered) || in_array('FWD',$delivered) && !empty($filterData['f_from']) && !empty($filterData['f_to']) )
                 {
                     $this->db->join('status_fm', 'status_fm.slip_no=shipment_fm.slip_no');
                     $this->db->where_in('status_fm.code', $delivered);
@@ -4274,7 +4276,9 @@ if(!empty($awbids ))
                    
                     $this->db->group_by('status_fm.slip_no');
                     if ($data['frwd_date'] == 1)
-                    $selectQry .= " status_fm.entry_date AS 3PL_FORWORD_DATE,";   
+                    $selectQry .= " status_fm.entry_date AS 3PL_FORWORD_DATE, ";  
+                    if(in_array('FWD',$delivered)) 
+                    $selectQry .= " COUNT(status_fm.id) AS FORWARD_COUNT, ";  
                 }
                 else
                 {
@@ -4296,6 +4300,7 @@ if(!empty($awbids ))
                 $selectQry .= " shipment_fm.frwd_date AS 3PL_FORWORD_DATE,";   
             }
         }
+
         $selectQry = rtrim($selectQry, ',');
         
         

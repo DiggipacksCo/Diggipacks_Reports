@@ -912,14 +912,18 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                     }
                     elseif($company=='Aramex International')
                     {
-                        $params = $this->Ccompany_model->AramexArrayAdvance($sellername,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id);
+
+                        $params = $this->Ccompany_model->AramexArrayAdvance($sellername,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$cod_amount,$super_id);
+
+                        // $params = $this->Ccompany_model->AramexArrayAdvance($sellername,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$cod_amount,$super_id);
                         $dataJson = json_encode($params);
-                        //echo $dataJson;die;
-                        // print "<pre>"; print_r($dataJson); 
+                        // echo $dataJson;die;
+                       // print "<pre>"; print_r($dataJson); 
                         $headers = array("Content-type:application/json");
-                        $url = $api_url;                        
+                         $url = $api_url;        
+                       //echo  $url;die;                 
                         $awb_array = $this->Ccompany_model->AxamexCurl($url, $headers, $dataJson,$c_id,$ShipArr);
-                        // print "<pre>"; print_r($awb_array); //die;
+                       // print "<pre>"; print_r($awb_array); //die;
 
                         $check_error = $awb_array['HasErrors'];
                         if($check_error == 'false') {
