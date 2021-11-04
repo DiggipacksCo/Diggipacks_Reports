@@ -220,6 +220,7 @@
                                                 <th class="head1">Bawani</th>
                                             <?php } ?>
                                             <th class="head1">Country Code</th>
+                                            <th class="head1">Currency</th>
                                             <th class="head1">LAT</th>
                                             <th class="head1">LNG</th>
                                         </tr>
@@ -541,7 +542,12 @@
                                                     <td><input type="text" name="country_code" id="country_code<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['country_code']; ?>" class="form-control">
                                                             <br>
                                                             <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'country_code');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
-                                                        </td>    
+                                                        </td>  
+                                                        
+                                                        <td><input type="text" name="currency" id="currency<?php echo $listdata['id']; ?>" placeholder="Currency Code" value="<?php echo $listdata['currency']; ?>" class="form-control">
+                                                            <br>
+                                                            <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'currency');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
+                                                        </td> 
                                                     <td><input type="text" name="latitute" id="latitute<?php echo $listdata['id']; ?>" placeholder="LAT" value="<?php echo $listdata['latitute']; ?>" class="form-control">
                                                         <br>
                                                         <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'latitute');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>

@@ -134,6 +134,10 @@
                                         <label for="vat"><strong><?=lang('lang_Vat_No');?>:</strong></label>
                                         <input type="text" class="form-control"  name='vat' id="vat" placeholder="vat" value="<?= $EditData['vat'] ?>">
                                     </div>
+                                    <div class="form-group">
+                                        <label for="vat"><strong>VAT %:</strong></label>
+                                        <input type="text" class="form-control"  name='default_service_tax' id="default_service_tax" placeholder="Vat %" value="<?= $EditData['default_service_tax'] ?>">
+                                    </div>
                                     <!-- <div class="form-group">
                             <label for="inputText">AWB Tollfree No. <span style="color:red">*</span></label>
                             <input type="text" name="tollfree_fm" id="tollfree_fm" class="form-control"  ng-model="updatearray.tollfree_fm" required>
