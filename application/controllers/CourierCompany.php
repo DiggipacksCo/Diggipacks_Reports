@@ -250,7 +250,6 @@ class CourierCompany extends MY_Controller  {
     { 
       
         $postData = json_decode(file_get_contents('php://input'), true);
-        
         $CURRENT_TIME = date('H:i:s');
         $CURRENT_DATE = date('Y-m-d H:i:s');
 
@@ -445,8 +444,6 @@ class CourierCompany extends MY_Controller  {
                     );
                     //print_r($ShipArr);die;
 
-                
-                   
                    $ccRetrundata= $this->courierComanyForward($sellername, $Auth_token,$company,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id,$company_type,$c_id, $api_url);
                    if($ccRetrundata['status']==200)
                    {

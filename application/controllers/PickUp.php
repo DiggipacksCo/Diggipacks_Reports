@@ -21,7 +21,7 @@ class PickUp extends MY_Controller {
          $this->load->model('User_model');
          $this->load->helper('zid');
         $this->load->helper('utility');
-        
+        $this->load->model('Ccompany_model');        
         // $this->user_id = isset($this->session->get_userdata()['user_details'][0]->id)?$this->session->get_userdata()['user_details'][0]->users_id:'1';
     }
 
@@ -3042,10 +3042,19 @@ public function awbPickupPrint_bulk_new($awb = array(),$type = null) {
     public function GetlabelPrint4_6($awb =null) {  
         $this->load->library('M_pdf');
 
+        // $sku_data = $this->Ccompany_model->Getskudetails_forward($awb);
+        //  //print "<pre>"; print_r($sku_data);die;
 
-
-        $shipment = $this->Pickup_model->pickListFilterShip_bulk($awb);
-        $data['status_update_data'] = $shipment;
+         $shipment = $this->Pickup_model->pickListFilterShip_bulk($awb);
+         $data['status_update_data'] = $shipment;
+        
+         
+        
+        // $total_weight = 0; 
+        // foreach ($sku_data as $key => $val) {
+        //         $total_weight += ($sku_data[$key]['weight'] * $sku_data[$key]['piece']);
+        // }
+        //echo $total_weight;die;
         //print_r($shipment); die;
         if (!empty($shipment)) {
             $body = $this->load->view('printAwblist', $data, true);

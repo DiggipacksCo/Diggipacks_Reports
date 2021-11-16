@@ -428,7 +428,9 @@ class Ccompany_model extends CI_Model {
         $this->db->from('diamention_fm');
         $this->db->join('items_m', 'items_m.sku=diamention_fm.sku');
         $this->db->where('diamention_fm.slip_no',$slip_no);
+        
         $query = $this->db->get();
+        //echo $this->db->last_query(); ;die;
         return $query->result_array();
         }
 
@@ -453,9 +455,14 @@ class Ccompany_model extends CI_Model {
         $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'city', $super_id);
         $sender_name =  $ShipArr['sender_name'];
         $sender_country_code = getdestinationfieldshow_auto_array($ShipArr['origin'], 'country_code',$super_id);
+     
         $reciever_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'aramex_city',$super_id);       
         $C_code = getdestinationfieldshow_auto_array($ShipArr['destination'], 'country_code',$super_id);
         $ic_no = getdestinationfieldshow_auto_array($ShipArr['destination'], 'ic_no',$super_id);
+        if($sender_country_code=='EG')
+        $entity='CAI';
+        else
+        $entity='SA';
         
         $date = (int) microtime(true) * 1000;
         $default_currency = site_configTable("default_currency");
@@ -545,8 +552,8 @@ class Ccompany_model extends CI_Model {
                                         'Version' => 'v1',
                                         'AccountNumber' => $counrierArr['courier_account_no'],
                                         'AccountPin' => $counrierArr['courier_pin_no'],
-                                        'AccountEntity' => 'RUH',
-                                        'AccountCountryCode' => 'SA'
+                                        'AccountEntity' => $entity,
+                                        'AccountCountryCode' => $sender_country_code
                                     ),
                                     'LabelInfo' => array("ReportID" => 9729, "ReportType" => "URL"),
                                     'Shipments' =>
@@ -569,7 +576,7 @@ class Ccompany_model extends CI_Model {
                                                     'City' => $sender_city,
                                                     'StateOrProvinceCode' => '',
                                                     'PostCode' => '0000',
-                                                    'CountryCode' => 'SA',
+                                                    'CountryCode' => $sender_country_code,
                                                     'Longitude' => 0,
                                                     'Latitude' => 0,
                                                     'BuildingNumber' => NULL,
@@ -673,7 +680,7 @@ class Ccompany_model extends CI_Model {
                                             'ShippingDateTime' => "/Date(" . $date . ")/",
                                             'DueDate' => "/Date(" . $date . ")/",
                                             'Comments' => '',
-                                            'PickupLocation' => 'Riyadh',
+                                            'PickupLocation' => $sender_city,
                                             'OperationsInstructions' => '',
                                             'AccountingInstrcutions' => '',
                                             'Details' =>
@@ -686,7 +693,7 @@ class Ccompany_model extends CI_Model {
                                                 ),
                                                 'ChargeableWeight' => NULL,
                                                 'DescriptionOfGoods' => $complete_sku,
-                                                'GoodsOriginCountry' => 'SA',
+                                                'GoodsOriginCountry' => $sender_country_code,
                                                 'NumberOfPieces' => $box_pieces,
                                                 'ProductGroup' => $ProductGroup,
                                                 'ProductType' => $ProductType,
