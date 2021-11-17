@@ -487,7 +487,7 @@ class Ccompany_model extends CI_Model {
             $shipment_value = "1.00";   
         }
 
-        if ($C_code != $default_currency && $C_code != '') {
+        if ($C_code != $sender_country_code && $C_code != '') {
             $reciever_country = $C_code;
                 $ProductGroup = 'EXP';
               $ProductType = 'EPX';
@@ -525,7 +525,7 @@ class Ccompany_model extends CI_Model {
           //  echo $currency; die;
 
         } else {
-            $reciever_country = 'SA';
+            $reciever_country = $C_code;
             $ProductGroup = 'DOM';
             $currency = $default_currency;
             $ProductType = 'CDS';
