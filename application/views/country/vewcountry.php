@@ -42,10 +42,11 @@
                                 <h1><strong><?=lang('lang_country_list');?></strong> 
                                     <?php  if(empty($ListArr))
                                     {
-                                        ?>
+                                      } ?>
                                     <a class="btn btn-primary mb-10 pull-right" href="<?= base_url('Country/CountraddForm'); ?>" style="margin-left: 10px;"><?=lang('lang_add_country');?></a> 
                                             
-                                    <?php } ?><a class="btn btn-primary mb-10 pull-right" href="<?= base_url('Country/Hubaddform'); ?>" style="margin-left: 10px;"><?=lang('lang_add_hub');?></a> <a href="<?= base_url('Country/CityAddForm'); ?>" class="btn btn-primary mb-10 pull-right" ><?=lang('lang_add_city');?></a></h1>
+                                  
+                                    <a class="btn btn-primary mb-10 pull-right" href="<?= base_url('Country/Hubaddform'); ?>" style="margin-left: 10px;"><?=lang('lang_add_hub');?></a> <a href="<?= base_url('Country/CityAddForm'); ?>" class="btn btn-primary mb-10 pull-right" ><?=lang('lang_add_city');?></a></h1>
 
                             </div>
                             <div class="panel-body" > 

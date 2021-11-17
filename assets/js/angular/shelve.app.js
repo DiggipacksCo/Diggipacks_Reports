@@ -8,6 +8,7 @@ var app = angular.module('shelve', [])
 	$scope.shelve=null;
     $scope.StockLocationArray=[];
     
+    
 	$scope.scan_shelve=function(){
 		$('#StockLocation').focus();
         $scope.checkShelve();
@@ -32,7 +33,7 @@ var app = angular.module('shelve', [])
             $scope.warning=null;
              $scope.Message=null;
               $scope.arrayIndexnew=[];
-         $scope.arrayIndex=$scope.awbArray.findIndex( record => record.shelv_no ===$scope.scan.shelve_no); 
+         $scope.arrayIndex=$scope.awbArray.findIndex( record => record.shelv_no.toUpperCase() ===$scope.scan.shelve_no.toUpperCase()); 
             if( $scope.arrayIndex==-1)
             {
 		//console.log($scope.scan);
@@ -159,7 +160,7 @@ var app = angular.module('shelve', [])
         else
         {
         
-        $scope.arrayIndex=$scope.awbArray.findIndex( record => record.shelv_no ===$scope.scan.shelve_no); 
+        $scope.arrayIndex=$scope.awbArray.findIndex( record => record.shelv_no.toUpperCase() ===$scope.scan.shelve_no.toUpperCase()); 
         
             if( $scope.arrayIndex!=-1)
             {

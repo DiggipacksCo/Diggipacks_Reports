@@ -568,6 +568,7 @@
                                 <?php } ?>
     <?php if (menuIdExitsInPrivilageArray(90) == 'Y') { ?>
                                     <li><a href="<?= base_url('Country/Importlocations'); ?>"><?= lang('lang_import_location'); ?></a></li>
+                                     <li><a href="<?= base_url('Country/CountraddForm'); ?>">Add Country</a></li>
     <?php } ?>
 
                         <?php if (menuIdExitsInPrivilageArray(91) == 'Y') { ?>
