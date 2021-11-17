@@ -3042,13 +3042,22 @@ public function awbPickupPrint_bulk_new($awb = array(),$type = null) {
     public function GetlabelPrint4_6($awb =null) {  
         $this->load->library('M_pdf');
 
-        // $sku_data = $this->Ccompany_model->Getskudetails_forward($awb);
-        //  //print "<pre>"; print_r($sku_data);die;
-
-         $shipment = $this->Pickup_model->pickListFilterShip_bulk($awb);
-         $data['status_update_data'] = $shipment;
-        
+         $sku_data = $this->Ccompany_model->Getskudetails_forward($awb);
          
+         $total_weight = 0; 
+         foreach ($sku_data as $key => $val) {
+                $total_weight += ($sku_data[$key]['weight'] * $sku_data[$key]['piece']);
+        }
+        if($total_weight > 0 ){
+            $weight = $total_weight;
+        }else{
+            $weight = 1;
+        }
+        $shipment = $this->Pickup_model->pickListFilterShip_bulk($awb);
+        $data['status_update_data'] = $shipment;
+        $data['status_update_data'][0]['weight'] = $weight;
+        
+         //print "<pre>"; print_r($data);die; 
         
         // $total_weight = 0; 
         // foreach ($sku_data as $key => $val) {
