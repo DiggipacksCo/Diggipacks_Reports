@@ -410,6 +410,7 @@ class CourierCompany extends MY_Controller  {
                     $CURRENT_TIME = date('H:i:s');
                     $CURRENT_DATE = date('Y-m-d H:i:s');
                     $sender_default_city = Getselletdetails_new($super_id);
+                    
                     // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
                     $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company'); 
                     $sellername = "DIGGIPACKS FULFILLMENT- ".$sellername;

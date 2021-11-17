@@ -79,11 +79,11 @@ foreach ($status_update_data as $key => $val) {
     {
 
 
-
-        if ($status_update_data[$key]['weight'] > $status_update_data[$key]['volumetric_weight'])
-            $weight = $status_update_data[$key]['weight'];
-        else
-            $weight = $status_update_data[$key]['volumetric_weight'];
+        $weight = $status_update_data[$key]['weight'];
+        // if ($status_update_data[$key]['weight'] > $status_update_data[$key]['volumetric_weight'])
+        //     $weight = $status_update_data[$key]['weight'];
+        // else
+        //     $weight = $status_update_data[$key]['volumetric_weight'];
 
 
         $style = " width:100px;margin-top:13px;";
