@@ -1,7 +1,7 @@
 var app = angular.module('log', [])
 
         /*------ show log shipments-----*/
-        .controller('shipment_log_view', function ($scope, $http, $window) {
+        .controller('shipment_log_view', function ($scope, $http, $window,$copyToClipboard) {
 
 
 
@@ -57,8 +57,13 @@ var app = angular.module('log', [])
                 "show_code": false,
                 "messenger_name": false,
             };
-
-
+            $scope.textcopyNotification=false;
+            $scope.copyHrefToClipboard = function(copyData) {
+                $copyToClipboard.copy(copyData).then(function () {
+                    //show some notification
+                    $scope.textcopyNotification=true;
+                });
+            }
             $scope.checkall = false;
             $scope.toggleAll = function () {
                 $scope.checkall = !$scope.checkall;
@@ -504,4 +509,48 @@ var app = angular.module('log', [])
                 }
             }
         ])
+
+        .filter('truncate', function () {
+            return function (input) {
+                if (!input) {
+                    return '';
+                } else if (input.length > 50) {
+                    return input.slice(0,50); //limit to first 10 characters only
+                }
+                 else
+                  return input;
+            };
+        })
+        .provider('$copyToClipboard', [function () {
+
+            this.$get = ['$q', '$window', function ($q, $window) {
+                var body = angular.element($window.document.body);
+                var textarea = angular.element('<textArea/>');
+                textarea.css({
+                    position: 'fixed',
+                    opacity: '0'
+                });
+                return {
+                    copy: function (stringToCopy) {
+                        var deferred = $q.defer();
+                        deferred.notify("copying the text to clipboard");
+                        textarea.val(stringToCopy);
+                        body.append(textarea);
+                        textarea[0].select();
+
+                        try {
+                            var successful = $window.document.execCommand('copy');
+                            if (!successful) throw successful;
+                            deferred.resolve(successful);
+                        } catch (err) {
+                            deferred.reject(err);
+                            //window.prompt("Copy to clipboard: Ctrl+C, Enter", toCopy);
+                        } finally {
+                            textarea.remove();
+                        }
+                        return deferred.promise;
+                    }
+                };
+            }];
+        }]);
 /*------ /show shipments-----*/

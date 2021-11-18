@@ -160,7 +160,9 @@
                                       <th><?=lang('lang_Status');?></th>
                                       <th><?=lang('lang_company');?></th>
                                       <th><?=lang('lang_Entry_Date');?></th>
-                                      <th><?=lang('lang_Log');?></th>
+                                      <th><?=lang('lang_Log');?></th> 
+                                      <th>Request</th>
+
                                       
                                                                 
                                            
@@ -174,7 +176,15 @@
                                             <td>{{data.status}}</td>
                                             <td>{{data.cc_name}}</td>
                                             <td>{{data.update_date}}</td>
-                                            <td>{{data.log}}</td>
+                                            <td>
+                                            <i class="fa fa-clipboard" data-ng-click="copyHrefToClipboard(data.log)"></i>    
+                                            <br>
+                                           <code> {{data.log | truncate}}</code>
+                                           <textArea style="display:none">{{data.log}}</textArea>
+                                        </td>
+                                            <td> <i class="fa fa-clipboard" data-ng-click="copyHrefToClipboard(data.request)"></i>
+                                            <br>
+                                            <code>{{data.request | truncate}}}</code> <textArea style="display:none">{{data.request}}</textArea></td>
                                             
                                                                                                 
                                         </tr>
