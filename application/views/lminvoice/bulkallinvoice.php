@@ -93,7 +93,7 @@ thead.report-header {
      
         <table id="print" cellpadding="0"  cellspacing="0" border="1" class="display nowrap" style="margin:0 auto;"  >
   <thead>
-<tr><td colspan="6"></td><td colspan="2" style="text-align:center;"><strong>Tax Invoice - الفاتورة الضريبية</strong></td><td colspan="10"></td></tr>
+<tr><td colspan="6"></td><td colspan="2" style="text-align:center;"><strong><?php if($this->session->userdata('user_details')['super_id']!=20) { ?>  Tax Invoice -  الفاتورة الضريبية<?php } else { ?>  Invoice -  الفاتورة   <?php }?></strong></td><td colspan="10"></td></tr>
         <tr  >
       <td colspan="6" align="left" >
 			<b>UID Account Number:-&nbsp;<?=GetalldashboardClientField($invoiceData[0]['cust_id'],'uniqueid');?> - رقم الحساب</b><br/> 

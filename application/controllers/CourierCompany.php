@@ -390,7 +390,7 @@ class CourierCompany extends MY_Controller  {
                     if ($pay_mode == 'COD') {
                          //   $pay_mode = 'P';
                             $CashOnDeliveryAmount = array("Value" => $cod_amount,
-                                    "CurrencyCode" => site_configTable("default_currency"));
+                                    "CurrencyCode" =>site_configTableSuper_id("default_currency",$super_id));
                             $services = 'CODS';
                     } elseif ($pay_mode == 'CC') {
                             //$pay_mode = 'P';
@@ -413,7 +413,7 @@ class CourierCompany extends MY_Controller  {
                     
                     // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
                     $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company'); 
-                    $sellername = "DIGGIPACKS FULFILLMENT- ".$sellername;
+                    $sellername = site_configTableSuper_id("company_name",$super_id)."- ".$sellername;
                     $sender_address = $sender_default_city['0']['address'];
                     
                     $ShipArr = array(
@@ -618,7 +618,7 @@ class CourierCompany extends MY_Controller  {
                             if ($pay_mode == 'COD') {
                                    // $pay_mode = 'P';
                                     $CashOnDeliveryAmount = array("Value" => $cod_amount,
-                                            "CurrencyCode" => site_configTable("default_currency"));
+                                            "CurrencyCode" => site_configTableSuper_id("default_currency",$super_id));
                                     $services = 'CODS';
                             } elseif ($pay_mode == 'CC') {
                                    // $pay_mode = 'P';
@@ -629,7 +629,7 @@ class CourierCompany extends MY_Controller  {
                             $sellername = $ShipArr['reciever_name']; 
                             $recDetail = Getselletdetails_new($super_id);
                            
-                            $receiver_name = "DIGGIPACKS FULFILLMENT ";
+                            $receiver_name = site_configTableSuper_id("company_name",$super_id);
                             $receiver_address = $recDetail['0']['address'];
                             $receiver_mobile = $recDetail['0']['phone'];
 
