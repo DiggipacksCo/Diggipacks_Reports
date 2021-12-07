@@ -867,7 +867,7 @@ class Excel_export extends MY_Controller {
             $res = $zip->open("$small_img");
 
             if ($res === TRUE) {
-                $zip->extractTo('/var/www/html/fastcoo-tech/demofulfillment/assets/item_uploads/');
+                $zip->extractTo('/var/www/html/diggipack_new/demofulfillment/assets/item_uploads/');
                 $zip->close();
                 echo 'woot!';
             } else {
@@ -943,7 +943,7 @@ class Excel_export extends MY_Controller {
 
                                     $item_path1 = "assets/item_uploads/$item_path";
 
-                                    rename("/var/www/html/fastcoo-tech/demofulfillment/assets/item_uploads/proimg/$item_path", "/var/www/html/fastcoo-tech/demofulfillment/assets/item_uploads/$item_path");
+                                    rename("/var/www/html/diggipack_new/demofulfillment/assets/item_uploads/proimg/$item_path", "/var/www/html/diggipack_new/demofulfillment/assets/item_uploads/$item_path");
                                     $data[] = array(
                                         'storage_id' => $storageArray['id'],
                                         'name' => $name,
@@ -1173,6 +1173,7 @@ class Excel_export extends MY_Controller {
         $table_columns[] = "Salla";
         $table_columns[] = "Zid";
         $table_columns[] = "Country Code";
+        $table_columns[] = "Aramex Country Code";
         sort($table_columns);
         
         $table_column = array_merge(array("City"),$table_columns);
@@ -1314,7 +1315,10 @@ class Excel_export extends MY_Controller {
                                     $dynmicColumn = 'AJA_city';
                                 if ($colimn == 'Bawani')
                                     $dynmicColumn = 'BAWANI_city';
-
+                                if ($colimn == 'Flamingo')
+                                    $dynmicColumn = 'flamingo_city';
+                                if ($colimn == 'Aramex Country Code')
+                                    $dynmicColumn = 'aramex_country_code';
                                  
                                 if (!empty($cityArrayName)) {
                                     $UpdateArray_new[] = array($dynmicColumn => addslashes($dynmicColumnVal), 'id' => $old_id);

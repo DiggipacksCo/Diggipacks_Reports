@@ -48,6 +48,7 @@ class Country extends MY_Controller {
          $comapnyArray[] = array("company"=>"Arabic City Name");
          $comapnyArray[] = array("company"=>"Salla");
          $comapnyArray[] = array("company"=>"Zid");
+         $comapnyArray[] = array("company"=>"Aramex Country Code");
          sort($comapnyArray);
          $data['ListArr'] = $comapnyArray;
             //print "<pre>"; print_r($data);die;

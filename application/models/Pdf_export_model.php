@@ -102,7 +102,7 @@ class Pdf_export_model extends CI_Model
 		$this->db->order_by('deducted_shelve');
         $this->db->where($conditions);
         $query=$this->db->get('diamention_fm');
-        
+        //$this->db->last_query();
         if($query->num_rows()>0){
          
           return $query->result();
