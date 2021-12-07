@@ -124,11 +124,12 @@ class Zid extends CI_Controller {
                     }
                     else
                     {
-                        if(in_array($result1['order']['shipping']['method']['name'],$deliveryOption)  || strpos(trim($result1['order']['shipping']['method']['name']),'DIGGIPACK')!==false )
+                        if(in_array($result1['order']['shipping']['method']['name'],$deliveryOption)  || strpos(trim($result1['order']['shipping']['method']['name']),'DIGGIPACK')!==false  || strpos(trim($result1['order']['shipping']['method']['name']),'DIGGIPACKS')!==false  )
                         $addShipValid=true;
 
                     }
                 
+                    echo   $addShipValid .'//'.$result1['order']['order_status']['code'].' =='. $customers['zid_status'];
                     if ($result1['order']['order_status']['code'] == $customers['zid_status'] &&  $addShipValid==true ) 
                     {
                    

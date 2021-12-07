@@ -29,6 +29,11 @@
                                                         <br>    
                                                         <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'aramex_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>  
                                                     </td>
+                                                    <td>
+                                                        <input type="text" name="aramex_country_code" id="aramex_country_code<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['aramex_country_code']; ?>" class="form-control">
+                                                        <br>    
+                                                        <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'aramex_country_code');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>  
+                                                    </td>
                                                       <?php } ?>
                                                     <?php if (GetCourierCompanyStausActive('DOTS') == 'Y') { ?>
                                                     <td>
@@ -303,6 +308,12 @@
                                                     <td><input type="text" name="BAWANI_city" id="BAWANI_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['BAWANI_city']; ?>" class="form-control">
                                                             <br>
                                                             <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'BAWANI_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
+                                                        </td>
+                                                     <?php } ?>
+                                                     <?php if (GetCourierCompanyStausActive('Flamingo') == 'Y') { ?>
+                                                    <td><input type="text" name="flamingo_city" id="flamingo_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['flamingo_city']; ?>" class="form-control">
+                                                            <br>
+                                                            <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'flamingo_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
                                                         </td>
                                                      <?php } ?>
                                                     <td><input type="text" name="country_code" id="country_code<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['country_code']; ?>" class="form-control">

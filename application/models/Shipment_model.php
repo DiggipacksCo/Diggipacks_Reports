@@ -232,7 +232,7 @@ if(!empty($awbids ))
             $counter++;
         }
 
-        $query = $this->db->query("select * from shipment_fm where (slip_no IN('$conditions') or frwd_company_awb IN('$conditions')) and super_id='" . $this->session->userdata('user_details')['super_id'] . "'");
+        $query = $this->db->query("select * from shipment_fm where (slip_no IN('$conditions') or frwd_company_awb IN('$conditions') or booking_id IN('$conditions')) and super_id='" . $this->session->userdata('user_details')['super_id'] . "'");
         // echo $this->db->last_query();
         if ($query->num_rows() > 0) {
             return $query->result_array();
@@ -1286,7 +1286,43 @@ if(!empty($awbids ))
 
         $fulfillment = 'Y';
         $deleted = 'N';
-
+        $wh_id_arr = array();
+        if(!empty($data['country'])){
+            $cityData = cityList($data['country']);
+            $cityID= array(); 
+            
+            if(!empty($cityData)){
+                foreach($cityData as $city){
+                    $cityID[] = $city['id'];
+                }
+            }
+            
+            if(!empty($cityID)){
+                foreach($cityID as $id){
+                    $sql = "SELECT id FROM warehouse_category   WHERE LOCATE($id,`city_id`) AND deleted='N' AND status = 'Y' AND super_id=".$this->session->userdata('user_details')['super_id']." ";
+                    
+                    $query = $this->db->query($sql);
+                    $data = $query->result_array();
+                    
+                    if(!empty($data)){
+                        foreach($data as $wh_id){
+                            if(!in_array($wh_id['id'],$wh_id_arr)){
+                                array_push($wh_id_arr, $wh_id['id']);
+                            }
+                            
+                        }
+                    }
+                    
+                }
+            }
+            if(!empty($wh_id_arr) && count($wh_id_arr)>0){
+                $this->db->where_in('shipment_fm.wh_id', implode(",",$wh_id_arr));
+            }else{
+                $this->db->where('shipment_fm.wh_id', NULL);
+            }
+            
+        }
+        
         if ($this->session->userdata('user_details')['user_type'] != 1) {
             $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
         }
@@ -1428,9 +1464,9 @@ if(!empty($awbids ))
              $this->db->where('DATE(shipment_fm.close_date)', $data['s_type_val']);
             }
         }
-         if (!empty($wh_id)) {
-            $this->db->where('shipment_fm.wh_id', $wh_id);
-        }
+        //  if (!empty($wh_id)) {
+        //     $this->db->where('shipment_fm.wh_id', $wh_id);
+        // }
         if (!empty($refsno)) {
             $this->db->group_start();
             $this->db->where('shipment_fm.booking_id', $refsno)
@@ -1489,14 +1525,14 @@ if(!empty($awbids ))
 
         $query = $this->db->get();
 
-      // echo $this->db->last_query(); die;
+       //echo $this->db->last_query(); die;
 
         if ($query->num_rows() > 0) {
 
 
             //$data['excelresult']=$this->filterexcel($awb,$sku,$delivered,$seller,$to,$from,$exact,$page_no,$destination,$booking_id); 
             $data['result'] = $query->result_array();
-            $data['count'] = $this->shipmCount($awb, $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination, $booking_id, '', $cc_id,$refsno,$mobileno,$wh_id,$data['order_type'],$data);
+            $data['count'] = $this->shipmCount($awb, $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination, $booking_id, '', $cc_id,$refsno,$mobileno,$wh_id,$data['order_type'],$data,$wh_id_arr);
             return $data;
             // return $page_no.$this->db->last_query();
         } else {
@@ -2311,7 +2347,7 @@ if(!empty($awbids ))
         return 0;
     }
 
-    public function shipmCount($awb, $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination, $booking_id, $backorder = null, $cc_id = null,$refsno=null,$mobileno=null,$wh_id=null,$order_type=null,$data=array()) {
+    public function shipmCount($awb, $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination, $booking_id, $backorder = null, $cc_id = null,$refsno=null,$mobileno=null,$wh_id=null,$order_type=null,$data=array(),$wh_id_arr =array()) {
 
 
         if ($this->session->userdata('user_details')['user_type'] != 1) {
@@ -2452,8 +2488,15 @@ if(!empty($awbids ))
             }
         }
         
-        if (!empty($wh_id)) {
-            $this->db->where('shipment_fm.wh_id', $wh_id);
+        // if (!empty($wh_id)) {
+        //     $this->db->where('shipment_fm.wh_id', $wh_id);
+        // }
+        if(!empty($data['country'])){    
+            if(!empty($wh_id_arr) && count($wh_id_arr)>0){
+                $this->db->where_in('shipment_fm.wh_id', implode(",",$wh_id_arr));
+            }else{
+                $this->db->where_in('shipment_fm.wh_id', NULL);
+            }
         }
          if (!empty($refsno)) {
             $this->db->where('shipment_fm.booking_id', $refsno);

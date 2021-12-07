@@ -2283,7 +2283,36 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                                 $return= array('status'=>201,'error'=> $returnArr);
                                 return $return;
                             }
+                    
                             
+                    }elseif ($company== 'Flamingo'){    
+                        
+                       $Auth_token = $this->Ccompany_model->shipox_auth($counrierArr);  
+                            
+                       $responseArray =$this->Ccompany_model->flamingoArray($sellername,$ShipArr,$counrierArr, $Auth_token, $c_id, $box_pieces1, $super_id);
+                       $successres = $responseArray['status'];  
+                       $error_status = $responseArray['message'];
+                       
+                       if (!empty($successres) && $successres == 'success')
+                       {
+                           $client_awb = $responseArray['data']['order_number'];
+                           $falmingoLabel = $this->Ccompany_model->shipox_label($client_awb, $counrierArr, $Auth_token);
+                           $label= json_decode($falmingoLabel,TRUE);
+                           $media_data = $label['data']['value'];                               
+
+                           $generated_pdf = file_get_contents($media_data);
+                           file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                           $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';
+                           $comment = '';                             
+                           $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                            return $return;
+                       }                            
+                       else
+                       {
+                           $returnArr['responseError'][] = $slipNo . ':' .$error_status;
+                           $return= array('status'=>201,'error'=> $returnArr);
+                           return $return;
+                       }
                             
                     }elseif ($company_type== 'F') { // for all fastcoo clients treat as a CC 
                         if ($company=='Ejack' ) 
