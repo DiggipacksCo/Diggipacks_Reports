@@ -297,6 +297,8 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
             $scope.awbArray = [];
             $scope.shelve = null;
             $scope.type = 'DL';
+            $scope.comments = "";
+            $scope.BoxInputshow = false;
             $scope.scan_awb = function () {
                 //$('#scan_awb').focus();
                 console.log($scope.scan);
@@ -307,11 +309,23 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
 
                 $scope.validateOrder();
             }
-
+            $scope.GetCheckvalidbox=function()
+            {
+              if($scope.type=='SFP')
+              {
+                 $scope.BoxInputshow = true;  
+              }
+              else
+              {
+                   $scope.comments = "";
+                   $scope.BoxInputshow = false;
+              }
+            };
             $scope.dispatchOrder = function ()
             {
 
                 $scope.scan.type = $scope.type;
+                 $scope.scan.comments = $scope.comments;
                 $http({
                     url: "PickUp/dispatchOrder",
                     method: "POST",

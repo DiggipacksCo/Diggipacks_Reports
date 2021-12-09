@@ -686,6 +686,14 @@ class PickUp extends MY_Controller {
             $sallaStatus=349994915;
             $note= "جاري التوصيل";
         }
+        if ($_POST['type'] == 'SFP') {
+            $code = 'POD';
+            $new_status = 7;
+            
+            $zidStatus = "delivered";
+            $sallaStatus=1723506348;
+            $note="تم التوصيل";
+        }
         if ($_POST['type'] == 'POD') {
             $code = 'POD';
             $new_status = 7;
@@ -729,6 +737,11 @@ class PickUp extends MY_Controller {
                 $statusvalue[$key]['new_status'] = $new_status;
                 $statusvalue[$key]['code'] = $code;
                 $statusvalue[$key]['Activites'] = 'Order Dispatched';
+                if (!empty($_POST['comments'])) {
+                    $statusvalue[$key]['comment'] = $_POST['comments'];
+                } else {
+                    $statusvalue[$key]['comment'] = "";
+                }
                 $statusvalue[$key]['Details'] = 'Order Dispatched By ' . getUserNameById($this->session->userdata('user_details')['user_id']);
                 $statusvalue[$key]['entry_date'] = date('Y-m-d H:i:s');
                 $statusvalue[$key]['super_id'] = $this->session->userdata('user_details')['super_id'];
