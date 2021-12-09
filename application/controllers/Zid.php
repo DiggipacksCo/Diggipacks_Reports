@@ -114,6 +114,7 @@ class Zid extends CI_Controller {
     
                         echo $booking_id . ' Exist<br>';
                     } else {
+                        
                         $addShipValid=false;
                        // echo 'xxxxx'; exit;
                         $result1['order'] = $Order; 
