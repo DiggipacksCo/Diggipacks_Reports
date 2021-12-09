@@ -425,8 +425,9 @@ class Manifest extends CourierCompany_pickup {
          //echo "{$total_QTY}=={$total_sku}";
          
         if($total_QTY>=$total_sku)
-        {
-            $updateArray = array('received_qty' =>  $received_qty,'missing_qty' =>  $missing_qty, 'damage_qty' => $damage_qty, 'id' =>$id);
+        {   
+            
+            $updateArray = array('received_qty' =>  $received_qty,'code' => 'RI','missing_qty' =>  $missing_qty, 'damage_qty' => $damage_qty, 'id' =>$id);
             $result = $this->Manifest_model->ManifestDMUpdate($updateArray, $id);
             $return_arr=array('show_alert' => 'successfully Updated');
         }
@@ -435,10 +436,10 @@ class Manifest extends CourierCompany_pickup {
            $return_arr=array('show_alert' => 'Invalid Quantity'); 
         }
         echo json_encode($return_arr); die;
-       
+                
     }
     function getupdateManifestStatus() {
-        $_POST = json_decode(file_get_contents('php://input'), true);
+        $_POST = json_decode(file_get_contents('php://input'), true);                   
         $dataArray = $_POST;
         $table_manifestid = $dataArray['mid'];
         $sku = $dataArray['skuno'];
