@@ -4475,8 +4475,50 @@ if(!empty( $searchids))
                      $item_type=$skudata['type'];
                      $SkuID=$skudata['id'];
                      $wh_id=$skudata['wh_id'];
+                     $expdate = "0000-00-00";
+                     $seller_id=$dataAray['cust_id'];
                      
-                     
+                     $dataNew = $this->ItemInventory_model->find(array('item_sku' => $SkuID, 'expity_date' => $expdate, 'seller_id' => $seller_id, 'itype' => $item_type, 'wh_id' => $wh_id));
+                 
+                  foreach ($dataNew as $val) {
+                if ($val->quantity < $sku_size) {
+
+                    //echo '<br> 2//'.$qty.'//'. $val->quantity.'//';
+                    $check = $qty + $val->quantity;
+                    $shelve_no = $val->shelve_no;
+                    if (empty($shelve_no)) {
+                        $shelve_no = "";
+                    }
+                    if ($check <= $sku_size) {
+
+                        $lastQtyUp = GetuserToatalLOcationQty($val->id, 'quantity');
+                        $stock_location_upHistory = GetuserToatalLOcationQty($val->id, 'stock_location');
+                        $lastQtyUp_up = $lastQtyUp;
+                        $activitiesArr = array('exp_date' => $expdate, 'st_location' => $stock_location_upHistory, 'item_sku' => $SkuID, 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $seller_id, 'qty' => $check, 'p_qty' => $lastQtyUp, 'qty_used' => $qty, 'type' => 'Return', 'entrydate' => date("Y-m-d h:i:s"), 'super_id' => $this->session->userdata('user_details')['super_id'], 'shelve_no' => $shelve_no,'awb_no'=>$dataAray['slip_no']);
+                        if($qty>0)
+                        {
+                        GetAddInventoryActivities($activitiesArr);
+                        }
+                        $this->ItemInventory_model->updateInventory(array('quantity' => $check, 'id' => $val->id));
+                        $qty = 0;
+                    } else {
+
+                        $diff = $sku_size - $val->quantity;
+                        $lastQtyUp = GetuserToatalLOcationQty($val->id, 'quantity');
+                        $stock_location_upHistory = GetuserToatalLOcationQty($val->id, 'stock_location');
+                        $lastQtyUp_up = $lastQtyUp;
+                        $activitiesArr = array('exp_date' => $expdate, 'st_location' => $stock_location_upHistory, 'item_sku' => $SkuID, 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $seller_id, 'qty' => $sku_size, 'p_qty' => $lastQtyUp, 'qty_used' => $qty, 'type' => 'Update', 'entrydate' => date("Y-m-d h:i:s"), 'super_id' => $this->session->userdata('user_details')['super_id'], 'shelve_no' => $shelve_no,'awb_no'=>$dataAray['slip_no']);
+                        if($qty>0)
+                        {
+                        GetAddInventoryActivities($activitiesArr);
+                        }
+                        $this->ItemInventory_model->updateInventory(array('quantity' => $sku_size, 'id' => $val->id));
+                        $qty = $qty - $diff;
+                    }
+                }
+
+                // echo $val['item_sku'];  
+            }
                      if ($qty > 0) {
                         if ($sku_size >= $qty)
                             $locationLimit = 1;
@@ -4677,10 +4719,11 @@ if(!empty( $searchids))
         
     }
     
+    
     public function edit_mapping_view($id){
         
-        $data['mapdata'] = $this->Shipment_model->getMappingData($id);
-        $this->load->view('ShipmentM/edit_shipment_mapping',$data);
+                $data['mapdata'] = $this->Shipment_model->getMappingData($id);
+                $this->load->view('ShipmentM/edit_shipment_mapping',$data);
     }
     
 }
