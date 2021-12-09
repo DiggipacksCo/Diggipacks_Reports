@@ -140,16 +140,19 @@ class ItemInventory_model extends CI_Model {
                 
                   if(empty($rdata['shelve_no']))
                     {
-                        $rdata['shelve_no']="";
+                        $shelve_no="";
+                    }
+                    else
+                    {
+                        $shelve_no=$rdata['shelve_no'];
                     }
                 if (!empty($rdata['awb_no']))
                 {
-                    $activitiesArr[] = array('exp_date' => $rdata['expity_date'], 'st_location' => $rdata['stock_location'], 'item_sku' => $rdata['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $rdata['seller_id'], 'qty' => $rdata['quantity'], 'p_qty' => 0, 'qty_used' => $rdata['quantity'], 'type' => $activitiesType, 'entrydate' => date("Y-m-d h:i:s"), 'awb_no' => $rdata['awb_no'], 'super_id' => $this->session->userdata('user_details')['super_id'],'shelve_no'=>$rdata['shelve_no']);
+                    $activitiesArr[] = array('exp_date' => $rdata['expity_date'], 'st_location' => $rdata['stock_location'], 'item_sku' => $rdata['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $rdata['seller_id'], 'qty' => $rdata['quantity'], 'p_qty' => 0, 'qty_used' => $rdata['quantity'], 'type' => $activitiesType, 'entrydate' => date("Y-m-d h:i:s"), 'awb_no' => $rdata['awb_no'], 'super_id' => $this->session->userdata('user_details')['super_id'],'shelve_no'=>$shelve_no);
                 }
                 else
                 {
-                    
-                    $activitiesArr[] = array('exp_date' => $rdata['expity_date'], 'st_location' => $rdata['stock_location'], 'item_sku' => $rdata['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $rdata['seller_id'], 'qty' => $rdata['quantity'], 'p_qty' => 0, 'qty_used' => $rdata['quantity'], 'type' => $activitiesType, 'entrydate' => date("Y-m-d h:i:s"), 'super_id' => $this->session->userdata('user_details')['super_id'],'shelve_no'=>$rdata['shelve_no']);
+                  $activitiesArr[] = array('exp_date' => $rdata['expity_date'], 'st_location' => $rdata['stock_location'], 'item_sku' => $rdata['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $rdata['seller_id'], 'qty' => $rdata['quantity'], 'p_qty' => 0, 'qty_used' => $rdata['quantity'], 'type' => $activitiesType, 'entrydate' => date("Y-m-d h:i:s"), 'super_id' => $this->session->userdata('user_details')['super_id'],'shelve_no'=>$shelve_no);
                 }
             }
         }
@@ -159,7 +162,7 @@ class ItemInventory_model extends CI_Model {
             // $this->db->insert('item_inventory_history',$item_inventory_history);
         }
 
-        if (!empty($item_inventory_history2) && !empty($array_added)) {
+        if (!empty($array_added)) {
             // $this->db->insert_batch('item_inventory_history',$item_inventory_history2);
            if($this->db->insert_batch('item_inventory', $array_added))
            {
