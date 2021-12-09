@@ -5397,7 +5397,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
         }
 
 
-        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$all_param_array);
+        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$all_param_data);
         return $responseArray;
         }else{ 
             $responseArray = array('data'=> 'Reciver City Empty', 'code'=>1) ;

@@ -294,7 +294,7 @@ class Ccompany_auto_model extends CI_Model {
                 $successstatus  = "Success";
             }
             
-        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$super_id);
+        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$super_id, $dataJson);
 
         return $awb_array;
     }
@@ -2180,12 +2180,14 @@ public function ShipaDelLabelcURL(array $counrierArr, $client_awb = null)
         return $response;
     }
 
- public function shipmentLog($c_id = null,$description= null,$status= null,$slip_no= null,$super_id= null){
+ public function shipmentLog($c_id = null,$description= null,$status= null,$slip_no= null,$super_id= null ,$requestData = null){
+        
         $CURRENT_DATE = date("Y-m-d H:i:s");
         $logarr  = array(
             'slip_no' => $slip_no, 
             'cc_id' => $c_id, 
-            'log' => $description, 
+            'log' => $description,
+            'request'=>$requestData, 
             'status' =>$status, 
             'super_id' => $super_id, 
             'entry_date' =>$CURRENT_DATE, 
@@ -2979,4 +2981,122 @@ public function fastcooArray(array $ShipArr, array $counrierArr, $complete_sku =
 
         return $safe_response;
     }
+
+    public function tamexArray(array $ShipArr, array $counrierArr, $complete_sku = null,$c_id=null,$box_pieces1=null,$super_id=null) 
+    {
+
+        $sender_default_city = Getselletdetails_new($super_id);
+        $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+        
+        
+        $sender_address = $sender_default_city['0']['address'];
+        
+        $sender_city = $this->getdestinationfieldshow_auto_array($ShipArr['origin'], 'tamex_city',$super_id); 
+
+        $receiver_city = getdestinationfieldshow_auto_array($ShipArr['destination'], 'tamex_city',$super_id);
+
+        if(!empty($receiver_city))
+        {
+            $API_URL = $counrierArr['api_url'].'create';
+            if ($ShipArr['pay_mode'] == 'COD') {
+                $codValue = $ShipArr['total_cod_amt'];
+            } else {
+                $codValue = 0;
+            }
+        
+
+            if(empty($box_pieces1))
+            {
+                $box_pieces = 1;
+            }
+            else
+            { 
+                $box_pieces = $box_pieces1 ; 
+            }
+
+            if($ShipArr['weight']==0)
+            {  
+                $weight= 1;
+            }
+            else { 
+                $weight = $ShipArr['weight'] ; 
+            }
+        $currency = site_configTable("default_currency");    
+        $param = array(
+            "apikey" => $counrierArr['auth_token'],          
+            "pack_type" => 1,
+            "pack_awb" => $ShipArr['slip_no'],
+            "pack_vendor_id" => "Diggipacks",
+            "pack_reciver_name" => $ShipArr['reciever_name'],
+            "pack_reciver_phone" => $ShipArr['reciever_phone'],
+            "pack_reciver_country" => "SA",
+            "pack_reciver_city" => $receiver_city,
+            "pack_reciver_dist" => '',
+            "pack_desc" => $complete_sku,
+            "pack_num_pcs" => $box_pieces,
+            "pack_weight" => $weight,
+            "pack_cod_amount" => $codValue,
+            "pack_currency_code" => $currency,
+            "pack_extra_note" => "OK",
+            "pack_live_time" => "4",
+            "pack_sender_name" => $sellername,//"Diggipacks",
+            "pack_sender_phone" => $ShipArr['reciever_phone'],
+            "pack_sender_email" =>$ShipArr['sender_email'],
+            "pack_send_country" => "SA",
+            "pack_send_city" =>  $sender_city,
+            "pack_sender_dist" =>  $sender_city,
+            "pack_sender_street" => $sender_address,
+            "pack_sender_zipcode" => "",
+            "pack_sender_building" => "NA",
+            "pack_sender_extra" => "NA",
+            "pack_sender_extar_address" => "NA",
+            "pack_sender_longitude" => "NA",
+            "pack_sender_latitude" => "NA",
+            "pack_reciver_email" => !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com',
+            "pack_reciver_street" => $ShipArr['reciever_address'],
+            "pack_reciver_zipcode" => "",
+            "pack_reciver_building" => "",
+            "pack_reciver_extra" => "NA",
+            "pack_reciver_extar_address" => "NA",
+            "pack_reciver_longitude" => "",
+            "pack_reciver_latitude" => "",
+            "pack_dimention" => "",
+            "pack_invoice_no" => "",
+        );
+        $all_param_data = json_encode($param);
+        $headers = array(
+            "Accept:application/json"
+        );
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $API_URL);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $all_param_data);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        $responseArray = json_decode($response, true);     
+        $logresponse =   json_encode($response);  
+    
+
+        if ($responseArray['code'] == 0) {
+            $successstatus  = "Success";
+        
+        } elseif ($response['code'] != 0 || empty($response)) {
+            $successstatus  = "Fail";
+        }else{
+            $successstatus  = "Fail";
+        }
+
+
+        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$super_id,$all_param_data);
+        
+        return $responseArray;
+        }else{ 
+            $responseArray = array('data'=> 'Reciver City Empty', 'code'=>1) ;
+            return $responseArray;
+        }
+    }
+
 }

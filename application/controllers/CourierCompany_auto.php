@@ -877,8 +877,7 @@ class CourierCompany_auto extends CI_Controller {
                             $returnArr['responseError'][] = $slipNo . ':' .$error_status;
                         }
                     
-                    }elseif ($company== 'Postagexp')
-                       {
+                    }elseif ($company== 'Postagexp'){
                         
                         $Auth_token=$this->Ccompany_auto_model->Postagexp_auth($counrierArr); 
                       
@@ -910,6 +909,37 @@ class CourierCompany_auto extends CI_Controller {
                             $returnArr['responseError'][] = $slipNo . ':' .$error_status;
                         }
                     
+
+                    }elseif ($company== 'Tamex'){
+                        
+                        $response = $this->Ccompany_auto_model->tamexArray($ShipArr, $counrierArr, $complete_sku, $c_id,$box_pieces1,$super_id);
+                        $responseArray = json_decode($response, true);
+                      
+                        if ($responseArray['code'] != 0 || empty($response)) {
+                            $returnArr['responseError'][] = $slipNo . ':' . $responseArray['data'];
+
+                        } elseif ($responseArray['code'] == 0) {
+
+                                $client_awb = $responseArray['tmxAWB'];
+                                $API_URL= $counrierArr['api_url'].'print';
+                                        
+                                $generated_pdf = Tamex_label($client_awb, $counrierArr['auth_token'],$API_URL);
+                                file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                                $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+
+
+                                $CURRENT_DATE = date("Y-m-d H:i:s");
+                                $CURRENT_TIME = date("H:i:s");
+
+                                $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                                
+                                $returnArr['successAbw'][] = 'AWB No.' . $slipNo . ' forwarded to SLS';
+                                array_push($succssArray, $slipNo);
+                        }
+
+
+
+
                     }elseif ($company_type == 'F')
                             { // for all fastcoo clients treat as a CC 
                       
