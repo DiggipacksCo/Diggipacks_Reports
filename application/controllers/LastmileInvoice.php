@@ -242,7 +242,7 @@ public function payableInvoice_update()
 		}
 
 		$finalArray = array_values(array_diff($show_awb_no, $areadyExit));
-		$shipmentdata= $this->Shipment_model->getawbdataquery($finalArray);
+		$shipmentdata= $this->Shipment_model->getawbdataqueryInvoice($finalArray,$cust_id);
 		$chargeData= $this->LastMile_model->calculateShipCharge($cust_id);
 		$returnData= $this->LastMile_model->calculateReturn($cust_id);
 		//echo json_encode($chargeData); exit;
@@ -420,7 +420,7 @@ public function payableInvoice_update()
 		 }
 
 		 $finalArray = array_values(array_diff($slipData, $areadyExit));
-		 $shipmentdata= $this->Shipment_model->getawbdataquery($finalArray);
+		 $shipmentdata= $this->Shipment_model->getawbdataqueryInvoice($finalArray,$cust_id);
 
 		 $belongToOther=array();
 		 $Available=array();

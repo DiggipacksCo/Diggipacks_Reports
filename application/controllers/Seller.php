@@ -616,7 +616,7 @@ $u_type = $this->input->post('u_type');
 
        // print_r( $ZidProductRT); exit;
         $ZidProductArr_total = json_decode($ZidProductRT, true);
-
+      //  echo '<pre>';
         $total_pages = 1;
         if ($ZidProductArr_total['count'] > 100) {
             $total_pages = ceil($ZidProductArr_total['count'] / 100);
@@ -646,15 +646,19 @@ $u_type = $this->input->post('u_type');
                         
 
                         $product = json_decode(ZidPcURL($storeID, $product_link, $bearer,$token), true);
-                       // print_r($product); exit;
+                       
                        if(!empty( $product)){
                         if (count($product['variants']) > 0) {
+                         
                             foreach ($product['variants'] as $key=>$variant) {
-
+                                $variant['images']=$product['images'];
                                 $results[] = $variant;
+                              
+                                
                              
                             }
                         } else {
+                          
                             $results[] = $product;
                           
                         }
