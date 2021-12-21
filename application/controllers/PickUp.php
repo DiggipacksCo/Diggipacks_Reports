@@ -752,6 +752,8 @@ class PickUp extends MY_Controller {
                 //$slip_data[$key]['shippers_ref_no'] = $responseData['awb'];
                 $slip_data[$key]['code'] = $code;
                 $slip_data[$key]['delivered'] = $new_status;
+                $slip_data[$key]['dispatch_date'] = date('Y-m-d H:i:s');
+                
                 // $slip_data[$key]['close_date'] = date('Y-m-d');
                 //======================outbound charges=====================================///
                 $getallskuArray = $this->Pickup_model->GetallskuDataDetails($data['slip_no']);

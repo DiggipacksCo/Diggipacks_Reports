@@ -412,7 +412,8 @@
                                                         <ul class="dropdown-menu dropdown-menu-right">
                                                             <li><a href="<?= base_url(); ?>Shipment/edit_view/{{data.id}}"><i class="icon-pencil7"></i> <?=lang('lang_Change_Destination');?> </a></li>    
                                                             <li><a class="dropdown-item" href="<?= base_url(); ?>awbPrint1/{{data.slip_no}}" target="_blank" style="  word-wrap: break-word;"><i class="fa fa-print fa-fw"></i><?=lang('lang_Label_A4');?> </a> </li>     
-                                                            <li><a ng-if="data.frwd_company_awb != ''" class="dropdown-item" href="<?= base_url(); ?>Printpicklist3PL_bulk/{{data.slip_no}}/{{data.frwd_company_id}}" target="_blank"> <i class="fa fa-print fa-fw"></i><?=lang('lang_TPL_AWB');?></a> </li>   
+                                                            <!-- <li><a ng-if="data.frwd_company_awb != ''" class="dropdown-item" href="<?= base_url(); ?>Printpicklist3PL_bulk/{{data.slip_no}}/{{data.frwd_company_id}}" target="_blank"> <i class="fa fa-print fa-fw"></i><? //=lang('lang_TPL_AWB');?></a> </li>    -->
+                                                            <li><a ng-if="data.frwd_company_label != ''" class="dropdown-item" href="{{data.frwd_company_label}}" target="_blank"> <i class="fa fa-print fa-fw"></i><?=lang('lang_TPL_AWB');?></a> </li>   
                                                             <li ng-if="data.product_invoice!=null"><a class="dropdown-item" href="<?= base_url(); ?>assets/product_invoice/{{data.slip_no}}.pdf" target="_blank"> <i class="fa fa-print fa-fw"></i>Print Invoice</a> </li>   
 
                                                                <?php //if (menuIdExitsInPrivilageArray(124) == 'Y') { ?>
