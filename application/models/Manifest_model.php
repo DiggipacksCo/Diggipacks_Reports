@@ -24,7 +24,7 @@ class Manifest_model extends CI_Model {
         $this->db->where('pickup_request.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('items_m.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('pickup_request.confirmO', 'N');
-         $this->db->where('pickup_request.code', 'RI');
+     $this->db->where('pickup_request.code', 'RI');
          $this->db->where("pickup_request.received_qty>0");
 
 

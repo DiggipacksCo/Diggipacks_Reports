@@ -223,6 +223,9 @@
                                             <?php if (GetCourierCompanyStausActive('Flamingo') == 'Y') { ?>
                                                 <th class="head1">Flamingo</th>
                                             <?php } ?>
+                                            <?php if (GetCourierCompanyStausActive('AJOUL') == 'Y') { ?>
+                                                <th class="head1">AJOUL City Code</th>
+                                            <?php } ?>
                                             <th class="head1">Country Code</th>
                                             <th class="head1">Currency</th>
                                             <th class="head1">LAT</th>
@@ -551,6 +554,12 @@
                                                     <td><input type="text" name="flamingo_city" id="flamingo_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['flamingo_city']; ?>" class="form-control">
                                                             <br>
                                                             <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'flamingo_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
+                                                        </td>
+                                                     <?php } ?>
+                                                     <?php if (GetCourierCompanyStausActive('AJOUL') == 'Y') { ?>
+                                                        <td><input type="text" name="ajoul_city_code" id="ajoul_city_code<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['ajoul_city_code']; ?>" class="form-control">
+                                                            <br>
+                                                            <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'ajoul_city_code');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
                                                         </td>
                                                      <?php } ?>
                                                         

@@ -8136,6 +8136,165 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
                 return $responseArray;
     }
 
+    public function AJOUL_AUTH($courierArr = array()){
+
+
+        $api_url = $courierArr['api_url']."authorize?client_secret=".$courierArr['courier_pin_no']."&client_id=".$courierArr['courier_account_no']."&username=".$courierArr['user_name']."&password=".$courierArr['password'];
+        $curl = curl_init();
+        //echo $api_url;die;
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => $api_url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_SSL_VERIFYHOST => 0,
+        CURLOPT_SSL_VERIFYPEER => 0,
+
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/x-www-form-urlencoded',
+            'Cache-Control: no-cache',
+            'Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW'
+        ),
+        ));
+
+        $response = curl_exec($curl);
+        //echo "Error = " . curl_errno($curl) . "<br>";die; 
+        //echo $response;die;
+
+        curl_close($curl);
+        $response_data = json_decode($response,true);
+        return $response_data['access_token'];
+    }
+
+    public function AJOULArray($sellername = null,array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null, $box_pieces1 = null,  $complete_sku = null, $super_id =null){
+        
+            $sender_city_code = getdestinationfieldshow($ShipArr['origin'], 'ajoul_city_code', $super_id);
+            $sender_country_code = getdestinationfieldshow($ShipArr['origin'], 'country_code', $super_id);
+            
+            $receiver_city_code = getdestinationfieldshow($ShipArr['destination'], 'ajoul_city_code', $super_id);
+            $receiver_country_code = getdestinationfieldshow($ShipArr['origin'], 'country_code', $super_id);
+            
+            $store_address = $ShipArr['sender_address'];
+            $senderemail = $ShipArr['sender_email'];
+            $senderphone = $ShipArr['sender_phone'];
+
+            $API_URL = $counrierArr['api_url'] . "shipment/create";
+
+            if (empty($box_pieces1)) {
+                $box_pieces = 1;
+            } else {
+                $box_pieces = $box_pieces1;
+            }
+
+            if ($ShipArr['weight'] == 0) {
+                $weight = 1;
+            } else {
+                $weight = $ShipArr['weight'];
+            }
+
+        
+            if($ShipArr['mode'] == "COD"){
+                $cod_amount = $ShipArr['total_cod_amt'];
+
+            }
+            elseif ($ShipArr['mode'] == 'CC'){
+                $cod_amount = 0;
+            }
+        
+            $date_time = strtotime(date('Y-m-d h:i:s'));                              
+           
+            $CURRENT_DATE = date('Y-m-d',$date_time);
+            $CURRENT_TIME = date('H:i',$date_time);
+          
+        $details = array(
+            'receiver'=>array(
+                'name'=>$ShipArr['reciever_name'],
+                'country_code'=>$receiver_country_code,
+                'city_code'=>$receiver_city_code,
+                'address'=>$ShipArr['reciever_address'],
+                'zip_code'=>'',
+                'phone'=>$ShipArr['reciever_phone'],
+                'email'=>$ShipArr['reciever_email']
+            ),
+            'sender'=>array(
+                'name'=>$sellername,
+                'country_code'=>$sender_country_code,
+                'city_code'=>$sender_city_code,
+                'address'=>$store_address,
+                'zip_code'=>'',
+                'phone'=>$senderphone,
+                'email'=>$senderemail
+            ),
+            "reference"=> $ShipArr['slip_no'],
+            "pick_date"=>$CURRENT_DATE,//"2018-08-06",
+            "pickup_time"=> $CURRENT_TIME,//"12:49",
+            "product_type"=> "104",
+            "payment_mode"=> $ShipArr['mode'],
+            "parcel_quantity"=> $box_pieces,
+            "parcel_weight"=> $weight,
+            "service_id"=> "1",
+            "description"=> $complete_sku,
+            "sku"=> $complete_sku,
+            "weight_total"=> $weight,
+            "total_cod_amount"=> $cod_amount
+        );    
+
+        
+
+        $json_final_date = json_encode($details);
+        //echo $json_final_date;  die;
+
+
+        if (empty($receiver_city_code))
+        {
+            $response = array('message'=> 'Receiver city code empty' ); 
+            $response = json_encode($response);
+        }
+        else {
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+            CURLOPT_URL =>  $API_URL,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => $json_final_date,
+                CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/json',
+                    'Accept: application/json',
+                    'Authorization: Bearer ' .$Auth_token),
+            ));
+            $response = curl_exec($curl);
+            curl_close($curl);
+        }
+
+        $responseArray = json_decode($response, true);
+        //print "<pre>"; print_r($responseArray);die;
+
+        $logresponse =   json_encode($response);  
+
+        
+        //print_r($successres);die;
+
+        if (isset($responseArray['Shipment']) && !empty($responseArray['Shipment'])) 
+            {
+                    $successstatus = "Success";
+            } else {
+                    $successstatus = "Fail";
+            }
+        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'], $json_final_date);
+        return $responseArray;
+
+    }
+
 
 
 

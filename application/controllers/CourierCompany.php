@@ -412,14 +412,17 @@ class CourierCompany extends MY_Controller  {
                     $sender_default_city = Getselletdetails_new($super_id);
                     
                     // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
-                    $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company'); 
-                    $sellername = site_configTableSuper_id("company_name",$super_id)."- ".$sellername;
-                    $sender_address = $sender_default_city['0']['address'];
+                    //$sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company'); 
+                   
+                    $sellername = site_configTableSuper_id("company_name",$super_id);
+                    $sender_address = site_configTableSuper_id("company_address",$super_id);
+                    $sender_phone =  site_configTableSuper_id("phone",$super_id);
+                   
                     
                     $ShipArr = array(
                         'sender_name' =>  $sellername,
                         'sender_address' => $sender_address,
-                        'sender_phone' =>  $ShipArr['sender_phone'],
+                        'sender_phone' =>  $sender_phone,
                         'sender_email' =>  $ShipArr['sender_email'],
                         'origin' => $sender_default_city['0']['branch_location'] , 
                         'slip_no' => $ShipArr['slip_no'],
@@ -630,9 +633,8 @@ class CourierCompany extends MY_Controller  {
                             $recDetail = Getselletdetails_new($super_id);
                            
                             $receiver_name = site_configTableSuper_id("company_name",$super_id);
-                            $receiver_address = $recDetail['0']['address'];
-                            $receiver_mobile = $recDetail['0']['phone'];
-
+                            $receiver_address = site_configTableSuper_id("company_address",$super_id);
+                            $receiver_mobile =  site_configTableSuper_id("phone",$super_id);
                             if($total_weight > 0 ){
                                 $weight = $total_weight;
                             }else{
@@ -2313,6 +2315,32 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                            $return= array('status'=>201,'error'=> $returnArr);
                            return $return;
                        }
+
+                    }elseif ($company== 'AJOUL'){
+                        $Auth_token = $this->Ccompany_model->AJOUL_AUTH($counrierArr);
+
+                        if(!empty($Auth_token)){
+                                
+                            $responseArray = $this->Ccompany_model->AJOULArray($sellername, $ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1, $complete_sku, $super_id);
+                            if (isset($responseArray['Shipment']) && !empty($responseArray['Shipment'])) {
+                                $client_awb = $responseArray['TrackingNumber'];
+                                $media_data = $responseArray['printLable'];
+                                $generated_pdf = file_get_contents($media_data);
+                                file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                                $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';
+
+                                $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                                return $return;
+                            }else{
+                                $returnArr['responseError'][] = $slipNo . ': '.json_encode($responseArray['errors']);
+                                $return= array('status'=>201,'error'=> $returnArr);
+                                return $return;
+                            }
+                        }else{
+                            $returnArr['responseError'][] = $slipNo . ': Token not gernerated';
+                            $return= array('status'=>201,'error'=> $returnArr);
+                            return $return;
+                        }
                             
                     }elseif ($company_type== 'F') { // for all fastcoo clients treat as a CC 
                         if ($company=='Ejack' ) 
