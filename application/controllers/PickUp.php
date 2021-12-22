@@ -1105,6 +1105,9 @@ class PickUp extends MY_Controller {
                 $skuno = $stck['sku'];
                 $shelve_no = $stck['deducted_shelve'];
                 $seller_id = $stck['cust_id'];
+                $dataArray[$key]['missing'] = 0;
+                $dataArray[$key]['damage'] = 0;
+                $dataArray[$key]['othertotal'] = $stck['piece'];
                 
                 $dataArray[$key]['seller']=getallsellerdatabyID($seller_id,'company');
                 $slip_no = $stck['slip_no'];
@@ -1157,9 +1160,10 @@ class PickUp extends MY_Controller {
     public function save_details() {
 
        
-        $postData = json_decode(file_get_contents('php://input'), true);
+        $RequestArr = json_decode(file_get_contents('php://input'), true);
 
-
+         $postData = $RequestArr['mainlist'];
+         $remarkbox = $RequestArr['remarkbox'];
         $slip_no = $postData[0]['slip_no'];
 
 
@@ -1173,20 +1177,48 @@ class PickUp extends MY_Controller {
         
         if ($check_slipNo['code'] == 'DL' || $check_slipNo['code'] == 'D3PL' || $check_slipNo['code'] == 'POD' || $check_slipNo['code'] == 'ROP' || $check_slipNo['code'] == 'OFD' || $check_slipNo['code'] == 'DOP' || $check_slipNo['code'] == 'FD' || $check_slipNo['code'] == 'PC' || $check_slipNo['delivered'] == '16' || $check_slipNo['code'] == 'IT' || $check_slipNo['code'] == 'DLM' || $check_slipNo['code'] == 'OP' || $check_slipNo['code'] == 'RI' || $check_slipNo['code'] == 'OH' || $check_slipNo['code'] == 'OU' || $check_slipNo['code'] == 'UAR' || $check_slipNo['code'] == 'RSD' || $check_slipNo['code'] == 'UK' || $check_slipNo['code'] == 'CANC' || $check_slipNo['code'] == 'PDD') {
             foreach ($postData as $SaveStock) {
+                $total_damage = $SaveStock['missing'] + $SaveStock['damage'];
 
                 foreach ($SaveStock['local'] as $fzArray) {
                     foreach ($fzArray as $fArray) {
+                        if (empty($fArray['shelve_no']))
+                            $fArray['shelve_no'] = "";
+                        if ($total_damage > 0) {
+                            $total_qty = $fArray['qty'] - $total_damage;
+                        } else {
+                            $total_qty = $fArray['qty'];
+                        }
+                         $sku_id = getalldataitemtablesSKU($SaveStock['sku'], 'id');
+                         if ($total_damage > 0) {
+
+                            
+                            $damage_iniventory[] = array(
+                                'item_sku' => $sku_id,
+                                'quantity' => $total_damage,
+                                'd_qty' => $SaveStock['damage'],
+                                'm_qty' => $SaveStock['missing'],
+                                'order_no' => $SaveStock['slip_no'],
+                                'shelve_no' => !empty($fArray['shelve_no']) ? $fArray['shelve_no'] : '',
+                                'stock_location' => !empty($fArray['stock_location']) ? $fArray['stock_location'] : '',
+                                'itype' => 'B2C',
+                                'super_id' => $this->session->userdata('user_details')['super_id'],
+                                'updated_by' => $this->session->userdata('user_details')['user_id'],
+                                'seller_id' => $SaveStock['cust_id'],
+                                'update_date' => date("Y-m-d H:i:s"),
+                                'order_type' => 'shipment'
+                            );
+                        }
                         if (!empty($fArray['location'])) {
                             $updateLoc[] = array(
                                 'id' => $fArray['location'],
-                                'quantity' => $fArray['qty'],
+                                'quantity' => $total_qty,
                                 'stock_location' => $fArray['stock_location'],
                                 'shelve_no' => $fArray['shelve_no'],
                                 'slip_no' => $slip_no
                             );
                         } else {
                             $addLoc[] = array(
-                                'quantity' => $fArray['qty'],
+                                'quantity' => $total_qty,
                                 'stock_location' => $fArray['stock_location'],
                                 'shelve_no' => $fArray['shelve_no'],
                                 'super_id' => $check_slipNo['super_id'],
@@ -1194,7 +1226,7 @@ class PickUp extends MY_Controller {
                                 'item_sku' => $fArray['item_sku']
                             );
 
-                            $activitiesArr[] = array('exp_date' => $rdata['expity_date'], 'st_location' => $fArray['stock_location'], 'item_sku' => $fArray['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $check_slipNo['cust_id'], 'qty' => $fArray['qty'], 'p_qty' => 0, 'qty_used' => $fArray['qty'], 'type' => 'Add', 'entrydate' => date("Y-m-d h:i:s"), 'awb_no' => $slip_no, 'super_id' => $this->session->userdata('user_details')['super_id'], 'shelve_no' => $fArray['shelve_no']);
+                            $activitiesArr[] = array('exp_date' => $rdata['expity_date'], 'st_location' => $fArray['stock_location'], 'item_sku' => $fArray['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $check_slipNo['cust_id'], 'qty' => $total_qty, 'p_qty' => 0, 'qty_used' => $total_qty, 'type' => 'return', 'entrydate' => date("Y-m-d h:i:s"), 'awb_no' => $slip_no, 'super_id' => $this->session->userdata('user_details')['super_id'], 'shelve_no' => $fArray['shelve_no']);
                         }
                         
                         if($this->session->userdata('user_details')['super_id'] == 256){
@@ -1247,6 +1279,9 @@ class PickUp extends MY_Controller {
             $statusvalue[0]['slip_no'] = $slip_no;
             $statusvalue[0]['new_status'] = 8;
             $statusvalue[0]['code'] = 'RTC';
+            if (!empty($remarkbox)) {
+                $statusvalue[0]['comment'] = $remarkbox;
+            }
             $statusvalue[0]['Activites'] = 'Return';
             $statusvalue[0]['Details'] = 'Order Return, Update By ' . getUserNameById($this->session->userdata('user_details')['user_id']);
             $statusvalue[0]['entry_date'] = date('Y-m-d H:i:s');
@@ -1287,6 +1322,11 @@ class PickUp extends MY_Controller {
 
             if (!empty($addLoc)) {
                 $this->Shipment_model->addInventory($addLoc, $activitiesArr);
+            }
+            
+             if(!empty($damage_iniventory))
+            {
+                $this->Shipment_model->Getupdatedamage_inventory($damage_iniventory);
             }
 
 

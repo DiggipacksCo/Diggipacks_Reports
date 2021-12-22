@@ -9,7 +9,7 @@
       <?php $this->load->view('include/file'); ?>
       <script src='https://code.responsivevoice.org/responsivevoice.js'></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-      <script src='<?=base_url();?>assets/js/angular/returnlm.app.js'></script>
+     <script type="text/javascript" src="<?= base_url('assets/js/angular/returnlm.app.js?v='.time()); ?>"></script>
       <style>
          /* Hiding the checkbox, but allowing it to be focused */
          .badgebox {
@@ -134,17 +134,25 @@
                                     <input type="text" id="" my-enter="scan_awb();" ng-disabled="awbcolmunBtn" ng-model="scan.slip_no"class="form-control" placeHolder='<?= lang('lang_AWB'); ?>'' />
                                  </div>
                               </div>
+                              
+                                
                               <div class="col-md-3">
                                  <div class="form-group">
                                     <input type="text" id="scan_awb" my-enter="packuShip()" ng-model="scan.sku" class="form-control" placeHolder='<?= lang('lang_SKU'); ?>' />
                                  </div>
                               </div>
+                              
+                              <div class="col-md-3" ng-show="remarkBox">
+                                 <div class="form-group">
+                                     <textarea type="text"  ng-model="scan.remarkbox" class="form-control" placeHolder='Remarks' /></textarea>
+                                 </div>
+                              </div>
                               <div class="col-md-2">
                                  <div class="form-group"  ng-if="completeArray.length>2 ">
-                                    <input type="button" ng-click="finishScan();" ng-disabled="btnfinal" value='<?= lang('lang_Verify'); ?>''class="btn btn-danger" />
+                                    <input type="button" ng-click="finishScan();" ng-disabled="btnfinal" value='<?= lang('lang_Verify'); ?>' class="btn btn-danger" />
                                  </div>
                                  <div class="form-group" ng-if="completeArray.length<=2">
-                                    <input type="button" ng-click="finishScan();" ng-disabled="btnfinal" value='<?= lang('lang_Verify'); ?>''class="btn btn-primary" />
+                                    <input type="button" ng-click="finishScan();" ng-disabled="btnfinal" value='<?= lang('lang_Verify'); ?>' class="btn btn-primary" />
                                  </div>
                               </div>
                               <!-- -->
@@ -154,6 +162,8 @@
                                         <th><?= lang('lang_SKU'); ?>  </th>                                        
                                         <th><?= lang('lang_QTY'); ?></th>
                                         <th><?= lang('lang_Capacity'); ?></th>
+                                          <th >Missing</th>
+                                        <th >Damage</th>
                                         <th><?= lang('lang_Shelve_No'); ?></th>
                                         <th><?= lang('lang_Stock_Location'); ?></th> 
                                     </tr>
@@ -162,6 +172,9 @@
                                <td><span class="label label-primary">{{stockdat.sku}}</span> </td>
                                <td><span class="label label-info">{{stockdat.piece}}</span></td>
                                <td><span class="label label-info">{{stockdat.sku_size}}</span></td>
+                               
+                                <td><span class="label label-danger" style="cursor:pointer" ng-dblclick="GetUpdateOtherfieldData($index, stockdat.sku, 'Missing', stockdat.piece);">{{stockdat.missing}}</span></td>
+                                   <td><span class="label label-danger" style="cursor:pointer" ng-dblclick="GetUpdateOtherfieldData($index, stockdat.sku, 'Damage', stockdat.piece);">{{stockdat.damage}}</span></td>
                                <td><div ng-repeat="sct1 in stockdat.local" > 
                              
                                
@@ -289,6 +302,32 @@
                            </tbody>
                         </table>
                      </div>
+                            
+                             <div class="modal fade" id="Update_damage_pop" tabindex="-1" role="dialog" aria-labelledby="Update_damage_pop" aria-hidden="true" >
+                                <div class="modal-dialog" role="document" >
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+
+
+
+                                            <h5 class="modal-title" id="exampleModalLabel" >Update {{UpdateotherArr.type}}({{UpdateotherArr.sku}})</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form name="myform" novalidate>
+                                            <div class="modal-body">
+                                                <input type="text" class="form-control" ng-model="UpdateotherArr.updateType" placeholder="Enter {{UpdateotherArr.type}} Qty">
+                                            </div>
+                                            <div class="modal-footer">
+                                               
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><?= lang('lang_Close'); ?></button>
+                                                <button type="button" class="btn btn-primary" ng-if="UpdateotherArr.updateType>0 && UpdateotherArr.qty >= UpdateotherArr.updateType" ng-click="GetUpdateMussingOrDamageQty();" ><?= lang('lang_Update'); ?></button>
+                                            </div>
+                                        </form>          
+                                    </div>
+                                </div>
+                            </div>
                   </div>
                </div>
             </div>

@@ -622,7 +622,7 @@
                         </li>
                     <?php } ?>
                          <?php if (menuIdExitsInPrivilageArray(109) == 'Y') { ?>
-                        <li  <?php if ($this->uri->segment(1) == 'shelve_report' || $this->uri->segment(1) == 'topdispatchproduct' || $this->uri->segment(1) == 'performance' || $this->uri->segment(1) == 'client_report' || $this->uri->segment(1) == 'dispatching_report'|| $this->uri->segment(1) == 'InboundRecord' || $this->uri->segment(1) == 'report_3pl') echo 'class="active"'; ?>>
+                        <li  <?php if ($this->uri->segment(1) == 'shelve_report' || $this->uri->segment(1) == 'topdispatchproduct' || $this->uri->segment(1) == 'performance' || $this->uri->segment(1) == 'client_report' || $this->uri->segment(1) == 'dispatching_report'|| $this->uri->segment(1) == 'InboundRecord' || $this->uri->segment(1) == 'report_3pl' || $this->uri->segment(1) == 'view_damage_inventory') echo 'class="active"'; ?>>
                             <a href="javascript: void(0);">
                                 <i class="icon-copy"></i>
                                 <span><?= lang('lang_Reports_Management'); ?></span>
@@ -661,7 +661,9 @@
                                 <?php } ?>
                                  <?php if (menuIdExitsInPrivilageArray(76) == 'Y') { ?>
                                     <li><a href="<?= base_url('ItemInventory/historyview'); ?>"><?= lang('lang_Inventory_History'); ?></a></li>
-                                <?php } ?>
+                              
+                                    <li><a href="<?= base_url('view_damage_inventory'); ?>">Damage <?= lang('lang_Inventory_History'); ?></a></li>
+                                      <?php } ?>
                                 <?php if (menuIdExitsInPrivilageArray(76) == 'Y') { ?>
                                     <li><a href="<?= base_url('warehouse_storage_report'); ?>">Warehouse Storage Report</a></li>
                                 <?php } ?>
