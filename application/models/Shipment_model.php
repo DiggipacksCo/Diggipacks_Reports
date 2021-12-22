@@ -97,7 +97,7 @@ class Shipment_model extends CI_Model {
 
                $row_qty = ($row_inv['quantity'] + $Inv_qty);   
                
-               $activitiesArr[] = array('exp_date' => $row_inv['expity_date'], 'st_location' => $updateInventory['stock_location'], 'item_sku' => $row_inv['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $row_inv['seller_id'], 'qty' => $row_qty, 'p_qty' => $row_inv['quantity'], 'qty_used' => $Inv_qty, 'type' => 'Add', 'entrydate' => date("Y-m-d h:i:s"), 'awb_no' => $updateInventory['slip_no'], 'super_id' => $this->session->userdata('user_details')['super_id'],'shelve_no'=>$updateInventory['shelve_no']);
+               $activitiesArr[] = array('exp_date' => $row_inv['expity_date'], 'st_location' => $updateInventory['stock_location'], 'item_sku' => $row_inv['item_sku'], 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $row_inv['seller_id'], 'qty' => $row_qty, 'p_qty' => $row_inv['quantity'], 'qty_used' => $Inv_qty, 'type' => 'return', 'entrydate' => date("Y-m-d h:i:s"), 'awb_no' => $updateInventory['slip_no'], 'super_id' => $this->session->userdata('user_details')['super_id'],'shelve_no'=>$updateInventory['shelve_no']);
           
 
                 $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
@@ -4544,6 +4544,12 @@ if(!empty($awbids ))
         $data = $query->result_array();
         return $data;        
     }
+    
+     public function Getupdatedamage_inventory($data=array())
+    {
+        $this->db->insert_batch('damage_history', $data);
+    }
+    
 
 
 }

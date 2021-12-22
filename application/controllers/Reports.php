@@ -112,7 +112,53 @@ class Reports extends MY_Controller {
          echo json_encode($dataArray);
     }
     
+     public function view_damage_inventory() {
+        $this->load->model('ItemInventory_model');
+         
+        $sellers = $this->Seller_model->find1();
+      
+        $bulk = array('sellers' => $sellers);
+        $this->load->view('reports/view_iteminventory_damage', $bulk);
+    }
+ public function filter_damage() {
 
+
+        $_POST = json_decode(file_get_contents('php://input'), true);
+        $items = $this->Reports_model->filter_damage($_POST);
+        $ItemArray = $items['result'];
+        //print_r($ItemArray);
+        $kk = 0;
+        $jj = 0;
+
+        $tolalShip = $items['count'];
+        $downlaoadData = 2000;
+        $j = 0;
+        for ($k = 0; $k < $tolalShip;) {
+            $k = $k + $downlaoadData;
+            if ($k > 0) {
+                $expoertdropArr[] = array('j' => $j, 'k' => $k);
+            }
+            $j = $k;
+        }
+        //echo '<pre>';
+        $currentDate = date("Y-m-d");
+        foreach ($items['result'] as $rdata) {
+           
+            
+            $ItemArray[$kk]['update_date'] = date("d-m-Y H:i:s",strtotime($rdata['update_date']));
+            $ItemArray[$kk]['item_type'] = $rdata['type'];
+            $ItemArray[$kk]['sku_size'] = $rdata['sku_size'];
+            $ItemArray[$kk]['storage_id'] = Getallstoragetablefield($rdata['storage_id'], 'storage_type');
+            $kk++;
+        }
+        //echo '<pre>';
+        //print_r($ItemArray);die;
+        $returnArray['query'] = $items['query'];
+        $returnArray['count'] = $items['count'];
+        $returnArray['dropexport'] = $expoertdropArr;
+        $returnArray['result'] = $ItemArray;
+        echo json_encode($returnArray);
+    }
 }
 
 ?>
