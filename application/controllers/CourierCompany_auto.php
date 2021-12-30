@@ -62,7 +62,7 @@ class CourierCompany_auto extends CI_Controller {
                     foreach ($shipmentLoopArray as $key => $slipNo) {
                         $ShipArr = $this->Ccompany_auto_model->GetSlipNoDetailsQry(trim($slipNo), $super_id);
                        //print_r($ShipArr);
-                    $ShipArr_custid =  $ShipArr['cust_id']; 
+                        $ShipArr_custid =  $ShipArr['cust_id']; 
                         $courier_id = $courier_data[0]['cc_id'];
                         $zone_id = $courier_data[0]['id'];
                         $counrierArr_table = $this->Ccompany_auto_model->GetdeliveryCompanyUpdateQry($courier_id, $super_id,$ShipArr_custid);
