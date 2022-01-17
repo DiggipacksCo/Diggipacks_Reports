@@ -226,6 +226,15 @@
                                             <?php if (GetCourierCompanyStausActive('AJOUL') == 'Y') { ?>
                                                 <th class="head1">AJOUL City Code</th>
                                             <?php } ?>
+                                            <?php if (GetCourierCompanyStausActive('FLOW') == 'Y') { ?>
+                                                <th class="head1">FLOW City</th>
+                                            <?php } ?>
+                                            <?php if (GetCourierCompanyStausActive('Mahmool') == 'Y') { ?>
+                                                <th class="head1">Mahmool City</th>
+                                            <?php } ?>
+                                            <?php if (GetCourierCompanyStausActive('UPS') == 'Y') { ?>
+                                                <th class="head1">UPS City</th>
+                                            <?php } ?>
                                             <th class="head1">Country Code</th>
                                             <th class="head1">Currency</th>
                                             <th class="head1">LAT</th>
@@ -562,7 +571,25 @@
                                                             <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'ajoul_city_code');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
                                                         </td>
                                                      <?php } ?>
-                                                        
+                                                     <?php if (GetCourierCompanyStausActive('FLOW') == 'Y') { ?>
+                                                        <td><input type="text" name="flow_city" id="flow_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['flow_city']; ?>" class="form-control">
+                                                            <br>
+                                                            <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'flow_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
+                                                        </td>
+                                                     <?php } ?>
+                                                     <?php if (GetCourierCompanyStausActive('Mahmool') == 'Y') { ?>
+                                                        <td><input type="text" name="mahmool_city" id="mahmool_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['mahmool_city']; ?>" class="form-control">
+                                                            <br>
+                                                            <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'mahmool_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
+                                                        </td>
+                                                     <?php } ?> 
+                                                     <?php if (GetCourierCompanyStausActive('UPS') == 'Y') { ?>
+                                                        <td><input type="text" name="ups_city" id="ups_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['ups_city']; ?>" class="form-control">
+                                                            <br>
+                                                            <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'ups_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
+                                                        </td>
+                                                     <?php } ?>   
+  
                                                     <td><input type="text" name="country_code" id="country_code<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['country_code']; ?>" class="form-control">
                                                             <br>
                                                             <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'country_code');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>

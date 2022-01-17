@@ -118,17 +118,20 @@ class Zid extends CI_Controller {
                         $addShipValid=false;
                        // echo 'xxxxx'; exit;
                         $result1['order'] = $Order; 
-                    if(!empty($shipId))
-                    {
-                       if($shipId==$result1['order']['shipping']['method']['id']) 
-                       $addShipValid=true;
-                    }
-                    else
-                    {
-                        if(in_array($result1['order']['shipping']['method']['name'],$deliveryOption)  || strpos(trim($result1['order']['shipping']['method']['name']),'DIGGIPACK')!==false  || strpos(trim($result1['order']['shipping']['method']['name']),'DIGGIPACKS')!==false  )
-                        $addShipValid=true;
+                    // if(!empty($shipId))
+                    // {
+                    //    if($shipId==$result1['order']['shipping']['method']['id']) 
+                    //    $addShipValid=true;
+                    // }
+                    // else
+                    // {
+                        if(in_array($result1['order']['shipping']['method']['id'],$deliveryOption)  || strpos(trim($result1['order']['shipping']['method']['name']),'DIGGIPACK')!==false  || strpos(trim($result1['order']['shipping']['method']['name']),'DIGGIPACKS')!==false  )
+                        {
 
+                   
+                        $addShipValid=true;
                     }
+                    //}
                 
                     echo   $addShipValid .'//'.$result1['order']['order_status']['code'].' =='. $customers['zid_status'];
                     if ($result1['order']['order_status']['code'] == $customers['zid_status'] &&  $addShipValid==true ) 

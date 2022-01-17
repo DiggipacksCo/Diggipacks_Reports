@@ -119,7 +119,15 @@ class Shipment extends MY_Controller {
     
 
     public function runshell() {
-      $are=  shell_exec('php /var/www/html/diggipack_new/fs_files/auto_assign.php');
+        $param=array('super_id'=>$this->session->userdata('user_details')['super_id']); 
+
+		 $paramJsone=json_encode($param);
+         //print_r($param); die; 
+	
+		 exec('/usr/bin/php /var/www/html/diggipack_new/fs_files/auto_assign_fm.php ' . escapeshellarg(serialize($param)) . '  2>&1 & ',$output);
+
+       print_r($output);
+//$are=  shell_exec('php /var/www/html/diggipack_new/fs_files/auto_assign_fm.php');
     }
 
      public function runshell_tracking() {

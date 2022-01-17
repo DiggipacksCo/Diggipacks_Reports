@@ -61,6 +61,7 @@ class Item_model extends CI_Model {
 
     public function all() {
         $this->db->where('items_m.super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->where('storage_table.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('items_m.`id`, items_m.`sku`, items_m.`name`, items_m.`description`,items_m.`type`,  items_m.`sku_size`,items_m.`wh_id`,`storage_table`.`storage_type`,items_m.`item_path`');
         $this->db->from('items_m');
         $this->db->join('storage_table', 'items_m.storage_id = storage_table.id');
@@ -82,7 +83,7 @@ class Item_model extends CI_Model {
         }
         $this->db->where('items_m.super_id', $this->session->userdata('user_details')['super_id']);
         if ($this->session->userdata('user_details')['user_type'] != 1) {
-            $this->db->where('items_m.wh_id', $this->session->userdata('user_details')['wh_id']);
+            //$this->db->where('items_m.wh_id', $this->session->userdata('user_details')['wh_id']);
         }
         
         if (!empty($data['name']))
@@ -142,7 +143,7 @@ class Item_model extends CI_Model {
 
     public function filterCount($data=array()) {
         if ($this->session->userdata('user_details')['user_type'] != 1) {
-            $this->db->where('items_m.wh_id', $this->session->userdata('user_details')['wh_id']);
+           // $this->db->where('items_m.wh_id', $this->session->userdata('user_details')['wh_id']);
         }
         
          if (!empty($data['added_by']))

@@ -57,7 +57,7 @@ Class Templates extends MY_Controller {
         if (!empty($dataArray['id'])) {
             $templateArray = array('status_id' => $dataArray['status_id'], 'sub_status' => $dataArray['sub_status'], 'arabic_sms' => $dataArray['arabic_sms'], 'english_sms' => $dataArray['english_sms'], 'arabic_status' => $dataArray['arabic_status'], 'english_status' => $dataArray['english_status']);
         } else {
-            $templateArray = array('status_id' => $dataArray['status_id'], 'sub_status' => $dataArray['sub_status'], 'arabic_sms' => $dataArray['arabic_sms'], 'english_sms' => $dataArray['english_sms'], 'arabic_status' => $dataArray['arabic_status'], 'english_status' => $dataArray['english_status'], 'super_id' => $this->session->userdata('super_id'));
+            $templateArray = array('status_id' => $dataArray['status_id'], 'sub_status' => $dataArray['sub_status'], 'arabic_sms' => $dataArray['arabic_sms'], 'english_sms' => $dataArray['english_sms'], 'arabic_status' => $dataArray['arabic_status'], 'english_status' => $dataArray['english_status'], 'super_id' => $this->session->userdata('user_details')['super_id']);
         }
 
         if (!empty($dataArray['id'])) {
@@ -67,6 +67,7 @@ Class Templates extends MY_Controller {
             $res_data = $this->Templates_model->insertsmsdata($templateArray);
         }
 
+        //die;
         echo json_encode($res_data);
     }
 

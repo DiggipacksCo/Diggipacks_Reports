@@ -2714,8 +2714,8 @@ if (!function_exists('statusCount')) {
         $ci = & get_instance();
         $ci->load->database();
         if ($ci->session->userdata('user_details')['user_type'] != 1) {
-            $wh_id = $ci->session->userdata('user_details')['wh_id'];
-            $cndition = " and wh_id='$wh_id'";
+            // $wh_id = $ci->session->userdata('user_details')['wh_id'];
+            // $cndition = " and wh_id='$wh_id'";
         }
         $sql = "SELECT COUNT(ID) as total_cnt FROM shipment_fm  where delivered='" . $id . "' and deleted='N' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and backorder='0' $cndition";
         $query = $ci->db->query($sql);
