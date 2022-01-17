@@ -917,7 +917,7 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
 
             $scope.scanCheck = function ()
             {
-                $scope.arrayIndexnew = $scope.shipData.findIndex(record => (record.slip_no.toUpperCase() === $scope.scan.slip_no.toUpperCase() && record.sku.toUpperCase() === $scope.scan.sku.toUpperCase()))
+                $scope.arrayIndexnew = $scope.shipData.findIndex(record => (record.slip_no.toUpperCase() === $scope.scan.slip_no.toUpperCase() && record.sku.toUpperCase().replace(/\s/g, '') === $scope.scan.sku.toUpperCase()))
                 // $scope.arrayIndexnew= $scope.shipData.findIndex( record => (record.slip_no ===$scope.scan.slip_no && record.sku ===$scope.scan.sku ))
                 if ($scope.arrayIndexnew != -1)
                 {

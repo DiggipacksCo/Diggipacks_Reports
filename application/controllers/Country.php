@@ -35,6 +35,7 @@ class Country extends MY_Controller {
     }
     public function Importdeliverycity($id=null) {
          $companyData = $this->Country_model->GetdeliveryCOmpanyListQry();
+         //print "<pre>"; print_r($companyData);die;
          $comapnyArray = array();
          if(!empty($companyData)){
              foreach($companyData as $dataresult){

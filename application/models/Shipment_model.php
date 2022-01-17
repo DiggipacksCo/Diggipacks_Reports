@@ -663,9 +663,9 @@ if(!empty($awbids ))
     }
 
     public function shipmetsInAwb($awb=array()) {
-        if ($this->session->userdata('user_details')['user_type'] != 1) {
-            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
-        }
+//        if ($this->session->userdata('user_details')['user_type'] != 1) {
+//            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
+//        }
         $this->db->where('shipment_fm.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('*');
         $this->db->from('shipment_fm');
@@ -688,9 +688,9 @@ if(!empty($awbids ))
         }
     }
     public function shipmetsInAwb_valid($awb = array()) {
-        if ($this->session->userdata('user_details')['user_type'] != 1) {
-            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
-        }
+//        if ($this->session->userdata('user_details')['user_type'] != 1) {
+//            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
+//        }
         $this->db->where('shipment_fm.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('*');
         $this->db->from('shipment_fm');
@@ -714,9 +714,9 @@ if(!empty($awbids ))
         }
     }
      public function shipmetsInAwb_picklist($awb=array()) {
-        if ($this->session->userdata('user_details')['user_type'] != 1) {
-            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
-        }
+//        if ($this->session->userdata('user_details')['user_type'] != 1) {
+//            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
+//        }
         $this->db->where('shipment_fm.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('*');
         $this->db->from('shipment_fm');
@@ -740,9 +740,9 @@ if(!empty($awbids ))
     }
 
     public function shipmetsInAwbAll($awb) {
-        if ($this->session->userdata('user_details')['user_type'] != 1) {
-            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
-        }
+//        if ($this->session->userdata('user_details')['user_type'] != 1) {
+//            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
+//        }
         $this->db->select('*');
         $this->db->where('shipment_fm.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->from('shipment_fm');
@@ -773,9 +773,9 @@ if(!empty($awbids ))
     }
     
     public function shipmetsInAwbAll_sms($awb) {
-        if ($this->session->userdata('user_details')['user_type'] != 1) {
-            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
-        }
+//        if ($this->session->userdata('user_details')['user_type'] != 1) {
+//            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
+//        }
         $this->db->select('*');
         $this->db->where('shipment_fm.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->from('shipment_fm');
@@ -783,13 +783,11 @@ if(!empty($awbids ))
         $this->db->where('shipment_fm.code', 'DL');
         $this->db->where('shipment_fm.sms_sent', 0);
 
-
-       // if (!empty($awb)) {
-          //  $awb = array_filter($awb);
-
-            $this->db->where_in('slip_no', $awb);
-        //}
-
+        $this->db->group_start();
+        $this->db->where_in('shipment_fm.booking_id', $awb)
+        ->or_where_in('shipment_fm.frwd_company_awb',$awb);
+        $this->db->group_end();
+       
 
         $query = $this->db->get();
 
@@ -807,9 +805,9 @@ if(!empty($awbids ))
         }
     }
     public function shipmetsInAwbAll_dishpacth($awb) {
-        if ($this->session->userdata('user_details')['user_type'] != 1) {
-            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
-        }
+//        if ($this->session->userdata('user_details')['user_type'] != 1) {
+//            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
+//        }
         $this->db->select('*');
         $this->db->where('shipment_fm.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->from('shipment_fm');
@@ -1097,9 +1095,9 @@ if(!empty($awbids ))
         }
 
 
- if (!empty($data['wh_id'])) {
-             $this->db->where('shipment_fm.wh_id', $data['wh_id']);
-        }
+// if (!empty($data['wh_id'])) {
+//             $this->db->where('shipment_fm.wh_id', $data['wh_id']);
+//        }
         if (!empty($data['status'])) {
             $this->db->where_in('shipment_fm.delivered', 11);
         }
@@ -1323,9 +1321,9 @@ if(!empty($awbids ))
             
         }
         
-        if ($this->session->userdata('user_details')['user_type'] != 1) {
-            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
-        }
+//        if ($this->session->userdata('user_details')['user_type'] != 1) {
+//            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
+//        }
         $this->db->where('shipment_fm.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('shipment_fm.fulfillment', $fulfillment);
         $this->db->where('shipment_fm.deleted', $deleted);
@@ -1674,9 +1672,9 @@ if(!empty($awbids ))
         $deleted = 'N';
         $reverse_forwarded = 1;
 
-        if ($this->session->userdata('user_details')['user_type'] != 1) {
-            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
-        }
+//        if ($this->session->userdata('user_details')['user_type'] != 1) {
+//            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
+//        }
         $this->db->where('shipment_fm.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('shipment_fm.fulfillment', $fulfillment);
         $this->db->where('shipment_fm.deleted', $deleted);
@@ -1868,9 +1866,9 @@ if(!empty($awbids ))
         $fulfillment = 'Y';
         $deleted = 'N';
 
-        if ($this->session->userdata('user_details')['user_type'] != 1) {
-            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
-        }
+//        if ($this->session->userdata('user_details')['user_type'] != 1) {
+//            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
+//        }
         $this->db->where('shipment_fm.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('shipment_fm.fulfillment', $fulfillment);
         $this->db->where('shipment_fm.deleted', $deleted);
@@ -1994,9 +1992,9 @@ if(!empty($awbids ))
     public function shipmetsInAwbAll_return($awb = null) {
         // echo $awb;
         //print_r($awb); die;
-        if ($this->session->userdata('user_details')['user_type'] != 1) {
-            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
-        }
+//        if ($this->session->userdata('user_details')['user_type'] != 1) {
+//            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
+//        }
         $this->db->where('shipment_fm.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('*');
         $this->db->from('shipment_fm');
@@ -2141,9 +2139,9 @@ if(!empty($awbids ))
     public function shipmCount_created($awb, $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination, $booking_id,$refsno,$mobileno,$wh_id) {
 
 
-        if ($this->session->userdata('user_details')['user_type'] != 1) {
-            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
-        }
+//        if ($this->session->userdata('user_details')['user_type'] != 1) {
+//            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
+//        }
         $fulfillment = 'Y';
         $deleted = 'N';
         $this->db->where('shipment_fm.super_id', $this->session->userdata('user_details')['super_id']);
@@ -2242,9 +2240,9 @@ if(!empty($awbids ))
     public function shipmCountReverse($awb, $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination, $booking_id, $backorder = null, $cc_id = null,$refsno=null,$mobileno=null,$wh_id=null) {
 
 
-        if ($this->session->userdata('user_details')['user_type'] != 1) {
-            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
-        }
+//        if ($this->session->userdata('user_details')['user_type'] != 1) {
+//            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
+//        }
 
         if (!empty($cc_id)) {
             $cc_id = array_filter($cc_id);
@@ -2350,9 +2348,9 @@ if(!empty($awbids ))
     public function shipmCount($awb, $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination, $booking_id, $backorder = null, $cc_id = null,$refsno=null,$mobileno=null,$wh_id=null,$order_type=null,$data=array(),$wh_id_arr =array()) {
 
 
-        if ($this->session->userdata('user_details')['user_type'] != 1) {
-            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
-        }
+//        if ($this->session->userdata('user_details')['user_type'] != 1) {
+//            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
+//        }
 
         if (!empty($cc_id)) {
             $cc_id = array_filter($cc_id);
@@ -2787,9 +2785,9 @@ if(!empty($awbids ))
     public function backoredrexcel($exportlimit) {
         $page_no;
         $limit = $exportlimit;
-        if ($this->session->userdata('user_details')['user_type'] != 1) {
-            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
-        }
+//        if ($this->session->userdata('user_details')['user_type'] != 1) {
+//            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
+//        }
 
         $fulfillment = 'Y';
         $deleted = 'N';
@@ -2880,9 +2878,9 @@ if(!empty($awbids ))
         $limit = 2000;
         $start = $exportlimit - $limit;
 
-        if ($this->session->userdata('user_details')['user_type'] != 1) {
-            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
-        }
+//        if ($this->session->userdata('user_details')['user_type'] != 1) {
+//            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
+//        }
         $fulfillment = 'Y';
         $deleted = 'N';
         $this->db->where('shipment_fm.fulfillment', $fulfillment);
@@ -2972,9 +2970,9 @@ if(!empty($awbids ))
         // print_r($exportlimit); die;
         $limit = 2000;
         $start = $filterArr['exportlimit'] - $limit;
-        if ($this->session->userdata('user_details')['user_type'] != 1) {
-            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
-        }
+//        if ($this->session->userdata('user_details')['user_type'] != 1) {
+//            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
+//        }
         $fulfillment = 'Y';
         $deleted = 'N';
         $this->db->where('shipment_fm.fulfillment', $fulfillment);
@@ -3076,9 +3074,9 @@ if(!empty($awbids ))
         $start = $filterArr['exportlimit'] - $limit;
         $delivered = $filterArr['status'];
         // echo $exportlimit;
-        if ($this->session->userdata('user_details')['user_type'] != 1) {
-            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
-        }
+//        if ($this->session->userdata('user_details')['user_type'] != 1) {
+//           // $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
+//        }
         $fulfillment = 'Y';
         $deleted = 'N';
         $this->db->where('shipment_fm.fulfillment', $fulfillment);
@@ -3582,9 +3580,9 @@ if(!empty($awbids ))
 	 $fulfillment = 'Y';
         $deleted = 'N';
 
-        if ($this->session->userdata('user_details')['user_type'] != 1) {
-            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
-        }
+//        if ($this->session->userdata('user_details')['user_type'] != 1) {
+//            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
+//        }
         $this->db->where('shipment_fm.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('shipment_fm.fulfillment', $fulfillment);
         $this->db->where('shipment_fm.deleted', $deleted);
@@ -3873,9 +3871,9 @@ if(!empty($awbids ))
 	 $fulfillment = 'Y';
         $deleted = 'N';
 
-        if ($this->session->userdata('user_details')['user_type'] != 1) {
-            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
-        }
+//        if ($this->session->userdata('user_details')['user_type'] != 1) {
+//            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
+//        }
         $this->db->where('shipment_fm.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('shipment_fm.fulfillment', $fulfillment);
         $this->db->where('shipment_fm.deleted', $deleted);
@@ -4076,9 +4074,9 @@ if(!empty($awbids ))
         //$this->load->helper('download');
 
 
-        if ($this->session->userdata('user_details')['user_type'] != 1) {
-            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
-        }
+//        if ($this->session->userdata('user_details')['user_type'] != 1) {
+//            $this->db->where('shipment_fm.wh_id', $this->session->userdata('user_details')['wh_id']);
+//        }
         $fulfillment = 'Y';
         $deleted = 'N';
         $this->db->where('shipment_fm.fulfillment', $fulfillment);
