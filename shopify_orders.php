@@ -102,7 +102,7 @@ if ($query->num_rows > 0) {
                     'BookingMode' => $payment_mod,
                     'receiver_address' => $receiver_address,
                     'reference_id' => $order->order_number,
-                    'codValue' => $order->subtotal_price,
+                    'codValue' => $order->total_price,
                     'productType' => 'parcel',
                     'service' => 12,
                     'skudetails' => $product_arr,

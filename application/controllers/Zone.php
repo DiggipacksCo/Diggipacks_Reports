@@ -549,7 +549,7 @@ class Zone extends MY_Controller {
     public function filter_zone_by_cc(){
         $cc_id = $this->input->post('cc_id');
         $cRetsult = $this->Ccompany_model->ccNamebYccid($cc_id);
-     
+        
         if(!empty($cRetsult)){
          
             if($cRetsult['company_type'] == "F"){
@@ -562,7 +562,6 @@ class Zone extends MY_Controller {
             if(!empty($cityColumn)){
                 
                 $masterCity = $this->Zone_model->get_cities_by_cc_city($cityColumn);
-                
                 if(!empty($masterCity)){
                     $response = json_encode(array("status"=>"true","data"=>$masterCity));
                 }else{

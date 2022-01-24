@@ -3109,6 +3109,7 @@ public function awbPickupPrint_bulk_new($awb = array(),$type = null) {
             $weight = 1;
         }
         $shipment = $this->Pickup_model->pickListFilterShip_bulk($awb);
+        //print "<pre>"; print_r($shipment);die;
         $data['status_update_data'] = $shipment;
         $data['status_update_data'][0]['weight'] = $weight;
         

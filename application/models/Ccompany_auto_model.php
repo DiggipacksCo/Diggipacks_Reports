@@ -116,7 +116,7 @@ class Ccompany_auto_model extends CI_Model {
 					'Reference2' => '',
 					'Reference3' => '',
 					'Shipper' =>array(
-						'Reference1' => $ShipArr['booking_id'],
+						'Reference1' => $ShipArr['slip_no'],
 						'Reference2' => '',
 						'AccountNumber' => $counrierArr['courier_account_no'],
 						'PartyAddress' =>array(
@@ -3242,7 +3242,7 @@ public function fastcooArray(array $ShipArr, array $counrierArr, $complete_sku =
         $senderemail = GetallCutomerBysellerId($ShipArr['cust_id'],'email');
         $senderphone = GetallCutomerBysellerId($ShipArr['cust_id'],'phone');
         $store_address = $sender_default_city['0']['address'];
-        $sender_city = $this->getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city_code', $super_id);        
+        $sender_city = $this->getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);        
 
         
         switch($counrierArr['company']){
@@ -3442,6 +3442,288 @@ public function fastcooArray(array $ShipArr, array $counrierArr, $complete_sku =
         curl_close($curl);
         return $response;
 
+    }
+
+    public function UPSLabel($client_awb, $courierArr = array()){
+        $api_url = $courierArr['api_url']."/labels";
+
+        $data_array = array(
+            "LabelRecoveryRequest"=>array(
+                "LabelSpecification"=>array(
+                    "HTTPUserAgent"=>"",
+                    "LabelImageFormat"=>array(
+                        "Code"=>"PDF"
+                    )
+                ),
+                "Translate"=>array(
+                    "LanguageCode"=>"eng",
+                    "DialectCode"=>"US",
+                    "Code"=>"01"
+                ),
+                "LabelDelivery"=>array(
+                    "LabelLinkIndicator"=>"",
+                    "ResendEMailIndicator"=>"",
+                    "EMailMessage"=>array(
+                        "EMailAddress"=>""
+                    )
+                ),
+                "TrackingNumber"=>$client_awb
+            )
+
+        );
+        $username = $courierArr['user_name'];
+        $password = $courierArr['password'];
+        $AccessLicenseNumber = $courierArr['courier_account_no'];
+        $transactionSrc = $courierArr['courier_pin_no'];
+        
+
+        $data_json = json_encode($data_array);
+        
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => $api_url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS =>$data_json,
+        CURLOPT_HTTPHEADER => array(
+            'AccessLicenseNumber: '.$AccessLicenseNumber,
+            'Password: '.$password,
+            'transactionSrc: '.$transactionSrc,
+            'Username: '.$username,
+            'Content-Type: application/json'
+        ),
+        ));
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        $response_array =  json_decode($response, TRUE); 
+        return $response_array;
+
+    }
+    public function UPSArray(array $ShipArr, array $counrierArr, $c_id = null, $box_pieces1 = null,  $complete_sku = null, $super_id = null){
+
+
+        //print "<pre>"; print_r($counrierArr);die;
+        $api_url = $counrierArr['api_url'];
+        $username = $counrierArr['user_name'];
+        $password = $counrierArr['password'];
+        $AccessLicenseNumber = $counrierArr['courier_account_no'];
+        $transactionSrc = $counrierArr['courier_pin_no'];
+        //$transId = $counrierArr['auth_token'];
+        $account_number = $counrierArr['account_entity_code'];
+        $service_code= $counrierArr['service_code'];
+        //print "<pre>"; print_r($counrierArr);die;
+
+
+        
+
+
+
+        $sender_default_city = Getselletdetails_new($super_id);
+        $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
+        $senderemail = GetallCutomerBysellerId($ShipArr['cust_id'],'email');
+        $senderphone = GetallCutomerBysellerId($ShipArr['cust_id'],'phone');
+        $store_address = $sender_default_city['0']['address'];
+        $sender_city = $this->getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'city', $super_id);
+
+        
+        
+        
+        $sender_country_code = $this->getdestinationfieldshow_auto_array($sender_default_city['0']['branch_location'], 'country_code', $super_id);
+        
+        
+        $receiver_city= $this->getdestinationfieldshow_auto_array($ShipArr['destination'], 'ups_city',$super_id);
+        
+        
+        $receiver_country_code = $this->getdestinationfieldshow_auto_array($ShipArr['destination'], 'country_code',$super_id);
+
+        $currency = $this->getdestinationfieldshow_auto_array($ShipArr['destination'], 'currency',$super_id); //"USD";
+
+
+        if (empty($box_pieces1)) {
+            $box_pieces = 1;
+        } else {
+            $box_pieces = $box_pieces1;
+        }
+
+        if ($ShipArr['weight'] == 0) {
+            $weight = 1;
+        } else {
+            $weight = $ShipArr['weight'];
+        }
+
+        $pay_mode=$ShipArr['mode'];
+        $total_amount_to_pay ='';
+        if($ShipArr['mode'] == "COD"){
+            $cod_amount = $ShipArr['total_cod_amt'];
+            $total_amount_to_pay = "COD ".$currency." ".$cod_amount." ".$currency;
+
+        }
+        elseif ($ShipArr['mode'] == 'CC'){
+            $cod_amount = 0;
+            $total_amount_to_pay = "CC ".$currency." ".$cod_amount." ".$currency;
+        }
+
+        if(empty($complete_sku))  {
+            $complete_sku = 'Goods';
+        }
+
+        $post_array = array(
+            "ShipmentRequest"=>array(
+                "Shipment"=>array(
+                    "Description"=>$complete_sku,
+                    "Ref1"=>$pay_mode,
+                    "Ref2"=>$cod_amount,
+                    "ReferenceNumber"=>array(
+                        array(
+                            "Value"=>$ShipArr['slip_no'],
+                            "Value"=>$total_amount_to_pay,
+                        )
+                    ),
+                    // "ReferenceNumber"=>array(
+                    //     "BarCodeIndicator"=>$ShipArr['slip_no'],
+                    //     "Code"=>"",
+                    //     "Value"=>$ShipArr['slip_no']
+                    // ),
+                    "NumOfPiecesInShipment"=>$box_pieces,
+                    "Shipper"=>array(
+                        "Name"=>$sellername,
+                        "AttentionName"=>$sellername,
+                        "CompanyDisplayableName"=>$sellername,
+                        "TaxIdentificationNumber"=>"",
+                        "Phone"=>array(
+                            "Number"=>$senderphone
+                        ),
+                        "ShipperNumber"=>$account_number,
+                        "EMailAddress"=>$senderemail,
+                        "Address"=>array(
+                            "AddressLine"=>$store_address,
+                            "City"=>$sender_city,
+                            "StateProvinceCode"=>$sender_country_code,
+                            "PostalCode"=>"",
+                            "CountryCode"=>$sender_country_code,
+                        )
+                    ),
+                    "ShipTo"=>array(
+                        "Name"=>$ShipArr['reciever_name'],
+                        "AttentionName"=>$ShipArr['reciever_name'],
+                        "Phone"=>array(
+                            "Number"=>$ShipArr['reciever_phone']
+                        ),
+                        "FaxNumber"=>"",
+                        "TaxIdentificationNumber"=>"",
+                        "Address"=>array(
+                            "AddressLine"=>$ShipArr['reciever_address'],
+                            "City"=>$receiver_city,
+                            "StateProvinceCode"=>$receiver_country_code,
+                            "PostalCode"=>"",
+                            "CountryCode"=>$receiver_country_code
+                        )
+                    ),
+                    "ShipFrom"=>array(
+                        "Name"=>$sellername,
+                        "AttentionName"=>$sellername,
+                        "Phone"=>array(
+                            "Number"=>$senderphone
+                        ),
+                        "FaxNumber"=>"",
+                        "TaxIdentificationNumber"=>"",
+                        "Address"=>array(
+                            "AddressLine"=>$store_address,
+                            "City"=>$sender_city,
+                            "StateProvinceCode"=>$sender_country_code,
+                            "PostalCode"=>"",
+                            "CountryCode"=>$sender_country_code
+                        )
+                    ),
+                    "PaymentInformation"=>array(
+                        "ShipmentCharge"=>array(
+                            "Type"=>"01",
+                            "BillShipper"=>array(
+                                "AccountNumber"=>$account_number
+                            )
+                        )
+                    ),
+                    "Service"=>array(
+                        "Code"=>$service_code,
+                        "Description"=>""
+                    ),
+                    "Package"=>array(
+                            "Description"=>$complete_sku,
+                            "Packaging"=>array(
+                                "Code"=>"02"
+                            ),
+                            "PackageWeight"=>array(
+                                "UnitOfMeasurement"=>array(
+                                    "Code"=>"KGS"
+                                ),
+                                "Weight"=>(string)$weight
+                            ),
+                            "PackageServiceOptions"=>""
+                        ),
+                    "ItemizedChargesRequestedIndicator"=>"",
+                    "RatingMethodRequestedIndicator"=>"",
+                    "TaxInformationIndicator"=>"",
+                    "ShipmentRatingOptions"=>array(
+                        "NegotiatedRatesIndicator"=>""
+                    )
+                    
+
+                ),
+                "LabelSpecification"=>array(
+                    "LabelImageFormat"=>array(
+                        "Code"=>"PNG"
+                    )
+                )
+            )
+        );
+
+        $json_string = json_encode($post_array);
+        //echo $json_string;die;
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => $api_url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS =>$json_string,
+        CURLOPT_HTTPHEADER => array(
+            'AccessLicenseNumber: '.$AccessLicenseNumber,
+            'Password: '.$password,
+            //'transId: '.$transId,
+            'transactionSrc: '.$transactionSrc,
+            'Username: '.$username,
+            'Content-Type: application/json'
+        ),
+        ));
+
+        $response = curl_exec($curl);
+        $responseArray = json_decode($response,TRUE);
+
+        curl_close($curl);
+
+        if (isset($responseArray['ShipmentResponse']['Response']['ResponseStatus']) && $responseArray['ShipmentResponse']['Response']['ResponseStatus']['Code'] == 1) 
+        {
+                $successstatus = "Success";
+        } else {
+                $successstatus = "Fail";
+        }
+        $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$super_id, $json_string);
+        return $responseArray;
+    
     }
 
 }

@@ -420,7 +420,7 @@ class Excel_export_model extends CI_Model {
             $selectQry[] = " (select name from warehouse_category where warehouse_category.id=item_inventory.wh_id) AS Warehouse";
         }
         if (isset($filter['listData2']['quantity']) && !empty($filter['listData2']['quantity'])) {
-            $selectQry[] = " item_inventory.quantity AS QUANTITY";
+            $selectQry[] = " SUM(item_inventory.quantity) AS QUANTITY";
         }
         if (isset($filter['listData2']['seller_name']) && !empty($filter['listData2']['seller_name'])) {
             $selectQry[] = " (select name from customer where customer.id=item_inventory.seller_id) AS SellerName";

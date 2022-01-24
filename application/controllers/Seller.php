@@ -610,7 +610,7 @@ $u_type = $this->input->post('u_type');
         $data['zidproducts'] = $this->Seller_model->zidproduct($id);
         $storeID = $data['zidproducts'];
         $token = GetallCutomerBysellerId($id, 'manager_token');
-        $store_link = "https://api.zid.dev/app/v2/products";
+        $store_link = "https://api.zid.sa/v1/products";
         $bearer = site_configTable('zid_provider_token');
         $ZidProductRT = ZidPcURL($storeID, $store_link, $bearer,$token); 
 
@@ -634,7 +634,7 @@ $u_type = $this->input->post('u_type');
         $p = 0;
         $s = 0;
        
-            $storlink_page = "https://api.zid.dev/app/v2/products?page=" . $i."&page_size=100";
+            $storlink_page = "https://api.zid.sa/v1/products?page=" . $i."&page_size=100";
             $ZidProductArr = ZidPcURL($storeID, $storlink_page, $bearer,$token); 
             $ZidProductArr = json_decode($ZidProductArr, true);
 
@@ -734,7 +734,7 @@ $u_type = $this->input->post('u_type');
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.zid.dev/app/v2/settings/cities/by-country-id/184",
+            CURLOPT_URL => "https://api.zid.sa/v1/settings/cities/by-country-id/184",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -905,27 +905,27 @@ $u_type = $this->input->post('u_type');
          // $delivery_options[0]['id']
         if ($customer['zid_status'] == 'new') {
             $event = "order.create";
-            $condition = json_encode(array('status'=>'new','delivery_option_id'=>$delivery_options['delivery_id']));;
+            $condition = array('status'=>'new','delivery_option_id'=>$delivery_options['delivery_id']);
         } else {
             $event = "order.status.update";
-            $condition = json_encode(array('status'=>'ready','delivery_option_id'=>$delivery_options['delivery_id']));
+            $condition = array('status'=>'ready','delivery_option_id'=>$delivery_options['delivery_id']);
         }
       // echo  $subscribe = site_configTable('company_name'); die; 
         if ($customer['zid_active'] == 'Y') {
             $subscribe = site_configTable('company_name');
-            $arr = array(
+            $arr = json_encode(array(
                 "event" => $event,
                 "target_url" => $this->config->item('zid_order_target_url') . '/' . $customer['uniqueid'].'/'. $delivery_options['delivery_id'],
                 "original_id" => $customer['uniqueid'],
                 "subscriber" =>  $subscribe,
                 "conditions" => $condition
-            );
+            ));
 
             
 
             $curl = curl_init();
             curl_setopt_array($curl, array(
-                CURLOPT_URL => "https://api.zid.dev/app/v2/managers/webhooks",
+                CURLOPT_URL => "https://api.zid.sa/v1/managers/webhooks",
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => "",
                 CURLOPT_MAXREDIRS => 10,
@@ -939,7 +939,7 @@ $u_type = $this->input->post('u_type');
                     "Accept-Language: en",
                     "X-MANAGER-TOKEN: " . $customer['manager_token'],
                     "Authorization:Bearer " . site_configTable('zid_provider_token'),
-                    "User-Agent: Fastcoo/1.00.00 (web)"
+                    "Content-Type: application/json"
                 ),
             ));
 
@@ -962,7 +962,7 @@ $u_type = $this->input->post('u_type');
        // echo $deliver_id; die;
         
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.zid.dev/app/v2/managers/webhooks?subscriber=".$subscribe."&original_id=" . $customer['uniqueid'],
+            CURLOPT_URL => "https://api.zid.sa/v1/managers/webhooks?subscriber=".$subscribe."&original_id=" . $customer['uniqueid'],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -994,7 +994,7 @@ $u_type = $this->input->post('u_type');
         $curl = curl_init();
          //echo site_configTable('zid_provider_token'); exit;
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.zid.dev/app/v2/managers/webhooks",
+            CURLOPT_URL => "https://api.zid.sa/v1/managers/webhooks",
            
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
@@ -1208,7 +1208,7 @@ $u_type = $this->input->post('u_type');
              
                 $curl = curl_init();
                 curl_setopt_array($curl, array(
-                    CURLOPT_URL => "https://api.zid.dev/app/v2/managers/store/delivery-options/add",
+                    CURLOPT_URL => "https://api.zid.sa/v1/managers/store/delivery-options/add",
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => "",
                     CURLOPT_MAXREDIRS => 10,
@@ -1258,7 +1258,7 @@ $u_type = $this->input->post('u_type');
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.zid.dev/app/v2/managers/store/delivery-options",
+            CURLOPT_URL => "https://api.zid.sa/v1/managers/store/delivery-options",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,

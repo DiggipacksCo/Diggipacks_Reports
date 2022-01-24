@@ -113,7 +113,7 @@ function update_zid_product($quantity = null, $pid = null, $token = null, $store
     $bearer = site_configTable('zid_provider_token');
     $param = json_encode($param);
     $curl = curl_init();
-    $url = "https://api.zid.dev/app/v2/products/" . $pid . "/";
+    $url = "https://api.zid.sa/v1/products/" . $pid . "/";
     curl_setopt_array($curl, array(
         CURLOPT_URL => $url,
         CURLOPT_RETURNTRANSFER => true,
@@ -161,7 +161,7 @@ function update_zid_product($quantity = null, $pid = null, $token = null, $store
 
 function updateZidStatus($orderID = null, $token = null, $status = null, $code = null, $label = null, $trackingurl = null,$cust_id=null) {
     //echo 'werwqerwqrewqerwqrwqerqew'.$token.'testerewrwrwerewrwererweer';
-    $url = 'https://api.zid.dev/app/v2/managers/store/orders/' . $orderID . '/change-order-status';
+    $url = 'https://api.zid.sa/v1/managers/store/orders/' . $orderID . '/change-order-status';
     $curl = curl_init();
     $bearer = site_configTable('zid_provider_token');
     curl_setopt_array($curl, array(
