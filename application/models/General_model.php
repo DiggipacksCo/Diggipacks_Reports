@@ -212,4 +212,68 @@ class General_model extends CI_Model {
         //echo $this->db->last_query();
     }
 
+    public function getReverseShipmentLog($awb, $page_no,$cc_id,$status){
+        $page_no;
+        $limit = 100;
+        if (empty($page_no)) {
+            $start = 0;
+        } else {
+            $start = ($page_no - 1) * $limit;
+        }
+        $this->db->select('*');
+        $this->db->from('frwd_reverse_ship_log');
+        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        if ($status != '')
+            $this->db->where('status', $status);
+
+        if ($cc_id != '')
+            $this->db->where('cc_id', $cc_id);
+        if ($awb != '')
+            $this->db->where('slip_no', $awb );
+            $this->db->or_where('frwd_slip_no', $awb );
+            $this->db->order_by('id','DESC'); 
+            $this->db->limit($limit, $start);
+            
+        $query = $this->db->get();
+        // echo  $this->db->last_query();exit;
+        if ($query->num_rows() > 0) {
+
+
+        
+            $data['result'] = $query->result_array();
+            $data['count'] = $this->getReverseShipmentLogCount($awb, $page_no,$cc_id,$status);
+            return $data;
+            
+        } else {
+            $data['result'] = '';
+            $data['count'] = 0;
+            return $data;
+        }
+
+    }
+    public function getReverseShipmentLogCount($awb, $page_no,$cc_id,$status) {
+    
+            
+        $this->db->select('COUNT(id) as sh_count');
+        $this->db->from('frwd_reverse_ship_log');
+        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        if ($status != '')
+            $this->db->where('status', $status);
+
+        if ($cc_id != '')
+            $this->db->where('cc_id', $cc_id);
+        if ($awb != '')
+            $this->db->where('slip_no', $awb );
+            $this->db->order_by('id','DESC'); 
+            
+        $query = $this->db->get();
+   
+        if ($query->num_rows() > 0) {
+
+            $data = $query->result_array();
+            return $data[0]['sh_count'];
+        }
+        return 0;
+    }
+
 }

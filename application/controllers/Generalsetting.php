@@ -153,6 +153,52 @@ public function addsmssetting($id=null) {
         $this->load->view('generalsetting/ShipmentLogview', $data);
     }
 
+
+    public function ReverseShipmentLog() {
+        $this->load->view('generalsetting/ReverseShipmentLog');
+    }
+
+     public function loadReversShipLog(){
+         $_POST = json_decode(file_get_contents('php://input'), true);
+        //print "<pre>"; print_r($_POST);die;
+        $delivered = $_POST['status'];
+        $page_no = $_POST['page_no'];
+        $awb = $_POST['slip_no'];
+        $cc_id = $_POST['cc_id'];
+        $status = $_POST['status'];
+
+        $shipments = $this->General_model->getReverseShipmentLog($awb, $page_no,$cc_id,$status);
+
+
+    
+        $shiparray = $shipments['result'];
+        //echo json_encode($shipments); die;
+        $ii = 0;
+        $jj = 0;
+
+        $tolalShip = $shipments['count'];
+        $downlaoadData = 2000;
+        $j = 0;
+        for ($i = 0; $i < $tolalShip;) {
+            $i = $i + $downlaoadData;
+            if ($i > 0) {
+                $expoertdropArr[] = array('j' => $j, 'i' => $i);
+            }
+            $j = $i;
+        } 
+        foreach ($shipments['result'] as $rdata) {
+            $shiparray[$ii]['cc_name'] = GetCCompanyNameById($rdata['cc_id'], 'company');
+            $shiparray[$ii]['update_date'] =  date("Y-m-d H:i:s", strtotime('+3 hours', strtotime($rdata['update_date'])));
+            $ii++;
+        }
+
+        $dataArray['result'] = $shiparray;
+        $dataArray['count'] = $shipments['count'];
+        echo json_encode($dataArray);
+
+
+     }
+
     public function updateCourier() {
         $dataArray = $this->input->post();
         $idArray = $dataArray['id'];

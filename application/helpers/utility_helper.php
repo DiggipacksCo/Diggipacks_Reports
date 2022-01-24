@@ -1363,36 +1363,136 @@ if (!function_exists('PrintPiclist3PL_bulk')) {
                 $frwd_company_id=$val['frwd_company_id'];
                 array_push($checkIds, $val['frwd_company_id']);
                 $awb_no = $val['frwd_company_awb'];
+               
                 $slip_no = $val['slip_no'];
+                $forwardCompany = GetCourCompanynameId($frwd_company_id, 'company');
+               
                 if ($val['label_type'] == 1) {
                   
 
                     if (!file_exists("assets/all_labels/$slip_no.pdf") || filesize("assets/all_labels/$slip_no.pdf") <= 0) 
                     {
-                      
-                          $generated_pdf = file_get_contents($val['frwd_company_label']);
+                        
+                        $generated_pdf = file_get_contents($val['frwd_company_label']);
                         $encoded = base64_decode($generated_pdf);
                         //header('Content-Type: application/pdf');
                         file_put_contents("assets/all_labels/$slip_no.pdf", $generated_pdf); 
-                       
+                        
                         
                     }
                 }
                 else
-                {
+                {   
+                    if ($forwardCompany == 'GLT' || $forwardCompany == 'Tamex'  || $forwardCompany == 'Aramex'  || $forwardCompany == 'Smsa' || $forwardCompany == 'Labaih' || $forwardCompany == 'Shipadelivery') {
+                        if (!file_exists("assets/all_labels/" . $slip_no . ".pdf") || filesize("assets/all_labels/" . $slip_no . ".pdf") <= 200) {
+    
+                            $ci->load->model('Ccompany_model');
+    
+                            $counrierArr_table = $ci->Ccompany_model->GetdeliveryCompanyUpdateQryById($frwd_company_id, $val['cust_id']);
+    
+                            //   echo '<pre>';
+                            //   print_r($counrierArr_table); exit;
+    
+                            if ($counrierArr_table['type'] == 'test') {
+    
+                                $api_url = $counrierArr_table['api_url_t'];
+                                $auth_token = $counrierArr_table['auth_token_t'];
+                                $courier_account_no = $counrierArr_table['courier_account_no_t'];
+                                $courier_pin_no = $counrierArr_table['courier_pin_no_t'];
+                                $user_name = $counrierArr_table['user_name_t'];
+                                $password = $counrierArr_table['password_t'];
+                                $account_entity_code = $counrierArr_table['account_entity_code_t'];
+                                $account_country_code = $counrierArr_table['account_country_code_t'];
+                            } else {
+    
+                                $api_url = $counrierArr_table['api_url'];
+                                $auth_token = $counrierArr_table['auth_token'];
+    
+                                $user_name = $counrierArr_table['user_name'];
+                                $password = $counrierArr_table['password'];
+                                $courier_account_no = $counrierArr_table['courier_account_no'];
+                                $courier_pin_no = $counrierArr_table['courier_pin_no'];
+                                $account_entity_code = $counrierArr_table['account_entity_code'];
+                                $account_country_code = $counrierArr_table['account_country_code'];
+                            }
+    
+                            $counrierArr['api_url'] = $api_url;
+    
+                            $counrierArr['user_name'] = $user_name;
+                            $counrierArr['auth_token'] = $auth_token;
+                            $counrierArr['password'] = $password;
+                            $counrierArr['courier_account_no'] = $courier_account_no;
+    
+                            $counrierArr['courier_pin_no'] = $courier_pin_no;
+                            $counrierArr['account_entity_code'] = $account_entity_code;
+                            $counrierArr['account_country_code'] = $account_country_code;
+    
+                            if ($forwardCompany == 'GLT') {
+                                $lable = $ci->Ccompany_model->GLT_label($awb_no, $counrierArr, $auth_token);
+                            }
+                            if ($forwardCompany == 'Aramex') {
+    
+                                $lable = aramexCurl($awb_no, $counrierArr);
+                            }
+                            if ($forwardCompany == 'Smsa') {
+    
+    
+    
+    
+                                // $printLabel =$ci->Ccompany_model->SamsaPrintLabel($awb_no,$auth_token , $counrierArr['api_url']); 
+    
+                                $printLabel = $ci->Ccompany_model->PrintLabel($awb_no, $auth_token, $counrierArr['api_url']);
+    
+    
+                                $xml_data = new SimpleXMLElement(str_ireplace(array("soap:", "<?xml version=\"1.0\" encoding=\"utf-16\"?>"), "", $printLabel));
+                                $mediaData = $xml_data->Body->getPDFResponse->getPDFResult[0];
+    
+                                if (!empty($mediaData)) {
+                                    $lable = base64_decode($mediaData);
+                                }
+                            }
+                            if ($forwardCompany == 'Tamex') { 
+                                  
+                                $lable = $ci->Ccompany_model->Tamex_label($awb_no,$auth_token,$counrierArr['api_url'].'print' ); 
+    
+                             
+                            }
+    
+                            if ($forwardCompany == 'Labaih') {
+    
+                                $shipmentLabel_url = $counrierArr['api_url'] . '/order/printlabel?consignmentNo=' . $awb_no . '&api_key=' . $auth_token;
+                                $lable = file_get_contents($shipmentLabel_url);
+                            }
+    
+                            if ($forwardCompany == 'Shipadelivery') {
+    
+                                $lable = $ci->Ccompany_model->ShipaDelLabelcURL($counrierArr, $awb_no);
+                            }
+    
+                            file_put_contents("assets/all_labels/" . $slip_no . ".pdf", $lable);
+                            
+                            
+                        }
+                    }
+
                     $awb_no = $val['frwd_company_awb'];
-                // echo   '/var/www/html/diggipack_new/demofulfillment/assets/all_labels/'.$slip_no.'.pdf'; exit;
+                    // echo   '/var/www/html/diggipack_new/demofulfillment/assets/all_labels/'.$slip_no.'.pdf'; exit;
                     if (!file_exists("assets/all_labels/$slip_no.pdf") || filesize("assets/all_labels/$slip_no.pdf") <= 0) {
-                    // echo "ssssssss";  exit;
+                     //echo "ssssssss";  exit;
                        if(GetCourCompanynameId($frwd_company_id, 'company') == 'Shipadelivery')
                        {header('Content-Type: application/pdf');
                         $shipalable= ShipaDelLabelcURL($frwd_company_id,$awb_no);   
                       
                         file_put_contents("assets/all_labels/".$slip_no.".pdf", $shipalable);
                        }
-                }
+                       
+                        
+                    }
+                    if ($forwardCompany == 'AJOUL') {
+                        redirect($val['frwd_company_label']);
+                    }
             }
-
+                
                 // $filePath='https://demosony.fastcoo-solutions.com/fm/assets/all_labels/SOF7362389516.pdf';
                 $filePath = '/var/www/html/diggipack_new/demofulfillment/assets/all_labels/' . $status_update_data[$key]['slip_no'] . '.pdf';
 
@@ -1458,6 +1558,55 @@ if (!function_exists('PrintPiclist3PL_bulk')) {
     }
 
     //print_r($awb); die();
+}
+
+function aramexCurl($client_awb = null, $counrierArr = array()) {
+
+
+    $ClientInfo['ClientInfo'] = array(
+        'UserName' => $counrierArr['user_name'],
+        'Password' => $counrierArr['password'],
+        'Version' => 'v1',
+        'AccountNumber' => $counrierArr['courier_account_no'],
+        'AccountPin' => $counrierArr['courier_pin_no'],
+        'AccountEntity' => $counrierArr['account_entity_code'],
+        'AccountCountryCode' => $counrierArr['account_country_code']
+    );
+    $params = array(
+        'ClientInfo' => $ClientInfo['ClientInfo'],
+        'GetLastTrackingUpdateOnly' => false,
+        'ShipmentNumber' => ($client_awb),
+        'LabelInfo' => array("ReportID" => 9729, "ReportType" => "URL"),
+        'Transaction' =>
+        array(
+            'Reference1' => '',
+            'Reference2' => '',
+            'Reference3' => '',
+            'Reference4' => '',
+            'Reference5' => '',
+        )
+    );
+    $dataJson = json_encode($params);
+    //echo "<pre> dataJson = ";
+    // print_r($dataJson);echo "</pre>";
+    // exit;
+
+    $headers = array(
+        "Content-type:application/json",
+        "Accept:application/json");
+
+    $url = "https://ws.aramex.net/ShippingAPI.V2/Shipping/Service_1_0.svc/json/PrintLabel";
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $dataJson);
+    $response = curl_exec($ch);
+    curl_close($ch);
+    $lableInfo = json_decode($response, true);
+    $awb_label = $lableInfo['ShipmentLabel']['LabelURL'];
+    return $generated_pdf = file_get_contents($awb_label);
 }
 
 

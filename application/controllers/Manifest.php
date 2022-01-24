@@ -513,6 +513,10 @@ class Manifest extends CourierCompany_pickup {
             $create_order_url = $counrierArr_table['create_order_url'];
             $company_type = $counrierArr_table['company_type'];
             $auth_token = $counrierArr_table['auth_token_t'];
+            $account_entity_code = $counrierArr_table['account_entity_code_t'];
+            $account_country_code = $counrierArr_table['account_country_code_t'];
+            $service_code = $counrierArr_table['service_code_t'];
+
         } else {
             $user_name = $counrierArr_table['user_name'];
             $password = $counrierArr_table['password'];
@@ -525,6 +529,10 @@ class Manifest extends CourierCompany_pickup {
             $auth_token = $counrierArr_table['auth_token'];
             $company_type = $counrierArr_table['company_type'];
             $create_order_url = $counrierArr_table['create_order_url'];
+            $account_entity_code = $counrierArr_table['account_entity_code'];
+            $account_country_code = $counrierArr_table['account_country_code'];
+            $service_code = $counrierArr_table['service_code'];
+
         }
         $counrierArr['user_name'] = $user_name;
         $counrierArr['password'] = $password;
@@ -539,6 +547,10 @@ class Manifest extends CourierCompany_pickup {
         $counrierArr['create_order_url'] = $create_order_url;
         $counrierArr['auth_token'] = $auth_token;
         $counrierArr['type'] = $counrierArr_table['type'];
+        $counrierArr['account_entity_code'] = $account_entity_code;
+        $counrierArr['account_country_code'] = $account_country_code;
+        $counrierArr['service_code'] = $service_code;
+
 //echo "<pre>";print_r($counrierArr); die;
         if (!empty($dataArray['mid'])) {
             $shipmentLoopArray = $dataArray['mid'];
@@ -1993,6 +2005,36 @@ class Manifest extends CourierCompany_pickup {
                             
                                 $returnArr['Error_msg'][] = $slipNo . ': '.json_encode($responseArray['data'][0]['message']);
                             }
+
+                }else if ($company=='UPS' ){
+
+                        $responseArray = $this->Ccompany_model->UPSArray($sellername ,$ShipArr, $counrierArr, $c_id, $box_pieces1, $complete_sku, $super_id);
+
+                        if (isset($responseArray['ShipmentResponse']['Response']['ResponseStatus']) && $responseArray['ShipmentResponse']['Response']['ResponseStatus']['Code'] == 1) {
+                            $client_awb = $responseArray['ShipmentResponse']['ShipmentResults']['PackageResults']['TrackingNumber'];
+                            sleep(2);
+                            $labelResponse = $this->Ccompany_model->UPSLabel($client_awb,$counrierArr);
+
+                            $GI = $labelResponse['LabelRecoveryResponse']['LabelResults']['LabelImage']['GraphicImage'];
+                            
+                            $response_label = base64_decode($GI);
+                            
+                            $generated_pdf = file_get_contents($response_label);
+
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $response_label);
+                            
+                            
+                            $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';     
+
+                            $comment = 'UPS New Manifest';
+                            $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                            array_push($succssArray, $slipNo);
+                            $returnArr['Success_msg'][] = $slipNo . ':Successfully Assigned';
+                            
+                        }else{
+                            $returnArr['Error_msg'][] = $slipNo . ': '.json_encode($responseArray['data'][0]['message']);
+                        }
+
                 }elseif($company_type == 'F') { // for all fastcoo clients treat as a CC 
             
                         if ($company=='Ejack' ) {
@@ -3532,6 +3574,10 @@ class Manifest extends CourierCompany_pickup {
                     $create_order_url = $counrierArr_table['create_order_url'];  
                     $company_type  = $counrierArr_table['company_type'];                  
                     $auth_token = $counrierArr_table['auth_token_t'];
+                    $account_entity_code = $counrierArr_table['account_entity_code_t'];
+                    $account_country_code = $counrierArr_table['account_country_code_t'];
+                    $service_code = $counrierArr_table['service_code_t'];
+
                 } else {
                     $user_name = $counrierArr_table['user_name'];
                     $password = $counrierArr_table['password'];
@@ -3544,6 +3590,10 @@ class Manifest extends CourierCompany_pickup {
                     $auth_token = $counrierArr_table['auth_token'];
                     $company_type  = $counrierArr_table['company_type'];
                     $create_order_url = $counrierArr_table['create_order_url']; 
+                    $account_entity_code = $counrierArr_table['account_entity_code'];
+                    $account_country_code = $counrierArr_table['account_country_code'];
+                    $service_code = $counrierArr_table['service_code'];
+
                 }
             $counrierArr['user_name'] = $user_name;
             $counrierArr['password'] = $password;
@@ -3558,6 +3608,10 @@ class Manifest extends CourierCompany_pickup {
             $counrierArr['create_order_url'] = $create_order_url;
             $counrierArr['auth_token'] = $auth_token;
             $counrierArr['type'] = $counrierArr_table['type'];
+            $counrierArr['account_entity_code'] = $account_entity_code;
+            $counrierArr['account_country_code'] = $account_country_code;
+            $counrierArr['service_code'] = $service_code;
+
           //print "<pre>"; print_r($dataArray);die;  
           if(!empty($dataArray['mid']))
           {
@@ -5092,7 +5146,7 @@ class Manifest extends CourierCompany_pickup {
                         $returnArr['responseError'][] = $slipNo . ': '.json_encode($responseArray['data'][0]['message']);
                     }
                   
-                }else if ($company=='Mahmool' ){    
+                }else if ($company=='Mahmool' ){
                     $responseArray = $this->Ccompany_model->ShipsyDataArray($sellername ,$ShipArr, $counrierArr, $c_id, $box_pieces1, $complete_sku, $super_id);
                     if($responseArray['data'][0]['success'] == true){
 
@@ -5108,6 +5162,34 @@ class Manifest extends CourierCompany_pickup {
                        $returnArr['responseError'][] = $slipNo . ': '.json_encode($responseArray['data'][0]['message']);
                     }
 
+                
+                }else if ($company=='UPS'){
+
+                    $responseArray = $this->Ccompany_model->UPSArray($sellername ,$ShipArr, $counrierArr, $c_id, $box_pieces1, $complete_sku, $super_id);
+
+                    if (isset($responseArray['ShipmentResponse']['Response']['ResponseStatus']) && $responseArray['ShipmentResponse']['Response']['ResponseStatus']['Code'] == 1) {
+                        $client_awb = $responseArray['ShipmentResponse']['ShipmentResults']['PackageResults']['TrackingNumber'];
+                        sleep(2);
+                        $labelResponse = $this->Ccompany_model->UPSLabel($client_awb,$counrierArr);
+
+                        $GI = $labelResponse['LabelRecoveryResponse']['LabelResults']['LabelImage']['GraphicImage'];
+                        
+                        $response_label = base64_decode($GI);
+                        
+                        $generated_pdf = file_get_contents($response_label);
+
+                        file_put_contents("assets/all_labels/$slipNo.pdf", $response_label);
+                        
+                        
+                        $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';
+
+                        $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
+                        array_push($succssArray, $slipNo);                          
+                        $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' : forwarded to UPS.';
+                        
+                    }else{
+                        $returnArr['responseError'][] = $slipNo . ': '.json_encode($responseArray['response']['errors']);
+                    }
 
                 }elseif ($company_type== 'F'){ // for all fastcoo clients treat as a CC 
                       

@@ -257,6 +257,7 @@ $route['setStorageRate']  = 'Storage/setStorageRate';
 $route['CompanyDetails'] = 'Generalsetting/CompanyDetails';
 $route['defaultlist_view'] = 'Generalsetting/defaultlist_view';
 $route['ShipmentLogview'] = 'Generalsetting/ShipmentLogview';
+$route['ReverseShipmentLog'] = 'Generalsetting/ReverseShipmentLog';
 
 $route['update_password'] = 'Generalsetting/update_password';
  

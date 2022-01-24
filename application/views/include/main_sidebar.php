@@ -554,7 +554,7 @@
                                 <li>  <a href="<?= base_url('addZone'); ?>" ><?= lang('lang_Add_Zone'); ?></a></li>
                                 <li> <a href="<?= base_url('viewZone'); ?>" ><?= lang('lang_View_Zone'); ?></a></li>
                                 <li><a href="<?= base_url('ShipmentLogview');?>"><?= lang('lang_Shipment_Log'); ?></a></li>
-                                
+                                <li><a href="<?= base_url('ReverseShipmentLog');?>">Reverse Shipment Log</a></li>
 
                             </ul>
                         </li>

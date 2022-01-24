@@ -378,9 +378,9 @@ class CourierCompany extends MY_Controller  {
                 $counrierArr['auth_token'] = $auth_token;
                 $counrierArr['type'] = $counrierArr_table['type'];
                 $super_id = $ShipArr['super_id'];
-                $counrierArr['account_entity_code'] = $counrierArr_table['account_entity_code'];
-                $counrierArr['account_country_code'] = $counrierArr_table['account_country_code'];
-                $counrierArr['service_code'] = $counrierArr_table['service_code'];
+                $counrierArr['account_entity_code'] = $account_entity_code;
+                $counrierArr['account_country_code'] = $account_country_code;
+                $counrierArr['service_code'] = $service_code;
 
                
             //  echo "<pre>"; print_r($counrierArr); //die; 
@@ -466,7 +466,7 @@ class CourierCompany extends MY_Controller  {
                         'destination' => $ShipArr['destination'],
                         'sku' => $ShipArr['sku'],
                         'booking_id' => $ShipArr['booking_id'],
-                        'old_slip_no'=> $ShipArr['slip_no'],
+                        //'old_slip_no'=> $ShipArr['slip_no'],
                         'sku_data' => $sku_data,
                         'pack_type' => $ShipArr['pack_type'],
                     );
@@ -641,7 +641,7 @@ class CourierCompany extends MY_Controller  {
                                 $complete_sku = $sku_all_names;
                             }
                             $pay_mode = trim($ShipArr['mode']);
-                            $cod_amount = $ShipArr['total_cod_amt'];
+                            $cod_amount = 'CC';
                             if ($pay_mode == 'COD') {
                                    // $pay_mode = 'P';
                                     $CashOnDeliveryAmount = array("Value" => $cod_amount,
@@ -913,6 +913,58 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
     $slipNo =$ShipArr['slip_no'];  
     
                         if($company=='Aramex'){
+
+                            // $client_awb = '47430258573'; $slipNo = 'DGF19981265524';
+                            // $ClientInfo['ClientInfo'] = array(
+                            //     'UserName' => $counrierArr['user_name'],
+                            //     'Password' => $counrierArr['password'],
+                            //     'Version' => 'v1',
+                            //     'AccountNumber' => $counrierArr['courier_account_no'],
+                            //     'AccountPin' => $counrierArr['courier_pin_no'],
+                            //     'AccountEntity' => 'RUH',
+                            //     'AccountCountryCode' =>'SA'
+                            // );
+                            // $params = array(
+                            //     'ClientInfo' => $ClientInfo['ClientInfo'],
+                            //     'GetLastTrackingUpdateOnly' => false,
+                            //     'ShipmentNumber' => ($client_awb),
+                            //     'LabelInfo' => array("ReportID" => 9729, "ReportType" => "URL"),
+                            //     'Transaction' =>
+                            //     array(
+                            //         'Reference1' => '',
+                            //         'Reference2' => '',
+                            //         'Reference3' => '',
+                            //         'Reference4' => '',
+                            //         'Reference5' => '',
+                            //     )
+                            // );
+                            // $dataJson = json_encode($params);
+                            // // echo "<pre> dataJson = ";
+                            // // print_r($dataJson);echo "</pre>";
+                            // // exit;
+                        
+                            // $headers = array(
+                            //     "Content-type:application/json");
+                        
+                            // $url = "https://ws.aramex.net/ShippingAPI.V2/Shipping/Service_1_0.svc/json/PrintLabel";
+                            // $ch = curl_init();
+                            // curl_setopt($ch, CURLOPT_URL, $url);
+                            // curl_setopt($ch, CURLOPT_POST, 1);
+                            // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                            // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                            // curl_setopt($ch, CURLOPT_POSTFIELDS, $dataJson);
+                            //  $response = curl_exec($ch);
+                            // curl_close($ch);
+                            // $xml2 = new SimpleXMLElement($response);
+                        
+                            // $lableInfo = json_decode(json_encode((array) $xml2), TRUE);
+                           
+                            // $awb_label = $lableInfo['ShipmentLabel']['LabelURL'];
+                            // echo $awb_label;die;
+                            // $generated_pdf = file_get_contents($awb_label);
+                            // file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);    
+                            //     die("Done");
+
                             $params = $this->Ccompany_model->AramexArray($sellername,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id);
                             $dataJson = json_encode($params);
                             //echo $dataJson;die;
@@ -1479,6 +1531,8 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                                     
                             }
                     }elseif ($company == 'Aymakan'){
+
+                        //die("hi");
                             
                             $Auth_token =$counrierArr['auth_token']; ;
                             
@@ -2426,7 +2480,7 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                         }
 
 
-                    }elseif ($company == 'UPS'){ 
+                    }elseif ($company == 'UPS'){
 
                         $responseArray = $this->Ccompany_model->UPSArray($sellername ,$ShipArr, $counrierArr, $c_id, $box_pieces1, $complete_sku, $super_id);
 

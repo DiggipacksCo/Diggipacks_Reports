@@ -180,6 +180,7 @@ public function previousCity_customer($id=null){
 	public function custList(){
 		$this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
 		 $this->db->where('access_fm', 'Y');
+		 $this->db->select('id,company as name');
 	  $this->db->order_by('id', 'desc');
 		   
    $query = $this->db->get('customer');
@@ -341,6 +342,7 @@ public function previousCity_customer($id=null){
                 'wadha'=>'Wadha',
                 'ejack'=>'ejack_city',
                 'beez'=>'beez_city',
+				'ajoul'=>'ajoul_city_code',
       );
       $columnName = '';
       if(!empty($companyName)){
