@@ -115,7 +115,55 @@ class Shipment extends MY_Controller {
         }
         $this->load->view('ShipmentM/view_reverse_shipments');
     }
+    public function forward_report() {
+        $data = GetCourierCompanyDrop();
+        if (menuIdExitsInPrivilageArray(1) == 'N') {
+            redirect(base_url() . 'notfound');
+            die;
+        }
 
+      
+        $sellers = $this->Seller_model->find2();
+        $status = $this->Status_model->allstatus();
+        
+
+        $search = $this->input->post('tracking_numbers');
+
+        if (!empty($search)) {
+            $condition = strtoupper($search);
+        } else {
+            $condition = null;
+        }
+       
+        if ($this->session->flashdata('condition')) {
+            $condition = $this->session->flashdata('condition');
+        }
+
+        
+        $status_name = $_POST['status_name'];
+        
+        $data = $this->Shipment_model->getStatusIDByName('3PL Updates');
+        
+        $result = array();
+        if(!empty($data)){
+            $result = getallstatusbyid($data[0]['id']);
+            
+        }
+       
+        $bulk = array(
+            // 'status'=>$status,
+            //		'shipments'=>$shipments,
+            'sellers' => $sellers,
+            'condition' => $condition,
+            'status' => $status,
+            'status_3pl' => $result,
+                //'items'=>$items,
+                //'sellers'=>$sellers
+        );
+       
+        $this->load->view('ShipmentM/forward_report', $bulk);
+       
+    }
     
 
     public function runshell() {
@@ -2799,6 +2847,48 @@ if(!empty( $searchids))
         echo json_encode($dataArray);
     }
 
+    public function forward_report_data() {
+       
+        $_POST = json_decode(file_get_contents('php://input'), true);
+      
+ 
+        $exact = $_POST['exact']; 
+        if ($_POST['s_type'] == 'AWB')
+            $awb = $_POST['s_type_val'];
+        if ($_POST['s_type'] == 'SKU')
+            $sku = $_POST['s_type_val'];
+        if ($_POST['s_type'] == 'REF')
+            $refsno = $_POST['s_type_val'];
+        if ($_POST['s_type'] == 'MOBL')
+            $mobileno = $_POST['s_type_val'];
+            
+        $from = $_POST['from'];
+        $to = $_POST['to'];
+        $wh_id = $_POST['wh_id'];
+        $delivered = $_POST['status'];
+        $seller = $_POST['seller'];
+        $page_no = $_POST['page_no'];
+        $destination = $_POST['destination'];
+        $booking_id = $_POST['booking_id'];
+        $cc_id = $_POST['cc_id'];
+        
+        
+        $is_menifest = isset($_POST['is_manifest']) ? $_POST['is_manifest'] : null;
+
+        
+        $shipments = $this->Shipment_model->filter_fwdReport($awb, $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination, $booking_id, $cc_id, $is_menifest, $refsno, $mobileno, $wh_id, $_POST);
+
+
+        //$shiparrayexcel = $shipmentsexcel['result'];
+        $shiparray = $shipments['result'];
+         
+        $dataArray['result'] = $shiparray;
+     
+        //print_r($shipments);
+        //exit();
+        echo json_encode($dataArray);
+    }
+
     public function filterReverse() {
         // print("heelo"); 
         // exit();
@@ -3536,7 +3626,7 @@ if(!empty( $searchids))
 
 
                     $dimationArray_w = array('slip_no' => $dataArray['slip_no']);
-                    $shipemntArr = array('destination' => $dataArray['destination_id'], 'booking_id' => $dataArray['booking_id'], 'reciever_name' => $dataArray['reciever_name'], 'reciever_phone' => $dataArray['reciever_phone'], 'reciever_address' => $dataArray['reciever_address'], 'wh_id' => $dataArray['whid']);
+                    $shipemntArr = array('destination' => $dataArray['destination_id'], 'booking_id' => $dataArray['booking_id'], 'reciever_name' => $dataArray['reciever_name'], 'reciever_phone' => $dataArray['reciever_phone'], 'reciever_address' => $dataArray['reciever_address'], 'reciever_pincode' => $dataArray['reciever_pincode'], 'wh_id' => $dataArray['whid']);
                     $shipemntArr_w = array('id' => $dataArray['id'], 'slip_no' => $dataArray['slip_no']);
                     ///print_r($StatusArray);
                     //print_r($shipemntArr);

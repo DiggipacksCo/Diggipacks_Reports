@@ -2035,6 +2035,35 @@ class Manifest extends CourierCompany_pickup {
                             $returnArr['Error_msg'][] = $slipNo . ': '.json_encode($responseArray['data'][0]['message']);
                         }
 
+
+                }else if ($company=='Kudhha' ){  
+                    
+                    $Auth_token = $this->Ccompany_model->shipox_auth($counrierArr);  
+                    $responseArray = $this->Ccompany_model->shipoxDataArray($sellername ,$ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1, $complete_sku, $super_id);
+                    
+                    $successres = $responseArray['status'];  
+                    $error_status = $responseArray['message'];
+                    
+                    if (!empty($successres) && $successres == 'success')
+                    {
+                        $client_awb = $responseArray['data']['order_number'];
+                        $WadhaLabel = $this->Ccompany_model->shipox_label($client_awb, $counrierArr, $Auth_token);
+                        $label= json_decode($WadhaLabel,TRUE);
+                        $media_data = $label['data']['value'];                               
+
+                        $generated_pdf = file_get_contents($media_data);
+                        file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                        $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';
+                        $comment = 'Kudhha New Manifest';
+                        $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                        array_push($succssArray, $slipNo);
+                        $returnArr['Success_msg'][] = $slipNo . ':Successfully Assigned';
+                    }                            
+                    else
+                    {
+                        $returnArr['Error_msg'][] = $slipNo . ':' .$error_status;
+                    }
+
                 }elseif($company_type == 'F') { // for all fastcoo clients treat as a CC 
             
                         if ($company=='Ejack' ) {
@@ -5190,6 +5219,35 @@ class Manifest extends CourierCompany_pickup {
                     }else{
                         $returnArr['responseError'][] = $slipNo . ': '.json_encode($responseArray['response']['errors']);
                     }
+
+                }else if ($company=='Kudhha' ){  
+                    
+                    $Auth_token = $this->Ccompany_model->shipox_auth($counrierArr);  
+                    $responseArray = $this->Ccompany_model->shipoxDataArray($sellername ,$ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1, $complete_sku, $super_id);
+                    
+                    $successres = $responseArray['status'];  
+                    $error_status = $responseArray['message'];
+                    
+                    if (!empty($successres) && $successres == 'success')
+                    {
+                        $client_awb = $responseArray['data']['order_number'];
+                        $WadhaLabel = $this->Ccompany_model->shipox_label($client_awb, $counrierArr, $Auth_token);
+                        $label= json_decode($WadhaLabel,TRUE);
+                        $media_data = $label['data']['value'];                               
+
+                        $generated_pdf = file_get_contents($media_data);
+                        file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                        $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';
+                        $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
+                        array_push($succssArray, $slipNo);                          
+                        $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' : forwarded to Kudhha.';
+                    }                            
+                    else
+                    {
+                        $returnArr['responseError'][] = $slipNo . ':' .$error_status;
+                    }    
+
+
 
                 }elseif ($company_type== 'F'){ // for all fastcoo clients treat as a CC 
                       

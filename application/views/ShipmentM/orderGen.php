@@ -330,7 +330,7 @@
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header" style="background-color:#DBB828;">
-                                        <h5 class="modal-title text-white" id="UpdateShipemtData"><?=lang('lang_Edit_Shipment');?> ({{ShipmentEditArr.slip_no}})</h5>
+                                        <h5 class="modal-title text-white" ><?=lang('lang_Edit_Shipment');?> ({{ShipmentEditArr.slip_no}})</h5>
                                         <br>
                                     </div>
                                     <form name="myform" novalidate ng-submit="myForm.$valid && GetUpdateShipmetTableData()"  >
@@ -366,6 +366,14 @@
                                                             </select>
                                                         </div></td>
                                                 </tr>
+
+                                                <tr>
+                                                    <td style="border: none;" ><div class="form-group" ><strong>Postal Code:</strong>
+                                                            <input type="text" class="form-control" name="reciever_pincode" ng-model="ShipmentEditArr.reciever_pincode"  id="reciever_pincode" required>
+                                                        </div></td>
+                                                    
+                                                </tr>
+
 
                                               <!--  <tr>
                                                     <td style="border: none;" ><div class="form-group" ><strong>Total COD Amount :</strong>

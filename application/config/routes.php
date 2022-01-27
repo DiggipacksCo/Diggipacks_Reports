@@ -91,6 +91,7 @@ $route['add_vehicle'] = 'Vehicle/add_view';
 $route['edit_vehicle/(:any)'] = 'Vehicle/add_view/$1';
 $route['deleteVehicle/(:any)'] = 'Vehicle/deleteVehicle/$1';
 //========================================//
+$route['forward_report'] = 'Shipment/forward_report';
 $route['delivered'] = 'Shipment/delivered_view';
 $route['returned']  = 'Shipment/returned_view';
 
