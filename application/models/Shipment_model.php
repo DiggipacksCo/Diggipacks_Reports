@@ -965,7 +965,7 @@ if(!empty($awbids ))
         $this->db->where('shipment.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('shipment.deleted', $deleted);
         $this->db->where('diamention.deleted', $deleted);
-        $this->db->select('shipment.id,shipment.frwd_company_awb,shipment.service_id,shipment.booking_id,shipment.slip_no,diamention.sku,status_main_cat.main_status,diamention.piece,diamention.wieght as wt,diamention.description,diamention.cod,customer.name,customer.id as seller_id,customer.uniqueid,shipment.entrydate,shipment.origin,shipment.destination,shipment.reciever_name,shipment.reciever_address,shipment.reciever_phone,`shipment.sender_name`, `shipment.sender_address`, `shipment.sender_phone`, `shipment.sender_email`, `shipment.mode`, `shipment.total_cod_amt`,shipment.weight,shipment.pieces,shipment.cust_id,shipment.shippers_ac_no,shipment.wh_id,shipment.back_reasons,diamention.wh_id as whid,diamention.id as d_id,diamention.free_sku,shipment.total_cod_amt,shipment.frwd_company_id,shipment.order_type');
+        $this->db->select('shipment.id,shipment.frwd_company_awb,shipment.service_id,shipment.booking_id,shipment.slip_no,diamention.sku,status_main_cat.main_status,diamention.piece,diamention.wieght as wt,diamention.description,diamention.cod,customer.name,customer.id as seller_id,customer.uniqueid,shipment.entrydate,shipment.origin,shipment.destination,shipment.reciever_name,shipment.reciever_address,shipment.reciever_phone,`shipment.sender_name`, `shipment.sender_address`, `shipment.sender_phone`, `shipment.sender_email`, `shipment.mode`, `shipment.total_cod_amt`,shipment.weight,shipment.pieces,shipment.reciever_pincode,shipment.cust_id,shipment.shippers_ac_no,shipment.wh_id,shipment.back_reasons,diamention.wh_id as whid,diamention.id as d_id,diamention.free_sku,shipment.total_cod_amt,shipment.frwd_company_id,shipment.order_type');
         $this->db->from('shipment_fm as shipment');
         $this->db->join('status_main_cat_fm as status_main_cat', 'status_main_cat.id=shipment.delivered');
         $this->db->join('diamention_fm as diamention', '  shipment.slip_no=diamention.slip_no','RIGHT');
@@ -1540,6 +1540,98 @@ if(!empty($awbids ))
         }
     }
 
+    public function filter_fwdReport($awb= null, $sku= null, $delivered= null, $seller= null, $to= null, $from= null, $exact= null, $page_no= null, $destination= null, $booking_id= null, $cc_id = null,$is_menifest = null,$refsno=null,$mobileno=null,$wh_id=null,$data=array()) {
+        error_reporting(-1);
+		ini_set('display_errors', 1);
+        if(!empty($data['sort_limit']))
+        {
+          $LimitArr= explode('-', $data['sort_limit']); 
+          $limit=$LimitArr[1];
+          //$start=$LimitArr[0];
+        }
+        else
+        {
+        $page_no;
+        $limit = 100;
+        if (empty($page_no)) {
+            $start = 0;
+        } else {
+            $start = ($page_no - 1) * $limit;
+        }
+        }
+        
+      
+        
+
+        $this->db->where('shipment_fm.super_id', $this->session->userdata('user_details')['super_id']);
+    
+        $this->db->where('shipment_fm.deleted', 'N');
+     
+            $this->db->select('shipment_fm.id,shipment_fm.product_invoice,shipment_fm.service_id,shipment_fm.booking_id,shipment_fm.slip_no,shipment_fm.entrydate,shipment_fm.origin,shipment_fm.destination,shipment_fm.reciever_name,shipment_fm.reciever_address,shipment_fm.reciever_phone,`shipment_fm.sender_name`, `shipment_fm.sender_address`, `shipment_fm.sender_phone`,`shipment_fm.order_type`, `shipment_fm.sender_email`, `shipment_fm.mode`, `shipment_fm.total_cod_amt`,shipment_fm.weight,shipment_fm.pieces,shipment_fm.cust_id,shipment_fm.shippers_ac_no,shipment_fm.frwd_company_awb,shipment_fm.frwd_company_id,shipment_fm.wh_id,shipment_fm.frwd_company_label,shipment_fm.frwd_date,shipment_fm.is_menifest,shipment_fm.code,shipment_fm.total_cod_amt,shipment_fm.no_of_attempt,shipment_fm.3pl_pickup_date,shipment_fm.3pl_close_date,  IFNULL(DATEDIFF(3pl_close_date, 3pl_pickup_date) , DATEDIFF(CURRENT_TIMESTAMP() , 3pl_pickup_date)  ) AS transaction_days,shipment_fm.delivered,shipment_fm.close_date');    
+        
+        
+        
+        $this->db->from('shipment_fm');
+       
+       
+ 
+
+        $this->db->join('status_fm', 'status_fm.slip_no=shipment_fm.slip_no');
+        $this->db->where('status_fm.code', 'FWD');
+       
+        $this->db->select('status_fm.details,status_fm.entry_date');
+       
+     
+
+        if (!empty($awb)) {
+            $this->db->where('shipment_fm.slip_no', $awb);
+        }
+       
+        if (!empty($refsno)) {
+            $this->db->group_start();
+            $this->db->where('shipment_fm.booking_id', $refsno)
+            ->or_where('shipment_fm.frwd_company_awb',$refsno);
+            $this->db->group_end();
+        }
+         if (!empty($mobileno)) {
+            $this->db->where('shipment_fm.reciever_phone', $mobileno);
+        }
+
+     
+        if (($is_menifest == 0 || $is_menifest == 1) && $is_menifest != null) {
+
+            $this->db->where('shipment_fm.is_menifest', $is_menifest);
+        }
+
+        if (!empty($booking_id)) {
+
+            $this->db->where('shipment_fm.booking_id', $booking_id);
+        }
+		 $this->db->order_by('shipment_fm.slip_no , shipment_fm.id', 'desc');
+
+       
+        $this->db->limit($limit, $start);
+
+        $query = $this->db->get();
+
+      // echo $this->db->last_query(); die;
+
+        if ($query->num_rows() > 0) {
+
+
+            //$data['excelresult']=$this->filterexcel($awb,$sku,$delivered,$seller,$to,$from,$exact,$page_no,$destination,$booking_id); 
+            $data['result'] = $query->result_array();
+            $data['count'] =   $data['result'];
+            return $data;
+            // return $page_no.$this->db->last_query();
+        } else {
+            $data['result'] = '';
+            $data['count'] = 0;
+            return $data;
+        }
+    }
+
+
         public function filterViewMApping($page_no = null, $cc_id=null, $data= array()){
         if(!empty($data['sort_limit'])){
             $LimitArr= explode('-', $data['sort_limit']); 
@@ -1988,6 +2080,8 @@ if(!empty($awbids ))
             return $data;
         }
     }
+
+    
 
     public function shipmetsInAwbAll_return($awb = null) {
         // echo $awb;
@@ -4287,7 +4381,8 @@ if(!empty($awbids ))
 
         $delivered = $filterData['status'];
 
-        if (!empty($delivered) || !empty($filterData['status_o'])) {
+        
+         if (!empty($delivered) || !empty($filterData['status_o'])) {
 
             // print_r($delivered);
             if ($delivered == '1' || $delivered == '4' || $delivered == '5' || $delivered == '7' || $delivered == '8') {
@@ -4299,8 +4394,8 @@ if(!empty($awbids ))
             if(is_numeric($delivered)){
                 $this->db->where_in('shipment_fm.delivered', $delivered);
             }else{
-                if(isset($data['status_o']) & !empty($filterData['status_o'])){
-                    $o_status = $filterData['status_o'];
+                if(isset($filterData['status_o']) & !empty($filterData['status_o'])){
+                    $o_status = $data['status_o'];
                     if(!empty($delivered)){
                     $delivered = array_merge($o_status,$delivered);
                     }else{
@@ -4308,18 +4403,17 @@ if(!empty($awbids ))
                 }
                 
                 }
-                if(in_array('DL',$delivered) || in_array('D3PL',$delivered) || in_array('FWD',$delivered) && !empty($filterData['f_from']) && !empty($filterData['f_to']) )
+              
+                if((in_array('DL',$delivered) || in_array('D3PL',$delivered) || in_array('FWD',$delivered))  && !empty($filterData['f_from']) && !empty($filterData['f_to']) )
                 {
+                   
                     $this->db->join('status_fm', 'status_fm.slip_no=shipment_fm.slip_no');
                     $this->db->where_in('status_fm.code', $delivered);
                     $this->db->where("DATE(status_fm.entry_date) BETWEEN '". $filterData['f_from']. "' AND '".$filterData['f_to']."' " );
-                    
+                    $this->db->select('status_fm.entry_date');
                    
                     $this->db->group_by('status_fm.slip_no');
-                    if ($data['frwd_date'] == 1)
-                    $selectQry .= " status_fm.entry_date AS 3PL_FORWORD_DATE, ";  
-                    if(in_array('FWD',$delivered)) 
-                    $selectQry .= " COUNT(status_fm.id) AS FORWARD_COUNT, ";  
+
                 }
                 else
                 {
@@ -4332,15 +4426,67 @@ if(!empty($awbids ))
         else
         {
             if (!empty($filterData['f_from']) && !empty($filterData['f_to'])) {
-                $where = "DATE(shipment_fm.frwd_date) BETWEEN '" . $filterData['f_from'] . "' AND '" . $filterData['f_to'] . "'";
+                $where = "DATE(shipment_fm.frwd_date) BETWEEN '" . $data['f_from'] . "' AND '" . $filterData['f_to'] . "'";
     
     
                 $this->db->where($where);
-
-                if ($data['frwd_date'] == 1)
-                $selectQry .= " shipment_fm.frwd_date AS 3PL_FORWORD_DATE,";   
             }
         }
+//        if (!empty($delivered) || !empty($filterData['status_o'])) {
+//
+//            // print_r($delivered);
+//            if ($delivered == '1' || $delivered == '4' || $delivered == '5' || $delivered == '7' || $delivered == '8') {
+//                if (array_key_exists(0, $delivered))
+//                    $delivered = array_filter(0, $delivered);
+//            } else
+//                $delivered = array_filter($delivered);
+//            
+//            if(is_numeric($delivered)){
+//                $this->db->where_in('shipment_fm.delivered', $delivered);
+//            }else{
+//                if(isset($data['status_o']) & !empty($filterData['status_o'])){
+//                    $o_status = $filterData['status_o'];
+//                    if(!empty($delivered)){
+//                    $delivered = array_merge($o_status,$delivered);
+//                    }else{
+//                        $delivered = $o_status;
+//                }
+//                
+//                }
+//                if(in_array('DL',$delivered) || in_array('D3PL',$delivered) || in_array('FWD',$delivered) && !empty($filterData['f_from']) && !empty($filterData['f_to']) )
+//                {
+//                    $this->db->join('status_fm', 'status_fm.slip_no=shipment_fm.slip_no');
+//                    $this->db->where_in('status_fm.code', $delivered);
+//                    $this->db->where("DATE(status_fm.entry_date) BETWEEN '". $filterData['f_from']. "' AND '".$filterData['f_to']."' " );
+//                    
+//                   
+//                    $this->db->group_by('status_fm.slip_no');
+//                    if ($data['frwd_date'] == 1)
+//                    $selectQry .= " status_fm.entry_date AS 3PL_FORWORD_DATE, ";  
+//                    if(in_array('FWD',$delivered)) 
+//                    $selectQry .= " COUNT(status_fm.id) AS FORWARD_COUNT, ";  
+//                }
+//                else
+//                {
+//                    $this->db->where_in('shipment_fm.code', $delivered);
+//                }
+//                
+//            }
+//            
+//        }
+//        else
+//        
+//        {
+//            if (!empty($filterData['f_from']) && !empty($filterData['f_to'])) {
+//                $where = "DATE(shipment_fm.frwd_date) BETWEEN '" . $filterData['f_from'] . "' AND '" . $filterData['f_to'] . "'";
+//    
+//    
+//                $this->db->where($where);
+//
+//                if ($data['frwd_date'] == 1)
+//                $selectQry .= " shipment_fm.frwd_date AS 3PL_FORWORD_DATE,";   
+//            }
+//        }
 
         $selectQry = rtrim($selectQry, ',');
         

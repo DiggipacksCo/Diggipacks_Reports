@@ -1319,6 +1319,17 @@ class Excel_export extends MY_Controller {
                                     $dynmicColumn = 'flamingo_city';
                                 if ($colimn == 'Aramex Country Code')
                                     $dynmicColumn = 'aramex_country_code';
+                                if ($colimn == 'Kudhha')
+                                    $dynmicColumn = 'kudhha_city';    
+                                if ($colimn == 'UPS')
+                                    $dynmicColumn = 'ups_city';    
+                                if ($colimn == 'Mahmool')
+                                    $dynmicColumn = 'mahmool_city';    
+                                if ($colimn == 'FLOW')
+                                    $dynmicColumn = 'flow_city';          
+                                if ($colimn == 'AJOUL')
+                                    $dynmicColumn = 'ajoul_city_code';          
+
                                  
                                 if (!empty($cityArrayName)) {
                                     $UpdateArray_new[] = array($dynmicColumn => addslashes($dynmicColumnVal), 'id' => $old_id);

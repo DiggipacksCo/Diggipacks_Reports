@@ -235,6 +235,9 @@
                                             <?php if (GetCourierCompanyStausActive('UPS') == 'Y') { ?>
                                                 <th class="head1">UPS City</th>
                                             <?php } ?>
+                                            <?php if (GetCourierCompanyStausActive('Kudhha') == 'Y') { ?>
+                                                <th class="head1">Kudhha City</th>
+                                            <?php } ?>
                                             <th class="head1">Country Code</th>
                                             <th class="head1">Currency</th>
                                             <th class="head1">LAT</th>
@@ -587,6 +590,12 @@
                                                         <td><input type="text" name="ups_city" id="ups_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['ups_city']; ?>" class="form-control">
                                                             <br>
                                                             <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'ups_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
+                                                        </td>
+                                                     <?php } ?>
+                                                     <?php if (GetCourierCompanyStausActive('Kudhha') == 'Y') { ?>
+                                                        <td><input type="text" name="kudhha_city" id="kudhha_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['kudhha_city']; ?>" class="form-control">
+                                                            <br>
+                                                            <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'kudhha_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
                                                         </td>
                                                      <?php } ?>   
   
