@@ -5269,6 +5269,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
            ) 
         );
         $params = json_encode($requestParams);
+        
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $apiUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
@@ -5283,6 +5284,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
         
         curl_close($ch);
         $responseArray = json_decode($response,TRUE);
+        //print "<pre>"; print_r($responseArray);die;
         if($responseArray['code'] == 200  && $responseArray['message'] == 'success'){
             $token = $responseArray['data']['accessToken'];
         }else{
@@ -5295,9 +5297,9 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
     {   
        // $sender_default_city = Getselletdetails($super_id);
         // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
-        $sender_address = $ShipArr['sender_address'];
+        //$sender_address = $ShipArr['sender_address'];
         
-        $apiUrl = $counrierArr['api_url']."client/order/createOrder";
+        $apiUrl = $counrierArr['api_url']."client/order/createB2cOrder";
         $customerID = $counrierArr['courier_account_no'];
         $timestamp =  strtotime(date("Y-m-d H:i:s")) * 1000;
         $sign = $counrierArr['auth_token'];
@@ -5318,6 +5320,15 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
         $lang = getdestinationfieldshow_auto_array($ShipArr['destination'], 'longitute',$super_id);
         $country = getdestinationfieldshow_auto_array($ShipArr['destination'], 'country',$super_id);
         
+        //print "<pre>";print_r($ShipArr);die;
+        $sender_address = $ShipArr['sender_address'];
+        //echo $sender_address;die;
+        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'imile_city', $super_id);
+        $sender_country = getdestinationfieldshow_auto_array($ShipArr['origin'], 'country',$super_id);
+        $sender_lat = getdestinationfieldshow_auto_array($ShipArr['origin'], 'latitute',$super_id);
+        $sender_lang = getdestinationfieldshow_auto_array($ShipArr['origin'], 'longitute',$super_id);
+        $selleremail = $ShipArr['sender_email'];
+        $sellerphone = $ShipArr['sender_phone'];
         
         if(empty($box_pieces1)){
             $box_pieces = 1;
@@ -5351,12 +5362,24 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
            "signMethod"=>"SimpleKey",
            "version"=>"1.0.0",
            "timestamp"=>$timestamp,//strtotime(date('Y-m-d :i:s')),
-           "timeZone"=>"+3",
+           "timeZone"=>"+4",
            "Sign"=>$sign,
            "param"=>array(
               "orderCode"=>$ShipArr['slip_no'],
               "orderType"=> "100", // 100: Delivery order 200: return order 400: Refund order 500: B2B order 800: Forward order
+              "oldExpressNo"=> "",
+              "deliveryType"=> "Self",
               "consignor"=>$userName,
+              "consignorContact"=> $sellername,
+              "consignorPhone"=> $sellerphone,
+              "consignorMobile"=> "",
+              "consignorCountry"=> 'KSA',//$sender_country,
+              "consignorProvince"=> "",
+              "consignorCity"=> $sender_city,
+              "consignorArea"=> "",
+              "consignorAddress"=> $sender_address,
+              "consignorLongitude"=>$sender_lang,
+              "consignorLatitude"=> $sender_lat,
               "consignee"=>$Receiver_name, //receiver name
               "consigneeContact"=>$Receiver_name,
               "consigneeMobile"=>"",
