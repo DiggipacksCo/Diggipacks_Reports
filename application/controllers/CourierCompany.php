@@ -364,6 +364,7 @@ class CourierCompany extends MY_Controller  {
                     $service_code = $counrierArr_table['service_code'];
 
                 }
+                
                 $counrierArr['user_name'] = $user_name;
                 $counrierArr['password'] = $password;
                 $counrierArr['courier_account_no'] = $courier_account_no;
@@ -1821,10 +1822,10 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                             return $return;
                             }
                     } 
-                    elseif ($company== 'iMile'){
+                    elseif ($company== 'IMile'){
                         //print "<pre>"; print_r($sku_data);die;
                         $auth_token = $this->Ccompany_model->iMileToken($counrierArr);
-                        
+                        //echo $auth_token;die;
                         if(empty($auth_token)){
                         $returnArr['responseError'] = $slipNo . ': Token not genrated';
                         $return= array('status'=>201,'error'=> $returnArr); 

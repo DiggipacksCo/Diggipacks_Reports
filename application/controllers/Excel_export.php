@@ -1329,6 +1329,8 @@ class Excel_export extends MY_Controller {
                                     $dynmicColumn = 'flow_city';          
                                 if ($colimn == 'AJOUL')
                                     $dynmicColumn = 'ajoul_city_code';          
+                                if ($colimn == 'IMile')
+                                    $dynmicColumn = 'imile_city';              
 
                                  
                                 if (!empty($cityArrayName)) {
