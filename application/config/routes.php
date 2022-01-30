@@ -129,6 +129,7 @@ $route['updateData']       = 'Shipment/updateData';
 $route['pickupList']             = 'PickUp/pickupList';
 $route['pickListView/(:any)']    = 'PickUp/pickListView/$1';
 $route['OfferOrders']            = 'Offers/GetofferOrderslist';
+$route['import_promo']            = 'Offers/import_promo';
 
 $route['OfferOrders_gift']       = 'Offers/GetofferOrderslist_gift';
 $route['pickListFilter']         = 'PickUp/pickListFilter';

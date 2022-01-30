@@ -25,6 +25,11 @@ class Offers extends MY_Controller {
         $this->load->view('offerM/offerlist', $data);
     }
     
+     public function import_promo() {
+
+        $this->load->view('offerM/add_bulk');
+    }
+
      public function giftOffersList() {
         $data['sellersArray'] = $this->Offers_model->getallsellersdata();
         $data['offersArray'] = $this->Offers_model->all();

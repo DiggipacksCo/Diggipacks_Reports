@@ -896,7 +896,18 @@ if (!function_exists('Getuniqueidbycustid')) {
     }
 
 }
+if (!function_exists('GetcheckPromocodeData')) {
 
+    function GetcheckPromocodeData($seller_id = null, $promo = null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        $sql = "SELECT id FROM promo_tbl where seller_id='$seller_id' and promocode='$promo' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $query = $ci->db->query($sql);
+        $result = $query->row_array();
+        return $result;
+    }
+
+}
 
 if (!function_exists('GetallaccountidBysellerID')) {
 
