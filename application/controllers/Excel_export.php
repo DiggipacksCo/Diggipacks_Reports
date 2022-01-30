@@ -1376,5 +1376,206 @@ class Excel_export extends MY_Controller {
 
         //  echo json_encode($returnArr);
     }
+    
+     function add_bulk_promo_offers() {
+        $this->load->model('Offers_model');
+        if (isset($_FILES["file"]["name"])) {
+            $path = $_FILES["file"]["tmp_name"];
+            $this->load->library("excel");
+
+            $object = PHPExcel_IOFactory::load($path);
+            foreach ($object->getWorksheetIterator() as $worksheet) {
+                $highestRow = $worksheet->getHighestRow();
+                $highestColumn = $worksheet->getHighestColumn();
+                $Skucheck = array();
+                $skuData = array();
+                $alertArray = array();
+                $promo_array = array();
+                for ($row = 2; $row <= $highestRow; $row++) {
+                    $account_no = trim($worksheet->getCellByColumnAndRow(0, $row)->getValue());
+                    $promocode = trim($worksheet->getCellByColumnAndRow(1, $row)->getValue());
+                    $sku = trim($worksheet->getCellByColumnAndRow(2, $row)->getValue());
+                    $qty = trim($worksheet->getCellByColumnAndRow(3, $row)->getValue());
+
+                    $start_date = date('Y-m-d', PHPExcel_Shared_Date::ExcelToPHP(trim($worksheet->getCellByColumnAndRow(4, $row)->getValue())));
+                    $end_date = date('Y-m-d', PHPExcel_Shared_Date::ExcelToPHP(trim($worksheet->getCellByColumnAndRow(5, $row)->getValue())));
+
+
+
+                    if (!empty($account_no) && !empty($sku) && $qty > 0 && !empty($start_date) && !empty($end_date)) {
+
+                        $seller_id = GetallaccountidBysellerID($account_no);
+                        $promovalid = GetcheckPromocodeData($seller_id, $promocode);
+                        if (empty($promovalid)) {
+
+
+                            if ($seller_id > 0) {
+
+                                $ItemskuID = getallitemskubyid($itemskusku);
+                                if ($ItemskuID > 0) {
+                                    $data2[] = array(
+                                        'promocode' => $promocode,
+                                        'main_item' => $sku,
+                                        'qty' => $qty,
+                                        'start_date' => $start_date,
+                                        'expire_date' => $end_date,
+                                        'seller_id' => $seller_id,
+                                        'added_by' => $this->session->userdata('user_details')['super_id'],
+                                        'type' => 'admin',
+                                        'super_id' => $this->session->userdata('user_details')['super_id']
+                                    );
+
+                                    if (!in_array($promocode, $promo_array)) {
+                                        array_push($promo_array, $promocode);
+                                        $data[] = array(
+                                            'promocode' => $promocode,
+                                            'main_item' => $sku,
+                                            'qty' => $qty,
+                                            'start_date' => $start_date,
+                                            'expire_date' => $end_date,
+                                            'seller_id' => $seller_id,
+                                            'added_by' => $this->session->userdata('user_details')['super_id'],
+                                            'type' => 'admin',
+                                            'super_id' => $this->session->userdata('user_details')['super_id']
+                                        );
+                                        $alertArray['validrow'][] = $promocode;
+                                    }
+                                } else {
+                                    $alertArray['invalid_sku'][] = $row;
+                                }
+                            } else {
+                                $alertArray['invalid_account_no'][] = $row;
+                            }
+                        } else {
+                            $alertArray['duplicate_promo'][] = $row;
+                        }
+                    } else {
+                        if (empty($account_no))
+                            $alertArray['empty_account_no'][] = $row;
+                        if ($sku < 0)
+                            $alertArray['empty_sku'][] = $row;
+                        if (empty($qty))
+                            $alertArray['empty_qty'][] = $row;
+                        if (empty($start_date))
+                            $alertArray['empty_start_date'][] = $row;
+                        if (empty($end_date))
+                            $alertArray['empty_end_date'][] = $row;
+                    }
+                }
+            }
+
+
+            $array_final = array();
+            $sku_array = array();
+            $new_skuArray = array();
+            foreach ($data as $val) {
+
+                foreach ($data2 as $key => $val2) {
+                    if ($val2['promocode'] == $val['promocode']) {
+                        $sku_array[$val2['main_item']] = $val2;
+                    }
+                }
+
+                $sku_array = array_unique(array_column($sku_array, 'main_item'));
+                $array_final[$val['promocode']] = $sku_array;
+            }
+
+            if (!empty($array_final)) {
+                $ii = 0;
+                foreach ($array_final as $key => $promoval) {
+                    $promocode = $key;
+                    foreach ($promoval as $key_88 => $sku_d) {
+                        $sku_name = $sku_d;
+
+                        $findKey = $this->search_revisions($data2, $promocode, 'promocode', $sku_name, 'main_item');
+                        $new_qty = $data2[$findKey[$key_88]]['qty'];
+                        $start_date = $data2[$findKey[$key_88]]['start_date'];
+                        $expire_date = $data2[$findKey[$key_88]]['expire_date'];
+                        $seller_id = $data2[$findKey[$key_88]]['seller_id'];
+                        //  print_r($findKey);
+                        $insertArray[] = array(
+                            'promocode' => $promocode,
+                            'main_item' => $sku_name,
+                            'qty' => $new_qty,
+                            'start_date' => $start_date,
+                            'expire_date' => $end_date,
+                            'seller_id' => $seller_id,
+                            'added_by' => $this->session->userdata('user_details')['super_id'],
+                            'type' => 'admin',
+                            'entrydate'=>date("Y-m-d H:i:s"),
+                            'super_id' => $this->session->userdata('user_details')['super_id']
+                        );
+                    }
+                    $ii++;
+                }
+            }
+
+            //   echo '<pre>';
+            //print_r($alertArray);
+            // print_r($alertArray);
+            // die;
+            ///$Status = $this->Item_model->add_bulk($data);
+            if (!empty($insertArray)) {
+                $Status = $this->Offers_model->getinsertoffersdata($insertArray);
+            }
+            if ($status == true) {
+
+                //$this->session->set_flashdata('msg','Bulk has been added successfully');  
+                $this->session->set_flashdata('errorA', $alertArray);
+                redirect('Offers/offerslist');
+            } else {
+                // $this->session->set_flashdata('error','data error Bulk add failed (duplicate or empty fields)'); 
+                $this->session->set_flashdata('errorA', $alertArray);
+                redirect('Offers/offerslist');
+            }
+        } else {
+            $this->session->set_flashdata('error', 'file error Bulk add failed');
+            redirect('Offers/offerslist');
+        }
+    }
+    
+     private function search_revisions($dataArray, $search_value, $key_to_search) {
+        // This function will search the revisions for a certain value
+        // related to the associative key you are looking for.
+        $keys = array();
+        foreach ($dataArray as $key => $cur_value) {
+            if ($cur_value[$key_to_search] == $search_value) {
+                $keys[] = $key;
+            }
+        }
+        return $keys;
+    }
+    
+    function promocode_bulk_format() {
+
+
+        $this->load->library("excel");
+        $object = new PHPExcel();
+
+        $object->setActiveSheetIndex(0);
+
+
+        $table_columns = array(
+            "Seller Account No.",
+            "Offer Code",
+            "Main Item",
+            "Quantity",
+            "Start Date ",
+            "End Date",
+        );
+
+        $column = 0;
+
+        foreach ($table_columns as $field) {
+            $object->getActiveSheet()->setCellValueByColumnAndRow($column, 1, $field);
+            $column++;
+        }
+        $object_writer = PHPExcel_IOFactory::createWriter($object, 'Excel5');
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="Bulk Import Offers.xls"');
+        $object_writer->save('php://output');
+    }
 
 }
+
+

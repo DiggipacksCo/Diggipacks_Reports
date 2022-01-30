@@ -287,6 +287,10 @@
                                 <?php if (menuIdExitsInPrivilageArray(86) == 'Y') { ?>
                                     <li><a href="<?= base_url('Offers/offerslist'); ?>"><?= lang('lang_Bundel_Offers_List'); ?></a></li>
                                 <?php } ?>  
+                                   
+                                      <?php if (menuIdExitsInPrivilageArray(148) == 'Y') { ?>
+                                    <li><a href="<?= base_url('Offers/import_promo'); ?>"> Bulk Import Offers</a></li>
+                                <?php } ?>
                                 <?php if (menuIdExitsInPrivilageArray(87) == 'Y') { ?>
                                     <li><a href="<?= base_url('Offers/Addoffers'); ?>"><?= lang('lang_Add_New_Bundle_Offers'); ?></a></li>
                                 <?php } ?>
