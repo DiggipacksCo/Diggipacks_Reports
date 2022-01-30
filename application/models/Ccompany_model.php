@@ -2777,7 +2777,7 @@ class Ccompany_model extends CI_Model {
         $SMSAXML = '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
         
             <soap:Body>
-                <addShipMPS xmlns="http://track.smsaexpress.com/secom/">
+                <addShip xmlns="http://track.smsaexpress.com/secom/">
                   <passKey>' . $counrierArr['auth_token'] . '</passKey>
                   <refNo>' . $ShipArr['slip_no'] . '</refNo>
                   <sentDate>' . date('d/m/Y') . '</sentDate>
@@ -2813,7 +2813,7 @@ class Ccompany_model extends CI_Model {
                   <sCntry>KSA</sCntry>
                   <prefDelvDate>'.date('d/m/Y').'</prefDelvDate>
                   <gpsPoints>2</gpsPoints>
-                </addShipMPS>
+                </addShip>
             </soap:Body>
         </soap:Envelope>';
 
