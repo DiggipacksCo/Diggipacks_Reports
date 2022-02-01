@@ -158,6 +158,8 @@ class CourierCompany extends MY_Controller  {
             'end_awb_sequence_t'=>$RequestArr['end_awb_sequence_t'],
             'auth_token_t'=>$RequestArr['auth_token_t'],
             'api_url_t'=>$RequestArr['api_url_t'],
+            'customer_care'=>$RequestArr['customer_care'],
+            
        );
         $UpdateArr_w=array('id'=>$RequestArr['id']);
         
@@ -187,6 +189,7 @@ class CourierCompany extends MY_Controller  {
             'end_awb_sequence_t'=>$RequestArr['end_awb_sequence_t'],
             'auth_token_t'=>$RequestArr['auth_token_t'],
             'api_url_t'=>$RequestArr['api_url_t'],
+            'customer_care'=>$RequestArr['customer_care'],
        );
         $UpdateArr_w=array('id'=>$RequestArr['id']);
         

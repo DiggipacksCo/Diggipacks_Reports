@@ -235,13 +235,16 @@
                                         </div>
                                           
                                     </div>
-                                    
+                                    <div class="col-sm">
+                                        <div class="form-group">
+                                            <label class="text-bold">Customer Care Number</label>
+                                            <input type="text"  class="form-control"  aria-describedby="textHelpBlock"  ng-model="EditDataArr.customer_care">
+                                        </div>
+                                    </div>
                                     <div class="modal-footer">
-                                                    <button type="button" class="btn btn-light waves-effect" data-dismiss="modal">Close</button>
-                                                    <button type="button" class="btn btn-primary waves-effect waves-light" ng-click="GetCompanyChnagesSave();">Save changes</button>
-                                                </div>
-                                  
-                                   
+                                        <button type="button" class="btn btn-light waves-effect" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary waves-effect waves-light" ng-click="GetCompanyChnagesSave();">Save changes</button>
+                                    </div>
                                 </div>
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
