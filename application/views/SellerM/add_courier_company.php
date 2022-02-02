@@ -234,7 +234,7 @@
                                             	<input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.end_awb_sequence_t">
                                         </div>
                                           
-                                    </div>   
+                                    </div>
                                     <div class="col-sm">
                                         <div class="form-group">
                                             <label class="text-bold">Customer Care Number</label>

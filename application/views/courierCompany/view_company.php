@@ -261,7 +261,7 @@
                                           
                                     </div>
                                     <div class="col-sm">
-                                        <div class="form-group"> 
+                                        <div class="form-group">
                                             <label class="text-bold">Customer Care Number</label>
                                             	<input type="text"  class="form-control"  aria-describedby="textHelpBlock"  ng-model="EditDataArr.customer_care">
                                         </div>
