@@ -149,19 +149,19 @@
                 
                 
                  <div  id="Showeditpopid" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-                        <div class="modal-dialog">
+                        <div class="modal-dialog"> 
                             <div class="modal-content">
                                 <div class="modal-header" style="background-color: <?=DEFAULTCOLOR;?>;">
                                     <h5 class="modal-title text-white" id="myModalLabel"><?=lang('lang_Settings_Delivery');?> ({{EditDataArr.company}})</h5>
                                     <button type="button" class="close text-white" data-dismiss="modal" aria-hidden="true">x</button><br>
                                 </div>
                                 <div class="modal-body">
-                                     <div class="col-sm">
-                                    <div class="form-group">
+                                    <div class="col-sm">
+                                        <div class="form-group">
                                             <label class="text-bold"><?=lang('lang_web_url');?></label>
                                             	<input type="text"  class="form-control"  aria-describedby="textHelpBlock"  ng-model="EditDataArr.company_url">
                                         </div>
-                                          </div>
+                                    </div>
                                     <div class="col-sm-6" style="width:50%; float:left;">
                                           <h5 class="font-16"><?=lang('lang_Live_Details');?></h5>
                                         <div class="form-group">
@@ -260,11 +260,16 @@
                                         </div>
                                           
                                     </div>
-                                    
+                                    <div class="col-sm">
+                                        <div class="form-group">
+                                            <label class="text-bold">Customer Care Number</label>
+                                            	<input type="text"  class="form-control"  aria-describedby="textHelpBlock"  ng-model="EditDataArr.customer_care">
+                                        </div>
+                                    </div>
                                     <div class="modal-footer">
-                                                    <button type="button" class="btn btn-light waves-effect" data-dismiss="modal"><?=lang('lang_Close');?></button>
-                                                    <button type="button" class="btn btn-primary waves-effect waves-light" ng-click="GetCompanyChnagesSave();"><?=lang('lang_Save_changes');?></button>
-                                                </div>
+                                        <button type="button" class="btn btn-light waves-effect" data-dismiss="modal"><?=lang('lang_Close');?></button>
+                                        <button type="button" class="btn btn-primary waves-effect waves-light" ng-click="GetCompanyChnagesSave();"><?=lang('lang_Save_changes');?></button>
+                                    </div>
                                   
                                    
                                 </div>

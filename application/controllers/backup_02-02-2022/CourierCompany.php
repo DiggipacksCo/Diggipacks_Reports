@@ -158,13 +158,13 @@ class CourierCompany extends MY_Controller  {
             'end_awb_sequence_t'=>$RequestArr['end_awb_sequence_t'],
             'auth_token_t'=>$RequestArr['auth_token_t'],
             'api_url_t'=>$RequestArr['api_url_t'],
-            'customer_care'=>$RequestArr['customer_care'],
             'account_entity_code'=>$RequestArr['account_entity_code'],
             'account_entity_code_t'=>$RequestArr['account_entity_code_t'],
             'account_country_code'=>$RequestArr['account_country_code'],
             'account_country_code_t'=>$RequestArr['account_country_code_t'],
             'service_code'=>$RequestArr['service_code'],
             'service_code_t'=>$RequestArr['service_code_t'],
+
        );
         $UpdateArr_w=array('id'=>$RequestArr['id']);
         
@@ -194,7 +194,6 @@ class CourierCompany extends MY_Controller  {
             'end_awb_sequence_t'=>$RequestArr['end_awb_sequence_t'],
             'auth_token_t'=>$RequestArr['auth_token_t'],
             'api_url_t'=>$RequestArr['api_url_t'],
-            'customer_care'=>$RequestArr['customer_care'],
        );
         $UpdateArr_w=array('id'=>$RequestArr['id']);
         
@@ -643,8 +642,8 @@ class CourierCompany extends MY_Controller  {
                             } else {
                                 $complete_sku = $sku_all_names;
                             }
-                            $pay_mode = 'CC';
-                            $cod_amount = 0;
+                            $pay_mode = trim($ShipArr['mode']);
+                            $cod_amount = 'CC';
                             if ($pay_mode == 'COD') {
                                    // $pay_mode = 'P';
                                     $CashOnDeliveryAmount = array("Value" => $cod_amount,
@@ -655,8 +654,6 @@ class CourierCompany extends MY_Controller  {
                                     $CashOnDeliveryAmount = NULL;
                                     $services = '';
                             }
-                            $ShipArr['mode']='CC';
-                            $ShipArr['total_cod_amt']=0;
                             $new_awb_number = $this->Ccompany_model->Generate_awb_number_new_fm($super_id);
                             $sellername = $ShipArr['reciever_name']; 
                             $recDetail = Getselletdetails_new($super_id);
@@ -679,7 +676,7 @@ class CourierCompany extends MY_Controller  {
                                 'slip_no' => $new_awb_number,
                                 'mode' => $ShipArr['mode']  , 
                                 'pay_mode' => $ShipArr['mode'],
-                                'total_cod_amt' => 0,//$ShipArr['total_cod_amt'],
+                                'total_cod_amt' => $ShipArr['total_cod_amt'],
                                 'pieces' =>  $box_pieces1,
                                 'status_describtion' => $complete_sku,
                                 'weight' => $weight,//$ShipArr['weight'],
@@ -705,8 +702,7 @@ class CourierCompany extends MY_Controller  {
                             $CURRENT_DATE = date('Y-m-d H:i:s');
                            //echo $company;die; 
                            $ccRetrundata = $this->courierComanyForward($sellername,$auth_token,$company,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id,$company_type, $c_id, $api_url);
-        //                    error_reporting(-1);
-		// ini_set('display_errors', 1);
+                           
                            if($ccRetrundata['status']==200)
                            {
                                 $Update_data = $this->Ccompany_model->Insert_Reverse_Shipment($sku_data,$ShipArr,$slipNo, $ccRetrundata['client_awb'], $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $ccRetrundata['label'],$c_id,$ccRetrundata['barq_order_id'], $api_url);
@@ -714,8 +710,7 @@ class CourierCompany extends MY_Controller  {
                                 if(!empty($zone_id)){
                                         $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
                                 }
-                                $slipArray = array('reverse_forwarded' => 1);
-                                $this->Ccompany_model->GetshipmentUpdate_forward($slipArray,$slipNo);
+
                                 array_push($succssArray, $slipNo);
                            }
                            else
@@ -2620,7 +2615,7 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                                 $return= array('status'=>201,'error'=> $returnArr); 
                                 return $return;
                                             }
-                                        } 
+                                        }
     } //end company type F code 
 
     }
