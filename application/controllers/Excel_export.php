@@ -1411,7 +1411,7 @@ class Excel_export extends MY_Controller {
 
                             if ($seller_id > 0) {
 
-                                $ItemskuID = getallitemskubyid($itemskusku);
+                                $ItemskuID = getallitemskubyid($sku);
                                 if ($ItemskuID > 0) {
                                     $data2[] = array(
                                         'promocode' => $promocode,
@@ -1511,9 +1511,9 @@ class Excel_export extends MY_Controller {
             }
 
             //   echo '<pre>';
-            //print_r($alertArray);
+           // print_r($alertArray);
             // print_r($alertArray);
-            // die;
+           //  die;
             ///$Status = $this->Item_model->add_bulk($data);
             if (!empty($insertArray)) {
                 $Status = $this->Offers_model->getinsertoffersdata($insertArray);
