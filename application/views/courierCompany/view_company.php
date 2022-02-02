@@ -188,7 +188,20 @@
                                             <label class="text-bold"><?=lang('lang_Courier_Pin');?></label>
                                             	<input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.courier_pin_no">
                                         </div>
-                                           <div class="form-group">
+                                        <div class="form-group">
+                                            <label class="text-bold">Account Entity</label>
+                                            	<input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.account_entity_code">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-bold">Account Country Code</label>
+                                            <input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.account_country_code">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-bold">Service Code</label>
+                                            <input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.service_code">
+                                        </div>
+
+                                        <div class="form-group">
                                             <label class="text-bold"><?=lang('lang_Awb_Sequence_Start');?></label>
                                             	<input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.start_awb_sequence">
                                         </div>
@@ -225,7 +238,19 @@
                                             <label class="text-bold"><?=lang('lang_Courier_Pin');?></label>
                                             	<input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.courier_pin_no_t">
                                         </div>
-                                           <div class="form-group">
+                                        <div class="form-group">
+                                            <label class="text-bold">Account Entity</label>
+                                            	<input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.account_entity_code_t">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-bold">Account Country Code</label>
+                                            <input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.account_country_code_t">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-bold">Service Code</label>
+                                            <input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.service_code_t">
+                                        </div>
+                                        <div class="form-group">
                                             <label class="text-bold"><?=lang('lang_Awb_Sequence_Start');?></label>
                                             	<input type="text"  class="form-control" aria-describedby="textHelpBlock"  ng-model="EditDataArr.start_awb_sequence_t">
                                         </div>

@@ -425,8 +425,9 @@ class Manifest extends CourierCompany_pickup {
          //echo "{$total_QTY}=={$total_sku}";
          
         if($total_QTY>=$total_sku)
-        {
-            $updateArray = array('received_qty' =>  $received_qty,'missing_qty' =>  $missing_qty, 'damage_qty' => $damage_qty, 'id' =>$id);
+        {   
+            
+            $updateArray = array('received_qty' =>  $received_qty,'code' => 'RI','missing_qty' =>  $missing_qty, 'damage_qty' => $damage_qty, 'id' =>$id);
             $result = $this->Manifest_model->ManifestDMUpdate($updateArray, $id);
             $return_arr=array('show_alert' => 'successfully Updated');
         }
@@ -435,10 +436,10 @@ class Manifest extends CourierCompany_pickup {
            $return_arr=array('show_alert' => 'Invalid Quantity'); 
         }
         echo json_encode($return_arr); die;
-       
+                
     }
     function getupdateManifestStatus() {
-        $_POST = json_decode(file_get_contents('php://input'), true);
+        $_POST = json_decode(file_get_contents('php://input'), true);                   
         $dataArray = $_POST;
         $table_manifestid = $dataArray['mid'];
         $sku = $dataArray['skuno'];
@@ -512,6 +513,10 @@ class Manifest extends CourierCompany_pickup {
             $create_order_url = $counrierArr_table['create_order_url'];
             $company_type = $counrierArr_table['company_type'];
             $auth_token = $counrierArr_table['auth_token_t'];
+            $account_entity_code = $counrierArr_table['account_entity_code_t'];
+            $account_country_code = $counrierArr_table['account_country_code_t'];
+            $service_code = $counrierArr_table['service_code_t'];
+
         } else {
             $user_name = $counrierArr_table['user_name'];
             $password = $counrierArr_table['password'];
@@ -524,6 +529,10 @@ class Manifest extends CourierCompany_pickup {
             $auth_token = $counrierArr_table['auth_token'];
             $company_type = $counrierArr_table['company_type'];
             $create_order_url = $counrierArr_table['create_order_url'];
+            $account_entity_code = $counrierArr_table['account_entity_code'];
+            $account_country_code = $counrierArr_table['account_country_code'];
+            $service_code = $counrierArr_table['service_code'];
+
         }
         $counrierArr['user_name'] = $user_name;
         $counrierArr['password'] = $password;
@@ -538,6 +547,10 @@ class Manifest extends CourierCompany_pickup {
         $counrierArr['create_order_url'] = $create_order_url;
         $counrierArr['auth_token'] = $auth_token;
         $counrierArr['type'] = $counrierArr_table['type'];
+        $counrierArr['account_entity_code'] = $account_entity_code;
+        $counrierArr['account_country_code'] = $account_country_code;
+        $counrierArr['service_code'] = $service_code;
+
 //echo "<pre>";print_r($counrierArr); die;
         if (!empty($dataArray['mid'])) {
             $shipmentLoopArray = $dataArray['mid'];
@@ -565,7 +578,7 @@ class Manifest extends CourierCompany_pickup {
             'sender_email' => $senderdetails['email'],
             'origin' => $senderdetails['city'],
             'slip_no' => $alldetails['uniqueid'],
-            'mode' =>$pay_mode,
+            'mode' =>'CC',
             'pay_mode' => 'CC',
             'total_cod_amt' => 0,
             'pieces' => $alldetails['boxes'],
@@ -1935,80 +1948,193 @@ class Manifest extends CourierCompany_pickup {
                             }else{
                                 $returnArr['Error_msg'][] = $slipNo . ':Token not gererated';
                             }
-                    
-                        
-                }elseif($company_type == 'F') { // for all fastcoo clients treat as a CC 
-            
-                if ($company=='Ejack' ) 
-                        {
-                        $response = $this->Ccompany_model->Ejack($sellername, $ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$super_id);
-                        $response = json_decode($response, true);
-                        if($response['error']=='')
-                        {
-                            $generated_pdf = file_get_contents($response['awb_print_url']);                                
-                            file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                }else if ($company=='AJOUL' ){
+                            $responseArray = $this->Ccompany_model->AJOUL_AUTH($sellername, $counrierArr ,$ShipArr, $c_id, $box_pieces1, $complete_sku, $super_id);
+                            //print "<pre>"; print_r($responseArray);die;
+                            if (isset($responseArray['Shipment']) && !empty($responseArray['Shipment'])) {
+                                $client_awb = $responseArray['TrackingNumber'];
+                                $media_data = $responseArray['printLable'];
+                                $comment = 'Ajoul New Manifest';
+                                $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $media_data, $c_id);
+                                array_push($succssArray, $slipNo);
+                                $returnArr['Success_msg'][] = $slipNo . ':Successfully Assigned';
+                            }else{
+                                $returnArr['Error_msg'][] = $slipNo . ': '.json_encode($responseArray['errors']);
+                            }  
+                
+                }else if ($company=='FLOW' ){
 
-                            $client_awb = $response['awb'];
+                            $responseArray = $this->Ccompany_model->ShipsyDataArray($sellername, $ShipArr, $counrierArr, $c_id, $box_pieces1, $complete_sku, $super_id);
+                            if($responseArray['data'][0]['success'] == true){
 
-                            $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
+                                $client_awb = $responseArray['data'][0]['reference_number'];
+
+                                $label = $this->Ccompany_model->ShipsyLabel($counrierArr, $client_awb);
+
+                                file_put_contents("assets/all_labels/$slipNo.pdf", $label);
+
+                                $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';
+                                $comment = 'FLow New Manifest';
+                                $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                                array_push($succssArray, $slipNo);
+                                $returnArr['Success_msg'][] = $slipNo . ':Successfully Assigned';                                
+
+                            }else{
+                                $returnArr['Error_msg'][] = $slipNo . ': '.json_encode($responseArray['data'][0]['message']);
+                            }
+                
+                }else if ($company=='Mahmool' ){            
+
+                            $responseArray = $this->Ccompany_model->ShipsyDataArray($sellername ,$ShipArr, $counrierArr, $c_id, $box_pieces1, $complete_sku, $super_id);
+                            if($responseArray['data'][0]['success'] == true){
+
+                                $client_awb = $responseArray['data'][0]['reference_number'];
+
+                                $label = $this->Ccompany_model->ShipsyLabel($counrierArr, $client_awb);
+
+                                file_put_contents("assets/all_labels/$slipNo.pdf", $label);
+                                    
+                                $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';
+
+                                $comment = 'Mahmool New Manifest';
+                                $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                                array_push($succssArray, $slipNo);
+                                $returnArr['Success_msg'][] = $slipNo . ':Successfully Assigned';
+
+                            }else{
+                            
+                                $returnArr['Error_msg'][] = $slipNo . ': '.json_encode($responseArray['data'][0]['message']);
+                            }
+
+                }else if ($company=='UPS' ){
+
+                        $responseArray = $this->Ccompany_model->UPSArray($sellername ,$ShipArr, $counrierArr, $c_id, $box_pieces1, $complete_sku, $super_id);
+
+                        if (isset($responseArray['ShipmentResponse']['Response']['ResponseStatus']) && $responseArray['ShipmentResponse']['Response']['ResponseStatus']['Code'] == 1) {
+                            $client_awb = $responseArray['ShipmentResponse']['ShipmentResults']['PackageResults']['TrackingNumber'];
+                            sleep(2);
+                            $labelResponse = $this->Ccompany_model->UPSLabel($client_awb,$counrierArr);
+
+                            $GI = $labelResponse['LabelRecoveryResponse']['LabelResults']['LabelImage']['GraphicImage'];
+                            
+                            $response_label = base64_decode($GI);
+                            
+                            $generated_pdf = file_get_contents($response_label);
+
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $response_label);
+                            
+                            
+                            $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';     
+
+                            $comment = 'UPS New Manifest';
                             $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
                             array_push($succssArray, $slipNo);
                             $returnArr['Success_msg'][] = $slipNo . ':Successfully Assigned';
-                        } else {
-                            $returnArr['Error_msg'][] = $slipNo . ':' . $response['refrence_id'];
-                        }
-
-                }
-
-                else if ($company=='Emdad' )
-                {  
-                    
-                    $response = $this->Ccompany_model->EmdadArray($sellername, $ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1, $super_id);
-                    $response = json_decode($response, true);
-                    
-                    $labelUrl = $response['awb_print_url'];
-                    if($response['error']=='' && !empty($labelUrl))
-                    {
-                        $generated_pdf = file_get_contents($response['awb_print_url']);                                
-                        file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
-
-                        $client_awb = $response['awb'];
-
-                        $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
-                        $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
-                        array_push($succssArray, $slipNo);
-                         $returnArr['Success_msg'][] = $slipNo . ':Successfully Assigned';
-                    } else {
-                        if(isset($response['Reciever_city']) && !empty($response['Reciever_city'])){
-                            $error = $response['Reciever_city'];
+                            
                         }else{
-                            $error = $response['refrence_id'];
+                            $returnArr['Error_msg'][] = $slipNo . ': '.json_encode($responseArray['data'][0]['message']);
                         }
-                        $returnArr['Error_msg'][] = $slipNo . ':' . $error;
-                    }
 
-                }else{
-                    $response = $this->Ccompany_model->fastcooArray($sellername, $ShipArr, $counrierArr, $complete_sku, $Auth_token, $c_id, $box_pieces1 ,$super_id);
-                    $responseArray = json_decode($response, true);
 
-                    if ($responseArray['status'] == 200) {
-                        $client_awb = $responseArray['awb_no'];
-                        $mediaData = $responseArray['label_print'];
-                        //****************************fastcoo arrival label print cURL****************************
-                        file_put_contents("assets/all_labels/$slipNo.pdf", file_get_contents($mediaData));
-                        $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
-                        //****************************fastcoo label print cURL****************************
-                        $CURRENT_DATE = date("Y-m-d H:i:s");
-                        $CURRENT_TIME = date("H:i:s");
+                }else if ($company=='Kudhha' ){  
+                    
+                    $Auth_token = $this->Ccompany_model->shipox_auth($counrierArr);  
+                    $responseArray = $this->Ccompany_model->shipoxDataArray($sellername ,$ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1, $complete_sku, $super_id);
+                    
+                    $successres = $responseArray['status'];  
+                    $error_status = $responseArray['message'];
+                    
+                    if (!empty($successres) && $successres == 'success')
+                    {
+                        $client_awb = $responseArray['data']['order_number'];
+                        $WadhaLabel = $this->Ccompany_model->shipox_label($client_awb, $counrierArr, $Auth_token);
+                        $label= json_decode($WadhaLabel,TRUE);
+                        $media_data = $label['data']['value'];                               
 
+                        $generated_pdf = file_get_contents($media_data);
+                        file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                        $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';
+                        $comment = 'Kudhha New Manifest';
                         $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
                         array_push($succssArray, $slipNo);
-                         $returnArr['Success_msg'][] = $slipNo . ':Successfully Assigned';
-                    } else {
-                        
-                        $returnArr['Error_msg'][] = $slipNo . ':Already Exist' ;
+                        $returnArr['Success_msg'][] = $slipNo . ':Successfully Assigned';
+                    }                            
+                    else
+                    {
+                        $returnArr['Error_msg'][] = $slipNo . ':' .$error_status;
                     }
-            }
+
+                }elseif($company_type == 'F') { // for all fastcoo clients treat as a CC 
+            
+                        if ($company=='Ejack' ) {
+
+                                $response = $this->Ccompany_model->Ejack($sellername, $ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$super_id);
+                                $response = json_decode($response, true);
+                                if($response['error']=='')
+                                {
+                                    $generated_pdf = file_get_contents($response['awb_print_url']);                                
+                                    file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+
+                                    $client_awb = $response['awb'];
+
+                                    $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
+                                    $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                                    array_push($succssArray, $slipNo);
+                                    $returnArr['Success_msg'][] = $slipNo . ':Successfully Assigned';
+                                } else {
+                                    $returnArr['Error_msg'][] = $slipNo . ':' . $response['refrence_id'];
+                                }
+
+                        }else if ($company=='Emdad' ){
+                            
+                            $response = $this->Ccompany_model->EmdadArray($sellername, $ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1, $super_id);
+                            $response = json_decode($response, true);
+                            
+                            $labelUrl = $response['awb_print_url'];
+                            if($response['error']=='' && !empty($labelUrl))
+                            {
+                                $generated_pdf = file_get_contents($response['awb_print_url']);                                
+                                file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+
+                                $client_awb = $response['awb'];
+
+                                $fastcoolabel = base_url() . "assets/all_labels/$slipNo.pdf";
+                                $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                                array_push($succssArray, $slipNo);
+                                $returnArr['Success_msg'][] = $slipNo . ':Successfully Assigned';
+                            } else {
+                                if(isset($response['Reciever_city']) && !empty($response['Reciever_city'])){
+                                    $error = $response['Reciever_city'];
+                                }else{
+                                    $error = $response['refrence_id'];
+                                }
+                                $returnArr['Error_msg'][] = $slipNo . ':' . $error;
+                            }
+                        
+                            
+                    
+                        }else{
+                            $response = $this->Ccompany_model->fastcooArray($sellername, $ShipArr, $counrierArr, $complete_sku, $Auth_token, $c_id, $box_pieces1 ,$super_id);
+                            $responseArray = json_decode($response, true);
+
+                            if ($responseArray['status'] == 200) {
+                                $client_awb = $responseArray['awb_no'];
+                                $mediaData = $responseArray['label_print'];
+                                //****************************fastcoo arrival label print cURL****************************
+                                file_put_contents("assets/all_labels/$slipNo.pdf", file_get_contents($mediaData));
+                                $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+                                //****************************fastcoo label print cURL****************************
+                                $CURRENT_DATE = date("Y-m-d H:i:s");
+                                $CURRENT_TIME = date("H:i:s");
+
+                                $Update_data = $this->Ccompany_model->Update_Manifest_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                                array_push($succssArray, $slipNo);
+                                $returnArr['Success_msg'][] = $slipNo . ':Successfully Assigned';
+                            } else {
+                                
+                                $returnArr['Error_msg'][] = $slipNo . ':Already Exist' ;
+                            }
+                    }
         }
         return $returnArr;   
     }
@@ -3477,6 +3603,10 @@ class Manifest extends CourierCompany_pickup {
                     $create_order_url = $counrierArr_table['create_order_url'];  
                     $company_type  = $counrierArr_table['company_type'];                  
                     $auth_token = $counrierArr_table['auth_token_t'];
+                    $account_entity_code = $counrierArr_table['account_entity_code_t'];
+                    $account_country_code = $counrierArr_table['account_country_code_t'];
+                    $service_code = $counrierArr_table['service_code_t'];
+
                 } else {
                     $user_name = $counrierArr_table['user_name'];
                     $password = $counrierArr_table['password'];
@@ -3489,6 +3619,10 @@ class Manifest extends CourierCompany_pickup {
                     $auth_token = $counrierArr_table['auth_token'];
                     $company_type  = $counrierArr_table['company_type'];
                     $create_order_url = $counrierArr_table['create_order_url']; 
+                    $account_entity_code = $counrierArr_table['account_entity_code'];
+                    $account_country_code = $counrierArr_table['account_country_code'];
+                    $service_code = $counrierArr_table['service_code'];
+
                 }
             $counrierArr['user_name'] = $user_name;
             $counrierArr['password'] = $password;
@@ -3503,6 +3637,10 @@ class Manifest extends CourierCompany_pickup {
             $counrierArr['create_order_url'] = $create_order_url;
             $counrierArr['auth_token'] = $auth_token;
             $counrierArr['type'] = $counrierArr_table['type'];
+            $counrierArr['account_entity_code'] = $account_entity_code;
+            $counrierArr['account_country_code'] = $account_country_code;
+            $counrierArr['service_code'] = $service_code;
+
           //print "<pre>"; print_r($dataArray);die;  
           if(!empty($dataArray['mid']))
           {
@@ -5001,8 +5139,116 @@ class Manifest extends CourierCompany_pickup {
                             }else{
                                 $returnArr['responseError'][] = $slipNo . ':Token not gererated';
                             }
-                    
+                }else if ($company=='AJOUL' ){
+
+                        $responseArray = $this->Ccompany_model->AJOUL_AUTH($sellername, $counrierArr ,$ShipArr, $c_id, $box_pieces1, $complete_sku, $super_id);
+                        if (isset($responseArray['Shipment']) && !empty($responseArray['Shipment'])) {
+                            $client_awb = $responseArray['TrackingNumber'];
+                            $media_data = $responseArray['printLable'];
+
+                            $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $media_data,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
+                            array_push($succssArray, $slipNo);                          
+                            $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' : forwarded to AJOUL.';
+                        }else{
+                            $returnArr['responseError'][] = $slipNo . ': '.json_encode($responseArray['errors']);
+                        }  
                         
+                        
+                }else if ($company=='FLOW' ){
+
+                    $responseArray = $this->Ccompany_model->ShipsyDataArray($sellername, $ShipArr, $counrierArr, $c_id, $box_pieces1, $complete_sku, $super_id);
+                    if($responseArray['data'][0]['success'] == true){
+
+                        $client_awb = $responseArray['data'][0]['reference_number'];
+
+                        $label = $this->Ccompany_model->ShipsyLabel($counrierArr, $client_awb);
+
+                        file_put_contents("assets/all_labels/$slipNo.pdf", $label);
+
+                            
+                        $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';
+                        $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
+                        array_push($succssArray, $slipNo);                          
+                        $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' : forwarded to FLOW.';
+
+                    }else{
+                        $returnArr['responseError'][] = $slipNo . ': '.json_encode($responseArray['data'][0]['message']);
+                    }
+                  
+                }else if ($company=='Mahmool' ){
+                    $responseArray = $this->Ccompany_model->ShipsyDataArray($sellername ,$ShipArr, $counrierArr, $c_id, $box_pieces1, $complete_sku, $super_id);
+                    if($responseArray['data'][0]['success'] == true){
+
+                        $client_awb = $responseArray['data'][0]['reference_number'];
+                        $label = $this->Ccompany_model->ShipsyLabel($counrierArr, $client_awb);
+                        file_put_contents("assets/all_labels/$slipNo.pdf", $label);
+                        $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';                             
+                        $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
+                        array_push($succssArray, $slipNo);                          
+                        $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' : forwarded to Mahmool.';
+
+                    }else{
+                       $returnArr['responseError'][] = $slipNo . ': '.json_encode($responseArray['data'][0]['message']);
+                    }
+
+                
+                }else if ($company=='UPS'){
+
+                    $responseArray = $this->Ccompany_model->UPSArray($sellername ,$ShipArr, $counrierArr, $c_id, $box_pieces1, $complete_sku, $super_id);
+
+                    if (isset($responseArray['ShipmentResponse']['Response']['ResponseStatus']) && $responseArray['ShipmentResponse']['Response']['ResponseStatus']['Code'] == 1) {
+                        $client_awb = $responseArray['ShipmentResponse']['ShipmentResults']['PackageResults']['TrackingNumber'];
+                        sleep(2);
+                        $labelResponse = $this->Ccompany_model->UPSLabel($client_awb,$counrierArr);
+
+                        $GI = $labelResponse['LabelRecoveryResponse']['LabelResults']['LabelImage']['GraphicImage'];
+                        
+                        $response_label = base64_decode($GI);
+                        
+                        $generated_pdf = file_get_contents($response_label);
+
+                        file_put_contents("assets/all_labels/$slipNo.pdf", $response_label);
+                        
+                        
+                        $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';
+
+                        $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
+                        array_push($succssArray, $slipNo);                          
+                        $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' : forwarded to UPS.';
+                        
+                    }else{
+                        $returnArr['responseError'][] = $slipNo . ': '.json_encode($responseArray['response']['errors']);
+                    }
+
+                }else if ($company=='Kudhha' ){  
+                    
+                    $Auth_token = $this->Ccompany_model->shipox_auth($counrierArr);  
+                    $responseArray = $this->Ccompany_model->shipoxDataArray($sellername ,$ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1, $complete_sku, $super_id);
+                    
+                    $successres = $responseArray['status'];  
+                    $error_status = $responseArray['message'];
+                    
+                    if (!empty($successres) && $successres == 'success')
+                    {
+                        $client_awb = $responseArray['data']['order_number'];
+                        $WadhaLabel = $this->Ccompany_model->shipox_label($client_awb, $counrierArr, $Auth_token);
+                        $label= json_decode($WadhaLabel,TRUE);
+                        $media_data = $label['data']['value'];                               
+
+                        $generated_pdf = file_get_contents($media_data);
+                        file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                        $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';
+                        $Update_data = $this->Ccompany_model->Update_Manifest_Return_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel,$c_id,$dataArray,$ShipArr,$itemData,$super_id);
+                        array_push($succssArray, $slipNo);                          
+                        $returnArr['Success_msg'][] = 'AWB No.' . $slipNo . ' : forwarded to Kudhha.';
+                    }                            
+                    else
+                    {
+                        $returnArr['responseError'][] = $slipNo . ':' .$error_status;
+                    }    
+
+
+
                 }elseif ($company_type== 'F'){ // for all fastcoo clients treat as a CC 
                       
                 $response = $this->Ccompany_model->fastcooArray($sellername, $ShipArr, $counrierArr, $complete_sku, $Auth_token,$c_id,$box_pieces1, $super_id);

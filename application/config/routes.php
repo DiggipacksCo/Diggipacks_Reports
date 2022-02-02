@@ -91,6 +91,7 @@ $route['add_vehicle'] = 'Vehicle/add_view';
 $route['edit_vehicle/(:any)'] = 'Vehicle/add_view/$1';
 $route['deleteVehicle/(:any)'] = 'Vehicle/deleteVehicle/$1';
 //========================================//
+$route['forward_report'] = 'Shipment/forward_report';
 $route['delivered'] = 'Shipment/delivered_view';
 $route['returned']  = 'Shipment/returned_view';
 
@@ -128,6 +129,7 @@ $route['updateData']       = 'Shipment/updateData';
 $route['pickupList']             = 'PickUp/pickupList';
 $route['pickListView/(:any)']    = 'PickUp/pickListView/$1';
 $route['OfferOrders']            = 'Offers/GetofferOrderslist';
+$route['import_promo']            = 'Offers/import_promo';
 
 $route['OfferOrders_gift']       = 'Offers/GetofferOrderslist_gift';
 $route['pickListFilter']         = 'PickUp/pickListFilter';
@@ -249,7 +251,7 @@ $route['add_storage']     = 'Storage/add_storage';
 $route['view_storage']    = 'Storage/storageview';
 $route['editview/(:any)'] = 'Storage/add_storage/$1';
 
-
+ $route['view_damage_inventory'] = 'Reports/view_damage_inventory';
 $route['editviewstorage/(:any)'] = 'Seller/add_storagecharges/$1';
 $route['add_courier_company/(:any)'] = 'Seller/add_courier_company/$1';
 $route['active_seller/(:num)/(:any)'] = 'Seller/active_seller/$1/$2';
@@ -257,6 +259,7 @@ $route['setStorageRate']  = 'Storage/setStorageRate';
 $route['CompanyDetails'] = 'Generalsetting/CompanyDetails';
 $route['defaultlist_view'] = 'Generalsetting/defaultlist_view';
 $route['ShipmentLogview'] = 'Generalsetting/ShipmentLogview';
+$route['ReverseShipmentLog'] = 'Generalsetting/ReverseShipmentLog';
 
 $route['update_password'] = 'Generalsetting/update_password';
  

@@ -243,13 +243,9 @@ class Seller_model extends CI_Model {
     public function zidDeliveryOptionUpdate($data) { 
         /* check if already exist then update */
         
-        if ($this->deliverOptionExist($data['cust_id'],$data['zid_delivery_name'])) {
-            $this->db->where('cust_id', $data['cust_id']);
-            $this->db->where('zid_delivery_name', $data['zid_delivery_name']);
-            $this->db->update('zid_deliver_options', $data);
-        } else {
+       
             $this->db->insert('zid_deliver_options', $data);
-        }
+        
         //echo $this->db->last_query(); die;
     }
 

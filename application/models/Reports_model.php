@@ -335,6 +335,98 @@ class Reports_model extends CI_Model {
         }
        
     }
+  public function filter_damage($data = array()) {
 
+
+
+
+        $limit = 100;
+        if (empty($data['page_no'])) {
+            $start = 0;
+        } else {
+            $start = ($data['page_no'] - 1) * $limit;
+        }
+        $this->db->where('damage_history.super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->select('damage_history.*,items_m.sku,items_m.name,seller_m.company as seller_name,seller_m.id as sid,items_m.item_path,items_m.storage_id,items_m.type,items_m.sku_size,items_m.description');
+        $this->db->from('damage_history');
+        $this->db->join('items_m', 'items_m.id = damage_history.item_sku');
+        $this->db->join('customer as seller_m', 'seller_m.id = damage_history.seller_id');
+
+        if (!empty($data['sku'])) {
+            $this->db->where('items_m.sku', $data['sku']);
+        }
+
+
+       // $this->db->where('damage_history.status_type', 'Damage');
+
+        if (!empty($data['seller'])) {
+            $this->db->where('seller_m.id', $data['seller']);
+        }
+        
+        if ($data['quantity'] || $data['quantity'] == '0') {
+            $this->db->where('damage_history.quantity', $data['quantity']);
+        }
+        if (!empty($data['order_no'])) {
+            $this->db->where('damage_history.order_no', $data['order_no']);
+        }
+        
+        //$this->db->group_by('damage_history.item_sku');
+        $this->db->order_by('damage_history.id', 'DESC');
+
+
+        $this->db->limit($limit, $start);
+
+        $query = $this->db->get();
+
+        // echo $this->db->last_query(); die;    
+        if ($query->num_rows() > 0) {
+
+            $data['result'] = $query->result_array();
+            $data['count'] = $this->filterCount_damage($data);
+            return $data;
+            // return $page_no.$this->db->last_query();
+        } else {
+            $data['result'] = '';
+            $data['count'] = 0;
+            return $data;
+        }
+    }
+    
+    public function filterCount_damage($data = array()) {
+
+        $this->db->where('damage_history.super_id', $this->session->userdata('user_details')['super_id']);
+
+        $this->db->select('COUNT(damage_history.id) as idCount');
+        $this->db->from('damage_history');
+        $this->db->join('items_m', 'items_m.id = damage_history.item_sku');
+        $this->db->join('customer as seller_m', 'seller_m.id = damage_history.seller_id');
+
+        if (!empty($data['sku'])) {
+            $this->db->where('items_m.sku', $data['sku']);
+        }
+        ///$this->db->group_by('inventory_damage.item_sku');
+       // $this->db->where('damage_history.status_type', 'Damage');
+ if (!empty($data['order_no'])) {
+            $this->db->where('damage_history.order_no', $data['order_no']);
+        }
+        if (!empty($data['seller'])) {
+            $this->db->where('seller_m.id', $data['seller']);
+        }
+if ($data['quantity'] || $data['quantity'] == '0') {
+            $this->db->where('damage_history.quantity', $data['quantity']);
+        }
+
+        $query = $this->db->get();
+
+        //return $this->db->last_query(); die;
+        if ($query->num_rows() > 0) {
+
+
+            return $query->row_array()['idCount'];
+            // return $page_no.$this->db->last_query();
+        } else {
+            return 0;
+        }
+    }
 
 }

@@ -57,7 +57,7 @@
 			<table  cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;width: 100%;">
 				<tr>
 					<!-- <td colspan="5"></td> -->
-					<td colspan="11" style="text-align:center;"><strong><?php if($this->session->userdata('user_details')['super_id']!=20) { ?>  Tax Invoice -  الفاتورة الضريبية<?php } else { ?>  Invoice -  الفاتورة   <?php }?></strong></td>
+					<td colspan="11" style="text-align:center;"><strong><?php if($this->session->userdata('user_details')['super_id']!=20) { ?>  Draft Invoice -  الفاتورة المبدئية<?php } else { ?>  Invoice -  الفاتورة   <?php }?></strong></td>
 				<!-- 	<td colspan="9"></td> -->
 				</tr>
 				<tr>

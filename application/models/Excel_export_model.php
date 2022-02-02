@@ -420,7 +420,7 @@ class Excel_export_model extends CI_Model {
             $selectQry[] = " (select name from warehouse_category where warehouse_category.id=item_inventory.wh_id) AS Warehouse";
         }
         if (isset($filter['listData2']['quantity']) && !empty($filter['listData2']['quantity'])) {
-            $selectQry[] = " item_inventory.quantity AS QUANTITY";
+            $selectQry[] = " SUM(item_inventory.quantity) AS QUANTITY";
         }
         if (isset($filter['listData2']['seller_name']) && !empty($filter['listData2']['seller_name'])) {
             $selectQry[] = " (select name from customer where customer.id=item_inventory.seller_id) AS SellerName";
@@ -592,5 +592,89 @@ class Excel_export_model extends CI_Model {
 
         return $data = chr(239) . chr(187) . chr(191) . $this->dbutil->csv_from_result($query, $delimiter, $newline);
     }
+    
+     public function ItemInventoryExport_damage($filter) {
+
+
+        $this->load->dbutil();
+        $limit = 2000;
+        if (isset($filter['filterData']['exportlimit']) && !empty($filter['filterData']['exportlimit'])) {
+            $limit = $filter['filterData']['exportlimit'];
+        }
+
+        $this->db->where('damage_history.super_id', $this->session->userdata('user_details')['super_id']);
+
+
+        if (isset($filter['filterData']['seller']) && !empty($filter['filterData']['seller'])) {
+            $this->db->where('seller_m.id', $filter['filterData']['seller']);
+        }
+        if (isset($filter['filterData']['sku']) && !empty($filter['filterData']['sku'])) {
+            $this->db->where('items_m.sku', $filter['filterData']['sku']);
+        }
+        if (isset($filter['filterData']['order_no']) && !empty($filter['filterData']['order_no'])) {
+            $this->db->where('damage_history.order_no', $filter['filterData']['order_no']);
+        }
+        if (isset($filter['filterData']['quantity']) && !empty($filter['filterData']['quantity'])) {
+
+            $this->db->where("(damage_history.quantity='" . $filter['filterData']['quantity'] . "' or damage_history.m_qty='" . $filter['filterData']['quantity'] . "' or damage_history.d_qty='" . $filter['filterData']['quantity'] . "')");
+        }
+
+
+        if (isset($filter['filterData']['item_description']) && !empty($filter['filterData']['item_description'])) {
+            $this->db->where('items_m.description', $filter['filterData']['item_description']);
+        }
+
+
+        $selectQry = array();
+        if (isset($filter['listData2']['name']) && !empty($filter['listData2']['name'])) {
+            $selectQry[] = " (select name from items_m where items_m.id=damage_history.item_sku) AS Name";
+        }
+        if (isset($filter['listData2']['sku']) && !empty($filter['listData2']['sku'])) {
+            $selectQry[] = " (select sku from items_m where items_m.id=damage_history.item_sku) AS ItemSku";
+        }
+
+
+        if (isset($filter['listData2']['quantity']) && !empty($filter['listData2']['quantity'])) {
+            $selectQry[] = " damage_history.quantity AS Total_QUANTITY";
+        }
+        if (isset($filter['listData2']['d_qty']) && !empty($filter['listData2']['d_qty'])) {
+            $selectQry[] = " damage_history.d_qty AS Damage_QUANTITY";
+        }
+        if (isset($filter['listData2']['m_qty']) && !empty($filter['listData2']['m_qty'])) {
+            $selectQry[] = " damage_history.m_qty AS Missing_QUANTITY";
+        }
+        if (isset($filter['listData2']['seller_name']) && !empty($filter['listData2']['seller_name'])) {
+            $selectQry[] = " (select name from customer where customer.id=damage_history.seller_id) AS SellerName";
+        }
+        if (isset($filter['listData2']['item_description']) && !empty($filter['listData2']['item_description'])) {
+            $selectQry[] = " (select description from items_m where items_m.id=damage_history.item_sku) AS Description,";
+        }
+        if (isset($filter['listData2']['update_date']) && !empty($filter['listData2']['update_date'])) {
+            $selectQry[] = "damage_history.update_date as UpdateDate";
+        }
+        if (isset($filter['listData2']['order_no']) && !empty($filter['listData2']['order_no'])) {
+            $selectQry[] = "damage_history.order_no as Order_no";
+        }
+
+
+
+        $select_str = implode(',', $selectQry);
+
+        $this->db->select($select_str);
+
+        $this->db->from('damage_history');
+        $this->db->join('items_m', 'items_m.id = damage_history.item_sku');
+        $this->db->join('customer as seller_m', 'seller_m.id = damage_history.seller_id');
+
+        $this->db->order_by('damage_history.id', 'DESC');
+        $this->db->limit($limit);
+        $query = $this->db->get();
+        //echo $this->db->last_query();die;
+        $delimiter = ",";
+        $newline = "\r\n";
+
+        return $data = chr(239) . chr(187) . chr(191) . $this->dbutil->csv_from_result($query, $delimiter, $newline);
+    }
+    
 
 }

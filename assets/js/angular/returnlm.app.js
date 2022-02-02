@@ -15,6 +15,7 @@ var app = angular.module('ReturnLmApp', [])
             $scope.btnfinal = true;
             $scope.boxshow1 = false;
             $scope.UpdateArr = {};
+            $scope.remarkBox = false;
             $scope.scan_awb = function () {
                 $('#scan_awb').focus();
                 $scope.packuShip();
@@ -204,6 +205,7 @@ var app = angular.module('ReturnLmApp', [])
                     $scope.warning = null;
                     var soundsuccess = document.getElementById("audioSuccess");
                     soundsuccess.play();
+                    $scope.remarkBox = true;
                     $scope.Message = $scope.checkArray[0].slip_no + ' Completly Scaned Please RTF order!';
                     //responsiveVoice.speak($scope.message);  
 
@@ -216,7 +218,58 @@ var app = angular.module('ReturnLmApp', [])
             $scope.Clountshowlocation = "";
             $scope.LocationError = false;
 
+            $scope.UpdateotherArr = {};
+            $scope.GetUpdateOtherfieldData = function (index, sku, type, qty)
+            {
 
+                $scope.UpdateotherArr.counter_id = index;
+                $scope.UpdateotherArr.sku = sku;
+                $scope.UpdateotherArr.type = type;
+                $scope.UpdateotherArr.qty = qty;
+                $("#Update_damage_pop").modal({backdrop: 'static', keyboard: false})
+
+            };
+            $scope.GetUpdateMussingOrDamageQty=function()
+                {
+                     //alert($scope.UpdateotherArr.counter_id);
+                     
+                     
+                     console.log($scope.UpdateotherArr.counter_id+"//"+$scope.UpdateotherArr.type+"yy"+$scope.UpdateotherArr.updateType);
+                    if($scope.UpdateotherArr.type=='Missing')
+                    {
+                    // var total_missing=parseInt($scope.UpdateotherArr.updateType);
+                     $scope.LocalItem[$scope.UpdateotherArr.counter_id].missing=parseInt($scope.UpdateotherArr.updateType);
+                    }
+                    if($scope.UpdateotherArr.type=='Damage')
+                    {
+                     //var total_damage=parseInt($scope.UpdateotherArr.updateType);
+                     $scope.LocalItem[$scope.UpdateotherArr.counter_id].damage=parseInt($scope.UpdateotherArr.updateType);
+                    }
+                      var totalother=parseInt($scope.LocalItem[$scope.UpdateotherArr.counter_id].damage)+parseInt($scope.LocalItem[$scope.UpdateotherArr.counter_id].missing);
+                      
+                      if($scope.UpdateotherArr.qty>=totalother)
+                      {
+                       $scope.LocalItem[$scope.UpdateotherArr.counter_id].othertotal=parseInt($scope.UpdateotherArr.qty)-parseInt(totalother);
+                    $scope.UpdateotherArr={};
+                    
+                     $("#Update_damage_pop").modal('hide');
+                 }
+                 else
+                 {
+                      $scope.UpdateotherArr={};
+                     if($scope.UpdateotherArr.type=='Damage')
+                    {
+                       $scope.LocalItem[$scope.UpdateotherArr.counter_id].damage=0; 
+                    }
+                    else
+                    {
+                       $scope.LocalItem[$scope.UpdateotherArr.counter_id].missing=0; 
+                    }
+                     alert("invalid qty");
+                 }
+                     
+            
+                };
             $scope.GetshowStocklocation = function (dataArray)
             {
 
@@ -262,7 +315,7 @@ var app = angular.module('ReturnLmApp', [])
                         $http({
                             url: "PickUp/save_details",
                             method: "POST",
-                            data: $scope.LocalItem,                              
+                           data: {mainlist: $scope.LocalItem, remarkbox: $scope.scan.remarkbox},            
                             
                             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 

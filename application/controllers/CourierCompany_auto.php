@@ -62,7 +62,7 @@ class CourierCompany_auto extends CI_Controller {
                     foreach ($shipmentLoopArray as $key => $slipNo) {
                         $ShipArr = $this->Ccompany_auto_model->GetSlipNoDetailsQry(trim($slipNo), $super_id);
                        //print_r($ShipArr);
-                    $ShipArr_custid =  $ShipArr['cust_id']; 
+                        $ShipArr_custid =  $ShipArr['cust_id']; 
                         $courier_id = $courier_data[0]['cc_id'];
                         $zone_id = $courier_data[0]['id'];
                         $counrierArr_table = $this->Ccompany_auto_model->GetdeliveryCompanyUpdateQry($courier_id, $super_id,$ShipArr_custid);
@@ -82,6 +82,9 @@ class CourierCompany_auto extends CI_Controller {
                             $company_type  = $counrierArr_table['company_type'];
                             $api_url = $counrierArr_table['api_url_t'];
                             $auth_token = $counrierArr_table['auth_token_t'];
+                            $account_entity_code = $counrierArr_table['account_entity_code_t'];
+                            $account_country_code = $counrierArr_table['account_country_code_t'];
+                            $service_code = $counrierArr_table['service_code_t'];
                         } else {
                             $user_name = $counrierArr_table['user_name'];
                             $password = $counrierArr_table['password'];
@@ -93,6 +96,10 @@ class CourierCompany_auto extends CI_Controller {
                             $company_type  = $counrierArr_table['company_type'];
                             $api_url = $counrierArr_table['api_url'];
                             $auth_token = $counrierArr_table['auth_token'];
+                            $account_entity_code = $counrierArr_table['account_entity_code'];
+                            $account_country_code = $counrierArr_table['account_country_code'];
+                            $service_code = $counrierArr_table['service_code'];
+        
                         }
                         $counrierArr['user_name'] = $user_name;
                         $counrierArr['password'] = $password;
@@ -105,6 +112,10 @@ class CourierCompany_auto extends CI_Controller {
                         $counrierArr['api_url'] = $api_url;
                         $counrierArr['company_type'] = $company_type ;
                         $counrierArr['auth_token'] = $auth_token;
+                        $counrierArr['account_entity_code'] = $account_entity_code;
+                        $counrierArr['account_country_code'] = $account_country_code;
+                        $counrierArr['service_code'] = $service_code;
+        
                     //     echo '<pre>';
                     //    print_r( $counrierArr); exit;
 
@@ -835,7 +846,7 @@ class CourierCompany_auto extends CI_Controller {
 
                                 $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
                                 
-                                $returnArr['successAbw'][] = 'AWB No.' . $slipNo . ' forwarded to SLS';
+                                $returnArr['successAbw'][] = 'AWB No.' . $slipNo . ' forwarded to Fedex';
                             array_push($succssArray, $slipNo);
                         }                            
                             
@@ -877,8 +888,7 @@ class CourierCompany_auto extends CI_Controller {
                             $returnArr['responseError'][] = $slipNo . ':' .$error_status;
                         }
                     
-                    }elseif ($company== 'Postagexp')
-                       {
+                    }elseif ($company== 'Postagexp'){
                         
                         $Auth_token=$this->Ccompany_auto_model->Postagexp_auth($counrierArr); 
                       
@@ -910,6 +920,152 @@ class CourierCompany_auto extends CI_Controller {
                             $returnArr['responseError'][] = $slipNo . ':' .$error_status;
                         }
                     
+
+                    }elseif ($company== 'Tamex'){
+                        
+                        $response = $this->Ccompany_auto_model->tamexArray($ShipArr, $counrierArr, $complete_sku, $c_id,$box_pieces1,$super_id);
+                        $responseArray = json_decode($response, true);
+                      
+                        if ($responseArray['code'] != 0 || empty($response)) {
+                            $returnArr['responseError'][] = $slipNo . ':' . $responseArray['data'];
+
+                        } elseif ($responseArray['code'] == 0) {
+
+                                $client_awb = $responseArray['tmxAWB'];
+                                $API_URL= $counrierArr['api_url'].'print';
+                                        
+                                $generated_pdf = Tamex_label($client_awb, $counrierArr['auth_token'],$API_URL);
+                                file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                                $fastcoolabel = base_url() . 'assets/all_labels/' . $slipNo . '.pdf';
+
+
+                                $CURRENT_DATE = date("Y-m-d H:i:s");
+                                $CURRENT_TIME = date("H:i:s");
+
+                                $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                                
+                                $returnArr['successAbw'][] = 'AWB No.' . $slipNo . ' forwarded to Tamex';
+                                array_push($succssArray, $slipNo);
+                        }
+
+
+                    }elseif ($company== 'AJOUL'){
+
+                            $responseArray = $this->Ccompany_auto_model->AJOUL_AUTH($counrierArr ,$ShipArr, $c_id, $box_pieces1, $complete_sku, $super_id);
+                            if (isset($responseArray['Shipment']) && !empty($responseArray['Shipment'])) {
+                                $client_awb = $responseArray['TrackingNumber'];
+                                $media_data = $responseArray['printLable'];
+                                $CURRENT_DATE = date("Y-m-d H:i:s");
+                                $CURRENT_TIME = date("H:i:s");
+
+                                $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $media_data, $c_id);
+                                
+                                $returnArr['successAbw'][] = 'AWB No.' . $slipNo . ' forwarded to AJOUL';
+                                array_push($succssArray, $slipNo);
+                            }else{
+                                $returnArr['responseError'][] = $slipNo . ': '.json_encode($responseArray['errors']);
+                            } 
+                            
+                            
+                    }elseif ($company== 'FLOW'){
+
+                        $responseArray = $this->Ccompany_auto_model->ShipsyDataArray($ShipArr, $counrierArr, $c_id, $box_pieces1, $complete_sku, $super_id);
+                        if($responseArray['data'][0]['success'] == true){
+
+                            $client_awb = $responseArray['data'][0]['reference_number'];
+
+                            $label = $this->Ccompany_auto_model->ShipsyLabel($counrierArr, $client_awb);
+
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $label);
+                            $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';
+
+                            $CURRENT_DATE = date("Y-m-d H:i:s");
+                            $CURRENT_TIME = date("H:i:s");
+                            $comment = "Auto Forwarded Flow";
+                            $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                            
+                        }else{
+                         
+                            $returnArr['responseError'][] = $slipNo . ': '.json_encode($responseArray['data'][0]['message']);
+                        }
+
+                    }elseif ($company== 'Mahmool'){
+                        $responseArray = $this->Ccompany_auto_model->ShipsyDataArray($ShipArr, $counrierArr, $c_id, $box_pieces1, $complete_sku, $super_id);
+                        if($responseArray['data'][0]['success'] == true){
+
+                            $client_awb = $responseArray['data'][0]['reference_number'];
+
+                            $label = $this->Ccompany_auto_model->ShipsyLabel($counrierArr, $client_awb);
+
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $label);
+
+                                
+                            $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';                             
+                            $CURRENT_DATE = date("Y-m-d H:i:s");
+                            $CURRENT_TIME = date("H:i:s");
+                            $comment = "Auto Forwarded Mahmool";
+                            $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+
+                        }else{
+                            $returnArr['responseError'][] = $slipNo . ': '.json_encode($responseArray['data'][0]['message']);
+                        }
+
+
+                    }elseif ($company== 'UPS'){
+
+                        $responseArray = $this->Ccompany_auto_model->UPSArray($ShipArr, $counrierArr, $c_id, $box_pieces1, $complete_sku, $super_id);
+
+                        if (isset($responseArray['ShipmentResponse']['Response']['ResponseStatus']) && $responseArray['ShipmentResponse']['Response']['ResponseStatus']['Code'] == 1) {
+                            $client_awb = $responseArray['ShipmentResponse']['ShipmentResults']['PackageResults']['TrackingNumber'];
+                            sleep(2);
+                            $labelResponse = $this->Ccompany_auto_model->UPSLabel($client_awb,$counrierArr);
+
+                            $GI = $labelResponse['LabelRecoveryResponse']['LabelResults']['LabelImage']['GraphicImage'];
+                            
+                            $response_label = base64_decode($GI);
+                            
+                            $generated_pdf = file_get_contents($response_label);
+
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $response_label);
+                            
+                            
+                            $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';                             
+                            $CURRENT_DATE = date("Y-m-d H:i:s");
+                            $CURRENT_TIME = date("H:i:s");
+                            $comment = "Auto Forwarded UPS";
+                            $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                            
+                        }else{
+                            $returnArr['responseError'][] = $slipNo . ': '.json_encode($responseArray['response']['errors']);
+                        }
+
+                    }elseif ($company== 'Kudhha'){
+                        $Auth_token = $this->Ccompany_auto_model->shipox_auth($counrierArr);  
+                        $responseArray = $this->Ccompany_auto_model->shipoxDataArray($ShipArr, $counrierArr, $Auth_token, $c_id, $box_pieces1, $complete_sku, $super_id);
+                        
+                        $successres = $responseArray['status'];  
+                        $error_status = $responseArray['message'];
+                        
+                        if (!empty($successres) && $successres == 'success')
+                        {
+                            $client_awb = $responseArray['data']['order_number'];
+                            $WadhaLabel = $this->Ccompany_auto_model->shipox_label($client_awb, $counrierArr, $Auth_token);
+                            $label= json_decode($WadhaLabel,TRUE);
+                            $media_data = $label['data']['value'];                               
+
+                            $generated_pdf = file_get_contents($media_data);
+                            file_put_contents("assets/all_labels/$slipNo.pdf", $generated_pdf);
+                            $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';
+                            $CURRENT_DATE = date("Y-m-d H:i:s");
+                            $CURRENT_TIME = date("H:i:s");
+                            $comment = "Auto Forwarded Kudhha";
+                            $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $client_awb, $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $fastcoolabel, $c_id);
+                        }                            
+                        else
+                        {
+                            $returnArr['responseError'][] = $slipNo . ':' .$error_status;
+                        }
+
                     }elseif ($company_type == 'F')
                             { // for all fastcoo clients treat as a CC 
                       

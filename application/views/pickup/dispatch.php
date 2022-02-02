@@ -108,16 +108,24 @@ echo '<div class="alert alert-warning">'.$this->session->flashdata('something').
 			
 				</div>
                        </div>
-         <div class="col-md-4">	
+         <div class="col-md-3">	
            
          <div class="form-group">
-             <select ng-model="type" class="form-control">
+             <select ng-model="type" class="form-control" ng-change="GetCheckvalidbox();">
              <option value="DL" ><?= lang('lang_Last_Mile'); ?></option>
                  <option value="POD" ><?= lang('lang_Deliver'); ?></option>
+                  <option value="SFP">Self Pickup</option>
              
              </select>
              </div>
                        </div>
+                       
+                         <div class="col-md-3" ng-show="BoxInputshow">	
+
+                                                <div class="form-group">
+                                                    <textarea type="text" class="form-control" ng-model="comments" placeholder="Enter Comment"></textarea>
+                                                </div>
+                                            </div>
             <div class="col-md-4">	
            
          <div class="form-group">

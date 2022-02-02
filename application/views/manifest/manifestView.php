@@ -157,7 +157,10 @@
                                             <td><span class="badge badge-primary">{{data.qty}}</span></td>
                                             <td><span class="badge badge-danger"  ng-if="data.editdamage==0"  ng-click="shipData[$index].editdamage=1">{{data.damage_qty}}</span><input type="number"  ng-if="data.editdamage==1" ng-model="shipData[$index].damage_qty" ng-blur="shipData[$index].editdamage=0" string-to-number max="{{data.qty}}"></td>
                                             <td><span class="badge badge-warning"  ng-if="data.editmissing==0"  ng-click="shipData[$index].editmissing=1"  >{{data.missing_qty}}</span> <input type="number" ng-if="data.editmissing==1" value="shipData[$index].missing_qty" ng-model="shipData[$index].missing_qty" ng-blur="shipData[$index].editmissing=0" string-to-number max="{{data.qty}}"> </td>
-                                             <td><span class="badge badge-success"  ng-if="data.editreceived==0"  ng-click="shipData[$index].editreceived=1"  >{{data.received_qty}}</span> <input type="number" ng-if="data.editreceived==1" value="shipData[$index].received_qty" ng-model="shipData[$index].received_qty" ng-blur="shipData[$index].editreceived=0" string-to-number max="{{data.qty}}"> </td>
+                                             <td><span class="badge badge-success"  ng-if="data.editreceived==0 || data.editreceived==null"  ng-click="shipData[$index].editreceived=1"  > {{data.received_qty}}</span> <input type="number" ng-if="data.editreceived==1" value="shipData[$index].received_qty" ng-model="shipData[$index].received_qty" ng-blur="shipData[$index].editreceived=0" string-to-number max="{{data.qty}}"> 
+                                            
+                                           
+                                            </td>
                                             
                                            
                                           

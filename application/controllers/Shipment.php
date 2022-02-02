@@ -115,11 +115,67 @@ class Shipment extends MY_Controller {
         }
         $this->load->view('ShipmentM/view_reverse_shipments');
     }
+    public function forward_report() {
+        $data = GetCourierCompanyDrop();
+        if (menuIdExitsInPrivilageArray(1) == 'N') {
+            redirect(base_url() . 'notfound');
+            die;
+        }
 
+      
+        $sellers = $this->Seller_model->find2();
+        $status = $this->Status_model->allstatus();
+        
+
+        $search = $this->input->post('tracking_numbers');
+
+        if (!empty($search)) {
+            $condition = strtoupper($search);
+        } else {
+            $condition = null;
+        }
+       
+        if ($this->session->flashdata('condition')) {
+            $condition = $this->session->flashdata('condition');
+        }
+
+        
+        $status_name = $_POST['status_name'];
+        
+        $data = $this->Shipment_model->getStatusIDByName('3PL Updates');
+        
+        $result = array();
+        if(!empty($data)){
+            $result = getallstatusbyid($data[0]['id']);
+            
+        }
+       
+        $bulk = array(
+            // 'status'=>$status,
+            //		'shipments'=>$shipments,
+            'sellers' => $sellers,
+            'condition' => $condition,
+            'status' => $status,
+            'status_3pl' => $result,
+                //'items'=>$items,
+                //'sellers'=>$sellers
+        );
+       
+        $this->load->view('ShipmentM/forward_report', $bulk);
+       
+    }
     
 
     public function runshell() {
-      $are=  shell_exec('php /var/www/html/diggipack_new/fs_files/auto_assign.php');
+        $param=array('super_id'=>$this->session->userdata('user_details')['super_id']); 
+
+		 $paramJsone=json_encode($param);
+         //print_r($param); die; 
+	
+		 exec('/usr/bin/php /var/www/html/diggipack_new/fs_files/auto_assign_fm.php ' . escapeshellarg(serialize($param)) . '  2>&1 & ',$output);
+
+       print_r($output);
+//$are=  shell_exec('php /var/www/html/diggipack_new/fs_files/auto_assign_fm.php');
     }
 
      public function runshell_tracking() {
@@ -2332,27 +2388,111 @@ if(!empty( $searchids))
     public function edit_view($id) {
 
         $data['shipment'] = $this->Shipment_model->edit_view($id);
-        $data['seller'] = $this->Seller_model->find_customer_sellerm($data['shipment'][0]->cust_id);
-        $conditions = array(
-            'seller_id' => $data['seller'][0]->id,
-        );
-        //$data['seller_inventory'] = $this->ItemInventory_model->find($conditions);
-        ////$data['sellers'] = $this->Seller_model->all();
-       // $data['items'] = $this->Item_model->all();
-       // $data['city'] = $this->Shipment_model->countryList();
-        $this->load->view('ShipmentM/shipment_detail', $data);
+
+        if (!empty($data['shipment'])) {
+            $origin = $data['shipment'][0]->origin;
+            $destination = $data['shipment'][0]->destination;
+            $data['hub_name_o'] = getdestinationfieldshow_name($origin, 'country', 'id');
+            $data['hub_name_d'] = getdestinationfieldshow_name($destination, 'country', 'id');
+            $data['city'] = []; //$this->Shipment_model->countryList();
+            $this->load->view('ShipmentM/shipment_detail', $data);
+        } else {
+            $this->session->set_flashdata('error', 'Something went wrong. Try again');
+            redirect('Shipment');
+        }
     }
 
-    public function edit($id) {
+    public function edit($id = null) {
 
-        $data = array(
-            'destination' => $this->input->post('destination')
-        );
+        $this->load->helper('security');
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('sender_name', 'Sender Name', 'trim|required');
+        $this->form_validation->set_rules('sender_address', 'Sender Address', 'trim|required');
+        $this->form_validation->set_rules('sender_phone', 'Sender Phone', 'trim|required');
+        $this->form_validation->set_rules("reciever_name", 'Receiver Name', 'trim|required');
+        $this->form_validation->set_rules('reciever_address', 'Receiver Address', 'trim|required');
+        $this->form_validation->set_rules('reciever_phone', 'Receiver Phonoe', 'trim|required');
+        $this->form_validation->set_rules('origin', 'Origin', 'trim|required');
+        $this->form_validation->set_rules('destination', 'Destination', 'trim|required');
 
-//print_r($data);  echo $id; die();  
-        $this->Shipment_model->edit($id, $data);
-        $this->session->set_flashdata('msg', 'Shipment id has been updated successfully');
-        redirect('Shipment');
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->edit_view($id);
+        } else {
+            $sender_name = $this->input->post('sender_name');
+            $sender_address = $this->input->post('sender_address');
+            $sender_phone = $this->input->post('sender_phone');
+            $reciever_name = $this->input->post('reciever_name');
+            $reciever_address = $this->input->post('reciever_address');
+            
+            $reciever_phone = $this->input->post('reciever_phone');
+            $origin = $this->input->post('origin');
+            $destination = $this->input->post('destination');
+            $comment = $this->input->post('comment');
+            if (empty($comment)) {
+                $comment = "";
+            }
+
+            $oldShipData = $this->Shipment_model->edit_view($id);
+            $statusActivites = "";
+            if ($oldShipData[0]->sender_name != $sender_name) {
+                $statusActivites .= $sender_name . " Sender Name changed from " . $oldShipData[0]->sender_name . "<br>";
+            }
+            if ($oldShipData[0]->sender_address != $sender_address) {
+                $statusActivites .= $sender_address . " Sender Address changed from " . $oldShipData[0]->sender_address . "<br>";
+            }
+            if ($oldShipData[0]->sender_phone != $sender_phone) {
+                $statusActivites .= $sender_phone . " Sender Phone changed from " . $oldShipData[0]->sender_phone . "<br>";
+            }
+            if ($oldShipData[0]->reciever_name != $reciever_name) {
+                $statusActivites .= $reciever_name . " Receiver Name changed from " . $oldShipData[0]->reciever_name . "<br>";
+            }
+            if ($oldShipData[0]->reciever_address != $reciever_address) {
+                $statusActivites .= $reciever_address . " Receiver Address changed from " . $oldShipData[0]->reciever_address . "<br>";
+            }
+            if ($oldShipData[0]->reciever_phone != $reciever_phone) {
+                $statusActivites .= $reciever_phone . " Receiver Phone changed from " . $oldShipData[0]->reciever_phone . "<br>";
+            }
+            if ($oldShipData[0]->destination != $destination) {
+                $statusActivites .= getdestinationfieldshow($destination, 'city') . " Destination changed from " . getdestinationfieldshow($oldShipData[0]->destination, 'city') . "<br>";
+            }
+            if ($oldShipData[0]->origin != $origin) {
+                $statusActivites .= getdestinationfieldshow($origin, 'city') . " Origin changed from " . getdestinationfieldshow($oldShipData[0]->origin, 'city') . "<br>";
+            }
+            if (!empty($statusActivites)) {
+
+                $key88 = 0;
+                $StatusArray[$key88]['slip_no'] = $oldShipData[0]->slip_no;
+                $StatusArray[$key88]['new_status'] = $oldShipData[0]->delivered;
+                $StatusArray[$key88]['pickup_time'] = date("H:i:s");
+                $StatusArray[$key88]['pickup_date'] = date("Y-m-d");
+                $StatusArray[$key88]['Details'] = addslashes($statusActivites);
+                $StatusArray[$key88]['Activites'] = addslashes($statusActivites);
+                $StatusArray[$key88]['entry_date'] = date("Y-m-d H:i:s");
+                $StatusArray[$key88]['comment'] = addslashes($comment);
+                $StatusArray[$key88]['user_id'] = $this->session->userdata('user_details')['user_id'];
+                $StatusArray[$key88]['user_type'] = 'fulfillment';
+                $StatusArray[$key88]['code'] = $oldShipData[0]->code;
+                $StatusArray[$key88]['super_id'] = $this->session->userdata('user_details')['super_id'];
+            }
+
+
+            $data = array(
+                'sender_name' => addslashes($sender_name),
+                'sender_address' => addslashes($sender_address),
+                'sender_phone' => $sender_phone,
+                'reciever_name' => addslashes($reciever_name),
+                'reciever_address' => addslashes($reciever_address),
+                'reciever_phone' => $reciever_phone,
+                'origin' => $origin,
+                'destination' => $destination
+            );
+
+            $this->Status_model->insertStatus($StatusArray);
+            $this->Shipment_model->edit($id, $data);
+            $this->session->set_flashdata('msg', 'Shipment ' . $oldShipData[0]->slip_no . ' has been updated successfully');
+            redirect('Shipment');
+        }
     }
 
     /* public function edit($id){
@@ -2702,6 +2842,48 @@ if(!empty( $searchids))
         $dataArray['dropshort'] = $pageShortArr;
         $dataArray['result'] = $shiparray;
         $dataArray['count'] = $shipments['count'];
+        //print_r($shipments);
+        //exit();
+        echo json_encode($dataArray);
+    }
+
+    public function forward_report_data() {
+       
+        $_POST = json_decode(file_get_contents('php://input'), true);
+      
+ 
+        $exact = $_POST['exact']; 
+        if ($_POST['s_type'] == 'AWB')
+            $awb = $_POST['s_type_val'];
+        if ($_POST['s_type'] == 'SKU')
+            $sku = $_POST['s_type_val'];
+        if ($_POST['s_type'] == 'REF')
+            $refsno = $_POST['s_type_val'];
+        if ($_POST['s_type'] == 'MOBL')
+            $mobileno = $_POST['s_type_val'];
+            
+        $from = $_POST['from'];
+        $to = $_POST['to'];
+        $wh_id = $_POST['wh_id'];
+        $delivered = $_POST['status'];
+        $seller = $_POST['seller'];
+        $page_no = $_POST['page_no'];
+        $destination = $_POST['destination'];
+        $booking_id = $_POST['booking_id'];
+        $cc_id = $_POST['cc_id'];
+        
+        
+        $is_menifest = isset($_POST['is_manifest']) ? $_POST['is_manifest'] : null;
+
+        
+        $shipments = $this->Shipment_model->filter_fwdReport($awb, $sku, $delivered, $seller, $to, $from, $exact, $page_no, $destination, $booking_id, $cc_id, $is_menifest, $refsno, $mobileno, $wh_id, $_POST);
+
+
+        //$shiparrayexcel = $shipmentsexcel['result'];
+        $shiparray = $shipments['result'];
+         
+        $dataArray['result'] = $shiparray;
+     
         //print_r($shipments);
         //exit();
         echo json_encode($dataArray);
@@ -3444,7 +3626,7 @@ if(!empty( $searchids))
 
 
                     $dimationArray_w = array('slip_no' => $dataArray['slip_no']);
-                    $shipemntArr = array('destination' => $dataArray['destination_id'], 'booking_id' => $dataArray['booking_id'], 'reciever_name' => $dataArray['reciever_name'], 'reciever_phone' => $dataArray['reciever_phone'], 'reciever_address' => $dataArray['reciever_address'], 'wh_id' => $dataArray['whid']);
+                    $shipemntArr = array('destination' => $dataArray['destination_id'], 'booking_id' => $dataArray['booking_id'], 'reciever_name' => $dataArray['reciever_name'], 'reciever_phone' => $dataArray['reciever_phone'], 'reciever_address' => $dataArray['reciever_address'], 'reciever_pincode' => $dataArray['reciever_pincode'], 'wh_id' => $dataArray['whid']);
                     $shipemntArr_w = array('id' => $dataArray['id'], 'slip_no' => $dataArray['slip_no']);
                     ///print_r($StatusArray);
                     //print_r($shipemntArr);
@@ -4475,8 +4657,50 @@ if(!empty( $searchids))
                      $item_type=$skudata['type'];
                      $SkuID=$skudata['id'];
                      $wh_id=$skudata['wh_id'];
+                     $expdate = "0000-00-00";
+                     $seller_id=$dataAray['cust_id'];
                      
-                     
+                     $dataNew = $this->ItemInventory_model->find(array('item_sku' => $SkuID, 'expity_date' => $expdate, 'seller_id' => $seller_id, 'itype' => $item_type, 'wh_id' => $wh_id));
+                 
+                  foreach ($dataNew as $val) {
+                if ($val->quantity < $sku_size) {
+
+                    //echo '<br> 2//'.$qty.'//'. $val->quantity.'//';
+                    $check = $qty + $val->quantity;
+                    $shelve_no = $val->shelve_no;
+                    if (empty($shelve_no)) {
+                        $shelve_no = "";
+                    }
+                    if ($check <= $sku_size) {
+
+                        $lastQtyUp = GetuserToatalLOcationQty($val->id, 'quantity');
+                        $stock_location_upHistory = GetuserToatalLOcationQty($val->id, 'stock_location');
+                        $lastQtyUp_up = $lastQtyUp;
+                        $activitiesArr = array('exp_date' => $expdate, 'st_location' => $stock_location_upHistory, 'item_sku' => $SkuID, 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $seller_id, 'qty' => $check, 'p_qty' => $lastQtyUp, 'qty_used' => $qty, 'type' => 'Return', 'entrydate' => date("Y-m-d h:i:s"), 'super_id' => $this->session->userdata('user_details')['super_id'], 'shelve_no' => $shelve_no,'awb_no'=>$dataAray['slip_no']);
+                        if($qty>0)
+                        {
+                        GetAddInventoryActivities($activitiesArr);
+                        }
+                        $this->ItemInventory_model->updateInventory(array('quantity' => $check, 'id' => $val->id));
+                        $qty = 0;
+                    } else {
+
+                        $diff = $sku_size - $val->quantity;
+                        $lastQtyUp = GetuserToatalLOcationQty($val->id, 'quantity');
+                        $stock_location_upHistory = GetuserToatalLOcationQty($val->id, 'stock_location');
+                        $lastQtyUp_up = $lastQtyUp;
+                        $activitiesArr = array('exp_date' => $expdate, 'st_location' => $stock_location_upHistory, 'item_sku' => $SkuID, 'user_id' => $this->session->userdata('user_details')['user_id'], 'seller_id' => $seller_id, 'qty' => $sku_size, 'p_qty' => $lastQtyUp, 'qty_used' => $qty, 'type' => 'Update', 'entrydate' => date("Y-m-d h:i:s"), 'super_id' => $this->session->userdata('user_details')['super_id'], 'shelve_no' => $shelve_no,'awb_no'=>$dataAray['slip_no']);
+                        if($qty>0)
+                        {
+                        GetAddInventoryActivities($activitiesArr);
+                        }
+                        $this->ItemInventory_model->updateInventory(array('quantity' => $sku_size, 'id' => $val->id));
+                        $qty = $qty - $diff;
+                    }
+                }
+
+                // echo $val['item_sku'];  
+            }
                      if ($qty > 0) {
                         if ($sku_size >= $qty)
                             $locationLimit = 1;
@@ -4677,10 +4901,11 @@ if(!empty( $searchids))
         
     }
     
+    
     public function edit_mapping_view($id){
         
-        $data['mapdata'] = $this->Shipment_model->getMappingData($id);
-        $this->load->view('ShipmentM/edit_shipment_mapping',$data);
+                $data['mapdata'] = $this->Shipment_model->getMappingData($id);
+                $this->load->view('ShipmentM/edit_shipment_mapping',$data);
     }
     
 }

@@ -113,6 +113,7 @@ class Ccompany_model extends CI_Model {
         $this->db->where('deleted', 'N');
         $this->db->where('status', 'Y');
         $this->db->where('cust_id', $ShipArr_custid);
+        $this->db->where('api_url != ', '');
         $this->db->order_by("company");
         $query = $this->db->get();
        // echo $this->db->last_query();exit;
@@ -131,6 +132,7 @@ class Ccompany_model extends CI_Model {
             $this->db->from('courier_company');
             $this->db->where('deleted', 'N');
             $this->db->where('status', 'Y');
+            $this->db->where('api_url != ', '');
             $this->db->order_by("company");
             $query = $this->db->get();
           //  echo $this->db->last_query();exit;
@@ -417,7 +419,7 @@ class Ccompany_model extends CI_Model {
     public function GetmanifestUpdate_forward(array $data, $awb = null) {
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->update('pickup_request', $data, array('uniqueid' => $awb));
-     //echo $this->db->last_query();
+     //echo $this->db->last_query();die;
     }
 
     public function Getskudetails_forward($slip_no=null)    {
@@ -614,7 +616,7 @@ class Ccompany_model extends CI_Model {
                                                     'Line3' => '',
                                                     'City' => $reciever_city,
                                                     'StateOrProvinceCode' => '',
-                                                    'PostCode' => '0000',
+                                                    'PostCode' => !empty($ShipArr['reciever_pincode'])?$ShipArr['reciever_pincode']:'0000',
                                                     'CountryCode' => $reciever_country,
                                                     'Longitude' => 0,
                                                     'Latitude' => 0,
@@ -781,7 +783,7 @@ class Ccompany_model extends CI_Model {
                     'Reference2' => '',
                     'Reference3' => '',
                     'Shipper' => array(
-                        'Reference1' => $ShipArr['booking_id'],
+                        'Reference1' => $ShipArr['slip_no'],
                         'Reference2' => '',
                         'AccountNumber' => $counrierArr['courier_account_no'],
                         'PartyAddress' => array(
@@ -826,7 +828,7 @@ class Ccompany_model extends CI_Model {
                             'Line3' => '',
                             'City' => $reciever_city,
                             'StateOrProvinceCode' => '',
-                            'PostCode' => '0000',
+                            'PostCode' => !empty($ShipArr['reciever_pincode'])?$ShipArr['reciever_pincode']:'0000',
                             'CountryCode' => 'SA',
                             'Longitude' => 0,
                             'Latitude' => 0,
@@ -968,8 +970,13 @@ class Ccompany_model extends CI_Model {
             }else {
                 $successstatus  = "Success";
             }
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$dataJson);
+        }else{
             
-        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
+            $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
+        }    
+        //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
 
         return $awb_array;
     }
@@ -997,7 +1004,7 @@ class Ccompany_model extends CI_Model {
         }
   
         $this->GetshipmentUpdate_forward($updateArr, $slipNo);
-        $details = 'Forwarded to ' . $company;
+        $details = 'Forwarded to ' . $company .' SlipNo: '.$slipNo.' : Frwd AWB: '.$client_awb;
         $statusArr = array(
             'slip_no' => $slipNo,
            
@@ -1146,7 +1153,14 @@ class Ccompany_model extends CI_Model {
             $successstatus  = "Fail";
         }
 
-        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'], $dataJson);
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$dataJson);
+        }else{
+            
+            $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
+        }
+
+        //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'], $dataJson);
 
         return $response;
     }
@@ -1264,7 +1278,13 @@ class Ccompany_model extends CI_Model {
             $successstatus  = "Fail";
         }
 
-        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$dataJson);
+        }else{
+            
+            $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
+        }
+        //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
 
         return $safe_response;
     }
@@ -1393,7 +1413,14 @@ class Ccompany_model extends CI_Model {
             $successstatus  = "Fail";
         }
 
-        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
+
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$dataJson);
+        }else{
+            
+            $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
+        }
+        //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
         return $response;
 }
 
@@ -1508,12 +1535,20 @@ class Ccompany_model extends CI_Model {
         $successres = $response_array['status'];
 
         if($successres == 200) 
-            {
-                $successstatus  = "Success";
-            }else {
-                $successstatus  = "Fail";
-            }
-        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
+        {
+            $successstatus  = "Success";
+        }else {
+            $successstatus  = "Fail";
+        }
+
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$dataJson);
+        }else{
+            
+            $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
+        }
+
+        //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
 
         return $response_array;
         }
@@ -1521,7 +1556,14 @@ class Ccompany_model extends CI_Model {
         {
             $logresponse = "Receiver city empty";
             $successstatus  = "Fail";
-            $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
+
+            if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+                $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],'');
+            }else{
+                
+                $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],'');
+            }
+            //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
             return $response_array=array('message'=>'receiver city empty');
         }
 
@@ -1635,7 +1677,14 @@ class Ccompany_model extends CI_Model {
             $successstatus  = "Fail";
         }
 
-        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$dataJson);
+        }else{
+            
+            $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
+        }
+
+        //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
         return $response_array;
     }
 
@@ -1740,7 +1789,16 @@ class Ccompany_model extends CI_Model {
             $successstatus  = "Fail";
         }
 
-        $log = $this->shipmentLog($c_id, $logresponse, $successstatus, $ShipArr['slip_no'],$dataJson);
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$dataJson);
+        }else{
+            
+            $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
+        }
+
+        //$log = $this->shipmentLog($c_id, $logresponse, $successstatus, $ShipArr['slip_no'],$dataJson);
+
+
         return $response_array;
     }
 
@@ -2112,7 +2170,14 @@ class Ccompany_model extends CI_Model {
             $successstatus  = "Success";
         }
 
-        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$dataJson);
+        }else{
+            
+            $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
+        }
+
+        //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
         return $response_ww;
     }
     public function ZajilArray($sellername = null ,$ShipArr, $counrierArr, $complete_sku, $c_id,$box_pieces1,$super_id) {
@@ -2227,12 +2292,20 @@ class Ccompany_model extends CI_Model {
         $logresponse =   json_encode($response_array);  
         $successres = $response_array['data'][0]['success'];        
         if($response_array['status'] == 'OK' && $successres == true) 
-            {
-                $successstatus  = "Success";
-            } else {
-                $successstatus  = "Fail";
-            }
-        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
+        {
+            $successstatus  = "Success";
+        } else {
+            $successstatus  = "Fail";
+        }
+
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$dataJson);
+        }else{
+            
+            $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
+        }
+
+        //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
         return $response_array;
     }
 
@@ -2354,7 +2427,14 @@ class Ccompany_model extends CI_Model {
             $successstatus  = "Fail";
         }
 
-        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$dataJson);
+        }else{
+            
+            $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
+        }
+
+        //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
         return $response;
     }
 
@@ -2457,12 +2537,19 @@ class Ccompany_model extends CI_Model {
             $successstatus  = "Fail";
         }
 
-        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$all_param_data);
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$all_param_data);
+        }else{
+            
+            $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$all_param_data);
+        }
+
+        //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$all_param_data);
         return $response;
     }
     public function AymakanArray($sellername = null ,array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null,$box_pieces1,$complete_sku=null,$super_id) {
 
-   
+        //print "<pre>"; print_r($ShipArr);die;
         //$sender_default_city = Getselletdetails_new($super_id);
         // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
        // $sender_address = $sender_default_city['0']['address'];
@@ -2529,7 +2616,7 @@ class Ccompany_model extends CI_Model {
             "delivery_description" =>$complete_sku,
             "collection_name" => $sellername,
             "collection_address" => $sender_address,
-            "collection_email" => $ShipArr['sender_email'],
+            "collection_email" => empty(trim($ShipArr['sender_email']))?'Support@diggipacks.com':$ShipArr['sender_email'],
             "collection_city" => $sender_city,
             "collection_postcode" => $s_zip,
             "collection_country" => 'SA',
@@ -2541,7 +2628,7 @@ class Ccompany_model extends CI_Model {
 
         $json_final_date = json_encode($all_param_data);  
      //  echo "<pre>"; print_r($all_param_data); die; 
-        //echo $json_final_date;die;
+     //   echo $json_final_date;die;
 
         $headers = array(
             "Accept:application/json",
@@ -2556,6 +2643,7 @@ class Ccompany_model extends CI_Model {
         //echo $response;die;
         curl_close($ch);
         $responseArray = json_decode($response, true);
+        //print "<pre>"; print_r($responseArray);die;
         $logresponse =   json_encode($response);  
         $successres = $responseArray['message'];
         $successreserror = $responseArray['error'];
@@ -2567,12 +2655,32 @@ class Ccompany_model extends CI_Model {
         }else {
             $successstatus  = "Fail";
         }
-
-        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_final_date);
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$json_final_date);
+        }else{
+            
+            $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_final_date);
+        }
         return $response;
     }
 
-   
+    public function shipmentLogReverse($c_id = null,$description= null,$status= null,$frwd_slip_no=null, $slip_no= null, $request=null){
+
+        $insertData  = array(
+            'slip_no' => $slip_no,
+            'frwd_slip_no' =>$frwd_slip_no,
+            'cc_id' => $c_id, 
+            'log' => $description, 
+            'status' =>$status,
+            'request'=>$request, 
+            'super_id' => $this->session->userdata('user_details')['super_id'], 
+            'entry_date' =>date("Y-m-d H:i:s"), 
+        );       
+
+        $this->db->insert('frwd_reverse_ship_log', $insertData);
+
+    }
+    
     public function Aymakan_tracking($client_awb= null, $tracking_url= null,$auth_token=null)
     {
 
@@ -2597,6 +2705,12 @@ class Ccompany_model extends CI_Model {
              
             curl_close($curl);
             return $response;
+    }
+
+
+    function stripInvalidXml($value)
+    {
+        return str_replace(array('&', '<', '>', '\'', '"'), array('&amp;', '&lt;', '&gt;', '&apos;', '&quot;'), $value);
     }
 
     public function SMSAArray($sellername = null ,$ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id) {
@@ -2649,25 +2763,34 @@ class Ccompany_model extends CI_Model {
         else { 
             $weight = $ShipArr['weight'] ; 
         }
-       
+        
+        
         $comp_api_url = $counrierArr['api_url'];
         $receiver_email = !empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com';
+
+        $rec_name = $this->stripInvalidXml($ShipArr['reciever_name']);
+        $rec_addres = $this->stripInvalidXml($ShipArr['reciever_address']);
+        $complete_sku = $this->stripInvalidXml($complete_sku);
+        
+        
+
         $SMSAXML = '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+        
             <soap:Body>
                 <addShip xmlns="http://track.smsaexpress.com/secom/">
                   <passKey>' . $counrierArr['auth_token'] . '</passKey>
                   <refNo>' . $ShipArr['slip_no'] . '</refNo>
                   <sentDate>' . date('d/m/Y') . '</sentDate>
                   <idNo>' . $ShipArr['booking_id'] . '</idNo>
-                  <cName>' . $ShipArr['reciever_name'] . '</cName>
-                  <cntry>'.$countryCode.'</cntry>
+                  <cName>' . $rec_name . '</cName>
+                  <cntry>KSA</cntry>
                   <cCity>' . $receiver_city . '</cCity>
                   <cZip>' . $ShipArr['sender_zip'] . '</cZip>
                   <cPOBox>45</cPOBox>
                   <cMobile>' . $ShipArr['reciever_phone'] . '</cMobile>
                   <cTel1>' . $ShipArr['reciever_phone'] . '</cTel1>
                   <cTel2>' . $ShipArr['reciever_phone'] . '</cTel2>
-                  <cAddr1>' . $ShipArr['reciever_address'] . '</cAddr1>
+                  <cAddr1>' . $rec_addres . '</cAddr1>
                   <cAddr2></cAddr2>
                   <shipType>DLV</shipType>
                   <PCs>' . $box_pieces . '</PCs>
@@ -2687,62 +2810,71 @@ class Ccompany_model extends CI_Model {
                   <sAddr2></sAddr2>
                   <sCity>' . $sender_city . '</sCity>
                   <sPhone>' . $ShipArr['sender_phone'] . '</sPhone>
-                  <sCntry>'.$countryCode.'</sCntry>
+                  <sCntry>KSA</sCntry>
                   <prefDelvDate>'.date('d/m/Y').'</prefDelvDate>
                   <gpsPoints>2</gpsPoints>
                 </addShip>
-                 <getPDF xmlns="http://track.smsaexpress.com/secom/">
-                  <awbNo>' . $pdfawb . '</awbNo>
-                  <passKey>' . $counrierArr['auth_token'] . '</passKey>
-                </getPDF>
             </soap:Body>
         </soap:Envelope>';
 
-
+        //   echo '<pre>';
+        // header('Content-type: text/xml;charset=utf-8');
+        //  echo  $SMSAXML; die;
         $headers = array(
             "Content-type: text/xml;charset=utf-8",
             "Accept: application/xml",
             "Cache-Control: no-cache",
             "Pragma: no-cache",
-            "SOAPAction: http://track.smsaexpress.com/secom/addShip",
+            "SOAPAction: http://track.smsaexpress.com/secom/addShipMPS",
             "Content-length: " . strlen($SMSAXML),
         );
         $cookiePath = tempnam('/tmp', 'cookie');
 
+        //echo $comp_api_url;die;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $comp_api_url);
         curl_setopt($ch, CURLOPT_COOKIEJAR, $cookiePath);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $SMSAXML);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
         $response = curl_exec($ch);
+        //echo $response;die;
         curl_close($ch);
         $check = $response;
         $respon = trim($check);
         $respon = str_ireplace(array("soap:", "<?xml version=\"1.0\" encoding=\"utf-8\"?>"), "", $response);
         $xml2 = new SimpleXMLElement($respon);
-            $again = $xml2;
-            $a = array("qwb" => $again);
+        $again = $xml2;
+        $a = array("qwb" => $again);
 
-            $complicated = ($a['qwb']->Body->addShipResponse->addShipResult[0]);
+        $complicated = ($a['qwb']->Body->addShipResponse->addShipResult[0]);
+       // echo $complicated;die;
+        if (preg_match('/\bFailed\b/', $complicated)) {
+            $ret = $complicated;
 
-            if (preg_match('/\bFailed\b/', $complicated)) {
-                $ret = $complicated;
+        } 
+            if (empty($ret)) 
+        {
+            $successstatus  = "Success";
+        }else {
+            $successstatus  = "Fail";
+        }
 
-            } 
-                 if (empty($ret)) 
-                {
-                    $successstatus  = "Success";
-                }else {
-                    $successstatus  = "Fail";
-                }
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $response,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$SMSAXML);
+        }else{
+            
+            $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$SMSAXML);
+        }
 
-                 $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$SMSAXML);
+
+       // $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$SMSAXML);
 
 
         return $respon;
@@ -2779,7 +2911,38 @@ class Ccompany_model extends CI_Model {
         $response = trim(curl_exec($ch));
         return $response;
     }
+    public function GetdeliveryCompanyUpdateQryById($cc_id = null, $custid= null) {
 
+        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->where('cc_id', $cc_id);
+        $this->db->select('*');
+        $this->db->from('courier_company_seller');
+        $this->db->where('deleted', 'N');
+        $this->db->where('status', 'Y');
+        $this->db->where('cust_id', $custid);
+        $this->db->order_by("company");
+        $query = $this->db->get();
+        //echo $this->db->last_query();exit;
+
+        if ($query->num_rows()> 0)
+        {
+            return $query->row_array();
+        }
+        else 
+        {
+        
+            $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+            $this->db->where('cc_id', $cc_id);
+            $this->db->select('*');
+            $this->db->from('courier_company');
+            $this->db->where('deleted', 'N');
+            $this->db->where('status', 'Y');
+            $this->db->order_by("company");
+            $query = $this->db->get();
+            //echo  $this->db->last_query(); die; 
+            return $query->row_array();
+        }
+    }
     public function GetallperformationDetailsQry($frwd_throw = null, $status = null, $from = null, $to = null) {
      if ($frwd_throw != 0)
             $condition .= " and shipment_fm.frwd_company_id='" . $frwd_throw . "'";
@@ -2928,19 +3091,26 @@ class Ccompany_model extends CI_Model {
                 }
                 curl_close($ch);
 
-                 $awb_array = json_decode(json_encode((array) $complicated_awb), TRUE);
-                 $logresponse =   json_encode($awb_array);  
-                    $successres = $awb_array['HasError'];
-                   
-                    //if($successres!== true) 
-                    if($successres == "false" || $successres == false) 
-                    {
-                        $successstatus  = "Success";
-                    } else {
-                        $successstatus  = "Fail";
-                    }
+                $awb_array = json_decode(json_encode((array) $complicated_awb), TRUE);
+                $logresponse =   json_encode($awb_array);  
+                $successres = $awb_array['HasError'];
+                
+                //if($successres!== true) 
+                if($successres == "false" || $successres == false) 
+                {
+                    $successstatus  = "Success";
+                } else {
+                    $successstatus  = "Fail";
+                }
 
-                    $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$xml_new);
+                if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+                    $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$xml_new);
+                }else{
+                    
+                    $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$xml_new);
+                }
+
+                //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$xml_new);
                            
 
                 return $awb_array;
@@ -3088,7 +3258,14 @@ class Ccompany_model extends CI_Model {
             $successstatus  = "Fail";
         }
 
-        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$param);
+
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$param);
+        }else{
+            
+            $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$param);
+        }
+        //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$param);
 
         curl_close($curl);
         return $response;
@@ -3200,7 +3377,14 @@ class Ccompany_model extends CI_Model {
         if (empty($param[0]['recipient']['city']))
         {
             
-            $response = $this->shipmentLog($c_id,'receiver city empty ','Fail', $ShipArr['slip_no'],$paramArray);
+            if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+                $response = $this->shipmentLogReverse($c_id, 'receiver city empty ','Fail', $ShipArr['slip_no'],$ShipArr['old_slip_no'],$paramArray);
+            }else{
+                
+                $response = $this->shipmentLog($c_id, 'receiver city empty ','Fail', $ShipArr['slip_no'],$paramArray);
+            }
+            
+            //$response = $this->shipmentLog($c_id,'receiver city empty ','Fail', $ShipArr['slip_no'],$paramArray);
             return $response;
         }
         else {
@@ -3225,22 +3409,29 @@ class Ccompany_model extends CI_Model {
                   ),
                 ));
 
-                 $response = curl_exec($curl); 
-                
-                 curl_close($curl);
-                 $logresponse =   json_encode($response);                   
-                 $response_array = json_decode($response, true);
-                 $successres = $response_array[0]['code'];
-                    if($successres==0) 
-                        {
-                           $successstatus  = "Success";
-                        }
-                    else 
-                        {
-                            $successstatus  = "Fail";
-                        }
+                $response = curl_exec($curl); 
+            
+                curl_close($curl);
+                $logresponse =   json_encode($response);                   
+                $response_array = json_decode($response, true);
+                $successres = $response_array[0]['code'];
+                if($successres==0) 
+                {
+                    $successstatus  = "Success";
+                }
+                else 
+                {
+                    $successstatus  = "Fail";
+                }
 
-                $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$paramArray);
+                if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+                    $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$paramArray);
+                }else{
+                    
+                    $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$paramArray);
+                }
+
+                //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$paramArray);
                 return $response;
         }
 
@@ -3501,7 +3692,14 @@ class Ccompany_model extends CI_Model {
             $successstatus  = "Fail";
         }
 
-        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$param);
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$param);
+        }else{
+            
+            $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$param);
+        }
+
+        //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$param);
         return $response;
     }
 
@@ -3594,7 +3792,13 @@ class Ccompany_model extends CI_Model {
             $successstatus  = "Fail";
         }
 
-        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],"productType=$product_type&service=$service&password=$password&sender_email=$sender_email&sender_name=$s_name&sender_city=$s_city&sender_phone=$s_phone&sender_address=$s_address&Receiver_name=$Receiver_name&Receiver_email=$Receiver_email&Receiver_address=$Receiver_address&Receiver_phone=$Receiver_phone&Reciever_city=$Reciever_city&Weight=$weight&Description=$description&NumberOfParcel=$NumberOfParcel&BookingMode=$pay_mode&codValue=$codValue&refrence_id=$booking_id&product_price=$product_price&shippers_ref_no=$shipper_refer_number");
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],"productType=$product_type&service=$service&password=$password&sender_email=$sender_email&sender_name=$s_name&sender_city=$s_city&sender_phone=$s_phone&sender_address=$s_address&Receiver_name=$Receiver_name&Receiver_email=$Receiver_email&Receiver_address=$Receiver_address&Receiver_phone=$Receiver_phone&Reciever_city=$Reciever_city&Weight=$weight&Description=$description&NumberOfParcel=$NumberOfParcel&BookingMode=$pay_mode&codValue=$codValue&refrence_id=$booking_id&product_price=$product_price&shippers_ref_no=$shipper_refer_number");
+        }else{
+            
+            $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],"productType=$product_type&service=$service&password=$password&sender_email=$sender_email&sender_name=$s_name&sender_city=$s_city&sender_phone=$s_phone&sender_address=$s_address&Receiver_name=$Receiver_name&Receiver_email=$Receiver_email&Receiver_address=$Receiver_address&Receiver_phone=$Receiver_phone&Reciever_city=$Reciever_city&Weight=$weight&Description=$description&NumberOfParcel=$NumberOfParcel&BookingMode=$pay_mode&codValue=$codValue&refrence_id=$booking_id&product_price=$product_price&shippers_ref_no=$shipper_refer_number");
+        }
+       // $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],"productType=$product_type&service=$service&password=$password&sender_email=$sender_email&sender_name=$s_name&sender_city=$s_city&sender_phone=$s_phone&sender_address=$s_address&Receiver_name=$Receiver_name&Receiver_email=$Receiver_email&Receiver_address=$Receiver_address&Receiver_phone=$Receiver_phone&Reciever_city=$Reciever_city&Weight=$weight&Description=$description&NumberOfParcel=$NumberOfParcel&BookingMode=$pay_mode&codValue=$codValue&refrence_id=$booking_id&product_price=$product_price&shippers_ref_no=$shipper_refer_number");
         
         return $response;
     }
@@ -3687,7 +3891,14 @@ class Ccompany_model extends CI_Model {
             $successstatus  = "Fail";
         }
 
-        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],"productType=$product_type&service=$service&password=$password&sender_email=$sender_email&sender_name=$s_name&sender_city=$s_city&sender_phone=$s_phone&sender_address=$s_address&Receiver_name=$Receiver_name&Receiver_email=$Receiver_email&Receiver_address=$Receiver_address&Receiver_phone=$Receiver_phone&Reciever_city=$Reciever_city&Weight=$weight&Description=$description&NumberOfParcel=$NumberOfParcel&BookingMode=$pay_mode&codValue=$codValue&refrence_id=$booking_id&product_price=$product_price&shippers_ref_no=$shipper_refer_number");
+
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],"productType=$product_type&service=$service&password=$password&sender_email=$sender_email&sender_name=$s_name&sender_city=$s_city&sender_phone=$s_phone&sender_address=$s_address&Receiver_name=$Receiver_name&Receiver_email=$Receiver_email&Receiver_address=$Receiver_address&Receiver_phone=$Receiver_phone&Reciever_city=$Reciever_city&Weight=$weight&Description=$description&NumberOfParcel=$NumberOfParcel&BookingMode=$pay_mode&codValue=$codValue&refrence_id=$booking_id&product_price=$product_price&shippers_ref_no=$shipper_refer_number");
+        }else{
+            
+            $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],"productType=$product_type&service=$service&password=$password&sender_email=$sender_email&sender_name=$s_name&sender_city=$s_city&sender_phone=$s_phone&sender_address=$s_address&Receiver_name=$Receiver_name&Receiver_email=$Receiver_email&Receiver_address=$Receiver_address&Receiver_phone=$Receiver_phone&Reciever_city=$Reciever_city&Weight=$weight&Description=$description&NumberOfParcel=$NumberOfParcel&BookingMode=$pay_mode&codValue=$codValue&refrence_id=$booking_id&product_price=$product_price&shippers_ref_no=$shipper_refer_number");
+        }
+        //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],"productType=$product_type&service=$service&password=$password&sender_email=$sender_email&sender_name=$s_name&sender_city=$s_city&sender_phone=$s_phone&sender_address=$s_address&Receiver_name=$Receiver_name&Receiver_email=$Receiver_email&Receiver_address=$Receiver_address&Receiver_phone=$Receiver_phone&Reciever_city=$Reciever_city&Weight=$weight&Description=$description&NumberOfParcel=$NumberOfParcel&BookingMode=$pay_mode&codValue=$codValue&refrence_id=$booking_id&product_price=$product_price&shippers_ref_no=$shipper_refer_number");
         
         return $responsedata;
     }
@@ -3806,6 +4017,12 @@ class Ccompany_model extends CI_Model {
             $successstatus  = "Fail";
         }
 
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$dataJson);
+        }else{
+            
+            $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$dataJson);
+        }
         $log = $this->shipmentLog($c_id, $responsedata,$successstatus, $ShipArr['slip_no'],$dataJson);
         
         return $responsedata;
@@ -3913,7 +4130,13 @@ class Ccompany_model extends CI_Model {
             $successstatus = "Failed";
             $logresponse = "Reciver city is empty.";
 
-            $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
+            if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+                $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],'');
+            }else{
+                
+                $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],'');
+            }
+            //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no']);
             $responseArray['Message'] = $logresponse;
             return $responseArray;
         }
@@ -4017,7 +4240,15 @@ class Ccompany_model extends CI_Model {
         }else{
             $successstatus = "Success";
         }
-        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$params);
+
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$params);
+        }else{
+            
+            $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$params);
+        }
+
+        //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$params);
         
         return $responseArray;
     }
@@ -4127,7 +4358,15 @@ class Ccompany_model extends CI_Model {
             } else {
                     $successstatus = "Fail";
             }
-            $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_final_date);
+
+            if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+                $this->shipmentLogReverse($c_id, $response,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$json_final_date);
+            }else{
+                
+                $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_final_date);
+            }
+
+            //$log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_final_date);
             return $responseArray;
     }
 
@@ -4287,7 +4526,15 @@ class Ccompany_model extends CI_Model {
             else {
                 $error = 'reciever city empty';
                 $responseArray['field.'][0] = $error;
-                $log = $this->shipmentLog($c_id, $error,'Fail', $ShipArr['slip_no'],$json_final_date);
+
+                if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+                    $this->shipmentLogReverse($c_id, $error,'Fail', $ShipArr['slip_no'],$ShipArr['old_slip_no'],$json_final_date);
+                }else{
+                    
+                    $this->shipmentLog($c_id, $error,'Fail', $ShipArr['slip_no'],$json_final_date);
+                }
+
+                //$log = $this->shipmentLog($c_id, $error,'Fail', $ShipArr['slip_no'],$json_final_date);
                 return $responseArray;
             }
             $responseArray = json_decode($response, true);            
@@ -4302,7 +4549,15 @@ class Ccompany_model extends CI_Model {
             } else {
                     $successstatus = "Fail";
             }
-            $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_final_date);
+
+            if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+                $this->shipmentLogReverse($c_id, $response,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$json_final_date);
+            }else{
+                
+                $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_final_date);
+            }
+
+            //$log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_final_date);
             return $responseArray;
     }
 
@@ -4511,7 +4766,15 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
         }else{
             $successstatus = "Fail";
         }
-        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_params);
+
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$json_params);
+        }else{
+            
+            $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_params);
+        }
+
+        //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_params);
         
         return array("error"=>$errorFlag,'message'=>'','data'=>$responseData);       
     }
@@ -4657,13 +4920,21 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
                 //print_r($successres);die;
         
                 if ($successres == 'success') 
-                    {
-                            $successstatus = "Success";
-                    } else {
-                            $successstatus = "Fail";
-                    }
-                    $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_final_date);
-                    return $responseArray;
+                {
+                        $successstatus = "Success";
+                } else {
+                        $successstatus = "Fail";
+                }
+
+                if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+                    $this->shipmentLogReverse($c_id, $response,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$json_final_date);
+                }else{
+                    
+                    $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_final_date);
+                }
+
+                //$log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_final_date);
+                return $responseArray;
         }
         
             
@@ -4932,13 +5203,21 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
             //print_r($successres);die;
     
              if ($successres == 'success') 
-                {
-                        $successstatus = "Success";
-                } else {
-                        $successstatus = "Fail";
-                }
-                $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_final_date);
-                return $responseArray;
+            {
+                    $successstatus = "Success";
+            } else {
+                    $successstatus = "Fail";
+            }
+
+            if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+                $this->shipmentLogReverse($c_id, $response,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$json_final_date);
+            }else{
+                
+                $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_final_date);
+            }
+
+            //$log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_final_date);
+            return $responseArray;
     }
     
         
@@ -4990,6 +5269,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
            ) 
         );
         $params = json_encode($requestParams);
+        
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $apiUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
@@ -5004,6 +5284,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
         
         curl_close($ch);
         $responseArray = json_decode($response,TRUE);
+        //print "<pre>"; print_r($responseArray);die;
         if($responseArray['code'] == 200  && $responseArray['message'] == 'success'){
             $token = $responseArray['data']['accessToken'];
         }else{
@@ -5016,9 +5297,9 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
     {   
        // $sender_default_city = Getselletdetails($super_id);
         // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
-        $sender_address = $ShipArr['sender_address'];
+        //$sender_address = $ShipArr['sender_address'];
         
-        $apiUrl = $counrierArr['api_url']."client/order/createOrder";
+        $apiUrl = $counrierArr['api_url']."client/order/createB2cOrder";
         $customerID = $counrierArr['courier_account_no'];
         $timestamp =  strtotime(date("Y-m-d H:i:s")) * 1000;
         $sign = $counrierArr['auth_token'];
@@ -5039,6 +5320,15 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
         $lang = getdestinationfieldshow_auto_array($ShipArr['destination'], 'longitute',$super_id);
         $country = getdestinationfieldshow_auto_array($ShipArr['destination'], 'country',$super_id);
         
+        //print "<pre>";print_r($ShipArr);die;
+        $sender_address = $ShipArr['sender_address'];
+        //echo $sender_address;die;
+        $sender_city = getdestinationfieldshow_auto_array($ShipArr['origin'], 'imile_city', $super_id);
+        $sender_country = getdestinationfieldshow_auto_array($ShipArr['origin'], 'country',$super_id);
+        $sender_lat = getdestinationfieldshow_auto_array($ShipArr['origin'], 'latitute',$super_id);
+        $sender_lang = getdestinationfieldshow_auto_array($ShipArr['origin'], 'longitute',$super_id);
+        $selleremail = $ShipArr['sender_email'];
+        $sellerphone = $ShipArr['sender_phone'];
         
         if(empty($box_pieces1)){
             $box_pieces = 1;
@@ -5072,12 +5362,24 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
            "signMethod"=>"SimpleKey",
            "version"=>"1.0.0",
            "timestamp"=>$timestamp,//strtotime(date('Y-m-d :i:s')),
-           "timeZone"=>"+3",
+           "timeZone"=>"+4",
            "Sign"=>$sign,
            "param"=>array(
               "orderCode"=>$ShipArr['slip_no'],
               "orderType"=> "100", // 100: Delivery order 200: return order 400: Refund order 500: B2B order 800: Forward order
+              "oldExpressNo"=> "",
+              "deliveryType"=> "Self",
               "consignor"=>$userName,
+              "consignorContact"=> $sellername,
+              "consignorPhone"=> $sellerphone,
+              "consignorMobile"=> "",
+              "consignorCountry"=> 'KSA',//$sender_country,
+              "consignorProvince"=> "",
+              "consignorCity"=> $sender_city,
+              "consignorArea"=> "",
+              "consignorAddress"=> $sender_address,
+              "consignorLongitude"=>$sender_lang,
+              "consignorLatitude"=> $sender_lat,
               "consignee"=>$Receiver_name, //receiver name
               "consigneeContact"=>$Receiver_name,
               "consigneeMobile"=>"",
@@ -5134,7 +5436,15 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
         }else{
             $successstatus = "Failed";
         }
-        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$params);
+
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$params);
+        }else{
+            
+            $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$params);
+        }
+
+        //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$params);
         
         return $responseArray;
         
@@ -5156,21 +5466,21 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
         
 
         if(empty($box_pieces1))
-            {
-                $box_pieces = 1;
-            }
-            else
-            { 
-                 $box_pieces = $box_pieces1 ; 
-            }
-    
-            if($ShipArr['weight']==0)
-            {  
-                $weight= 1;
-            }
-            else { 
-                $weight = $ShipArr['weight'] ; 
-            }
+        {
+            $box_pieces = 1;
+        }
+        else
+        { 
+                $box_pieces = $box_pieces1 ; 
+        }
+
+        if($ShipArr['weight']==0)
+        {  
+            $weight= 1;
+        }
+        else { 
+            $weight = $ShipArr['weight'] ; 
+        }
     
 
         if ($ShipArr['pay_mode'] == 'COD') {
@@ -5256,7 +5566,15 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
             $successstatus  = "Fail";
         }
 
-        $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$params);
+
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $response,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$params);
+        }else{
+            
+            $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$params);
+        }
+
+        //$log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$params);
         return $responseData;
     }
 
@@ -5371,6 +5689,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
             "pack_invoice_no" => "",
         );
         $all_param_data = json_encode($param);
+        //echo $all_param_data;die;
         $headers = array(
             "Accept:application/json"
         );
@@ -5381,8 +5700,11 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $all_param_data);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $response = curl_exec($ch);
         curl_close($ch);
+        
         $responseArray = json_decode($response, true);     
         $logresponse =   json_encode($response);  
     
@@ -5396,15 +5718,56 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
             $successstatus  = "Fail";
         }
 
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$all_param_data);
+        }else{
+            
+            $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$all_param_data);
+        }
 
-        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$all_param_array);
-        return $responseArray;
+        //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$all_param_data);
+        return $response;
         }else{ 
             $responseArray = array('data'=> 'Reciver City Empty', 'code'=>1) ;
-            return $responseArray;
+            return json_encode($responseArray);
         }
     }
     
+    function Tamex_label($tamex_slip_no, $apikey, $url) {
+
+        $param_data = array(
+            "apikey" => $apikey,
+            "pack_awb" => $tamex_slip_no,
+        );
+        $all_param_data = json_encode($param_data);
+        
+        $headers = array(
+            "Accept:application/json"
+        );
+  
+        $curl = curl_init();
+  
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_SSL_VERIFYHOST=> 0,
+            CURLOPT_SSL_VERIFYPEER=>0,
+            CURLOPT_POSTFIELDS => $all_param_data,
+            CURLOPT_HTTPHEADER => $headers,
+        ));
+  
+        $response = curl_exec($curl);
+        
+        curl_close($curl);
+        return $response;
+  }
+
     public function SLSArray($sellername = null ,array $ShipArr, array $counrierArr, $complete_sku = null,$box_pieces1 = null,$c_id=null,$super_id=null) 
     {
         $sender_address =$ShipArr['sender_address'];
@@ -5519,7 +5882,15 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
         } else {
             $successstatus = "Fail";
         }
-        $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_final_data);
+
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $response,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$json_final_data);
+        }else{
+            
+            $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_final_data);
+        }
+
+       // $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_final_data);
         return $responseArray;
     }
 
@@ -5674,7 +6045,15 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
                 } else {
                     $successstatus = "Fail";
                 }
-                $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$details_encode);
+
+                if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+                    $this->shipmentLogReverse($c_id, $response,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$details_encode);
+                }else{
+                    
+                    $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$details_encode);
+                }
+
+                //$log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$details_encode);
                 return $responseArray;
 
             
@@ -5868,13 +6247,21 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
             $successres = $responseArray['errors'];
             
             if (empty($successres)) 
-                {
-                        $successstatus = "Success";
-                } else {
-                        $successstatus = "Fail";
-                }
-                $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_final_date);
-                return $responseArray;
+            {
+                    $successstatus = "Success";
+            } else {
+                    $successstatus = "Fail";
+            }
+
+            if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+                $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$json_final_date);
+            }else{
+                
+                $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_final_date);
+            }
+
+            //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_final_date);
+            return $responseArray;
     }
     public function Postagexp_auth($counrierArr=null){
       
@@ -6031,13 +6418,21 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
             //print_r($successres);die;
     
              if (empty($successres)) 
-                {
-                        $successstatus = "Success";
-                } else {
-                        $successstatus = "Fail";
-                }
-            $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_final_date);
-                return $responseArray;
+            {
+                    $successstatus = "Success";
+            } else {
+                    $successstatus = "Fail";
+            }
+
+            if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+                $this->shipmentLogReverse($c_id, $response,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$json_final_date);
+            }else{
+                
+                $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_final_date);
+            }
+
+            //$log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_final_date);
+            return $responseArray;
     }
     public function SMSAEgyptArray($sellername = null ,$ShipArr, $counrierArr, $complete_sku,$box_pieces1,$c_id,$super_id) {
             //$sender_default_city = Getselletdetails_new($super_id);
@@ -6159,23 +6554,31 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
         $respon = trim($check);
         $respon = str_ireplace(array("soap:", "<?xml version=\"1.0\" encoding=\"utf-8\"?>"), "", $response);
         $xml2 = new SimpleXMLElement($respon);
-            $again = $xml2;
-            $a = array("qwb" => $again);
+        $again = $xml2;
+        $a = array("qwb" => $again);
 
-            $complicated = ($a['qwb']->Body->addShipResponse->addShipResult[0]);
+        $complicated = ($a['qwb']->Body->addShipResponse->addShipResult[0]);
 
-            if (preg_match('/\bFailed\b/', $complicated)) {
-                $ret = $complicated;
+        if (preg_match('/\bFailed\b/', $complicated)) {
+            $ret = $complicated;
 
-            } 
-             if (empty($ret)) 
-            {
-                $successstatus  = "Success";
-            }else {
-                $successstatus  = "Fail";
-            }
+        } 
+            if (empty($ret)) 
+        {
+            $successstatus  = "Success";
+        }else {
+            $successstatus  = "Fail";
+        }
 
-        $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$SMSAXML);
+
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $response,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$SMSAXML);
+        }else{
+            
+            $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$SMSAXML);
+        }
+
+        //$this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$SMSAXML);
 
 
         return $respon;
@@ -6380,7 +6783,15 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
             $successstatus = "Fail";
             $errorFlag = TRUE;
         }
-        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_params);
+
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$json_params);
+        }else{
+            
+            $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_params);
+        }
+
+        //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_params);
         
         return array("error"=>$errorFlag,'message'=>'','data'=>$responseData);
     }
@@ -6591,7 +7002,15 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
             $successstatus = "Fail";
         }
 
-        $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_final_date);
+
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$json_final_date);
+        }else{
+            
+            $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_final_date);
+        }
+
+        //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_final_date);
         return $responseArray;
     }   
         
@@ -6806,7 +7225,14 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
             {
                  $response = array('error'=>true,'message'=> 'Receiver city empty' ); 
                  $responsejson = json_encode($response);
-                 $log = $this->shipmentLog($c_id, $responsejson ,"Fail", $ShipArr['slip_no'],$json_final_date);
+
+                 if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+                    $this->shipmentLogReverse($c_id, $responsejson,"Fail", $ShipArr['slip_no'],$ShipArr['old_slip_no'],$json_final_date);
+                }else{
+                    
+                    $this->shipmentLog($c_id, $responsejson,"Fail", $ShipArr['slip_no'],$json_final_date);
+                }
+                 //$log = $this->shipmentLog($c_id, $responsejson ,"Fail", $ShipArr['slip_no'],$json_final_date);
                  return $response;
             }
             else {
@@ -6838,12 +7264,20 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
             $successres = $responseArray['error'];
             //print_r($successres);die;
             if (empty($successres)) 
-                {
-                        $successstatus = "Success";
-                } else {
-                        $successstatus = "Fail";
-                }
-            $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_final_date);
+            {
+                    $successstatus = "Success";
+            } else {
+                    $successstatus = "Fail";
+            }
+
+            if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+                $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$json_final_date);
+            }else{
+                
+                $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_final_date);
+            }
+
+            //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_final_date);
             return $responseArray;
     }
     
@@ -6967,9 +7401,17 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
                       
             if (empty($receiver_city))
             {  
-                 $response = array('reason'=> 'Receiver city empty' ); 
-                 $logresponse = json_encode($response);
-                 $this->shipmentLog($c_id, $logresponse,'Fail', $ShipArr['slip_no'],$json_final_date);
+                $response = array('reason'=> 'Receiver city empty' ); 
+                $logresponse = json_encode($response);
+
+                if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+                    $this->shipmentLogReverse($c_id, $logresponse,'Fail', $ShipArr['slip_no'],$ShipArr['old_slip_no'],$json_final_date);
+                }else{
+                    
+                    $this->shipmentLog($c_id, $logresponse,'Fail', $ShipArr['slip_no'],$json_final_date);
+                }
+
+                 //$this->shipmentLog($c_id, $logresponse,'Fail', $ShipArr['slip_no'],$json_final_date);
                  return $response;
             }
             else {
@@ -7008,7 +7450,15 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
             } else {
                     $successstatus = "Fail";
             }
-            $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_final_date);
+
+            if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+                $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$json_final_date);
+            }else{
+                
+                $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_final_date);
+            }
+
+           // $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_final_date);
             return $responseArray;
     }
     
@@ -7203,13 +7653,21 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
             //print_r($successres);die;
     
              if ($successres == 'success') 
-                {
-                        $successstatus = "Success";
-                } else {
-                        $successstatus = "Fail";
-                }
-                $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_final_date);
-                return $responseArray;
+            {
+                    $successstatus = "Success";
+            } else {
+                    $successstatus = "Fail";
+            }
+
+            if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+                $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$json_final_date);
+            }else{
+                
+                $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_final_date);
+            }
+
+            //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_final_date);
+            return $responseArray;
     }
 
     public function BAWANI_label($client_awb = null,$counrierArr= null, $Auth_token=null) {
@@ -7419,13 +7877,21 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
             //print_r($successres);die;
     
              if ($successres == 'success') 
-                {
-                        $successstatus = "Success";
-                } else {
-                        $successstatus = "Fail";
-                }
-                $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_final_date );
-                return $responseArray;
+            {
+                    $successstatus = "Success";
+            } else {
+                    $successstatus = "Fail";
+            }
+
+            if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+                $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$json_final_date);
+            }else{
+                
+                $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_final_date);
+            }
+
+            //$log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_final_date );
+            return $responseArray;
     }
     
         
@@ -7594,7 +8060,14 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
             $response = json_encode($responseData);
         }
         
-        $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_string);
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $response,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$json_string);
+        }else{
+            
+            $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_string);
+        }
+
+        //$log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_string);
         return $responseData;
         
     }
@@ -7744,7 +8217,14 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
             $response = json_encode($responseData);
         }
         
-        $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_string);
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $response,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$json_string);
+        }else{
+            
+            $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_string);
+        }
+
+       // $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_string);
         return $responseData;
         
     }
@@ -7970,12 +8450,20 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
             //print_r($successres);die;
 
              if ($successres) 
-                {
-                        $successstatus = "Success";
-                } else {
-                        $successstatus = "Fail";
-                }
-            $log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_final_date);
+            {
+                    $successstatus = "Success";
+            } else {
+                    $successstatus = "Fail";
+            }
+
+            if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+                $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$json_final_date);
+            }else{
+                
+                $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_final_date);
+            }
+
+            //$log = $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$json_final_date);
             return $responseArray;
         
     }
@@ -8127,15 +8615,869 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
             //print_r($successres);die;
     
              if ($successres == 'success') 
-                {
-                        $successstatus = "Success";
-                } else {
-                        $successstatus = "Fail";
-                }
-                $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'], $json_final_date);
-                return $responseArray;
+            {
+                    $successstatus = "Success";
+            } else {
+                    $successstatus = "Fail";
+            }
+
+            if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+                $this->shipmentLogReverse($c_id, $response,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$json_final_date);
+            }else{
+                
+                $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_final_date);
+            }
+
+            //$log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'], $json_final_date);
+            return $responseArray;
     }
 
+    public function AJOUL_AUTH($sellername =null, $courierArr = array(),$ShipArr = array(), $c_id= null, $box_pieces1= null, $complete_sku= null, $super_id = null){
+
+
+        
+        $sender_city_code = getdestinationfieldshow($ShipArr['origin'], 'ajoul_city_code', $super_id);
+        $sender_country_code = getdestinationfieldshow($ShipArr['origin'], 'country_code', $super_id);
+        
+
+        $receiver_city_code = getdestinationfieldshow($ShipArr['destination'], 'ajoul_city_code', $super_id);
+        $receiver_country_code = getdestinationfieldshow($ShipArr['destination'], 'country_code' , $super_id);
+        
+        $store_address = $ShipArr['sender_address'];
+        $senderemail = $ShipArr['sender_email'];
+        $senderphone = $ShipArr['sender_phone'];
+
+        $API_URL = $courierArr['api_url'] . "shipment/create";
+
+
+        if (empty($box_pieces1)) {
+            $box_pieces = 1;
+        } else {
+            $box_pieces = $box_pieces1;
+        }
+
+        if ($ShipArr['weight'] == 0) {
+            $weight = 1;
+        } else {
+            $weight = $ShipArr['weight'];
+        }
+
+        
+        if($ShipArr['mode'] == "COD"){
+            $cod_amount = $ShipArr['total_cod_amt'];
+
+        }
+        elseif ($ShipArr['mode'] == 'CC'){
+            $cod_amount = 0;
+        }
+        
+        $date_time = strtotime(date('Y-m-d h:i:s'));                              
+       
+        $CURRENT_DATE = date('Y-m-d',$date_time);
+        $CURRENT_TIME = date('H:i',$date_time);
+      
+        $details = array(
+            'receiver'=>array(
+                'name'=>$ShipArr['reciever_name'],
+                'country_code'=>$receiver_country_code,
+                'city_code'=>$receiver_city_code,
+                'address'=>$ShipArr['reciever_address'],
+                'zip_code'=>'',
+                'phone'=>$ShipArr['reciever_phone'],
+                'email'=>!empty($ShipArr['reciever_email'])?$ShipArr['reciever_email']:'no@no.com'
+            ),
+            'sender'=>array(
+                'name'=>$sellername,
+                'country_code'=>$sender_country_code,
+                'city_code'=>$sender_city_code,
+                'address'=>$store_address,
+                'zip_code'=>'',
+                'phone'=>$senderphone,
+                'email'=>$senderemail
+            ),
+            "reference"=> $ShipArr['slip_no'],
+            "pick_date"=>$CURRENT_DATE,//"2018-08-06",
+            "pickup_time"=> $CURRENT_TIME,//"12:49",
+            "product_type"=> "104",
+            "payment_mode"=> $ShipArr['mode'],
+            "parcel_quantity"=> $box_pieces,
+            "parcel_weight"=> $weight,
+            "service_id"=> "1",
+            "description"=> $complete_sku,
+            "sku"=> $complete_sku,
+            "weight_total"=> $weight,
+            "total_cod_amount"=> $cod_amount
+        );    
+
+        if(empty($receiver_city_code)){
+            $responseArray = array('errors'=>'Receiver City Code is empty');
+
+            if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+                $this->shipmentLogReverse($c_id, json_encode($responseArray),'Fail', $ShipArr['slip_no'],$ShipArr['old_slip_no'],'');
+            }else{
+                
+                $this->shipmentLog($c_id, json_encode($responseArray),'Fail', $ShipArr['slip_no'], '');
+            }
+            
+            return $responseArray;
+        }
+
+        $json_final_date = json_encode($details);
+        //echo $json_final_date;die;
+
+        $url =  "http://fastcoo.net/fastcoo-tech/fs_files/ajoul_api.php";
+        $token_api_url = $courierArr['api_url']."authorize?client_secret=".$courierArr['courier_pin_no']."&client_id=".$courierArr['courier_account_no']."&username=".$courierArr['user_name']."&password=".$courierArr['password'];
+        $Allarra = array('token_api_url' => $token_api_url,'action'=>'get_token','ship_url'=>$API_URL,'data'=>$json_final_date);
+
+        
+
+        $dataJson = json_encode($Allarra);
+        
+        $headers = array("Content-type: application/json");
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataJson);
+        //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,  0);
+        //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,  0);
+        $response = curl_exec($ch);
+        
+        curl_close($ch);
+        $responseArray = json_decode($response,true);
+        if (isset($responseArray['Shipment']) && !empty($responseArray['Shipment'])) 
+        {
+                $successstatus = "Success";
+        } else {
+                $successstatus = "Fail";
+        }
+
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $response,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$json_final_date);
+        }else{
+            
+            $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'], $json_final_date);
+        }
+
+        //$log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'], $json_final_date);
+        return $responseArray;
+    }
+
+
+    public function ShipsyDataArray($sellername =null, $ShipArr =array(), $counrierArr =array(), $c_id=null, $box_pieces1=null, $complete_sku=null, $super_id=null){
+
+        
+        
+        $api_url = $counrierArr['api_url']."softdata";
+         
+        $xapi = $counrierArr['auth_token'];
+        
+        $customer_code = $counrierArr['courier_pin_no'];
+        
+        $store_address = $ShipArr['sender_address'];
+        $senderemail = $ShipArr['sender_email'];
+        $senderphone = $ShipArr['sender_phone'];
+
+        switch($counrierArr['company']){
+            case 'FLOW' :       
+                $city_column = 'flow_city'; 
+                $service_type_id = 'DELIVERY';
+                break;
+            case 'Mahmool' :    
+                $city_column = 'mahmool_city'; 
+                $service_type_id = 'Dry';
+                break;
+            default:            
+                $city_column = '';       
+                $service_type_id = '';         
+                break;
+        }
+        
+
+
+        $sender_city = getdestinationfieldshow($ShipArr['destination'], $city_column,$super_id);
+        $receiver_city= getdestinationfieldshow($ShipArr['destination'], $city_column,$super_id);
+       
+
+       if (empty($box_pieces1)) {
+           $box_pieces = 1;
+       } else {
+           $box_pieces = $box_pieces1;
+       }
+
+       if ($ShipArr['weight'] == 0) {
+           $weight = 1;
+       } else {
+           $weight = $ShipArr['weight'];
+       }
+
+       $pay_mode=$ShipArr['mode'];
+       if($ShipArr['mode'] == "COD"){
+           $cod_amount = $ShipArr['total_cod_amt'];
+           $pay_mode = "cash";
+       }
+       elseif ($ShipArr['mode'] == 'CC'){
+           $cod_amount = 0;
+           $pay_mode = "cc";
+       }
+       
+       if(empty( $receiver_city)){
+           $logresponse = "Receiver city empty";
+           $successstatus  = "Fail";
+
+            if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+                $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],'');
+            }else{
+                
+                $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],'');
+            }
+
+           
+           return array('data'=>array(array('message'=>'receiver city empty')));
+       }
+
+       for($i=1;$i<=$box_pieces;$i++){
+        $piecec_array[] = array(
+            "description"=> $complete_sku,
+            "declared_value"=> $cod_amount,
+            "weight"=>$weight,
+            "height"=> "",
+            "length"=> "",
+            "width"=> "",
+            "quantity"=> 1,
+            "product_code"=> "",
+            "volume"=>"",
+            "volume_unit"=> "",
+            "dimension_unit"=>"",
+            "weight_unit"=> "kg"                            
+           );
+       }
+       //print "<pre>"; print_r($piecec_array);die;
+
+       $data_array = array(
+           'consignments'=>array(
+               array(
+                   "customer_code"=> $customer_code,
+                   "customer_reference_number"=> $ShipArr['slip_no'],
+                   "service_type_id" => $service_type_id,//"DELIVERY",
+                   "load_type" => "NON-DOCUMENT",
+                   "description" => $complete_sku,
+                   "cod_favor_of"=> "",
+                   "cod_collection_mode"=> $pay_mode,
+                   "dimension_unit"=>"",
+                   "length"=> "",
+                   "width"=>"",
+                   "height"=> "",
+                   "weight_unit"=> "kg",
+                   "weight"=> $weight,
+                   "declared_value"=> $cod_amount,
+                   "cod_amount"=>$cod_amount,
+                   "num_pieces"=>$box_pieces,
+                   "is_risk_surcharge_applicable"=>"",
+                   "origin_details"=>array(
+
+                       "name" => $sellername,
+                       "phone"=> $senderphone,
+                       "alternate_phone"=> "",
+                       "address_line_1"=> $store_address,
+                       "address_line_2"=> "",
+                       "pincode"=> $sender_city,
+                       "city"=> $sender_city,
+                       "state"=> ""
+                   ),
+                   "destination_details"=>array(
+                       "name" => $ShipArr['reciever_name'],
+                       "phone"=> $ShipArr['reciever_phone'],
+                       "alternate_phone" => "",
+                       "address_line_1" => $ShipArr['reciever_address'],
+                       "address_line_2" => "",
+                       "pincode" => $receiver_city,
+                       "city" => $receiver_city,
+                       "state" => ""
+                   ),
+                   "return_details"=>array(
+                       "name" => null,
+                       "phone"=> null,
+                       "alternate_phone"=> null,
+                       "address_line_1"=> null,
+                       "address_line_2"=> null,
+                       "pincode"=> null,
+                       "city"=> null,
+                       "state" => null
+                   ),
+                   "exceptional_return_details"=>array(
+                       "name" => null,
+                       "phone" => null,
+                       "alternate_phone" => null,
+                       "address_line_1" => null,
+                       "address_line_2" => null,
+                       "pincode" => null,
+                       "city" => null,
+                       "state" => null
+                   ),
+                   "type_of_delivery"=>null,
+                   "pieces_detail"=>$piecec_array,
+                   "eway_bill"=>null,
+                   "invoice_number" => null,
+                   "invoice_date" => null,
+                   "commodity_name" => null,
+                   "consignment_type" => null,
+                   "rescheduled_date" => ""
+               )
+           )
+       );
+
+       $json_string= json_encode($data_array);
+       //echo $json_string;die;
+       $curl = curl_init();
+
+       curl_setopt_array($curl, array(
+       CURLOPT_URL => $api_url,
+       CURLOPT_RETURNTRANSFER => true,
+       CURLOPT_ENCODING => '',
+       CURLOPT_MAXREDIRS => 10,
+       CURLOPT_TIMEOUT => 0,
+       CURLOPT_FOLLOWLOCATION => true,
+       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+       CURLOPT_CUSTOMREQUEST => 'POST',
+       CURLOPT_POSTFIELDS =>$json_string,
+       CURLOPT_HTTPHEADER => array(
+           'api-key: '.$xapi,
+           'Content-Type: application/json'
+         ),
+       ));
+       
+       $response = curl_exec($curl);
+       curl_close($curl);
+       //echo $response;die;
+       $response_array = json_decode($response,true);
+       if($response_array['data'][0]['success'] == true){
+           $successstatus  = "Success";
+       }else{
+           $successstatus  = "Fail";
+       }
+
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $response,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$json_string);
+        }else{
+            
+            $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_string);
+        }
+       
+       //$log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_string);
+       return $response_array;
+
+    }
+
+    public function ShipsyLabel($counrierArr= array(), $client_awb =null){
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => $counrierArr['api_url'].'shippinglabel/stream?reference_number='.$client_awb,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json',
+            'api-key: '.$counrierArr['auth_token'],
+            'cache-control: no-cache'
+        ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        return $response;
+
+    }
+
+
+    public function UPSLabel($client_awb, $courierArr = array()){
+        $api_url = $courierArr['api_url']."/labels";
+
+        $data_array = array(
+            "LabelRecoveryRequest"=>array(
+                "LabelSpecification"=>array(
+                    "HTTPUserAgent"=>"",
+                    "LabelImageFormat"=>array(
+                        "Code"=>"PDF"
+                    )
+                ),
+                "Translate"=>array(
+                    "LanguageCode"=>"eng",
+                    "DialectCode"=>"US",
+                    "Code"=>"01"
+                ),
+                "LabelDelivery"=>array(
+                    "LabelLinkIndicator"=>"",
+                    "ResendEMailIndicator"=>"",
+                    "EMailMessage"=>array(
+                        "EMailAddress"=>""
+                    )
+                ),
+                "TrackingNumber"=>$client_awb
+            )
+
+        );
+        $username = $courierArr['user_name'];
+        $password = $courierArr['password'];
+        $AccessLicenseNumber = $courierArr['courier_account_no'];
+        $transactionSrc = $courierArr['courier_pin_no'];
+        
+
+        $data_json = json_encode($data_array);
+        
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => $api_url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS =>$data_json,
+        CURLOPT_HTTPHEADER => array(
+            'AccessLicenseNumber: '.$AccessLicenseNumber,
+            'Password: '.$password,
+            'transactionSrc: '.$transactionSrc,
+            'Username: '.$username,
+            'Content-Type: application/json'
+        ),
+        ));
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        $response_array =  json_decode($response, TRUE); 
+        return $response_array;
+
+    }
+    public function UPSArray($sellername= null, array $ShipArr, array $counrierArr, $c_id = null, $box_pieces1 = null,  $complete_sku = null, $super_id = null){
+
+
+        //print "<pre>"; print_r($counrierArr);die;
+        $api_url = $counrierArr['api_url'];
+        $username = $counrierArr['user_name'];
+        $password = $counrierArr['password'];
+        $AccessLicenseNumber = $counrierArr['courier_account_no'];
+        $transactionSrc = $counrierArr['courier_pin_no'];
+        //$transId = $counrierArr['auth_token'];
+        $account_number = $counrierArr['account_entity_code'];
+        $service_code= $counrierArr['service_code'];
+        //print "<pre>"; print_r($counrierArr);die;
+
+
+        $store_address = $ShipArr['sender_address'];
+        $senderemail = $ShipArr['sender_email'];
+        $senderphone = $ShipArr['sender_phone'];
+        $senderzipcode = $ShipArr['sender_phone'];
+
+        
+        
+        $sender_city = getdestinationfieldshow($ShipArr['origin'], 'ups_city',$super_id);
+        $sender_country_code = getdestinationfieldshow($ShipArr['origin'], 'country_code',$super_id);
+        
+        
+        $receiver_city= getdestinationfieldshow($ShipArr['destination'], 'ups_city',$super_id);
+        
+        
+        $receiver_country_code = getdestinationfieldshow($ShipArr['destination'], 'country_code',$super_id);
+
+        $currency = getdestinationfieldshow($ShipArr['destination'], 'currency',$super_id); //"USD";
+
+
+        if (empty($box_pieces1)) {
+            $box_pieces = 1;
+        } else {
+            $box_pieces = $box_pieces1;
+        }
+
+        if ($ShipArr['weight'] == 0) {
+            $weight = 1;
+        } else {
+            $weight = $ShipArr['weight'];
+        }
+
+        $pay_mode=$ShipArr['mode'];
+        $total_amount_to_pay ='';
+        if($ShipArr['mode'] == "COD"){
+            $cod_amount = $ShipArr['total_cod_amt'];
+            $total_amount_to_pay = "COD ".$currency." ".$cod_amount." ".$currency;
+
+        }
+        elseif ($ShipArr['mode'] == 'CC'){
+            $cod_amount = 0;
+            $total_amount_to_pay = "CC ".$currency." ".$cod_amount." ".$currency;
+        }
+
+        if(empty($complete_sku))  {
+            $complete_sku = 'Goods';
+        }
+
+        $post_array = array(
+            "ShipmentRequest"=>array(
+                "Shipment"=>array(
+                    "Description"=>$complete_sku,
+                    "Ref1"=>$pay_mode,
+                    "Ref2"=>$cod_amount,
+                    "ReferenceNumber"=>array(
+                        array(
+                            "Value"=>$ShipArr['slip_no'],
+                            "Value"=>$total_amount_to_pay,
+                        )
+                    ),
+                    // "ReferenceNumber"=>array(
+                    //     "BarCodeIndicator"=>$ShipArr['slip_no'],
+                    //     "Code"=>"",
+                    //     "Value"=>$ShipArr['slip_no']
+                    // ),
+                    "NumOfPiecesInShipment"=>$box_pieces,
+                    "Shipper"=>array(
+                        "Name"=>$sellername,
+                        "AttentionName"=>$sellername,
+                        "CompanyDisplayableName"=>$sellername,
+                        "TaxIdentificationNumber"=>"",
+                        "Phone"=>array(
+                            "Number"=>$senderphone
+                        ),
+                        "ShipperNumber"=>$account_number,
+                        "EMailAddress"=>$senderemail,
+                        "Address"=>array(
+                            "AddressLine"=>$store_address,
+                            "City"=>$sender_city,
+                            "StateProvinceCode"=>$sender_country_code,
+                            "PostalCode"=>"",
+                            "CountryCode"=>$sender_country_code,
+                        )
+                    ),
+                    "ShipTo"=>array(
+                        "Name"=>$ShipArr['reciever_name'],
+                        "AttentionName"=>$ShipArr['reciever_name'],
+                        "Phone"=>array(
+                            "Number"=>$ShipArr['reciever_phone']
+                        ),
+                        "FaxNumber"=>"",
+                        "TaxIdentificationNumber"=>"",
+                        "Address"=>array(
+                            "AddressLine"=>$ShipArr['reciever_address'],
+                            "City"=>$receiver_city,
+                            "StateProvinceCode"=>$receiver_country_code,
+                            "PostalCode"=>"",
+                            "CountryCode"=>$receiver_country_code
+                        )
+                    ),
+                    "ShipFrom"=>array(
+                        "Name"=>$sellername,
+                        "AttentionName"=>$sellername,
+                        "Phone"=>array(
+                            "Number"=>$senderphone
+                        ),
+                        "FaxNumber"=>"",
+                        "TaxIdentificationNumber"=>"",
+                        "Address"=>array(
+                            "AddressLine"=>$store_address,
+                            "City"=>$sender_city,
+                            "StateProvinceCode"=>$sender_country_code,
+                            "PostalCode"=>"",
+                            "CountryCode"=>$sender_country_code
+                        )
+                    ),
+                    "PaymentInformation"=>array(
+                        "ShipmentCharge"=>array(
+                            "Type"=>"01",
+                            "BillShipper"=>array(
+                                "AccountNumber"=>$account_number
+                            )
+                        )
+                    ),
+                    "Service"=>array(
+                        "Code"=>$service_code,
+                        "Description"=>""
+                    ),
+                    "Package"=>array(
+                            "Description"=>$complete_sku,
+                            "Packaging"=>array(
+                                "Code"=>"02"
+                            ),
+                            "PackageWeight"=>array(
+                                "UnitOfMeasurement"=>array(
+                                    "Code"=>"KGS"
+                                ),
+                                "Weight"=>(string)$weight
+                            ),
+                            "PackageServiceOptions"=>""
+                        ),
+                    "ItemizedChargesRequestedIndicator"=>"",
+                    "RatingMethodRequestedIndicator"=>"",
+                    "TaxInformationIndicator"=>"",
+                    "ShipmentRatingOptions"=>array(
+                        "NegotiatedRatesIndicator"=>""
+                    )
+                    
+
+                ),
+                "LabelSpecification"=>array(
+                    "LabelImageFormat"=>array(
+                        "Code"=>"PNG"
+                    )
+                )
+            )
+        );
+
+        $json_string = json_encode($post_array);
+        //echo $json_string;die;
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => $api_url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS =>$json_string,
+        CURLOPT_HTTPHEADER => array(
+            'AccessLicenseNumber: '.$AccessLicenseNumber,
+            'Password: '.$password,
+            //'transId: '.$transId,
+            'transactionSrc: '.$transactionSrc,
+            'Username: '.$username,
+            'Content-Type: application/json'
+        ),
+        ));
+
+        $response = curl_exec($curl);
+        $responseArray = json_decode($response,TRUE);
+
+        curl_close($curl);
+
+        if (isset($responseArray['ShipmentResponse']['Response']['ResponseStatus']) && $responseArray['ShipmentResponse']['Response']['ResponseStatus']['Code'] == 1) 
+        {
+                $successstatus = "Success";
+        } else {
+                $successstatus = "Fail";
+        }
+
+        if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
+            $this->shipmentLogReverse($c_id, $response,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$json_string);
+        }else{
+            
+            $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'],$json_string);
+        }
+
+        //$log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'], $json_string);
+        return $responseArray;
+    
+    }
+
+    public function shipoxDataArray($sellername =null,array $ShipArr, array $counrierArr, $Auth_token = null, $c_id = null, $box_pieces1 = null, $complete_sku=null, $super_id= null) 
+    {
+
+
+                $store_address = $ShipArr['sender_address'];
+                $senderemail = $ShipArr['sender_email'];
+                $senderphone = $ShipArr['sender_phone'];
+                
+                
+                
+                
+                $API_URL = $counrierArr['api_url'] . "v2/customer/order";
+                
+                switch($counrierArr['company']){
+                    case 'Kudhha': 
+                            $city_column = 'kudhha_city';
+                        break;
+                    default: 
+                            $city_column = 'kudhha_city';
+                        break;
+                }
+
+                $sender_city = getdestinationfieldshow($ShipArr['origin'], $city_column, $super_id);        
+                
+                $coutry_code = getdestinationfieldshow($ShipArr['destination'], 'country_code', $super_id);
+
+                $receiver_city= getdestinationfieldshow($ShipArr['destination'], $city_column, $super_id);
+
+                
+                $allowed_city = array("Riyadh","RIYADH", "Ad Diriyah", "Diriyah");
+                
+                if(in_array($receiver_city,$allowed_city)){
+                    switch($counrierArr['company']){
+                        case 'Kudhha': 
+                                $courier_type = 'INSIDE_RIYADH'; 
+                            break;
+                        default: $courier_type = 'NEXT_DAY_DELIVERY'; 
+                            break;
+                    }
+                }else if($coutry_code != "SA" ){
+                    $courier_type = 'INTERNATIONAL_DELIVERY';
+                }else{
+                    $courier_type = 'DOMESTIC_DELIVERY';                    
+                }
+
+                //echo "city=".$courier_type;die;
+
+                
+                
+                //echo $courier_type;die;
+                
+                $currency = "SAR";
+                
+                if (empty($box_pieces1)){
+                $box_pieces = 1;
+                } else {
+                $box_pieces = $box_pieces1;
+                }
+                
+                if ($ShipArr['weight'] == 0) {
+                $weight = 1;
+                } else {
+                $weight = $ShipArr['weight'];
+                }
+
+
+                if($ShipArr['mode'] == "COD"){
+                    $pay_mode = "credit_balance";
+                    $cod_amount = $ShipArr['total_cod_amt'];
+                    $paid = FALSE;
+                }
+                elseif ($ShipArr['mode'] == 'CC'){
+                    $pay_mode = "credit_balance";
+                    $paid = TRUE;
+                    $cod_amount = 0;
+                }
+
+               
+    
+            $sender_data = array(
+                'address_type' => 'residential',
+                'name' =>$sellername,
+                'email' => $senderemail,
+                'apartment'=> "",
+                'building' => '',
+                'street' => $store_address,
+                "city" => array(
+                    "name" =>$sender_city
+                ),
+                "country" => array(
+                    "id" => 191
+                ),
+                
+    
+                    'phone' =>$senderphone,
+                    );
+                  
+    
+                $receiverdata = array(
+                'address_type' => 'residential',
+				'name'=> $ShipArr['reciever_name'],
+                'street' => $ShipArr['reciever_address'],
+                'city' => array(
+                        'name' => $receiver_city
+                    ),
+                    'phone' => $ShipArr['reciever_phone'],
+                    'landmark' => $ShipArr['reciever_address']);
+    
+    
+            $dimensions = array(
+                'weight' => $weight,
+                'width' =>  '',
+                'length' => '',
+                'height' =>'' ,
+                'unit' => '',
+                'domestic' => true
+            );
+            $package_type = array(
+                'courier_type' => $courier_type
+            );
+
+            $charge_items[] = array(
+                'paid' => $paid,
+                'charge' => $cod_amount,
+                'charge_type' => "COD"               
+            );
+    
+            $details = array(
+                'sender_data' => $sender_data,
+                'recipient_data' => $receiverdata,
+                'dimensions' => $dimensions,
+                'package_type' => $package_type,
+                'charge_items' => $charge_items,
+                'recipient_not_available' => 'do_not_deliver',
+                'payment_type' => $pay_mode,
+                'payer' => 'sender',
+                'parcel_value' => $cod_amount,
+                'fragile' => true,
+                'note' => $complete_sku,
+                'piece_count' => $box_pieces,
+                'force_create' => true,
+                "reference_id" => $ShipArr['slip_no']
+            );
+
+            $json_final_date = json_encode($details);
+            //echo $json_final_date;die;
+            //  echo "<pre>";  print_r($json_final_date);  die;
+              
+                     
+            if (empty($receiver_city) || empty($coutry_code))
+            {
+                $successstatus = 'Fail';
+                $responseArray = array('message'=> 'Receiver city or country code empty','status'=>$successstatus); 
+                $response = json_encode($response);
+                $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'], $json_final_date);
+                return $responseArray;
+            }
+            else {
+                $curl = curl_init();    
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => $API_URL,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => $json_final_date,
+                    CURLOPT_HTTPHEADER => array(
+                        'Content-Type: application/json',
+                        'Accept: application/json',
+                        'Authorization:Bearer ' .$Auth_token),
+                ));
+                $response = curl_exec($curl);
+                curl_close($curl);
+            }
+
+            $responseArray = json_decode($response, true);
+            //print "<pre>"; print_r($responseArray);die;
+       
+            $logresponse =   json_encode($response);  
+            
+            $successres = $responseArray['status'];
+            //print_r($successres);die;
+    
+            if ($successres == 'success') 
+            {
+                    $successstatus = "Success";
+            } else {
+                    $successstatus = "Fail";
+            }
+            $log = $this->shipmentLog($c_id, $response,$successstatus, $ShipArr['slip_no'], $json_final_date);
+            return $responseArray;
+    }
 
 
 

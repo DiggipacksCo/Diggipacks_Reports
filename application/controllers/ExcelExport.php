@@ -110,6 +110,22 @@ class ExcelExport extends MY_Controller {
         );
         echo json_encode($response);
     }
+    
+    public function ItemInventoryExport_damage() {
+ 
+         
+        $request = json_decode(file_get_contents('php://input'), true);
+        $result = $this->Excel_export_model->ItemInventoryExport_damage($request);
+        $file_name = 'ItemInventory_damage.csv';
+
+        $response = array(
+            'op' => 'ok',
+            'file_name' => $file_name,
+            'file' => "data:application/vnd.ms-excel;charset=UTF-8;base64," . base64_encode($result)
+        );
+        echo json_encode($response);
+    }
+    
 
 }
 

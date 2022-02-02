@@ -424,6 +424,7 @@ class Offers_model extends CI_Model {
        }
 	
 public function getallsellersdata(){
+	$this->db->select('id,company as name');
      $this->db->where('super_id',$this->session->userdata('user_details')['super_id']);
       $this->db->where('access_fm','Y');
 		$query = $this->db->get('customer');

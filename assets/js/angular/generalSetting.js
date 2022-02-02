@@ -127,6 +127,58 @@ var app = angular.module('log', [])
             };
 
 
+            $scope.loadReverseShipment = function (page_no, reset)
+            {
+                //  disableScreen(1);
+                //$scope.loadershow=true; 
+                console.log(page_no);
+                // console.log($scope.selectedData);    
+                $scope.filterData.page_no = page_no;
+                if (reset == 1)
+                {
+                    $scope.shipData = [];
+                }
+
+                $http({
+                    url: "Generalsetting/loadReversShipLog",
+                    method: "POST",
+                    data: $scope.filterData,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+
+                }).then(function (response) {
+                    console.log(response)
+                    $scope.dropshort = response.data.dropshort;
+                    $scope.totalCount = response.data.count;
+                    //$scope.shipDataexcel = response.data.excelresult;
+                    //$scope.dropexport = response.data.dropexport;
+
+                    if (response.data.result.length > 0) {
+                        angular.forEach(response.data.result, function (value) {
+                            //console.log(value.slip_no)
+
+                            $scope.shipData.push(value);
+
+                        });
+                        //console.log( $scope.shipData)
+                        //$scope.$broadcast('scroll.infiniteScrollComplete');
+                    } else {
+                        $scope.nodata = true
+                    }
+
+                    disableScreen(0);
+                    $scope.loadershow = false;
+
+
+
+                }, function (status, error) {
+
+                    disableScreen(0);
+                    $scope.loadershow = false;
+                })
+
+
+            };
+
             $scope.GetProcessOpenOrder = function (slip_no)
             {
                 disableScreen(1);
