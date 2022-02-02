@@ -158,13 +158,13 @@ class CourierCompany extends MY_Controller  {
             'end_awb_sequence_t'=>$RequestArr['end_awb_sequence_t'],
             'auth_token_t'=>$RequestArr['auth_token_t'],
             'api_url_t'=>$RequestArr['api_url_t'],
-            'customer_care'=>$RequestArr['customer_care'],
             'account_entity_code'=>$RequestArr['account_entity_code'],
             'account_entity_code_t'=>$RequestArr['account_entity_code_t'],
             'account_country_code'=>$RequestArr['account_country_code'],
             'account_country_code_t'=>$RequestArr['account_country_code_t'],
             'service_code'=>$RequestArr['service_code'],
             'service_code_t'=>$RequestArr['service_code_t'],
+
        );
         $UpdateArr_w=array('id'=>$RequestArr['id']);
         
@@ -194,7 +194,6 @@ class CourierCompany extends MY_Controller  {
             'end_awb_sequence_t'=>$RequestArr['end_awb_sequence_t'],
             'auth_token_t'=>$RequestArr['auth_token_t'],
             'api_url_t'=>$RequestArr['api_url_t'],
-            'customer_care'=>$RequestArr['customer_care'],
        );
         $UpdateArr_w=array('id'=>$RequestArr['id']);
         
@@ -677,7 +676,7 @@ class CourierCompany extends MY_Controller  {
                                 'slip_no' => $new_awb_number,
                                 'mode' => $ShipArr['mode']  , 
                                 'pay_mode' => $ShipArr['mode'],
-                                'total_cod_amt' => 0,//$ShipArr['total_cod_amt'],
+                                'total_cod_amt' => $ShipArr['total_cod_amt'],
                                 'pieces' =>  $box_pieces1,
                                 'status_describtion' => $complete_sku,
                                 'weight' => $weight,//$ShipArr['weight'],
@@ -2561,7 +2560,7 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                                     $returnArr['responseError'] = $slipNo . ':' . $response['refrence_id'];
                                     $return= array('status'=>201,'error'=> $returnArr); 
                                     return $return;
-                                }   
+                                }
                             }
                         else if ($company=='Emdad' )
                         {
@@ -2616,7 +2615,7 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                                 $return= array('status'=>201,'error'=> $returnArr); 
                                 return $return;
                                             }
-                                        } 
+                                        }
     } //end company type F code 
 
     }

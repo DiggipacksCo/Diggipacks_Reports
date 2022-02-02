@@ -149,7 +149,7 @@
                 
                 
                  <div  id="Showeditpopid" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-                        <div class="modal-dialog">
+                        <div class="modal-dialog"> 
                             <div class="modal-content">
                                 <div class="modal-header" style="background-color: <?=DEFAULTCOLOR;?>;">
                                     <h5 class="modal-title text-white" id="myModalLabel"><?=lang('lang_Settings_Delivery');?> ({{EditDataArr.company}})</h5>
@@ -261,7 +261,7 @@
                                           
                                     </div>
                                     <div class="col-sm">
-                                        <div class="form-group">
+                                        <div class="form-group"> 
                                             <label class="text-bold">Customer Care Number</label>
                                             	<input type="text"  class="form-control"  aria-describedby="textHelpBlock"  ng-model="EditDataArr.customer_care">
                                         </div>
