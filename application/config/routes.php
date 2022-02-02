@@ -263,7 +263,7 @@ $route['ReverseShipmentLog'] = 'Generalsetting/ReverseShipmentLog';
 
 $route['update_password'] = 'Generalsetting/update_password';
  
-
+$route['reverse_order'] = 'ShipmentR/reverse_view';
 $route['performance']                                     = 'CourierCompany/performance';
 $route['performance_details/(:any)/(:any)/(:any)/(:any)'] = 'Reports/performance_details_3pl/$1/$2/$3/$4';
 //$route['performance_details/(:any)/(:any)/(:any)/(:any)'] = 'CourierCompany/performance_details/$1/$2/$3/$4';

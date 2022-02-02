@@ -4426,7 +4426,7 @@ if(!empty($awbids ))
         else
         {
             if (!empty($filterData['f_from']) && !empty($filterData['f_to'])) {
-                $where = "DATE(shipment_fm.frwd_date) BETWEEN '" . $data['f_from'] . "' AND '" . $filterData['f_to'] . "'";
+                $where = "DATE(shipment_fm.frwd_date) BETWEEN '" . $filterData['f_from'] . "' AND '" . $filterData['f_to'] . "'";
     
     
                 $this->db->where($where);

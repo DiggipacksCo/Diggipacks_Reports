@@ -34,6 +34,43 @@
 
         <!-- Content area -->
         <div class="content" >
+             <?php
+                        if (!empty($this->session->flashdata('errorA'))) {
+                            // print_r($this->session->flashdata('errorA'));
+                            foreach ($this->session->flashdata('errorA')['empty_account_no'] as $validAlert) {
+                                echo '<div class="alert alert-warning"> row "' . $validAlert . '" Seller Account No are empty   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+                            }
+                            foreach ($this->session->flashdata('errorA')['empty_sku'] as $validAlert) {
+                                echo '<div class="alert alert-warning"> row "' . $validAlert . '" Main Item are empty   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+                            }
+                            foreach ($this->session->flashdata('errorA')['empty_qty'] as $validAlert) {
+                                echo '<div class="alert alert-warning"> row "' . $validAlert . '" Qty are invalid   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+                            }
+                             foreach ($this->session->flashdata('errorA')['empty_start_date'] as $validAlert) {
+                                echo '<div class="alert alert-warning"> row "' . $validAlert . '" Start Date invalid   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+                            }
+                             foreach ($this->session->flashdata('errorA')['empty_end_date'] as $validAlert) {
+                                echo '<div class="alert alert-warning"> row "' . $validAlert . '" End Date invalid   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+                            }
+                             foreach ($this->session->flashdata('errorA')['duplicate_promo'] as $validAlert) {
+                                echo '<div class="alert alert-danger"> row "' . $validAlert . '" offer code are  already exists in system   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+                            }
+                            foreach ($this->session->flashdata('errorA')['invalid_account_no'] as $validAlert) {
+                                echo '<div class="alert alert-warning"> row "' . $validAlert . '"  Seller Account no. are invalid   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+                            }
+                             foreach ($this->session->flashdata('errorA')['invalid_sku'] as $validAlert) {
+                                echo '<div class="alert alert-warning"> row "' . $validAlert . '"  Main Item are invalid   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+                            }
+
+                            
+                            foreach ($this->session->flashdata('errorA')['validrow'] as $validAlert) {
+                                echo '<div class="alert alert-success"> This Offer Code "' . $validAlert . '"  Successfully Added.   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+                            }
+
+
+                           
+                        }
+                        ?>
           <!--style="background-color: red;"-->
 <?php if($this->session->flashdata('msg')):?>
 <?= '<div class="alert alert-success">'.$this->session->flashdata('msg').' <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';?> 
