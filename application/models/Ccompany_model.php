@@ -5294,7 +5294,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
         return $token;
     }
     
-    public function iMileArray($sellername = null ,array $ShipArr, array $counrierArr, $complete_sku = null, $c_id = null,$box_pieces1 = null,$auth_token = null,$super_id = null) 
+    public function iMileArray($sellername = null ,array $ShipArr, array $counrierArr, $complete_sku = null, $c_id = null,$box_pieces1 = null,$auth_token = null,$super_id = null,$imileordertype= null ) 
     {   
        // $sender_default_city = Getselletdetails($super_id);
         // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
@@ -5355,7 +5355,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
         else { $weight = $ShipArr['weight'] ; }
         
         if(empty($complete_sku)) { $complete_sku = 'test sku';}
-        
+        $complete_sku=	mb_substr($complete_sku,0,50,"UTF-8"); 
         $requestParams = array(
            "customerId"=>$customerID,
            "accessToken"=>$auth_token, 
@@ -5367,7 +5367,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
            "Sign"=>$sign,
            "param"=>array(
               "orderCode"=>$ShipArr['slip_no'],
-              "orderType"=> "100", // 100: Delivery order 200: return order 400: Refund order 500: B2B order 800: Forward order
+              "orderType"=> $imileordertype, // 100: Delivery order 200: return order 400: Refund order 500: B2B order 800: Forward order
               "oldExpressNo"=> "",
               "deliveryType"=> "Self",
               "consignor"=>$userName,
