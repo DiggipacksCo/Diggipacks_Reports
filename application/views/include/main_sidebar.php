@@ -417,6 +417,10 @@
                     <?php if (menuIdExitsInPrivilageArray(78) == 'Y') { ?>
                         <li <?php if ($this->uri->segment(1) == 'returnLM') echo 'class="active"'; ?>> <a href="<?= base_url('returnLM'); ?>"><i class="fa fa-arrow-left"></i> <span>RTF</span></a> </li>
                     <?php } ?>
+                        
+                         <?php if (menuIdExitsInPrivilageArray(149) == 'Y') { ?>
+                        <li <?php if ($this->uri->segment(1) == 'ReturnShipment') echo 'class="active"'; ?>> <a href="<?= base_url('ReturnShipment'); ?>"><i class="fa fa-arrow-left"></i> <span>RTF Bulk</span></a> </li>
+                    <?php } ?>
 
 
                             <?php if (menuIdExitsInPrivilageArray(4) == 'Y') { ?>
