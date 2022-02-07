@@ -7,7 +7,7 @@ if ($conn->connect_errno) {
     echo "Failed to connect to MySQL: " . $conn->connect_error;
     exit();
 }
-$sql = "select c.id,c.*,cn.city as city_name from customer c left join country cn on c.city = cn.id where c.deleted='N' and c.is_shopify_active ='1' and c.shopify_url !='' and c.id=168";
+$sql = "select c.id,c.*,cn.city as city_name from customer c left join country cn on c.city = cn.id where c.deleted='N' and c.is_shopify_active ='1' and c.shopify_url !='' ";
 $query = $conn->query($sql);
 
 if ($query->num_rows > 0) {

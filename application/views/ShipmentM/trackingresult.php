@@ -73,6 +73,11 @@
                                             //print_r($shipmentdata);
                                             if (!empty($shipmentdata)) {
                                                 foreach ($shipmentdata as $awbdata) {
+                                                    $status=getStatusByCode_fm($awbdata['code']);
+                                                if(empty($status))
+                                                {
+                                                        $status=getallmaincatstatus($awbdata['delivered'], 'main_status');
+                                                }
                                                     echo '<tr>
                                                         <td>' . $awbdata['entrydate'] . '</td>
                                                              <td>' . $awbdata['slip_no'] . '</td>
@@ -81,7 +86,7 @@
                                                         <td>' . $awbdata['pieces'] . '</td>
 
                                                         <td>' . $awbdata['weight'] . 'Kg</td>
-                                                        <td>' . getallmaincatstatus($awbdata['delivered'], 'main_status') . '</td>
+                                                        <td>' . $status . '</td>
 
                                                         <td><a href="' . base_url() . 'TrackingDetails/' . $awbdata['id'] . '" class="btn btn-primary" target="_black">'.$lang_View_detail.'</a></td>
 
