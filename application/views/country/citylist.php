@@ -238,6 +238,9 @@
                                             <?php if (GetCourierCompanyStausActive('Kudhha') == 'Y') { ?>
                                                 <th class="head1">Kudhha City</th>
                                             <?php } ?>
+                                            <?php if (GetCourierCompanyStausActive('Mylerz') == 'Y') { ?>
+                                                <th class="head1">Mylerz City</th>
+                                            <?php } ?>
                                             <th class="head1">Country Code</th>
                                             <th class="head1">Currency</th>
                                             <th class="head1">LAT</th>
@@ -596,6 +599,12 @@
                                                         <td><input type="text" name="kudhha_city" id="kudhha_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['kudhha_city']; ?>" class="form-control">
                                                             <br>
                                                             <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'kudhha_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
+                                                        </td>
+                                                     <?php } ?>   
+                                                     <?php if (GetCourierCompanyStausActive('Mylerz') == 'Y') { ?>
+                                                        <td><input type="text" name="mylerz_city" id="mylerz_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['mylerz_city']; ?>" class="form-control">
+                                                            <br>
+                                                            <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'mylerz_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
                                                         </td>
                                                      <?php } ?>   
   
