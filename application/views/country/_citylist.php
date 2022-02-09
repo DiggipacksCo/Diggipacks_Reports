@@ -346,6 +346,13 @@
                 <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'kudhha_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
             </td>
         <?php } ?>   
+        <?php if (GetCourierCompanyStausActive('Mylerz') == 'Y') { ?>
+            <td><input type="text" name="mylerz_city" id="mylerz_city<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['mylerz_city']; ?>" class="form-control">
+                <br>
+                <a class="btn btn-info" style="" onclick="updateCityListData('<?php echo $listdata['id']; ?>', 'mylerz_city');" value="<?php echo $listdata['id']; ?>"><?= lang('lang_Update'); ?></a>
+            </td>
+        <?php } ?>   
+          
           
         <td><input type="text" name="country_code" id="country_code<?php echo $listdata['id']; ?>" placeholder="<?= lang('lang_add_city'); ?>" value="<?php echo $listdata['country_code']; ?>" class="form-control">
                 <br>

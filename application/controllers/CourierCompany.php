@@ -2543,6 +2543,41 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                             return $return;
                         }
 
+                    }elseif ($company == 'Mylerz'){
+
+                        $this->load->library('mylerzClass'); //load library 
+                        
+                        $token_response = $this->mylerzclass->getToken($counrierArr['user_name'],$counrierArr['password'],$counrierArr['api_url']);
+                        
+                        if(!empty($token_response['access_token'])){
+                            $token = $token_response['access_token'];
+                            
+                            $response = $this->mylerzclass->forwardShipment($sellername,$ShipArr, $counrierArr, $token,$complete_sku,$c_id,$box_pieces1,$super_id);
+                            
+                            if($response['IsErrorState'] === false){
+                                
+                                $client_awb = $response['Value']['Packages'][0]['BarCode'];
+                                $label_response = $this->mylerzclass->getLabel($client_awb,$token,$api_url, $slipNo);
+                                
+                                if(!empty($label_response['Value'])){
+                                    $label_data = base64_decode($label_response['Value']);
+                                    file_put_contents("assets/all_labels/$slipNo.pdf", $label_data);
+                                    $fastcoolabel = base_url().'assets/all_labels/'.$slipNo.'.pdf';
+                                    $return= array('status'=>200,'label'=> $fastcoolabel,'client_awb'=>$client_awb); 
+                                    return $return;
+                                }
+                            }else{
+                                $returnArr['responseError'][] = $slipNo . ':' .$response['ErrorDescription'];
+                                $return= array('status'=>201,'error'=> $returnArr);
+                                return $return;
+                            }
+                            
+                        }else{
+                            $returnArr['responseError'][] = $slipNo . ': Token not generated';
+                            $return= array('status'=>201,'error'=> $returnArr);
+                            return $return;
+                        }
+                        
                     }elseif ($company_type== 'F') { // for all fastcoo clients treat as a CC 
                         if ($company=='Ejack' ) 
                         {
