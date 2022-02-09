@@ -14,7 +14,7 @@ class Country_model extends CI_Model {
             $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
             $this->db->update('country', $data, array('id' => $editid));
            //  echo $this->db->last_query();die;
-            return 2;
+            return 2; 
         } else {
             $this->db->insert('country', $data);
              //echo $this->db->last_query();die;

@@ -10,7 +10,6 @@
         <?php $this->load->view('include/file'); ?>
        
         <script src="<?= base_url(); ?>assets/js/angular/courier_company.js"></script>
-
   
     </head>
 <style type="text/css">

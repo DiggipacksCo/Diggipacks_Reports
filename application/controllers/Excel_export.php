@@ -1331,6 +1331,8 @@ class Excel_export extends MY_Controller {
                                     $dynmicColumn = 'ajoul_city_code';          
                                 if ($colimn == 'IMile')
                                     $dynmicColumn = 'imile_city';              
+                                if ($colimn == 'Mylerz')
+                                    $dynmicColumn = 'mylerz_city';              
 
                                  
                                 if (!empty($cityArrayName)) {

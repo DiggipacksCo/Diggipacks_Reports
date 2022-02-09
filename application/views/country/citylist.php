@@ -16,7 +16,6 @@
 
         </style>
     </head>
-
     <body>
         <?php $this->load->view('include/main_navbar'); ?>
 

@@ -15,7 +15,7 @@ class CourierCompany extends MY_Controller  {
 		$this->load->model('Shipment_model');
 		$this->load->model('ItemInventory_model');
 		$this->load->library('form_validation');
-	}
+	} 
 
 	
 	public function cCompany(){
