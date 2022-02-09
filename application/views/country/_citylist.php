@@ -1,5 +1,5 @@
 
-    <?php
+   <?php
         //print "<pre>"; print_r($result);die;
         if(is_array($result) && count($result) >0){
             $cnt = $counter;
