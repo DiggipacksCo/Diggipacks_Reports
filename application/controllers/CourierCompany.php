@@ -474,8 +474,8 @@ class CourierCompany extends MY_Controller  {
                         'pack_type' => $ShipArr['pack_type'],
                     );
                     //print_r($ShipArr);die;
-
-                   $ccRetrundata= $this->courierComanyForward($sellername, $Auth_token,$company,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id,$company_type,$c_id, $api_url);
+                    $imileordertype = 100;
+                   $ccRetrundata= $this->courierComanyForward($sellername, $Auth_token,$company,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id,$company_type,$c_id, $api_url,$imileordertype);
                    if($ccRetrundata['status']==200)
                    {
                     $Update_data = $this->Ccompany_model->Update_Shipment_Status($slipNo, $ccRetrundata['client_awb'], $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $ccRetrundata['label'],$c_id, $api_url);
@@ -643,8 +643,8 @@ class CourierCompany extends MY_Controller  {
                             } else {
                                 $complete_sku = $sku_all_names;
                             }
-                            $pay_mode = trim($ShipArr['mode']);
-                            $cod_amount = 'CC';
+                            $pay_mode = 'CC';
+                            $cod_amount = 0;
                             if ($pay_mode == 'COD') {
                                    // $pay_mode = 'P';
                                     $CashOnDeliveryAmount = array("Value" => $cod_amount,
@@ -655,6 +655,8 @@ class CourierCompany extends MY_Controller  {
                                     $CashOnDeliveryAmount = NULL;
                                     $services = '';
                             }
+                            $ShipArr['mode']='CC';
+                            $ShipArr['total_cod_amt']=0;
                             $new_awb_number = $this->Ccompany_model->Generate_awb_number_new_fm($super_id);
                             $sellername = $ShipArr['reciever_name']; 
                             $recDetail = Getselletdetails_new($super_id);
@@ -701,9 +703,11 @@ class CourierCompany extends MY_Controller  {
 
                             $CURRENT_TIME = date('H:i:s');
                             $CURRENT_DATE = date('Y-m-d H:i:s');
+                            $imileordertype = 200;
                            //echo $company;die; 
-                           $ccRetrundata = $this->courierComanyForward($sellername,$auth_token,$company,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id,$company_type, $c_id, $api_url);
-                           
+                           $ccRetrundata = $this->courierComanyForward($sellername,$auth_token,$company,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id,$company_type, $c_id, $api_url, $imileordertype);
+        //                    error_reporting(-1);
+		// ini_set('display_errors', 1);
                            if($ccRetrundata['status']==200)
                            {
                                 $Update_data = $this->Ccompany_model->Insert_Reverse_Shipment($sku_data,$ShipArr,$slipNo, $ccRetrundata['client_awb'], $CURRENT_TIME, $CURRENT_DATE, $company, $comment, $ccRetrundata['label'],$c_id,$ccRetrundata['barq_order_id'], $api_url);
@@ -711,7 +715,8 @@ class CourierCompany extends MY_Controller  {
                                 if(!empty($zone_id)){
                                         $updateZone = $this->Ccompany_model->CapacityUpdate($zone_cust_id,$zone_id,$super_id);
                                 }
-
+                                $slipArray = array('reverse_forwarded' => 1);
+                                $this->Ccompany_model->GetshipmentUpdate_forward($slipArray,$slipNo);
                                 array_push($succssArray, $slipNo);
                            }
                            else
@@ -910,7 +915,7 @@ class CourierCompany extends MY_Controller  {
 
 
 
-public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id,$company_type,$c_id, $api_url)
+public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, $counrierArr, $complete_sku, $pay_mode, $CashOnDeliveryAmount, $services, $box_pieces1,$super_id,$company_type,$c_id, $api_url,$imileordertype)
 {
     //print "<pre>"; print_r($ShipArr);die;
     $slipNo =$ShipArr['slip_no'];  
@@ -1832,7 +1837,7 @@ public function courierComanyForward($sellername,$Auth_token,$company,$ShipArr, 
                         $return= array('status'=>201,'error'=> $returnArr); 
                         return $return;
                         }else{
-                        $response = $this->Ccompany_model->iMileArray($sellername,$ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$auth_token,$super_id);  
+                        $response = $this->Ccompany_model->iMileArray($sellername,$ShipArr, $counrierArr, $complete_sku,$c_id,$box_pieces1,$auth_token,$super_id,$imileordertype);  
                         if($response['code'] == 200  && $response['message'] == 'success'){
                                 $client_awb = $response['data']['expressNo'];
                                 $pdf_encoded_base64 = $response['data']['imileAwb'];

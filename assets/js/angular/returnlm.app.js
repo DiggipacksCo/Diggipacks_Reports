@@ -337,7 +337,10 @@ var app = angular.module('ReturnLmApp', [])
                                 $scope.shipData = {};
                                 $scope.completeArray = {};
                                 $scope.Message = "Completed order RTF!";
+                                alert($scope.Message);
+                                location.reload();
                            
+
 
                         }, function (error) {
                             console.log(error);

@@ -33,22 +33,22 @@ class SallaTrackOrderUpdate {
     public function allOrders() {
         $customers = $this->fetchSallaCustomers();
         echo '<pre>';
-     
+     //print_r( $customers);
        
         if ($customers) {
             foreach ($customers as $customer) {
-                if ($customer['salla_provider'] == 1 ) {
-                    $auth_token = $customer['salla_provider_token'];
-                    $tracking_url1 = $customer['site_url'];
+                if ($customer['salla_provider'] == 1 || 1==1 ) {
+                    $auth_token = '$2y$04$rncDoc3yqrue9Fc6Ey29JOs1Qws4J6yVr9UbF2kDMKWv//xAhJ72y';
+                    $tracking_url1 = "https://track.diggipacks.com";
 
-                    if (!$this->is_valid_domain_name($tracking_url1)) {
-                        $tracking_url1 = "https://track.diggipacks.com";
-                    }
+                    // if (!$this->is_valid_domain_name($tracking_url1)) {
+                    //     $tracking_url1 = "https://track.diggipacks.com";
+                    // }
 
                     $new_tracking_url = $this->addhttp($tracking_url1);
                     $orders = $this->sallaOrders($customer);
 
-                    //  print_r( $orders); exit;
+                      //print_r( $orders); exit;
                         $DL_array=array('5','16','17','19','21') ;
                         $RTC_array=array('8','18') ;
                         
@@ -225,7 +225,7 @@ echo 'xxx';
      */
     private function fetchSallaCustomers() {
 
-      echo  $sql = "select c.id as cust_id,c.uniqueid,s.salla_provider,s.site_url,s.salla_provider_token,c.email,c.phone,c.user_Agent,c.address,c.seller_id,c.super_id,salla_athentication,salla_active,uniqueid,name,city, order_status,company from customer c  left join site_config s on s.super_id = c.super_id where  s.super_id= '" . $this->super_id . "'   and s.salla_provider='1'  ";
+      echo  $sql = "select c.id as cust_id,c.uniqueid,s.salla_provider,s.site_url,s.salla_provider_token,c.email,c.phone,c.user_Agent,c.address,c.seller_id,c.super_id,salla_athentication,salla_active,uniqueid,name,city, order_status,company from customer c  left join site_config s on s.super_id = c.super_id where c.salla_access='FM' and s.super_id IN (5,54)  ";
 
         $result = $this->db->query($sql);
         $customers = mysqli_fetch_all($result, MYSQLI_ASSOC);

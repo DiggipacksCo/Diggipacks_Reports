@@ -93,6 +93,7 @@ class Ccompany_model extends CI_Model {
         $this->db->select('*');
         $this->db->from('shipment_fm');
         $this->db->where('slip_no', $slip_no);
+        $this->db->where('booking_id!=',$slip_no);
         $this->db->where('deleted', 'N');
         $this->db->where('code', 'POD');
         $this->db->where('reverse_forwarded', 0);
@@ -439,7 +440,7 @@ class Ccompany_model extends CI_Model {
     public function GetshipmentUpdate_forward(array $data, $awb = null) {
         $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->update('shipment_fm', $data, array('slip_no' => $awb));
-        // $this->db->last_query(); 
+         $this->db->last_query(); 
     }
 
     public function GetstatuInsert_forward(array $data) {
@@ -2777,7 +2778,7 @@ class Ccompany_model extends CI_Model {
         $SMSAXML = '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
         
             <soap:Body>
-                <addShip xmlns="http://track.smsaexpress.com/secom/">
+                <addShipMPS xmlns="http://track.smsaexpress.com/secom/">
                   <passKey>' . $counrierArr['auth_token'] . '</passKey>
                   <refNo>' . $ShipArr['slip_no'] . '</refNo>
                   <sentDate>' . date('d/m/Y') . '</sentDate>
@@ -2813,7 +2814,7 @@ class Ccompany_model extends CI_Model {
                   <sCntry>KSA</sCntry>
                   <prefDelvDate>'.date('d/m/Y').'</prefDelvDate>
                   <gpsPoints>2</gpsPoints>
-                </addShip>
+                </addShipMPS>
             </soap:Body>
         </soap:Envelope>';
 
@@ -5293,7 +5294,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
         return $token;
     }
     
-    public function iMileArray($sellername = null ,array $ShipArr, array $counrierArr, $complete_sku = null, $c_id = null,$box_pieces1 = null,$auth_token = null,$super_id = null) 
+    public function iMileArray($sellername = null ,array $ShipArr, array $counrierArr, $complete_sku = null, $c_id = null,$box_pieces1 = null,$auth_token = null,$super_id = null,$imileordertype= null ) 
     {   
        // $sender_default_city = Getselletdetails($super_id);
         // $sellername = GetallCutomerBysellerId($ShipArr['cust_id'],'company');
@@ -5354,7 +5355,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
         else { $weight = $ShipArr['weight'] ; }
         
         if(empty($complete_sku)) { $complete_sku = 'test sku';}
-        
+        $complete_sku=	mb_substr($complete_sku,0,50,"UTF-8"); 
         $requestParams = array(
            "customerId"=>$customerID,
            "accessToken"=>$auth_token, 
@@ -5366,7 +5367,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
            "Sign"=>$sign,
            "param"=>array(
               "orderCode"=>$ShipArr['slip_no'],
-              "orderType"=> "100", // 100: Delivery order 200: return order 400: Refund order 500: B2B order 800: Forward order
+              "orderType"=> $imileordertype, // 100: Delivery order 200: return order 400: Refund order 500: B2B order 800: Forward order
               "oldExpressNo"=> "",
               "deliveryType"=> "Self",
               "consignor"=>$userName,
@@ -5385,7 +5386,7 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
               "consigneeMobile"=>"",
               "consigneePhone"=>$Receiver_phone,
               "consigneeEmail"=>$Receiver_email,
-              "consigneeCountry"=>$country,
+              "consigneeCountry"=>!empty($country)?$country:'SA',
               "consigneeCity"=>$Reciever_city,
               "consigneeArea"=>$Reciever_city,
               "consigneeAddress"=>$Receiver_address,
@@ -5440,7 +5441,6 @@ public function DhlJonesArray($sellername = null, array $ShipArr, array $counrie
         if(isset($ShipArr['old_slip_no']) && !empty($ShipArr['old_slip_no'])){
             $this->shipmentLogReverse($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$ShipArr['old_slip_no'],$params);
         }else{
-            
             $this->shipmentLog($c_id, $logresponse,$successstatus, $ShipArr['slip_no'],$params);
         }
 
