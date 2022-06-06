@@ -7,10 +7,10 @@ class Manifest extends CourierCompany_pickup {
 
     function __construct() { 
         parent::__construct();
-        if (menuIdExitsInPrivilageArray(17) == 'N') {
-            redirect(base_url() . 'notfound');
-            die;
-        }
+        // if (menuIdExitsInPrivilageArray(17) == 'N') {
+        //     redirect(base_url() . 'notfound');
+        //     die;
+        // }
         if ($this->session->userdata('user_details')['user_id'] == null || $this->session->userdata('user_details')['user_id'] < 1) {
             // Prevent infinite loop by checking that this isn't the login controller               
             if ($this->router->class != 'User') {
@@ -56,15 +56,17 @@ class Manifest extends CourierCompany_pickup {
         $this->load->model('User_model');
         $assignuser = $this->User_model->userDropval(9);
         $_POST = json_decode(file_get_contents('php://input'), true);
-        $super_id = $this->session->userdata('user_details')['super_id'];
+        $super_id = $_POST['wh_id'];
 
         $page_no = $_POST['page_no'];
         $seller_id = $_POST['seller_id'];
         $driverid = $_POST['driverid'];
         $manifestid = $_POST['manifestid'];
         $sort_list = $_POST['sort_list'];
+        $sku = $_POST['sku'];
 
-        $filterarray = array('seller_id' => $seller_id, 'manifestid' => $manifestid, 'driverid' => $driverid, 'sort_list' => $sort_list);
+
+        $filterarray = array('seller_id' => $seller_id, 'manifestid' => $manifestid, 'driverid' => $driverid, 'sort_list' => $sort_list,'sku'=>$sku,'wh_id'=>$super_id );
         $shipments = $this->Manifest_model->filter($page_no, $filterarray);
 
         $manifestarray = $shipments['result'];
@@ -72,9 +74,9 @@ class Manifest extends CourierCompany_pickup {
         $seller_ids = "";
         foreach ($shipments['result'] as $rdata) {
 
-            if ($this->Manifest_model->GetallpickupRequestData_imtemCheck($rdata['uniqueid']) == true) {
+            if ($this->Manifest_model->GetallpickupRequestData_imtemCheck($rdata['uniqueid'],$rdata['super_id']) == true) {
                 $manifestarray[$ii]['addBtnI'] = "N";
-                $manifestarray[$ii]['skuid'] = getallitemskubyid($rdata['sku']);
+                $manifestarray[$ii]['skuid'] = getallitemskubyid($rdata['sku'],$rdata['super_id']);
                 $manifestarray[$ii]['confirmO'] = 'N';
             } else {
                 $manifestarray[$ii]['addBtnI'] = "Y";
@@ -101,7 +103,7 @@ class Manifest extends CourierCompany_pickup {
 
             if ($rdata['seller_id'] > 0)
            
-                $manifestarray[$ii]['seller_id'] =  getallsellerdatabyID($rdata['seller_id'], 'company',$super_id);
+                $manifestarray[$ii]['seller_id'] =  getallsellerdatabyID($rdata['seller_id'], 'company',$rdata['super_id']);
             else
                 $manifestarray[$ii]['seller_id'] = 'N/A';
                 
@@ -128,7 +130,7 @@ class Manifest extends CourierCompany_pickup {
                 $manifestarray[$ii]['company_awb'] = 'N/A';
 
             if ($rdata['city'] > 0)
-                $manifestarray[$ii]['city'] = getdestinationfieldshow($rdata['city'], 'city');
+                $manifestarray[$ii]['city'] = getdestinationfieldshow($rdata['city'], 'city',$rdata['super_id']);
             else
                 $manifestarray[$ii]['city'] = 'N/A';
 
@@ -137,7 +139,7 @@ class Manifest extends CourierCompany_pickup {
             else
                 $manifestarray[$ii]['address'] = 'N/A';
             $manifestarray[$ii]['company_label'] = $rdata['3pl_label'];
-
+            $manifestarray[$ii]['wh_id'] = Getwarehouse_categoryfield($rdata['super_id']);
             $ii++;
         }
         //$sellers = Getallsellerdata($seller_ids);
@@ -281,7 +283,7 @@ class Manifest extends CourierCompany_pickup {
             $manifestarray[$ii]['editmissing'] =0;
             $manifestarray[$ii]['editreceived'] =0;
 
-
+            $manifestarray[$ii]['wh_id'] = Getwarehouse_categoryfield($rdata['super_id']);
             $manifestarray[$ii]['pstatus'] = GetpickupStatus($rdata['pstatus']);
             if ($rdata['seller_id'] > 0)
                 $manifestarray[$ii]['seller_id'] = getallsellerdatabyID($rdata['seller_id'], 'name',$rdata['super_id']);

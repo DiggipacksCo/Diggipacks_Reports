@@ -1,0 +1,124 @@
+  	     <div class="container-fluid" ng-init="getSmslist(1,0);">
+
+                    <!-- start page title -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box d-flex align-items-center justify-content-between">
+                                <h4 class="mb-0 font-size-18">{{'lang_SMS_Management'|translate}}</h4>
+
+                                <div class="page-title-right">
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="dashboard">{{'lang_Home'|translate}}</a></li>
+                                        <li class="breadcrumb-item active">{{'lang_Show_Template'|translate}}</li>
+                                    </ol>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div> 
+	 
+					  <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="clearfix">
+                                        <h5 class="hk-sec-title">{{'lang_Show_Template'|translate}}
+											<span style="font-size: 50px;
+                            color: red;float:right;    margin-right: 99px;"> <a href="https://www.youtube.com/watch?v=cSBauwYjBzs
+                              " target="blank" style="color:red">	<i class="fa fa-youtube-play" aria-hidden="true"></i>
+                         </a> </span>
+                              <span style="font-size: 20px;
+                              color: rgb(9, 59, 100);float:right;    margin-right: 99px;margin-top: 17px;">Learn How?</span>
+										</h5>
+                                    </div>
+    
+    
+                                    <div class="row" style="margin-top:10px">  
+                                       <div class="table-responsive">
+										<table class="table datatable-show-all table-bordered table-hover datatable-highlight">
+										<thead>
+										
+										
+										
+											<tr>
+											<th class="head1" colspan="3">
+											<input type="text" ng-model="filterData.status_name"  class="form-control" placeholder="Search Status" required="required">
+										
+											</th>
+											<th class="head1" colspan="3">
+											 <input type="submit" name="Search" class="btn btn-primary" value="{{'lang_search'|translate}}" ng-click="getSmslist(1,1);">        </th>  
+										   
+										</tr> 
+										
+										
+									   </thead>
+									   </table>
+										<table class="table datatable-show-all table-bordered table-hover datatable-highlight">
+														
+											<thead>
+												<tr>
+													<th class="head0">{{'lang_sNO'|translate}}</th>  
+													<th class="head1">{{'lang_status'|translate}}</th>                            	
+													<th class="head1">{{'lang_Sub_Status'|translate}}</th>
+													<th class="head1">{{'lang_Arabic_SMS'|translate}}</th>
+													<th class="head0">{{'lang_Activity_on_off'|translate}}</th>
+													 <th class="head1">{{'lang_English_SMS'|translate}}</th>
+													<th class="head0">{{'lang_Activity_on_off'|translate}}</th>
+													<th class="head1">{{'lang_action'|translate}}</th>
+												</tr>
+											</thead>
+														
+											<tbody>
+												<tr ng-repeat="data in SmslistArray">
+													<td>{{$index+1}}</td>
+													<td>{{data.main_status}}</td>
+													<td>{{data.sub_status}}</td>  
+													<td>{{data.arabic_sms}}</td>
+													<td style="text-align:center;"><a  style="cursor: pointer" ng-click="ShowactiveStatus(data.id,'N')" ng-if="data.arabic_status=='Y'" ng-confirm-click="Do you want to Off?">&nbsp; <span class="badge badge-primary badge-pill mt-15 mr-10">On<span></a> 
+															<a  style="cursor: pointer" ng-click="ShowactiveStatus(data.id,'Y')" ng-if="data.arabic_status=='N'" ng-confirm-click="Do you want to On?">&nbsp;<span class="badge badge-danger badge-pill mt-15 mr-10">Off</span></a></td>
+													<td>{{data.english_sms}}</td>  
+													<td style="text-align:center;"><a  style="cursor: pointer" ng-click="UpdateEnglishStatus(data.id,'N')" ng-if="data.english_status=='Y'" ng-confirm-click="Do you want to Off?">&nbsp; <span class="badge badge-primary badge-pill mt-15 mr-10">On<span></a> 
+															<a  style="cursor: pointer" ng-click="UpdateEnglishStatus(data.id,'Y')" ng-if="data.english_status=='N'" ng-confirm-click="Do you want to On?">&nbsp;<span class="badge badge-danger badge-pill mt-15 mr-10">Off</span></a></td>
+													 
+													
+													<td>
+													   <div class="btn-group">
+														<button type="button" class="btn btn-basic" style="background-color:grey !important"><i class="icon-list"></i></button>   
+														<button type="button" class="btn btn-basic dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color:grey !important">
+														<span class="sr-only">{{'lang_Toggle_Dropdown'|translate}}</span>  
+														</button>
+														<div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(138px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
+														
+														<a class="dropdown-item" ui-sref="edit_template({smsid:data.id})"><i class="mdi mdi-account-edit-outline"></i>&nbsp;{{'lang_edit'|translate}}</a> 
+														<a class="dropdown-item" style="cursor: pointer" ng-click="GetNotifydelete(data.id)" ng-confirm-click="Do you want to Delete?"><i class="mdi mdi-delete"></i>&nbsp;Delete</a>
+														 
+														</div> 
+														</div>
+													</td>
+													
+												</tr>
+												<tr>
+													<td ng-if="SmslistArray==''" colspan="8" align="center" style="text-align:center;">
+														{{'lang_NoRecords_Found'|translate}}
+													</td> 
+													
+												</tr>  
+													
+											</tbody>
+										</table>
+										<button ng-hide="SmslistArray.length==totalCount" class="btn btn-info" ng-click="getSmslist(count=count+1,0);" ng-init="count=1">{{'lang_Load_More'|translate}}</button>
+										</div> 
+                                    </div>
+                                    <!-- end row -->
+    
+                            
+    
+                                    
+                                </div>
+                            </div> <!-- end card-->
+                        </div> <!-- end col -->
+                    </div>
+                    
+					
+					
+	

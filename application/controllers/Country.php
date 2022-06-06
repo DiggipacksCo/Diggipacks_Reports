@@ -7,10 +7,10 @@ class Country extends MY_Controller {
     function __construct() {
         parent::__construct();
 
-        if (menuIdExitsInPrivilageArray(79) == 'N') {
-            redirect(base_url() . 'notfound');
-           die;
-        }
+        // if (menuIdExitsInPrivilageArray(79) == 'N') {
+        //     redirect(base_url() . 'notfound');
+        //    die;
+        // }
         $this->load->model('Country_model');
        // $this->load->model('Storage_model');
         $this->load->helper('utility');

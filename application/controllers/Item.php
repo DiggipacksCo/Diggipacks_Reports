@@ -7,10 +7,10 @@ class Item extends MY_Controller {
     function __construct() {
         parent::__construct();
 
-        if (menuIdExitsInPrivilageArray(3) == 'N') {
-            redirect(base_url() . 'notfound');
-            die;
-        }
+        // if (menuIdExitsInPrivilageArray(3) == 'N') {
+        //     redirect(base_url() . 'notfound');
+        //     die;
+        // }
 
         //$this->load->library('pagination');
         $this->load->helper('zid_helper');
@@ -327,7 +327,7 @@ class Item extends MY_Controller {
         foreach($newArray as $key=>$val)
         {
             $newArray[$key]['storage_type']=Getallstoragetablefield($val['storage_id'],'storage_type');
-             $newArray[$key]['wh_name']=Getwarehouse_categoryfield($val['wh_id'],'name');
+             $newArray[$key]['wh_name']=Getwarehouse_categoryfield($val['super_id'],'name');
             
             $newArray[$key]['seller_name']=GetallCutomerBysellerId($val['added_by'],'name');
             if(empty($newArray[$key]['seller_name']))

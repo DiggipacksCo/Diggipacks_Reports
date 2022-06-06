@@ -41,7 +41,7 @@
                                 <?php 
                                     $awb_label = ''; $trackFlag = FALSE; $track_awb= '';
                                     if(!empty($Shipmentinfo['frwd_company_awb'])){
-                                        $track_url = GetCourCompanynameId($Shipmentinfo['frwd_company_id'], 'company_url');
+                                        $track_url = GetCourCompanynameId($Shipmentinfo['frwd_company_id'], 'company_url',$Shipmentinfo['super_id']);
                                         if(!empty($track_url)){
                                             $trackFlag = TRUE;
                                             $track_awb = $track_url.$Shipmentinfo['frwd_company_awb'];
@@ -325,7 +325,7 @@
 
                                            
                                             if ($Shipmentinfo['frwd_company_id'] != '0')
-                                                echo   '<tr><th><b class="size-2">'.$lang_Forwarded_Company.'</b></th><td>' . GetCourCompanynameId($Shipmentinfo['frwd_company_id'], 'company') . '</td></tr>';
+                                                echo   '<tr><th><b class="size-2">'.$lang_Forwarded_Company.'</b></th><td>' . GetCourCompanynameId($Shipmentinfo['frwd_company_id'], 'company',$Shipmentinfo['super_id']) . '</td></tr>';
                                             else
                                                 echo' <tr><th><b class="size-2">'.$lang_Forwarded_Company.'</b></th><td style="color:grey;">No Info Found</td></tr>';
                                            

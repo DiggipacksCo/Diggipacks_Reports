@@ -65,6 +65,7 @@
                                                 <th><b class="size-2"><?=lang('lang_Destination');?></b></th>
                                                 <th><b class="size-2"><?=lang('lang_Pieces');?></b></th>
                                                 <th><b class="size-2"><?=lang('lang_Weight');?></b></th>
+                                                <th><b class="size-2"><?=lang('lang_Forwarded_Company');?></b></th>
                                                 <th><b class="size-2"><?=lang('lang_Status');?></b></th>
                                                 <th><b class="size-2"><?=lang('lang_Action');?></b></th>
                                             </tr>
@@ -86,6 +87,7 @@
                                                         <td>' . $awbdata['pieces'] . '</td>
 
                                                         <td>' . $awbdata['weight'] . 'Kg</td>
+                                                        <td>' . GetCourCompanynameId($awbdata['frwd_company_id'], 'company',$awbdata['super_id']) . '</td>
                                                         <td>' . $status . '</td>
 
                                                         <td><a href="' . base_url() . 'TrackingDetails/' . $awbdata['id'] . '" class="btn btn-primary" target="_black">'.$lang_View_detail.'</a></td>
@@ -252,12 +254,12 @@
                                             <span class="checkmark"></span>
                                         </label>
                                     </div>
-                                    <!-- <div class="col-sm-4">
+                                    <div class="col-sm-4">
                                          <label class="container">
                                              <input type="checkbox" name="Forward_through" value="Forward_through"  ng-model="listData2.frwd_throw" > Forward through
                                              <span class="checkmark"></span> 
                                          </label>
-                                     </div> -->
+                                     </div>
                                     <div class="col-sm-4">    
                                         <label class="container">
                                             <input type="checkbox" name="Forward_awb" value="Forward_awb"  ng-model="listData2.frwd_awb_no"> <?= lang('lang_Forwarded_AWB_No'); ?>
@@ -280,6 +282,42 @@
                                       <div class="col-sm-4">    
                                         <label class="container">
                                             <input type="checkbox" name="last_status_n" value="last_status_n"  ng-model="listData2.last_status_n"> Last Status
+                                            <span class="checkmark"></span>    
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="laststatus_first" value="laststatus_first"  ng-model="listData2.laststatus_first"> Failed 1st Status
+                                            <span class="checkmark"></span>    
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="laststatus_second" value="laststatus_second"  ng-model="listData2.laststatus_second"> Failed 2nd Status
+                                            <span class="checkmark"></span>    
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="laststatus_last" value="laststatus_last"  ng-model="listData2.laststatus_last"> Failed Last Status 
+                                            <span class="checkmark"></span>    
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="fd1_date" value="fd1_date"  ng-model="listData2.fd1_date"> FD1 Date
+                                            <span class="checkmark"></span>    
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                        <input type="checkbox" name="fd2_date" value="fd2_date"  ng-model="listData2.fd2_date"> FD2 Date
+                                            <span class="checkmark"></span>    
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                        <input type="checkbox" name="fd3_date" value="fd3_date"  ng-model="listData2.fd3_date"> FD3 Date
                                             <span class="checkmark"></span>    
                                         </label>
                                     </div>

@@ -529,17 +529,14 @@ class ItemInventory_model extends CI_Model {
 
     public function count_all($date = null) {
 
-        $this->db->where('item_inventory.super_id', $this->session->userdata('user_details')['super_id']);
-        $query = $this->db->select('quantity')->get('item_inventory');
+       // $this->db->where('item_inventory.super_id', $this->session->userdata('user_details')['super_id']);
+        $query = $this->db->select('SUM(quantity) as qty' )->get('item_inventory');
         //echo $this->db->last_query(); die;
-        $count = 0;
-        if ($query->num_rows() > 0) {
-
-            for ($i = 0; $i < $query->num_rows(); $i++) {
-                $count += $query->result()[$i]->quantity;
-            }
+        
+                $count = $query->result()[0]->qty;
+            
             return $count;
-        }
+        
     }
 
     public function count_all_expire($date = null) {
@@ -793,17 +790,15 @@ class ItemInventory_model extends CI_Model {
         } else {
             $start = ($page_no - 1) * $limit;
         }
-        $this->db->where('item_inventory.super_id', $this->session->userdata('user_details')['super_id']);
-        $this->db->select('item_inventory.id,item_inventory.item_sku,item_inventory.shelve_no,item_inventory.stock_location , items_m.sku , item_inventory.quantity,item_inventory.update_date,item_inventory.expity_date,item_inventory.expiry , items_m.name,seller_m.company as seller_name,items_m.description as item_description,seller_m.id as sid,item_inventory.wh_id,item_inventory.seller_id,items_m.item_path');
+        //$this->db->where('item_inventory.super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->select('item_inventory.id,item_inventory.item_sku,item_inventory.shelve_no,item_inventory.stock_location , items_m.sku , item_inventory.quantity,item_inventory.update_date,item_inventory.expity_date,item_inventory.expiry , items_m.name,seller_m.company as seller_name,items_m.description as item_description,seller_m.id as sid,item_inventory.wh_id,item_inventory.seller_id,items_m.item_path,user.company');
         $this->db->from('item_inventory');
         $this->db->join('items_m', 'items_m.id = item_inventory.item_sku');
         $this->db->join('customer as seller_m', 'seller_m.id = item_inventory.seller_id');
-        $this->db->join('warehouse_category', 'warehouse_category.id = item_inventory.wh_id');
+        $this->db->join('user', 'user.id = item_inventory.super_id');
 
 
-        if ($this->session->userdata('user_details')['user_type'] != 1) {
-            $this->db->where('item_inventory.wh_id', $this->session->userdata('user_details')['wh_id']);
-        }
+       
 
         if (!empty($exact)) {
             $date = date("Y-m-d", strtotime($exact));
@@ -844,8 +839,8 @@ class ItemInventory_model extends CI_Model {
             $this->db->where('item_inventory.stock_location', $data['stock_location']);
         }
 
-        if (!empty($data['wh_name'])) {
-            $this->db->where('warehouse_category.name', $data['wh_name']);
+        if (!empty($data['wh_id'])) {
+            $this->db->where('item_inventory.super_id', $data['wh_id']);
         }
 
         if (!empty($data['item_description'])) {
@@ -966,10 +961,10 @@ class ItemInventory_model extends CI_Model {
 
     public function filterCount($quantity, $sku, $seller, $to, $from, $exact, $page_no) {
 
-        $this->db->where('item_inventory.super_id', $this->session->userdata('user_details')['super_id']);
-        if ($this->session->userdata('user_details')['user_type'] != 1) {
-            $this->db->where('item_inventory.wh_id', $this->session->userdata('user_details')['wh_id']);
-        }
+        // $this->db->where('item_inventory.super_id', $this->session->userdata('user_details')['super_id']);
+        // if ($this->session->userdata('user_details')['user_type'] != 1) {
+        //     $this->db->where('item_inventory.wh_id', $this->session->userdata('user_details')['wh_id']);
+        // }
         $this->db->select('COUNT(item_inventory.id) as idCount');
         $this->db->from('item_inventory');
         $this->db->join('items_m', 'items_m.id = item_inventory.item_sku');
@@ -1686,11 +1681,12 @@ class ItemInventory_model extends CI_Model {
     }
 
     public function GetstorageTypes() {
-        $this->db->where('storage_table.super_id', $this->session->userdata('user_details')['super_id']);
+       // $this->db->where('storage_table.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('*');
         $this->db->from('storage_table');
         $this->db->where('status', 'Y');
         $this->db->where('deleted', 'N');
+        $this->db->group_by('storage_type');
         $query = $this->db->get();
 
 

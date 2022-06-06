@@ -6,10 +6,10 @@ class ItemInventory extends MY_Controller {
 
     function __construct() {
         parent::__construct();
-        if (menuIdExitsInPrivilageArray(2) == 'N') {
-            redirect(base_url() . 'notfound');
-            die;
-        }
+        // if (menuIdExitsInPrivilageArray(2) == 'N') {
+        //     redirect(base_url() . 'notfound');
+        //     die;
+        // }
         
         $this->load->model('ItemInventory_model');
         $this->load->helper('zid');
@@ -622,7 +622,7 @@ class ItemInventory extends MY_Controller {
             $ItemArray[$kk]['storage_id'] = Getallstoragetablefield(getalldataitemtables($rdata['item_sku'], 'storage_id'), 'storage_type');
             //if($rdata['shelve_no']!='')
 
-            $ItemArray[$kk]['wh_name'] = Getwarehouse_categoryfield($rdata['wh_id'], 'name');
+            $ItemArray[$kk]['wh_name'] =$rdata['company'];
 
             //$PData=$this->ItemInventory_model->Getcheckvalidpallet($rdata['shelve_no'],$rdata['sid']);
             //$ItemArray[$kk]['palletArray']=$PData;

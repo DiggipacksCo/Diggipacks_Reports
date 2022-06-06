@@ -100,7 +100,7 @@ class Cartoon extends MY_Controller {
 	}
 
 	public function getInventory(){
-
+			
 		$cartoon_sku=  $this->input->post('cartoon_sku');
 		return $this->Cartoon_model->getInventory($cartoon_sku);
 

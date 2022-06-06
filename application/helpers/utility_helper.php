@@ -43,7 +43,7 @@ if (!function_exists('GetCheckPackingOrderBtn')) {
         $ci = & get_instance();
         $ci->load->database();
 
-        $sql = "SELECT id FROM pickuplist_tbl where pickupId='$id' and pickup_status='Y' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and deleted='N' group by pickupId  $cndition";
+        $sql = "SELECT id FROM pickuplist_tbl where pickupId='$id' and pickup_status='Y'  and deleted='N' group by pickupId  $cndition";
         $query = $ci->db->query($sql);
        if($query->num_rows()>0)
        {
@@ -141,7 +141,7 @@ if (!function_exists('GetallitemcheckDuplicate')) {
     function GetallitemcheckDuplicate($sku) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT id FROM items_m where sku='$sku' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT id FROM items_m where sku='$sku' ";
         $query = $ci->db->query($sql);
         $countdata = $query->num_rows();
         $row = $query->row_array();
@@ -158,7 +158,7 @@ if (!function_exists('type_of_vehicleFiled')) {
     function type_of_vehicleFiled($id=null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT icon_path FROM type_of_vehicle where id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT icon_path FROM type_of_vehicle where id='$id' ";
         $query = $ci->db->query($sql);
         $countdata = $query->num_rows();
         $row = $query->row_array();
@@ -177,7 +177,7 @@ if (!function_exists('GetstockID')) {
     function GetstockID($seller_id=null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT lastno FROM stockLocation where  seller_id='$seller_id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "' order by id desc";
+        $sql = "SELECT lastno FROM stockLocation where  seller_id='$seller_id'  order by id desc";
         $query = $ci->db->query($sql);
         
         $row = $query->row_array();
@@ -286,7 +286,7 @@ if (!function_exists('GetinventoryTableData')) {
     function GetinventoryTableData($id = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT * FROM item_inventory where id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT * FROM item_inventory where id='$id' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result;
@@ -298,7 +298,7 @@ if (!function_exists('GetSellerTableField')) {
     function GetSellerTableField($id = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM seller_m where id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT $field FROM seller_m where id='$id' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result[$field];
@@ -325,7 +325,7 @@ if (!function_exists('Getallstorage_drop')) {
     function Getallstorage_drop() {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT * FROM storage_table where deleted='N' AND status='Y' AND super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT * FROM storage_table where deleted='N' AND status='Y' ";
         $query = $ci->db->query($sql);
         $result = $query->result_array();
         return $result;
@@ -337,7 +337,7 @@ if (!function_exists('GetwherehouseDropShow')) {
 
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT id,name FROM warehouse_category where deleted='N' and status='Y' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT id,name FROM warehouse_category where deleted='N' and status='Y' ";
         $query = $ci->db->query($sql);
         $result = $query->result_array();
         $userdrop = '<select class="form-control" name="wh_id" id="wh_id" required><option value="">Please Select</option>';
@@ -388,10 +388,10 @@ if (!function_exists('Getwarehouse_categoryfield')) {
     function Getwarehouse_categoryfield($id = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM warehouse_category where id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT company FROM user where id='$id' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
-        return $result[$field];
+        return $result['company'];
     }
 
 }
@@ -401,7 +401,7 @@ if (!function_exists('Getwarehouse_categoryfield_name')) {
         $ci = & get_instance();
         $ci->load->database();
 
-        $sql = "SELECT $field FROM warehouse_category where name='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT $field FROM warehouse_category where name='$id' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         if(count($result)>0)
@@ -420,7 +420,7 @@ if (!function_exists('Getwarehouse_Dropdata')) {
     function Getwarehouse_Dropdata() {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT id,name FROM warehouse_category where status='Y' and deleted='N' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "' ";
+        $sql = "SELECT id,company as name FROM user where status='Y' and deleted='N' and super_id=0 ";
         $query = $ci->db->query($sql);
         $result = $query->result_array();
         return $result;
@@ -456,10 +456,10 @@ if (!function_exists('makeSms')) {
 }
 
 if (!function_exists('GetCourCompanynameId')) {
-    function GetCourCompanynameId($id = null, $field = null) {
+    function GetCourCompanynameId($id = null, $field = null,$sup_id=null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM courier_company where cc_id='$id' and super_id='".$ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT $field FROM courier_company where cc_id='$id' and super_id='".$sup_id . "'";
         $query = $ci->db->query($sql);
         // echo   $ci->db->last_query();
         // die; 
@@ -468,10 +468,10 @@ if (!function_exists('GetCourCompanynameId')) {
     }
 }
 if (!function_exists('GetCCompanyNameById')) { 
-    function GetCCompanyNameById($id = null, $field = null) {
+    function GetCCompanyNameById($id = null, $field = null,$sup_id=null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM courier_company where cc_id='$id' and super_id='".$ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT $field FROM courier_company where cc_id='$id' and super_id='".$sup_id . "'";
         $query = $ci->db->query($sql);
         // echo   $ci->db->last_query();
         // die; 
@@ -481,10 +481,10 @@ if (!function_exists('GetCCompanyNameById')) {
 }
 
 if (!function_exists('GetCourCompanynameIdAll')) {
-    function GetCourCompanynameIdAll($id = null) {
+    function GetCourCompanynameIdAll($id = null,$sup_id=null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT company,company_url,auth_token,api_url FROM courier_company where cc_id='$id' and super_id='".$ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT company,company_url,auth_token,api_url FROM courier_company where cc_id='$id' and super_id='".$sup_id . "'";
         $query = $ci->db->query($sql);
         // echo   $ci->db->last_query();
         // die; 
@@ -496,7 +496,7 @@ if (!function_exists('GetCourCompanynameIdbulkprint')) {
     function GetCourCompanynameIdbulkprint($id = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM courier_company where id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT $field FROM courier_company where id='$id' ";
         $query = $ci->db->query($sql);
         // echo   $ci->db->last_query();
         // die; 
@@ -508,7 +508,7 @@ if (!function_exists('GetCourierCompanyStausActive')) {
     function GetCourierCompanyStausActive($name = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT status FROM courier_company where company='$name' and deleted='N' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT status FROM courier_company where company='$name' and deleted='N' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result['status'];
@@ -521,7 +521,7 @@ if (!function_exists('getdestinationfieldshow_array')) {
         $ci = & get_instance();
         $ci->load->database();
         if (!empty($id)) {
-            $sql = "SELECT $field FROM country where id IN ($id) and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+            $sql = "SELECT $field FROM country where id IN ($id) ";
             $query = $ci->db->query($sql);
             $result = $query->result_array();
             foreach ($result as $ndata) {
@@ -559,7 +559,7 @@ if (!function_exists('Print_getall3plfm')) {
             $awb = "'" . $awbData . "'";
         }
         //all_labels
-        $listingQry = "select slip_no from shipment_fm where deleted='N' and ( slip_no IN  (" . $awb . ")) ORDER  BY FIELD(slip_no," . $awb . ") and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $listingQry = "select slip_no from shipment_fm where deleted='N' and ( slip_no IN  (" . $awb . ")) ORDER  BY FIELD(slip_no," . $awb . ") ";
         $query = $ci->db->query($listingQry);
 
         if ($query->num_rows()) {
@@ -615,15 +615,15 @@ if (!function_exists('print_shipment_smsa')) {
         }
 
         if ($type == 'id') {
-            $listingQry = "select frwd_awb_no from shipment where deleted='N' and id IN  (" . $awb . ") and `frwd_throw` LIKE 'smsa' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+            $listingQry = "select frwd_awb_no from shipment where deleted='N' and id IN  (" . $awb . ") and `frwd_throw` LIKE 'smsa' ";
         } else {
-            $listingQry = "select frwd_awb_no from shipment where deleted='N' and ( slip_no IN  (" . $awb . ")) and `frwd_throw` LIKE 'SAMSA' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+            $listingQry = "select frwd_awb_no from shipment where deleted='N' and ( slip_no IN  (" . $awb . ")) and `frwd_throw` LIKE 'SAMSA' ";
 
             $query = $ci->db->query($listingQry);
 
 
             if ($query->num_rows() <= 0) {
-                $listingQry = "select frwd_awb_no from shipment where deleted='N' and  booking_id IN  (" . $awb . ") and `frwd_throw` LIKE 'SAMSA' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "' ORDER  BY FIELD(booking_id," . $awb . ")";
+                $listingQry = "select frwd_awb_no from shipment where deleted='N' and  booking_id IN  (" . $awb . ") and `frwd_throw` LIKE 'SAMSA'  ORDER  BY FIELD(booking_id," . $awb . ")";
             }
         }
         $query = $ci->db->query($listingQry);
@@ -678,13 +678,13 @@ if (!function_exists('print_shipment_aramex')) {
             $awb = "'" . $awbData . "'";
         }
         if ($type == 'id') {
-            $listingQry = "select slip_no,frwd_throw,frwd_awb_no from shipment where deleted='N' and id IN  (" . $awb . ") and  and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'`frwd_throw` IN ('ARAMEX')";
+            $listingQry = "select slip_no,frwd_throw,frwd_awb_no from shipment where deleted='N' and id IN  (" . $awb . ") and  `frwd_throw` IN ('ARAMEX')";
         } else {
-            $listingQry = "select slip_no,frwd_throw,frwd_awb_no from shipment where deleted='N' and ( slip_no IN  (" . $awb . ")) and super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and `frwd_throw` IN ('ARAMEX')";
+            $listingQry = "select slip_no,frwd_throw,frwd_awb_no from shipment where deleted='N' and ( slip_no IN  (" . $awb . "))  and `frwd_throw` IN ('ARAMEX')";
             $query = $ci->db->query($listingQry);
 
             if ($query->num_rows() <= 0) {
-                $listingQry = "select slip_no,frwd_throw,frwd_awb_no from shipment where deleted='N' and  booking_id IN  (" . $awb . ") and super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and `frwd_throw` IN ('ARAMEX') ORDER  BY FIELD(booking_id," . $awb . ")";
+                $listingQry = "select slip_no,frwd_throw,frwd_awb_no from shipment where deleted='N' and  booking_id IN  (" . $awb . ")  and `frwd_throw` IN ('ARAMEX') ORDER  BY FIELD(booking_id," . $awb . ")";
             }
         }
         $query = $ci->db->query($listingQry);
@@ -849,7 +849,7 @@ if (!function_exists('GetuniqIDbySellerId')) {
     function GetuniqIDbySellerId($cust_id = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT uniqueid FROM customer where seller_id='$cust_id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT uniqueid FROM customer where seller_id='$cust_id' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result['uniqueid'];
@@ -863,7 +863,7 @@ if (!function_exists('packedcount')) {
         $ci = & get_instance();
         $ci->load->database();
 
-        $sql = "SELECT count(id) as  packedcount FROM pickuplist_tbl where pickupId='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "' $cndition";
+        $sql = "SELECT count(id) as  packedcount FROM pickuplist_tbl where pickupId='$id'  $cndition";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result['packedcount'];
@@ -889,7 +889,7 @@ if (!function_exists('Getuniqueidbycustid')) {
     function Getuniqueidbycustid($cust_id = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT uniqueid FROM customer where id='$cust_id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT uniqueid FROM customer where id='$cust_id' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result['uniqueid'];
@@ -901,7 +901,7 @@ if (!function_exists('GetcheckPromocodeData')) {
     function GetcheckPromocodeData($seller_id = null, $promo = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT id FROM promo_tbl where seller_id='$seller_id' and promocode='$promo' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT id FROM promo_tbl where seller_id='$seller_id' and promocode='$promo' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result;
@@ -914,7 +914,7 @@ if (!function_exists('GetallaccountidBysellerID')) {
     function GetallaccountidBysellerID($uid = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT id FROM customer where uniqueid='$uid' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT id FROM customer where uniqueid='$uid' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         if(count($result)>0)
@@ -1020,7 +1020,7 @@ if (!function_exists('GetuserToatalLOcationQty')) {
     function GetuserToatalLOcationQty($id = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM item_inventory where id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "' ";
+        $sql = "SELECT $field FROM item_inventory where id='$id'  ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result[$field];
@@ -1048,7 +1048,7 @@ if (!function_exists('GetcustomerDropdata')) {
         $ci = & get_instance();
         $ci->load->database();
 
-        $sql = "SELECT id,uniqueid, company FROM customer WHERE  status='Y' and deleted='N' and access_fm='Y' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT id,uniqueid, company FROM customer WHERE  status='Y' and deleted='N' and access_fm='Y' ";
         $query = $ci->db->query($sql);
         $statusData = $query->result_array();
         return $statusData;
@@ -1131,7 +1131,7 @@ if (!function_exists('GetuserSkuAllqty')) {
     function GetuserSkuAllqty($seller_id = null, $item_sku = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT SUM(quantity) as tqty FROM item_inventory where seller_id='$seller_id'  and item_sku='$item_sku' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT SUM(quantity) as tqty FROM item_inventory where seller_id='$seller_id'  and item_sku='$item_sku' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result['tqty'];
@@ -1627,7 +1627,7 @@ if (!function_exists('GetcheckConditionsAddInventory')) {
     function GetcheckConditionsAddInventory($id) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT itemupdated FROM `pickup_request` WHERE `uniqueid`='$id' and code in ('MSI','DI') and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT itemupdated FROM `pickup_request` WHERE `uniqueid`='$id' and code in ('MSI','DI') ";
         $query = $ci->db->query($sql);
         $row = $query->row_array();
         return $row['itemupdated'];
@@ -1687,7 +1687,7 @@ if (!function_exists('GetManifestInventroyUpdateQty')) {
     function GetManifestInventroyUpdateQty($uid, $sid, $sku) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT received_qty as tqty FROM `pickup_request` WHERE `uniqueid`='$uid' and code='RI' and seller_id='$sid' and sku='$sku' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT received_qty as tqty FROM `pickup_request` WHERE `uniqueid`='$uid' and code='RI' and seller_id='$sid' and sku='$sku' ";
 
         $query = $ci->db->query($sql);
         $row = $query->row_array();
@@ -1728,7 +1728,7 @@ if (!function_exists('get_total_current')) {
         $status_condition = "and delivered='" . $status . "'";
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "select id from shipment_fm where  status='Y' and deleted='N' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "' $status_condition $current_date_new ";
+        $sql = "select id from shipment_fm where  status='Y' and deleted='N'  $status_condition $current_date_new ";
         $query = $ci->db->query($sql);
         $result = $query->result_array();
         return count($result);
@@ -1805,7 +1805,7 @@ if (!function_exists('getcheckslavenovalid')) {
     function getcheckslavenovalid($slave = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT * FROM warehous_shelve_no_fm where shelv_no='$slave' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT * FROM warehous_shelve_no_fm where shelv_no='$slave' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         if ($query->num_rows() == 0)
@@ -1823,7 +1823,7 @@ if (!function_exists('Getallskudatadetails')) {
     function Getallskudatadetails($slip_no = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "select (select id from items_m where items_m.sku=diamention_fm.sku and items_m.super_id='" . $ci->session->userdata('user_details')['super_id'] . "')as itmSku,piece from diamention_fm where deleted='N' and slip_no='" . $slip_no . "' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "select (select id from items_m where items_m.sku=diamention_fm.sku and items_m.super_id='" . $ci->session->userdata('user_details')['super_id'] . "')as itmSku,piece from diamention_fm where deleted='N' and slip_no='" . $slip_no . "' ";
         $query = $ci->db->query($sql);
         //echo  $ci->db->last_query; die();                
         $result = $query->result_array();
@@ -1836,7 +1836,7 @@ if (!function_exists('Getallskudatadetails_tracking')) {
     function Getallskudatadetails_tracking($slip_no = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "select * from diamention_fm where deleted='N' and slip_no='" . $slip_no . "' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "select * from diamention_fm where deleted='N' and slip_no='" . $slip_no . "' ";
         $query = $ci->db->query($sql);
         //echo  $ci->db->last_query; die();                
         $result = $query->result_array();
@@ -1849,7 +1849,7 @@ if (!function_exists('GetdiaMationTableDataFind')) {
     function GetdiaMationTableDataFind($slip_no = null, $sku = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "select * from diamention_fm where deleted='N' and slip_no='" . $slip_no . "' and sku='$sku' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "select * from diamention_fm where deleted='N' and slip_no='" . $slip_no . "' and sku='$sku' ";
         $query = $ci->db->query($sql);
         //echo  $ci->db->last_query; die();                
         $result = $query->row_array();
@@ -1867,7 +1867,7 @@ if (!function_exists('getallsellerdatabyID')) {
         $ci->load->database();
         if($super_id ==null)
         $super_id= $ci->session->userdata('user_details')['super_id'] ;
-        //$sql = "SELECT $field FROM customer where id='$id' and access_fm='Y' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        //$sql = "SELECT $field FROM customer where id='$id' and access_fm='Y' ";
          $sql = "SELECT $field FROM customer where id='$id' and access_fm='Y' and super_id='" . $super_id . "'";
      
         $query = $ci->db->query($sql);
@@ -1908,7 +1908,7 @@ if (!function_exists('getalldataitemtablesSKU')) {
     function getalldataitemtablesSKU($sku = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM items_m where sku='$sku' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT $field FROM items_m where sku='$sku' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result[$field];
@@ -1936,7 +1936,7 @@ if (!function_exists('GetallCutomerBysellerId')) {
     function GetallCutomerBysellerId($id = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM customer where id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT $field FROM customer where id='$id' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result[$field];
@@ -1948,7 +1948,7 @@ if (!function_exists('Getallstoragetablefield')) {
     function Getallstoragetablefield($id = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM storage_table where id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT $field FROM storage_table where id='$id' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result[$field];
@@ -1962,7 +1962,7 @@ if (!function_exists('getpickuprequestData')) {
     function getpickuprequestData($id = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM pickup_request where id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT $field FROM pickup_request where id='$id' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result[$field];
@@ -1975,7 +1975,7 @@ if (!function_exists('GetshpmentDataByawb')) {
     function GetshpmentDataByawb($awb = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM shipment_fm  where slip_no='$awb' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT $field FROM shipment_fm  where slip_no='$awb' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result[$field];
@@ -1987,7 +1987,7 @@ if (!function_exists('GetshipmentRowsDetailsPage')) {
     function GetshipmentRowsDetailsPage($awb = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT * FROM shipment_fm  where slip_no='$awb' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT * FROM shipment_fm  where slip_no='$awb' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result;
@@ -2000,7 +2000,7 @@ if (!function_exists('GetCityAllDataByname')) {
     function GetCityAllDataByname($name = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT * FROM country where city='".addslashes($name)."' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT * FROM country where city='".addslashes($name)."' ";
         $query = $ci->db->query($sql);
         //echo $ci->db->last_query();exit;
         return $query->row_array();
@@ -2016,7 +2016,7 @@ if (!function_exists('Getallsellerdata')) {
         $condition = '';
         if($type != ''){$condition = " invoice_type = '".$type."' and "; }
         //$sql = "SELECT id,name,company FROM customer where invoice_type='".$type."' and  super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and company!='' and access_fm='Y'";
-        $sql = "SELECT id,company as name,company FROM customer where ".$condition."  super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and company!='' and access_fm='Y'";
+        $sql = "SELECT id,company as name,company FROM customer where ".$condition."   company!='' and access_fm='Y'";
         
         $query = $ci->db->query($sql);
         $result = $query->result_array();
@@ -2103,7 +2103,7 @@ if (!function_exists('getcheckalreadyexitsstorage')) {
     function getcheckalreadyexitsstorage($id = null, $storage_id = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT id FROM storage_rate_table where storage_id='$storage_id' and client_id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT id FROM storage_rate_table where storage_id='$storage_id' and client_id='$id' ";
         $query = $ci->db->query($sql);
         $count = $query->num_rows();
         return $count;
@@ -2400,7 +2400,7 @@ if (!function_exists('UpdateStockBackorder_orderGen')) {
         foreach ($data as $rdata) {
             foreach ($rdata as $finaldata) {
 
-                $updates = "update item_inventory set quantity='" . $finaldata['upqty'] . "' where id='" . $finaldata['tableid'] . "' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+                $updates = "update item_inventory set quantity='" . $finaldata['upqty'] . "' where id='" . $finaldata['tableid'] . "' ";
                 $ci->db->query($updates);
 
                 if ($finaldata['slip_no'] != '') {
@@ -2430,10 +2430,10 @@ if (!function_exists('UpdateStockBackorder_orderGen')) {
                     $ci->db->query($insertdata);
                 }
                 if (!empty($finaldata['shelve_no'])) {
-                    $updates_dimation = "update diamention_fm set deducted_shelve='" . $finaldata['shelve_no'] . "' where slip_no='" . $finaldata['slip_no'] . "' and sku='" . $finaldata['sku'] . "' and deducted_shelve='' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+                    $updates_dimation = "update diamention_fm set deducted_shelve='" . $finaldata['shelve_no'] . "' where slip_no='" . $finaldata['slip_no'] . "' and sku='" . $finaldata['sku'] . "' and deducted_shelve='' ";
                     $ci->db->query($updates_dimation);
                 }
-                $updates_ship = "update shipment_fm set wh_id='" . $finaldata['wh_id'] . "' where slip_no='" . $finaldata['slip_no'] . "' and wh_id='0' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+                $updates_ship = "update shipment_fm set wh_id='" . $finaldata['wh_id'] . "' where slip_no='" . $finaldata['slip_no'] . "' and wh_id='0' ";
                 $ci->db->query($updates_ship);
                 //echo $ci->db->last_query();
             }
@@ -2456,16 +2456,16 @@ if (!function_exists('UpdateStockBackorder')) {
 
         foreach ($data as $rdata) {
             foreach ($rdata as $finaldata) {
-                $updates = "update item_inventory set quantity='" . $finaldata['upqty'] . "' where id='" . $finaldata['tableid'] . "' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+                $updates = "update item_inventory set quantity='" . $finaldata['upqty'] . "' where id='" . $finaldata['tableid'] . "' ";
                 $ci->db->query($updates);
                 if ($finaldata['slip_no'] != '' && $finaldata['pieces'] > 0) {
                     $newqty = $finaldata['totalqty'] - $finaldata['pieces'];
                     $insertdata = "insert into inventory_activity (user_id,seller_id,qty,p_qty,qty_used,item_sku,type,entrydate,awb_no,super_id) values('" . $ci->session->userdata('user_details')['user_id'] . "','" . $finaldata['seller_id'] . "','" . $newqty . "','" . $finaldata['totalqty'] . "','" . $finaldata['pieces'] . "','" . $finaldata['skuid'] . "','deducted','" . date('Y-m-d H:i:s') . "','" . $finaldata['slip_no'] . "','" . $ci->session->userdata('user_details')['super_id'] . "')";
                     $ci->db->query($insertdata);
                 }
-                $updates_dimation = "update diamention_fm set deducted_shelve='" . $finaldata['shelve_no'] . "' where slip_no='" . $finaldata['slip_no'] . "' and sku='" . $finaldata['sku'] . "' and deducted_shelve='' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+                $updates_dimation = "update diamention_fm set deducted_shelve='" . $finaldata['shelve_no'] . "' where slip_no='" . $finaldata['slip_no'] . "' and sku='" . $finaldata['sku'] . "' and deducted_shelve='' ";
                 $ci->db->query($updates_dimation);
-                $updates_ship = "update shipment_fm set wh_id='" . $finaldata['wh_id'] . "' where slip_no='" . $finaldata['slip_no'] . "' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and wh_id='0'";
+                $updates_ship = "update shipment_fm set wh_id='" . $finaldata['wh_id'] . "' where slip_no='" . $finaldata['slip_no'] . "'  and wh_id='0'";
                 $ci->db->query($updates_ship);
 
 
@@ -2482,15 +2482,32 @@ if (!function_exists('statusCount_back')) {
         $ci->load->database();
         if ($ci->session->userdata('user_details')['user_type'] != 1) {
             $wh_id = $ci->session->userdata('user_details')['wh_id'];
-            $cndition = " and wh_id='$wh_id'";
+            $cndition = " and wh_id='$wh_id'";  
         }
-        $sql = "SELECT COUNT(ID) as total_cnt FROM shipment_fm  where  deleted='N' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and backorder='1' $cndition";
+        $sql = "SELECT COUNT(ID) as total_cnt FROM shipment_fm where delivered='11'and super_id !=6  and deleted='N' and backorder='1' $cndition";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result['total_cnt'];
     }
 
 }
+if (!function_exists('monthstatusCount_back')) {
+
+    function monthstatusCount_back($id = null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        if ($ci->session->userdata('user_details')['user_type'] != 1) {
+            $wh_id = $ci->session->userdata('user_details')['wh_id'];
+            $cndition = " and wh_id='$wh_id'";  
+        }
+        $sql = "SELECT COUNT(ID) as total_cnt FROM shipment_fm where delivered='11'and super_id='175' and super_id !=6  AND DATE(shipment_fm.entrydate) BETWEEN '".date('Y-m-01')."' AND '". date('Y-m-t') ."' and deleted='N' and backorder='1' $cndition  ";
+        $query = $ci->db->query($sql);
+        $result = $query->row_array();
+        return $result['total_cnt'];
+    }
+
+}
+
 if (!function_exists('getcheckalreadyexitsFinance')) {
 
     function getcheckalreadyexitsFinance($id = null, $cat_id = null) {
@@ -2508,7 +2525,7 @@ if (!function_exists('getalluserstoragerates')) {
     function getalluserstoragerates($id = null, $storage_id = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM storage_rate_table where storage_id='$storage_id' and client_id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT $field FROM storage_rate_table where storage_id='$storage_id' and client_id='$id' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result[$field];
@@ -2521,7 +2538,7 @@ if (!function_exists('getalluserfinanceRates')) {
     function getalluserfinanceRates($id = null, $cat_id = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM finance_carges where cat_id='$cat_id' and seller_id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT $field FROM finance_carges where cat_id='$cat_id' and seller_id='$id' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result[$field];
@@ -2534,7 +2551,7 @@ if (!function_exists('GetallpickupChagresinvoice')) {
     function GetallpickupChagresinvoice($seller_id = null, $mdate = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT SUM($field) as totalcharge FROM orderpickupinvoice where seller_id='$seller_id' and DATE(entrydate)='$mdate' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT SUM($field) as totalcharge FROM orderpickupinvoice where seller_id='$seller_id' and DATE(entrydate)='$mdate' ";
         $query = $ci->db->query($sql);
         //echo $this->db->last_query();
         $result = $query->row_array();
@@ -2619,7 +2636,7 @@ if (!function_exists('GetallpackingChargetransport')) {
     function GetallpackingChargetransport($seller_id = null, $mdate = null, $slip_no = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT SUM($field) as totalcharge FROM orderinvoicepicking where seller_id='$seller_id' and DATE(entrydate)='$mdate' and slip_no='$slip_no' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT SUM($field) as totalcharge FROM orderinvoicepicking where seller_id='$seller_id' and DATE(entrydate)='$mdate' and slip_no='$slip_no' ";
         $query = $ci->db->query($sql);
         //return $this->db->last_query();
         $result = $query->row_array();
@@ -2634,7 +2651,7 @@ if (!function_exists('GetalloutboundtransportChagres')) {
     function GetalloutboundtransportChagres($seller_id = null, $mdate = null, $slip_no = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT SUM(outcharge) as totalcharge FROM orderoutboundinvoice where seller_id='$seller_id' and DATE(entrydate)='$mdate'  and slip_no='$slip_no' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "' ";
+        $sql = "SELECT SUM(outcharge) as totalcharge FROM orderoutboundinvoice where seller_id='$seller_id' and DATE(entrydate)='$mdate'  and slip_no='$slip_no'  ";
         $query = $ci->db->query($sql);
         //echo $this->db->last_query(); 
         $result = $query->row_array();
@@ -2648,7 +2665,7 @@ if (!function_exists('GetalloutboundChargeinvoice')) {
     function GetalloutboundChargeinvoice($seller_id = null, $mdate = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT SUM($field) as totalcharge FROM orderoutboundinvoice where seller_id='$seller_id' and DATE(entrydate)='$mdate' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT SUM($field) as totalcharge FROM orderoutboundinvoice where seller_id='$seller_id' and DATE(entrydate)='$mdate' ";
         $query = $ci->db->query($sql);
         //return $this->db->last_query();
         $result = $query->row_array();
@@ -2661,7 +2678,7 @@ if (!function_exists('GetalldailyrentelChargesinvocie')) {
     function GetalldailyrentelChargesinvocie($seller_id = null, $mdate = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT SUM($field) as totalcharge FROM storagesinvoices where seller_id='$seller_id' and DATE(entrydate)='$mdate' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT SUM($field) as totalcharge FROM storagesinvoices where seller_id='$seller_id' and DATE(entrydate)='$mdate' ";
         $query = $ci->db->query($sql);
         //return $this->db->last_query();
         $result = $query->row_array();
@@ -2674,7 +2691,7 @@ if (!function_exists('GetallpackingChargeinvoices')) {
     function GetallpackingChargeinvoices($seller_id = null, $mdate = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT SUM($field) as totalcharge FROM orderinvoicepicking where seller_id='$seller_id' and DATE(entrydate)='$mdate' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT SUM($field) as totalcharge FROM orderinvoicepicking where seller_id='$seller_id' and DATE(entrydate)='$mdate' ";
         $query = $ci->db->query($sql);
         //return $this->db->last_query();
         $result = $query->row_array();
@@ -2687,7 +2704,7 @@ if (!function_exists('GetallPortelRentelChargesInvocie')) {
     function GetallPortelRentelChargesInvocie($seller_id = null, $mdate = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT SUM($field) as totalcharge FROM clientportalinvocie where seller_id='$seller_id' and DATE(entrydate)='$mdate' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT SUM($field) as totalcharge FROM clientportalinvocie where seller_id='$seller_id' and DATE(entrydate)='$mdate' ";
         $query = $ci->db->query($sql);
         //return $this->db->last_query();
         $result = $query->row_array();
@@ -2701,7 +2718,7 @@ if (!function_exists('Getbarcode_printInvoiceData')) {
     function Getbarcode_printInvoiceData($seller_id = null, $mdate = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT SUM($field) as totalcharge FROM skubarcode_print where seller_id='$seller_id' and DATE(entrydate)='$mdate' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT SUM($field) as totalcharge FROM skubarcode_print where seller_id='$seller_id' and DATE(entrydate)='$mdate' ";
         $query = $ci->db->query($sql);
         //return $this->db->last_query();
         $result = $query->row_array();
@@ -2727,10 +2744,10 @@ if (!function_exists('GetpickupStatus')) {
 
 if (!function_exists('getallitemskubyid')) {
 
-    function getallitemskubyid($sku = null) {
+    function getallitemskubyid($sku = null,$super_id=null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT id FROM items_m where sku='$sku' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT id FROM items_m where sku='$sku' and super_id='$super_id' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result['id'];
@@ -2743,7 +2760,7 @@ if (!function_exists('GetskuDetailsForPrint')) {
     function GetskuDetailsForPrint($sku = array()) {
         $ci = & get_instance();
         $ci->load->database();
-        //  $sql = "SELECT id FROM items_m where sku='$sku' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        //  $sql = "SELECT id FROM items_m where sku='$sku' ";
         $ci->db->select('*');
         $ci->db->from('items_m');
         $ci->db->where_in('sku', $sku);
@@ -2762,7 +2779,7 @@ if (!function_exists('getshelveNobyid')) {
     function getshelveNobyid($sku = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT shelve_no FROM item_inventory where item_sku='$sku' and quantity>0 and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT shelve_no FROM item_inventory where item_sku='$sku' and quantity>0 ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result['shelve_no'];
@@ -2776,7 +2793,7 @@ if (!function_exists('GetallremoveskuQty')) {
     function GetallremoveskuQty($sku = null, $seller_id = null, $uniqueid = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT id FROM pickup_request where sku='$sku' and code in('MSI','DI') and seller_id='$seller_id' and uniqueid='$uniqueid' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT id FROM pickup_request where sku='$sku' and code in('MSI','DI') and seller_id='$seller_id' and uniqueid='$uniqueid' ";
         $query = $ci->db->query($sql);
         $result = $query->result_array();
         return count($result);
@@ -2789,7 +2806,7 @@ if (!function_exists('getalldataitemtables')) {
     function getalldataitemtables($id = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM items_m where id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT $field FROM items_m where id='$id' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result[$field];
@@ -2802,7 +2819,7 @@ if (!function_exists('getalldataitemtablesBySku')) {
     function getalldataitemtablesBySku($id = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM items_m where sku='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT $field FROM items_m where sku='$id' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result[$field];
@@ -2819,7 +2836,7 @@ if (!function_exists('GetCourierCompanyDrop')) {
     function GetCourierCompanyDrop($id = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT id,company,cc_id FROM courier_company where status='Y' and (api_url!='' || api_url_t!='') and deleted='N' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "' order by company";
+        $sql = "SELECT id,company,cc_id FROM courier_company where status='Y' and (api_url!='' || api_url_t!='') and deleted='N' group by cc_id order by company";
         $query = $ci->db->query($sql);
         $result = $query->result_array();
         return $result;
@@ -2831,7 +2848,7 @@ if (!function_exists('GetcuriertableData')) {
     function GetcuriertableData($id = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT * FROM courier_company where status='Y' and deleted='N' and id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT * FROM courier_company where status='Y' and deleted='N' and id='$id' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result;
@@ -2856,7 +2873,7 @@ if (!function_exists('getUserNameByIdType')) {
 
         if ($usertype == 'user') {
 
-            $sql = "SELECT name as username FROM customer where id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+            $sql = "SELECT name as username FROM customer where id='$id' ";
         } else {
             $sql = "SELECT username FROM user where id='$id'";
         }
@@ -2877,11 +2894,28 @@ if (!function_exists('statusCount')) {
             // $wh_id = $ci->session->userdata('user_details')['wh_id'];
             // $cndition = " and wh_id='$wh_id'";
         }
-        $sql = "SELECT COUNT(ID) as total_cnt FROM shipment_fm  where delivered='" . $id . "' and deleted='N' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and backorder='0' $cndition";
+        $sql = "SELECT COUNT(ID) as total_cnt FROM shipment_fm  where delivered='" . $id . "' and deleted='N' and super_id !=6   and backorder='0' $cndition";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result['total_cnt'];
-    }
+    }  
+
+}
+
+if (!function_exists('monthstatusCount')) {
+
+    function monthstatusCount($id = null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        if ($ci->session->userdata('user_details')['user_type'] != 1) {
+            // $wh_id = $ci->session->userdata('user_details')['wh_id'];
+            // $cndition = " and wh_id='$wh_id'";
+        }
+        $sql = "SELECT COUNT(ID) as total_cnt FROM shipment_fm  where  DATE(shipment_fm.entrydate) BETWEEN '".date('Y-m-01')."' AND '". date('Y-m-t') ."' and delivered='" . $id . "'  and deleted='N' and super_id !=6 and super_id =175  and backorder='0' $cndition";
+        $query = $ci->db->query($sql);
+        $result = $query->row_array();
+        return $result['total_cnt'];
+    }  
 
 }
 if (!function_exists('ManifeststatusCount')) {
@@ -2892,8 +2926,24 @@ if (!function_exists('ManifeststatusCount')) {
         if ($ci->session->userdata('user_details')['user_type'] != 1) {
             $wh_id = $ci->session->userdata('user_details')['wh_id'];
             $cndition = " and wh_id='$wh_id'";
-        }
-        $sql = "SELECT id FROM delivery_manifest  where  deleted='N' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'  $cndition group by m_id";
+        } 
+        $sql = "SELECT id FROM delivery_manifest  where  deleted='N'   $cndition group by m_id";
+        $query = $ci->db->query($sql);
+        $result = $query->result_array();
+        return count($result);
+    }
+
+}
+if (!function_exists('MonthManifeststatusCount')) {
+
+    function MonthManifeststatusCount($id = null) {
+        $ci = & get_instance();
+        $ci->load->database();
+        if ($ci->session->userdata('user_details')['user_type'] != 1) {
+            $wh_id = $ci->session->userdata('user_details')['wh_id'];
+            $cndition = " and wh_id='$wh_id'";
+        } 
+        $sql = "SELECT id FROM delivery_manifest  where  DATE(delivery_manifest.entry_date) BETWEEN '".date('Y-m-01')."' AND '". date('Y-m-t') ."' and deleted='N' and super_id !=6   $cndition group by m_id";
         $query = $ci->db->query($sql);
         $result = $query->result_array();
         return count($result);
@@ -2905,7 +2955,7 @@ if (!function_exists('getallsratusshipmentid')) {
     function getallsratusshipmentid($shipid = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM shipment_fm  where id='$shipid' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT $field FROM shipment_fm  where id='$shipid' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result[$field];
@@ -2919,7 +2969,7 @@ if (!function_exists('BookingIdCheck_cust')) {
     function BookingIdCheck_cust($booking_id = null, $cust_id = null, $id = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $site_query = "select slip_no from shipment_fm where booking_id='" . trim($booking_id) . "' and cust_id='" . $cust_id . "' and deleted='N' and id!='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'  ";
+        $site_query = "select slip_no from shipment_fm where booking_id='" . trim($booking_id) . "' and cust_id='" . $cust_id . "' and deleted='N' and id!='$id'   ";
         $query = $ci->db->query($site_query);
         $result = $query->row_array();
         return $result['slip_no'];
@@ -2931,7 +2981,7 @@ if (!function_exists('getAllDestination')) {
     function getAllDestination($id = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT id,city FROM country where deleted='N' and city!='' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT id,city FROM country where deleted='N' and city!='' ";
         $query = $ci->db->query($sql);
         $result = $query->result_array();
         return $result;
@@ -2943,7 +2993,8 @@ if (!function_exists('getdestinationfieldshow')) {
     function getdestinationfieldshow($id = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM country where id='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        
+        $sql = "SELECT $field FROM country where id='$id'";
         //echo $sql;
         $query = $ci->db->query($sql);
         $result = $query->row_array();
@@ -2957,7 +3008,7 @@ if (!function_exists('GetErrorShowShipment')) {
     function GetErrorShowShipment($slip_no = null, $booking_id = null, $field = null) {
         $ci = & get_instance();
         $ci->load->database();
-        //and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'
+        //
         $sql = "SELECT $field FROM shipment_pulling_errors where slip_no='$slip_no' and booking_id='$booking_id' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
@@ -2970,7 +3021,7 @@ if (!function_exists('getdestinationfieldshow_name')) {
     function getdestinationfieldshow_name($id = null, $field = null, $matchfield = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT $field FROM country where   $matchfield='$id' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT $field FROM country where   $matchfield='$id' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result[$field];
@@ -2996,7 +3047,7 @@ if (!function_exists('GetStatusFmTableCodes')) {
     function GetStatusFmTableCodes($slip_no = null, $code = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT entry_date FROM status_fm where slip_no='$slip_no' and code='$code' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT entry_date FROM status_fm where slip_no='$slip_no' and code='$code' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result['entry_date'];
@@ -3012,7 +3063,7 @@ if (!function_exists('checkPrivilageExitsForCustomer')) {
 
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "select privilage_array from set_user_privilege_fm where customer_id='" . $customer_id . "' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "' ";
+        $sql = "select privilage_array from set_user_privilege_fm where customer_id='" . $customer_id . "'  ";
         $query = $ci->db->Query($sql);
         $data = $query->row_array();
         $privilage = $data['privilage_array'];
@@ -3104,7 +3155,7 @@ if (!function_exists('menuIdExitsInPrivilageArray')) {
 
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "select privilage_array from set_user_privilege_fm where customer_id='" . $ci->session->userdata('user_details')['user_id'] . "' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "select privilage_array from set_user_privilege_fm where customer_id='" . $ci->session->userdata('user_details')['user_id'] . "' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         $privielage_array = explode(',', $result['privilage_array']);
@@ -3142,7 +3193,7 @@ if (!function_exists('GetSuperAdminAccessIds')) {
     function GetSuperAdminAccessIds() {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT privilage_array FROM set_user_privilege_fm where customer_id='" . $ci->session->userdata('user_details')['super_id'] . "'  and super_id='" . $ci->session->userdata('user_details')['super_id'] . "' ";
+        $sql = "SELECT privilage_array FROM set_user_privilege_fm where customer_id='" . $ci->session->userdata('user_details')['super_id'] . "'   ";
         $query = $ci->db->query($sql);
         $row = $query->row_array();
         return $row['privilage_array'];
@@ -3154,7 +3205,7 @@ if (!function_exists('getIdfromCityName')) {
     function getIdfromCityName($city) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT id FROM country where deleted='N' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and city Like '" . $city . "'";
+        $sql = "SELECT id FROM country where deleted='N'  and city Like '" . $city . "'";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result['id'];
@@ -3512,7 +3563,7 @@ function getCityCode($city_id = null) {
 
     $ci = & get_instance();
     $ci->load->database();
-    $sql = "select city_code from country where (id='" . $city_id . "' or city='" . $city_id . "') and deleted='N' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+    $sql = "select city_code from country where (id='" . $city_id . "' or city='" . $city_id . "') and deleted='N' ";
     $query = $ci->db->query($sql);
     $statusData = $query->row_array();
     return $status = $statusData['city_code'];
@@ -3686,7 +3737,7 @@ if (!function_exists('GetdeliveryreportArr')) {
             $condition = " and  delivered in(1,2,3,4,5)";
         else
             $condition = " and delivered='$delivered'";
-        $getCustName = "SELECT count(id) as totalship FROM shipment_fm  WHERE  deleted='N' and status='Y' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'  and frwd_company_id='$id' $condition $condition2  group by frwd_company_id";
+        $getCustName = "SELECT count(id) as totalship FROM shipment_fm  WHERE  deleted='N' and status='Y'   and frwd_company_id='$id' $condition $condition2  group by frwd_company_id";
         $query = $ci->db->query($getCustName);
         $cusNameRun = $query->row_array();
         $totalno = $cusNameRun['totalship'];
@@ -3740,7 +3791,7 @@ if (!function_exists('Alertcountshowdata')) {
         if ($type == 'two')
             $sql = "SELECT COUNT(ID) as total_cnt FROM `item_inventory` WHERE super_id='" . $ci->session->userdata('user_details')['super_id'] . "' GROUP BY `item_sku` HAVING SUM(quantity) < (SELECT less_qty from items_m where id=item_sku and items_m.super_id='" . $ci->session->userdata('user_details')['super_id'] . "') ";
         else
-            $sql = "SELECT COUNT(ID) as total_cnt FROM  item_inventory WHERE  expity_date<(CURDATE() + INTERVAL (SELECT alert_day from items_m where id=item_sku) DAY) and super_id='" . $ci->session->userdata('user_details')['super_id'] . "' and expity_date>(CURDATE())";
+            $sql = "SELECT COUNT(ID) as total_cnt FROM  item_inventory WHERE  expity_date<(CURDATE() + INTERVAL (SELECT alert_day from items_m where id=item_sku) DAY)  and expity_date>(CURDATE())";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         if ($type == 'two')
@@ -3756,7 +3807,7 @@ if (!function_exists('GetCourierCompanyStausActive')) {
     function GetCourierCompanyStausActive($name = null) {
         $ci = & get_instance();
         $ci->load->database();
-        $sql = "SELECT status FROM courier_company where company='$name' and deleted='N' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT status FROM courier_company where company='$name' and deleted='N' ";
         $query = $ci->db->query($sql);
         $result = $query->row_array();
         return $result['status'];
@@ -4055,7 +4106,7 @@ if (!function_exists('cityList')) {
         $ci = & get_instance();
         $ci->load->database();
     
-        $sql = "SELECT city,id FROM country where deleted='N' and city!='' and `country`='" . $country . "' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'";
+        $sql = "SELECT  city FROM country where deleted='N' and city!='' and `country`='" . $country . "' group by city order by city ";
         $query = $ci->db->query($sql);
         $result = $query->result_array();
         return $result;
@@ -4072,7 +4123,7 @@ if (!function_exists('cityList')) {
             {
                 $condition=" and id='".$city."'";
             }
-           $sql = "SELECT DISTINCT `country` as country FROM country where deleted='N' and `country`!='' and super_id='" . $ci->session->userdata('user_details')['super_id'] . "'" .$condition;
+           $sql = "SELECT DISTINCT `country` as country FROM country where deleted='N' and `country`!='' " .$condition;
             $query = $ci->db->query($sql);
             $result = $query->result_array();
             return $result;

@@ -13,6 +13,7 @@ class Home extends MY_Controller {
         $this->load->model('Seller_model');
         $this->load->model('Shipment_model');
         $this->load->helper('form');
+        $this->load->helper('utility_helper');
         // $this->user_id = isset($this->session->get_userdata()['user_details'][0]->id)?$this->session->get_userdata()['user_details'][0]->users_id:'1';
     }
 
@@ -223,13 +224,13 @@ class Home extends MY_Controller {
         print_r($totalorderschart);
     }
 
-    public function index() {
-        // echo md5('Am@2021@@@'); die;
+    public function index() {  
+         //echo md5('Am@2021@@@'); die;
 
         
         $year= $this->input->post('year'); 
         if ($this->session->userdata('user_details')) {
-
+            // echo statusCount(4);   die;
             $Total_Shipments = $this->Shipment_model->count();
             $Total_Rts = $this->Shipment_model->countRTS();
             $Item_Inventory = $this->ItemInventory_model->count_all();
@@ -237,6 +238,12 @@ class Home extends MY_Controller {
             $Total_Items = $this->Item_model->count();
             $Total_Cartoons = $this->Cartoon_model->count_all();
             $totalorderschart = $this->Shipment_model->Getalltotalchartmonth($year);
+            // $sql = $this->db->query("SELECT COUNT(ID) as total_cnt FROM shipment_fm  where delivered='8' and deleted='N'  and backorder='0' $cndition");
+          
+            // $result=$sql->result();
+            // print_r($result);
+            // echo count($result);
+            // die;
 
             //print_r($totalorderschart); die;
             //print_r(json_encode($totalorderschart));die;
@@ -257,7 +264,46 @@ class Home extends MY_Controller {
             redirect(base_url() . 'Login');
         }
     }
+    public function test() {  
+      //echo md5('Am@2021@@@'); die;
 
+     
+     $year= $this->input->post('year'); 
+     if ($this->session->userdata('user_details')) {
+         // echo statusCount(4);   die;
+         $Total_Shipments = $this->Shipment_model->count();
+         $Total_Rts = $this->Shipment_model->countRTS();
+         $Item_Inventory = $this->ItemInventory_model->count_all();
+         $Item_Inventory_expire = $this->ItemInventory_model->count_all_expire('exp');
+         $Total_Items = $this->Item_model->count();
+         $Total_Cartoons = $this->Cartoon_model->count_all();
+         $totalorderschart = $this->Shipment_model->Getalltotalchartmonth($year);
+         // $sql = $this->db->query("SELECT COUNT(ID) as total_cnt FROM shipment_fm  where delivered='8' and deleted='N'  and backorder='0' $cndition");
+       
+         // $result=$sql->result();
+         // print_r($result);
+         // echo count($result);
+         // die;
+
+         //print_r($totalorderschart); die;
+         //print_r(json_encode($totalorderschart));die;
+         $Total_Sellers = $this->Seller_model->count();
+         $this->load->view('home1', [
+             'Total_Shipments' => $Total_Shipments,
+             'Total_Rts' => $Total_Rts,
+             'Item_Inventory' => $Item_Inventory,
+             'Total_Items' => $Total_Items,
+             'Total_Cartoons' => $Total_Cartoons,
+             'Total_Sellers' => $Total_Sellers,
+             'totalorderschart' => $totalorderschart,
+             'Item_Inventory_expire' => $Item_Inventory_expire
+         ]);
+
+         //$this->load->view('home');
+     } else {
+         redirect(base_url() . 'Login');
+     }
+ }
     public function logout() {
 
 

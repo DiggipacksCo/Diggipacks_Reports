@@ -38,7 +38,7 @@ class Seller_model extends CI_Model {
     // }
 
     public function fetch_all_cities() {
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+      //  $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('id,city');
         $this->db->where('deleted', 'N');
         $this->db->where("city!=''");
@@ -51,7 +51,7 @@ class Seller_model extends CI_Model {
     
 
     public function all() {
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+      //  $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('access_fm', 'Y');
         $this->db->order_by('id', 'desc');
 
@@ -71,7 +71,7 @@ class Seller_model extends CI_Model {
     }
 
     public function edit_view($id) {
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+      //  $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('id', $id);
         $query = $this->db->get('customer');
         if ($query->num_rows() > 0) {
@@ -80,7 +80,7 @@ class Seller_model extends CI_Model {
     }
 
     public function edit_view_customerdata($id) {
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+      //  $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('id', $id);
         $query = $this->db->get('customer');
         if ($query->num_rows() > 0) {
@@ -90,7 +90,7 @@ class Seller_model extends CI_Model {
 
 
     public function edit($id, $data) {
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+      //  $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('id', $id);
 
         //echo $this->db->last_query(); die;
@@ -98,7 +98,7 @@ class Seller_model extends CI_Model {
     }
 
     public function edit_custimer($id, $data) {
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+      //  $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         //print_r($data);exit;
         $this->db->where('id', $id);
         return $this->db->update('customer', $data);
@@ -106,7 +106,7 @@ class Seller_model extends CI_Model {
 
     public function find($id) {
         $this->db->where('access_fm', 'Y');
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+      //  $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('id', $id);
         // $this->db->get_where('seller_m',array('id'=>$id));
         $query = $this->db->get('customer');
@@ -117,7 +117,7 @@ class Seller_model extends CI_Model {
 
     public function customers() {
         $this->db->where('access_fm', 'Y');
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+      //  $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('seller_id', 0);
         $query = $this->db->get('customer');
 
@@ -127,7 +127,7 @@ class Seller_model extends CI_Model {
     }
 
     public function customer($seller_id, $customer_id) {
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+      //  $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $data = array(
             'seller_id' => $seller_id
         );
@@ -146,7 +146,7 @@ class Seller_model extends CI_Model {
     }
 
     public function find_customer($id) {
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+      //  $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('id', $id);
         $query = $this->db->get('customer');
 
@@ -156,7 +156,7 @@ class Seller_model extends CI_Model {
     }
 
     public function find_customer_sellerm($id) {
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+      //  $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('id', $id);
         $query = $this->db->get('customer');
         //echo $this->db->last_query(); die;
@@ -168,7 +168,7 @@ class Seller_model extends CI_Model {
     public function find1() {
 
         $this->db->where('access_fm', 'Y');
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        // $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $query = $this->db->get('customer');
 
         if ($query->num_rows() > 0) {
@@ -178,7 +178,7 @@ class Seller_model extends CI_Model {
 
     public function find2() {
         $this->db->where('access_fm', 'Y');
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        // $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         //$this->db->where('seller_id!=',0);
         $query = $this->db->get('customer');
 
@@ -198,13 +198,13 @@ class Seller_model extends CI_Model {
 
 
     public function update_zid($id, $data) {
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+      //  $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('id', $id);
         return $this->db->update('customer', $data);
     }
 
     public function update_salla($id, $data) {
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+      //  $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         //print_r($data);exit;
         $this->db->where('id', $id);
         
@@ -275,7 +275,7 @@ class Seller_model extends CI_Model {
     }
     
      public function update_shopify($id, $data) {
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+      //  $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('id', $id);
         return $this->db->update('customer', $data);
          
@@ -283,7 +283,7 @@ class Seller_model extends CI_Model {
     
     public function update_Woocommerce($id, $data) {
         
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+      //  $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->where('id', $id);
         $this->db->update('customer', $data);
         //echo $this->db->last_query();die;

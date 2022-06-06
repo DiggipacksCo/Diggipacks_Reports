@@ -326,6 +326,15 @@ class Country_model extends CI_Model {
          return $query->result_array();
     }
     
+    public function getIdsByCityName($name=array()) { 
+    
+      $this->db->select('`id`');
+      $this->db->from('country');
+      $this->db->where_in('city',$name);
+      $query = $this->db->get();
+   //  echo $this->db->last_query()."<br>"; 
+       return $query->result_array();
+  }
     
     public function GetDataUpdateCIty_new($data=array())
     {

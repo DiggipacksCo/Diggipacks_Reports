@@ -6,10 +6,10 @@ class Generalsetting extends MY_Controller {
 
     function __construct() {
         parent::__construct();
-        if (menuIdExitsInPrivilageArray(68) == 'N') {
-            redirect(base_url() . 'notfound');
-            die;
-        }
+        // if ( $this->session->userdata('user_details')['super_id']!=54) {
+        //     redirect(base_url() . 'notfound');
+        //     die;
+        // }
         $this->load->model('General_model');
         $this->load->model('Seller_model');
         $this->load->model('Shipment_model');

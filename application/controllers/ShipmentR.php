@@ -7,12 +7,12 @@ class ShipmentR extends MY_Controller {
     function __construct() {
         parent::__construct();
 
-        if ($this->session->userdata('user_details')['user_id'] == null || $this->session->userdata('user_details')['user_id'] < 1) {
-            // Prevent infinite loop by checking that this isn't the login controller               
-            if ($this->router->class != 'User') {
-                redirect(base_url());
-            }
-        }
+        // if ($this->session->userdata('user_details')['user_id'] == null || $this->session->userdata('user_details')['user_id'] < 1) {
+        //     // Prevent infinite loop by checking that this isn't the login controller               
+        //     if ($this->router->class != 'User') {
+        //         redirect(base_url());
+        //     }
+        // }
         $this->load->model('Shipment_model');
         $this->load->model('ShipmentR_model');
         $this->load->model('Seller_model');

@@ -241,7 +241,7 @@ class Excel_export_model extends CI_Model {
             $limit = $filter['filterData']['exportlimit'];
         }
 
-        $this->db->where('item_inventory.super_id', $this->session->userdata('user_details')['super_id']);
+       // $this->db->where('item_inventory.super_id', $this->session->userdata('user_details')['super_id']);
 
         if (isset($filter['filterData']['seller']) && !empty($filter['filterData']['seller'])) {
             $this->db->where('seller_m.id', $filter['filterData']['seller']);
@@ -271,8 +271,8 @@ class Excel_export_model extends CI_Model {
         if (isset($filter['filterData']['stock_location']) && !empty($filter['filterData']['stock_location'])) {
             $this->db->where('item_inventory.stock_location', $filter['filterData']['stock_location']);
         }
-        if (isset($filter['filterData']['wh_name']) && !empty($filter['filterData']['wh_name'])) {
-            $this->db->where('warehouse_category.name', $filter['filterData']['wh_name']);
+        if (isset($filter['filterData']['id']) && !empty($filter['filterData']['id'])) {
+            $this->db->where('item_inventory.super_id', $filter['filterData']['wh_name']);
         }
         if (isset($filter['filterData']['item_description']) && !empty($filter['filterData']['item_description'])) {
             $this->db->where('items_m.description', $filter['filterData']['item_description']);
@@ -305,7 +305,7 @@ class Excel_export_model extends CI_Model {
             $selectQry[] = " item_inventory.shelve_no AS Shelve NO";
         }
         if (isset($filter['listData2']['wh_name']) && !empty($filter['listData2']['wh_name'])) {
-            $selectQry[] = " (select name from warehouse_category where warehouse_category.id=item_inventory.wh_id) AS Warehouse";
+            $selectQry[] = " user.company AS Warehouse";
         }
         if (isset($filter['listData2']['quantity']) && !empty($filter['listData2']['quantity'])) {
             $selectQry[] = " item_inventory.quantity AS QUANTITY";
@@ -334,7 +334,7 @@ class Excel_export_model extends CI_Model {
         $this->db->from('item_inventory');
         $this->db->join('items_m', 'items_m.id = item_inventory.item_sku');
         $this->db->join('customer as seller_m', 'seller_m.id = item_inventory.seller_id');
-        $this->db->join('warehouse_category', 'warehouse_category.id = item_inventory.wh_id');
+        $this->db->join('user', 'user.id = item_inventory.super_id');
         $this->db->order_by('item_inventory.id', 'DESC');
         $this->db->limit($limit);
         $query = $this->db->get();

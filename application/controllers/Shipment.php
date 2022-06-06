@@ -30,10 +30,10 @@ class Shipment extends MY_Controller {
 
     public function index() {
         $data = GetCourierCompanyDrop();
-        if (menuIdExitsInPrivilageArray(1) == 'N') {
-            redirect(base_url() . 'notfound');
-            die;
-        }
+        // if (menuIdExitsInPrivilageArray(1) == 'N') {
+        //     redirect(base_url() . 'notfound');
+        //     die;
+        // }
 
         //echo "sssssss"; die;
         // $status=$this->Shipment_model->allstatus();
@@ -109,10 +109,10 @@ class Shipment extends MY_Controller {
         $this->load->view('ShipmentM/reverse_client');
     }
     public function ViewReverseShipment() {
-         if (menuIdExitsInPrivilageArray(146) == 'N') {
-            redirect(base_url() . 'notfound');
-            die;
-        }
+        //  if (menuIdExitsInPrivilageArray(146) == 'N') {
+        //     redirect(base_url() . 'notfound');
+        //     die;
+        // }
         $this->load->view('ShipmentM/view_reverse_shipments');
     }
     public function forward_report() {
@@ -225,10 +225,7 @@ class Shipment extends MY_Controller {
     }
 
     public function manifestView($id = null) {
-        if (menuIdExitsInPrivilageArray(103) == 'N') {
-            redirect(base_url() . 'notfound');
-            die;
-        }
+        
         $data['m_id'] = $id;
         //echo $pickUpId;
         $this->load->view('ShipmentM/manifestView', $data);
@@ -2690,7 +2687,7 @@ if(!empty( $searchids))
     }
 
     public function filter() {
-        // print("heelo"); 
+        // print("heelo Manish");     
         // exit();
         // $search=$this->input->post('tracking_numbers');
         // echo $search;exit;
@@ -2717,7 +2714,19 @@ if(!empty( $searchids))
         $destination = $_POST['destination'];
         $booking_id = $_POST['booking_id'];
         $cc_id = $_POST['cc_id'];
-        
+        $this->load->model('Country_model');
+        if(!empty($destination))
+        {
+          $dData=  $this->Country_model-> getIdsByCityName($destination); 
+          $destination=array();
+          foreach($dData as $val)
+          {
+            $destination[]=$val['id'];
+          }
+        //   print_r($destination);
+        //   exit;
+        }
+       
         
         $is_menifest = isset($_POST['is_manifest']) ? $_POST['is_manifest'] : null;
 
@@ -2771,9 +2780,9 @@ if(!empty( $searchids))
           
             //if($expire_data[$ii]['sku']==$rdata['sku'])
             $shiparray[$ii]['expire_details'] = $expire_data;
-            $shiparray[$ii]['origin'] = getdestinationfieldshow($rdata['origin'], 'city');
-            $shiparray[$ii]['destination'] = getdestinationfieldshow($rdata['destination'], 'city');
-            $shiparray[$ii]['wh_id'] = Getwarehouse_categoryfield($rdata['wh_id'], 'name');
+            $shiparray[$ii]['origin'] = getdestinationfieldshow($rdata['origin'], 'city',$rdata['super_id']);
+            $shiparray[$ii]['destination'] = getdestinationfieldshow($rdata['destination'], 'city',$rdata['super_id']);
+            $shiparray[$ii]['wh_id'] = Getwarehouse_categoryfield($rdata['wh_id'], 'name',$rdata['super_id']);
             $shiparray[$ii]['DispatchDate'] = GetStatusFmTableCodes($rdata['slip_no'],'DL');
 
 
@@ -2792,7 +2801,7 @@ if(!empty( $searchids))
 
             }
             else {
-                $shiparray[$ii]['cc_name'] = GetCourCompanynameId($rdata['frwd_company_id'], 'company');
+                $shiparray[$ii]['cc_name'] = GetCourCompanynameId($rdata['frwd_company_id'], 'company',$rdata['super_id']);
             }
 
 
@@ -2812,7 +2821,7 @@ if(!empty( $searchids))
 
             $shiparray[$ii]['wh_ids'] = $rdata['wh_id'];
             if($rdata['frwd_company_awb'] != ''){ 
-                $track_url = GetCourCompanynameId($rdata['frwd_company_id'], 'company_url');
+                $track_url = GetCourCompanynameId($rdata['frwd_company_id'], 'company_url',$rdata['super_id']);
                 if(!empty($track_url)){
                     $shiparray[$ii]['frwd_link'] = $track_url.$rdata['frwd_company_awb'];
                 }else{
@@ -4579,12 +4588,25 @@ if(!empty( $searchids))
         //$columns = implode(",",$_POST );
         $data = $_POST['listData2'];
         $data1 = $_POST['filterData'];
+        
         //    foreach ($_POST['listData2'] as $name => $val)
         //    {
         //        array_push($data,$name); 
         //    }
-
-        $dataAray = $this->Shipment_model->alllistexcelData($data, $_POST['filterData']);
+        $destination=$data1['destination'];
+        $this->load->model('Country_model');
+        if(!empty($destination))
+        {
+          $dData=  $this->Country_model-> getIdsByCityName($destination); 
+          $destination=array();
+          foreach($dData as $val)
+          {
+            $destination[]=$val['id'];
+          }
+        //   print_r($destination);
+        //   exit;
+        }
+        $dataAray = $this->Shipment_model->alllistexcelData($data, $_POST['filterData'],$destination);
 
         $file_name = 'shipments.csv';
 

@@ -1505,3 +1505,6 @@ $lang['lang_Newest_Order']="Newest Order";
 $lang['lang_TPL_AWB']="3PL AWB";
 $lang['lang_Number_Of_Boxes']="No. of Boxes";
 $lang['lang_Storage_Type']="Storage Type";
+$lang['lang_FD1_Status']="FD1";
+$lang['lang_FD2_Status']="FD2";
+$lang['lang_FD3_Status']="FD3";

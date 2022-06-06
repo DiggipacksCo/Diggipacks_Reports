@@ -71,7 +71,7 @@ $margin_left=$marginArr_new[3];
             <li class="dropdown dropdown-user"> <a class="dropdown-toggle" data-toggle="dropdown"> 
               <!-- <img src="<? // base_url('assets/images/placeholder.jpg'); ?>" alt=""> --> 
                     <span>
-<?= $this->session->userdata('user_details')['username']; ?>
+                <?= $this->session->userdata('user_details')['username']; ?>
                     </span> <i class="caret"></i> </a>
                 <ul class="dropdown-menu dropdown-menu-right" style="width: 229px;">
 
@@ -94,7 +94,7 @@ $margin_left=$marginArr_new[3];
                     <li><a href="<?= base_url('Home/logout'); ?>"><i class="icon-switch2"></i> <?= lang('lang_Logout'); ?></a></li>
                 </ul>
             </li>
-            <?php if($this->session->userdata('user_details')['changeSystem']==true) { ?>
+            <?php if($this->session->userdata('user_details')['changeSystem']==false) { ?>
             <li class="dropdown dropdown-user" style="padding-top:7px;"> 
                 <a class="dropdown-toggle" data-toggle="dropdown">
                    

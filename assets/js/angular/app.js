@@ -1500,6 +1500,14 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
                 "no_of_attempt": false,
                 "cc_name": false,
                  "last_status_n": false,
+                 "wh_name": false,
+                 "laststatus_first": false,
+                 "laststatus_second": false,
+                 "laststatus_last": false,
+                 "fd1_date": false,
+                 "fd2_date": false,
+                 "fd3_date": false,                 
+
             };
 
             $scope.showCity = function ()
@@ -3103,7 +3111,13 @@ var app = angular.module('fulfill', ['betsol.timeCounter'])
                 "messenger_name": false,
                 "close_date": false,
                 "transaction_days": false,
-                 "last_status_n": false,
+                "last_status_n": false,
+                "laststatus_first": false,
+                "laststatus_second": false,
+                "laststatus_last": false,
+                "fd1_date": false,
+                "fd2_date": false,
+                "fd3_date": false,
             };
     $scope.slipnosdetails=function(val)
     {

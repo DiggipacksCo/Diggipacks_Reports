@@ -1,0 +1,114 @@
+<div class="container-fluid">   
+
+                    <!-- start page title -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box d-flex align-items-center justify-content-between">
+                                <h4 class="mb-0 font-size-18">{{'lang_SMS_Management'|translate}}</h4>
+
+                                <div class="page-title-right">
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="dashboard">{{'lang_Home'|translate}}</a></li>
+                                        <li class="breadcrumb-item active">{{'lang_Add_Template'|translate}}</li>
+                                    </ol>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+					
+					   <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="clearfix">
+                                       <h5 class="panel-title">{{'lang_Add_Template'|translate}}</h5> 
+                                    </div>
+    
+    
+                                    <div class="row" style="margin-top:10px;padding:10px">  
+									<div class="col-md-8">
+                                     <form class="stdform col-md-12" name="add_sms" enctype="multipart/form-data">
+                     
+										<div class="form-group"  ng-init="showStatusDrop();">
+										<label>{{'lang_status'|translate}}</label><span id="heading_id" class="alert"></span> 
+									    
+										<select  name="main_status"  ng-change="subStatus();"  class="select2 select2-multiple form-control" style="word-wrap: break-word;"   ng-model="templateArray.status_id"  >
+										
+										<option ng-repeat="st1 in statuslist" value="{{st1.id}}">{{st1.main_status}}</option>
+										</select>
+
+
+										<span class="text-danger" ng-show="add_sms.status_name.$error.required">{{'lang_Status_Required'|translate}}</span>
+										</div>   
+										<div class="form-group" ng-if="Substatuslist">   
+										  <label>{{'lang_Sub_Status'|translate}}</label><span id="heading_id" class="alert"></span>
+
+										  <select    name="sub_status" class="form-control" ng-model="templateArray.sub_status" Required >
+										
+										<option ng-repeat="st in Substatuslist" value="{{st.id}}">{{st.sub_status}}</option>
+										</select>
+										<span class="text-danger" ng-show="add_sms.sub_status.$error.required">{{'lang_Sub_Status_Required'|translate}}</span>
+										</div>
+									
+										<div class="form-group">
+										<label>{{'lang_Arabic_SMS'|translate}}</label>
+										<span id="content_id" class="alert"></span>
+										<textarea class="form-control mt-15" my-text=""  name="arabic_sms" rows="6" placeholder="Textarea" ng-model="templateArray.arabic_sms" Required></textarea>
+										<span class="text-danger" ng-show="add_sms.arabic_sms.$error.required">{{'lang_Arabic_SMS_Required'|translate}}</span>
+										</div>
+										 <div class="form-group">
+											<label>{{'lang_Activity'|translate}}</label><br>
+										  {{'lang_Yes'|translate}}     <input type="radio" id="arabic_status" name="arabic_status" ng-model="templateArray.arabic_status" value="Y" ng-checked="false"/>&nbsp;&nbsp;
+										   {{'lang_No'|translate}}   <input type="radio" id="arabic_status" name="arabic_status" ng-model="templateArray.arabic_status" value="N" ng-checked="false"/>  
+									 </div>    
+									 <div class="form-group">
+										<label>{{'lang_English_SMS'|translate}}</label>
+										<span id="content_id" class="alert"></span>
+										<textarea class="form-control mt-15" my-text="" name="english_sms" rows="6" placeholder="Textarea" ng-model="templateArray.english_sms" Required></textarea>
+										<span class="text-danger" ng-show="add_sms.english_sms.$error.required">{{'lang_English_SMS'|translate}} {{'lang_Required'|translate}}</span>
+									</div>
+										 <div class="form-group">
+											<label>{{'lang_Activity'|translate}}</label><br>
+										  {{'lang_Yes'|translate}}     <input type="radio" id="english_status" name="english_status" ng-model="templateArray.english_status" value="Y" ng-checked="false"/>&nbsp;&nbsp;
+										   {{'lang_No'|translate}}   <input type="radio" id="english_status" name="english_status" ng-model="templateArray.english_status" value="N" ng-checked="false"/>
+											</div> 
+										
+										<input name="id" type="hidden" value="">
+										<input name="submit" type="submit" class="btn btn-primary" value="{{'lang_Submit'|translate}}" ng-disabled="add_sms.$invalid" ng-click="AddTemplateform(templateArray);"> 
+										
+											
+										</form>  
+                                    </div>
+									<div class="col-md-4">
+									
+									<div class="list-group">
+								<a href="#" class="list-group-item active">Variables</a>
+								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('AWB_NO');">AWB_NO</span></h4> (#AWB Number of shipment.)</a>
+								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('SCHEDULE_URL')";>SCHEDULE_URL</span></h4> (URL to schedule shipment by sms.)</a>
+								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('FEED_BACK_URL')";>FEED_BACK_URL</span></h4> (Feedback URL.)</a>
+								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param( 'CUSTOMER_NAME')";>CUSTOMER_NAME</span></h4> (Name of receiver.)</a>
+								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('SENDER_NAME')";>SENDER_NAME</span></h4> (Name of sender.)</a>
+								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('DRIVER_MOBILE')";>DRIVER_MOBILE</span></h4> (#Driver Mobile No..)</a>
+								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('DRIVER_NAME')";>DRIVER_NAME</span></h4> (#Driver Name.)</a>
+								<a href="#" class="list-group-item"> <h4><span class="badge badge-info" ng-click="add_param('CUST_CARE_MOBILE')";>CUST_CARE_MOBILE</span></h4> (#Customer care  No..)</a>
+
+  									</div>
+									</div>
+									</div>
+									
+                                    <!-- end row -->
+    
+                            
+    
+                                    
+                                </div>
+                            </div> <!-- end card-->
+                        </div> <!-- end col -->
+                    </div>
+                  
+				  
+				  
+					
+   	
+	

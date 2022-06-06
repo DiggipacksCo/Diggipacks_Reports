@@ -54,16 +54,24 @@ class Manifest_model extends CI_Model {
         }
 
         $this->db->where('pickup_request.deleted','N');
-        $this->db->select('COUNT(id) as id_count,id,SUM(qty) as qtyall,SUM(missing_qty) as m_qty,SUM(damage_qty) as d_qty,manifest_type,SUM(received_qty) as r_qty,id,uniqueid,sku,qty,assign_to,req_date,pstatus,code,seller_id,on_hold,itemupdated,confirmO,pickimg,address,city,3pl_awb,3pl_name,3pl_label,3pl_date,boxes,description,return_type,staff_id,vehicle_type,assign_date,pack_type');
+        $this->db->select('COUNT(id) as id_count,id,SUM(qty) as qtyall,SUM(missing_qty) as m_qty,SUM(damage_qty) as d_qty,manifest_type,SUM(received_qty) as r_qty,id,uniqueid,sku,qty,assign_to,req_date,pstatus,code,seller_id,on_hold,itemupdated,confirmO,pickimg,address,city,3pl_awb,3pl_name,3pl_label,3pl_date,boxes,description,return_type,staff_id,vehicle_type,assign_date,pack_type,super_id');
         $this->db->from('pickup_request');
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+       // $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         if ($this->session->userdata('user_details')['user_type'] == 9)
             $this->db->where('assign_to', $this->session->userdata('user_details')['user_id']);
         if ($this->session->userdata('user_details')['user_type'] != 1 && $this->session->userdata('user_details')['user_type'] != 3 ) {
             $this->db->where('staff_id', $this->session->userdata('user_details')['user_id']);
         }
+        if (!empty($filterarray['wh_id'])) {
+            if (sizeof($filterarray['wh_id']) > 0) {
+                $super_ids = array_filter($filterarray['wh_id']);
+                $this->db->where_in('super_id', $super_ids);
+            }
+        }
         if ($filterarray['seller_id'])
             $this->db->where('seller_id', $filterarray['seller_id']);
+            if ($filterarray['sku'])
+            $this->db->where('sku', $filterarray['sku']);
         if ($filterarray['driverid'])
             $this->db->where('assign_to', $filterarray['driverid']);
         if ($filterarray['manifestid'])
@@ -169,7 +177,14 @@ class Manifest_model extends CI_Model {
 
     public function manifestCount($page_no, $filterarray = array()) {
         $this->db->where('pickup_request.deleted','N');
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        if (!empty($filterarray['wh_id'])) {
+            if (sizeof($filterarray['wh_id']) > 0) {
+                $super_ids = array_filter($filterarray['wh_id']);
+                $this->db->where_in('super_id', $super_ids);
+            }
+        }
+        if ($filterarray['sku'])
+        $this->db->where('sku', $filterarray['sku']);
         $this->db->select(' count( DISTINCT(uniqueid) )  AS tcount');
         $this->db->from('pickup_request');
         if ($filterarray['seller_id'])
@@ -351,7 +366,7 @@ class Manifest_model extends CI_Model {
             $start = ($data['page_no'] - 1) * $limit;
         }
         $this->db->where('pickup_request.deleted','N');
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+       // $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('*');
         $this->db->from('pickup_request');
         $this->db->where('uniqueid', $data['manifest_id']);
@@ -389,7 +404,7 @@ class Manifest_model extends CI_Model {
     }
 
     public function manifestlistviewCount($data = array()) {
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+       // $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('id');
         $this->db->from('pickup_request');
 
@@ -567,9 +582,9 @@ class Manifest_model extends CI_Model {
         //$this->db->get_compiled_select();
     }
 
-    public function GetallpickupRequestData_imtemCheck($uid = null) {
+    public function GetallpickupRequestData_imtemCheck($uid = null,$super_id=null) {
         $this->db->where('pickup_request.deleted','N');
-        $this->db->where('super_id', $this->session->userdata('user_details')['super_id']);
+        $this->db->where('super_id', $super_id);
         $this->db->select('count(id)');
         $this->db->from('pickup_request');
         //$this->db->join("items_m as IMS","IMS.sku!=pickup_request.sku","inner");

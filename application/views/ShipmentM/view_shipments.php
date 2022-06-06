@@ -134,7 +134,7 @@
                                                        
                                                         <select  id="city" name="city" multiple  data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%" ng-model="filterData.destination"   >
                        
-                     <option ng-repeat="cData in citylist"  data-select-watcher data-last="{{$last}}" value="{{cData.id}}" >{{cData.city}}</option>
+                     <option ng-repeat="cData in citylist"  data-select-watcher data-last="{{$last}}" value="{{cData.city}}" >{{cData.city}}</option>
                                                         </select>
                                                     </div></div>
                                             </div>
@@ -295,6 +295,20 @@
                                                             </select>
                                                         </div>
                                                     </div>
+                                                    <div class="col-md-2" ><div class="form-group" ><strong><?= lang('lang_warehouse'); ?>:</strong>
+                                                    <?php
+                                                    $warehouseArr = Getwarehouse_Dropdata();
+                                                    ?>
+                                                       <select  id="storagwh_ide_id" name="wh_id" ng-model="filterData.wh_id" multiple data-show-subtext="true" data-live-search="true" class="selectpicker" data-width="100%">
+                                                        <option value=""><?= lang('lang_Selectwarehousename'); ?></option>
+                                                        <?php foreach ($warehouseArr as $storage_detail): ?>
+                                                            <option value="<?= $storage_detail['id']; ?>">
+                                                                <?= $storage_detail['name']; ?>
+                                                            </option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                       </div>
+                                                    </div>
                                                 <div class="col-md-5"><div class="form-group" >
                                                         <button  class="btn btn-danger" ng-click="loadMore(1, 1);" ><?=lang('lang_Search');?></button>
                                                         <button type="button" class="btn btn-success" style="margin-left: 7%"><?=lang('lang_Total');?> <span class="badge">{{shipData.length}}/{{totalCount}}</span></button>
@@ -360,8 +374,10 @@
                                                 <th><?=lang('lang_tpl_Closed_Date');?></th>
                                                  <th>Close Date</th>
                                                 <th><?=lang('lang_Transaction');?> <?=lang('lang_Day');?></th>
-                                                 
                                                 <th>Transaction Timer</th>
+                                                <th><?=lang('lang_FD1_Status'); ?></th>
+                                                <th><?=lang('lang_FD2_Status'); ?></th>
+                                                <th><?=lang('lang_FD3_Status'); ?></th>                                                
                                                 <th class="text-center" ><i class="icon-database-edit2"></i></th>
                                             </tr>  
                                         </thead>   
@@ -389,7 +405,7 @@
                                             <td>{{data.status}}</td>
                                             <!--<td>{{data.piece}}</td>-->
                                             <td>{{data.company}}</td>
-                                            <td>{{data.wh_id}}</td>
+                                            <td>{{data.WAREHOUSE}}</td>
                                             <td>{{data.entrydate}}</td>
                                             <td>{{data.no_of_attempt}}</td>
                                             <td>{{data.pl3_pickup_date}}</td>
@@ -402,6 +418,9 @@
       
                                            <div class="alert alert-success ">{{ days }} days, {{ hours }}:{{ minutes }}:{{ seconds }} </div> </span>
                                             </td>
+                                            <td>{{data.laststatus_first}}</td>
+                                            <td>{{data.laststatus_second}}</td>
+                                            <td>{{data.laststatus_last}}</td>
                                             <td class="text-center">
                                                 <ul class="icons-list">
                                                     <li class="dropdown">
@@ -655,6 +674,12 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <label class="container">
+                                            <input type="checkbox" name="wh_name" value="wh_name"  ng-model="listData2.wh_name"> <?=lang('lang_warehouse');?>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
                                             <input type="checkbox" name="Status" value="Status"  ng-model="listData2.delivered"><?= lang('lang_Main'); ?> <?= lang('lang_Status'); ?>
                                             <span class="checkmark"></span>
                                         </label>
@@ -763,6 +788,42 @@
                                     <div class="col-sm-4">
                                         <label class="container">
                                             <input type="checkbox" name="close_date" value="close_date"  ng-model="listData2.close_date"> <?=lang('lang_close_date');?>
+                                            <span class="checkmark"></span>    
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="laststatus_first" value="laststatus_first"  ng-model="listData2.laststatus_first"> Failed 1st Status
+                                            <span class="checkmark"></span>    
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="laststatus_second" value="laststatus_second"  ng-model="listData2.laststatus_second"> Failed 2nd Status
+                                            <span class="checkmark"></span>    
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="laststatus_last" value="laststatus_last"  ng-model="listData2.laststatus_last"> Failed Last Status 
+                                            <span class="checkmark"></span>    
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                            <input type="checkbox" name="fd1_date" value="fd1_date"  ng-model="listData2.fd1_date"> FD1 Date
+                                            <span class="checkmark"></span>    
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                        <input type="checkbox" name="fd2_date" value="fd2_date"  ng-model="listData2.fd2_date"> FD2 Date
+                                            <span class="checkmark"></span>    
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="container">
+                                        <input type="checkbox" name="fd3_date" value="fd3_date"  ng-model="listData2.fd3_date"> FD3 Date
                                             <span class="checkmark"></span>    
                                         </label>
                                     </div>

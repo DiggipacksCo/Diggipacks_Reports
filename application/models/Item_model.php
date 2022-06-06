@@ -81,10 +81,7 @@ class Item_model extends CI_Model {
         } else {
             $start = ($data['page_no'] - 1) * $limit;
         }
-        $this->db->where('items_m.super_id', $this->session->userdata('user_details')['super_id']);
-        if ($this->session->userdata('user_details')['user_type'] != 1) {
-            //$this->db->where('items_m.wh_id', $this->session->userdata('user_details')['wh_id']);
-        }
+       
         
         if (!empty($data['name']))
             $this->db->where('items_m.name', $data['name']);
@@ -100,7 +97,7 @@ class Item_model extends CI_Model {
         
         
             if (!empty($data['wh_id']))
-            $this->db->where('items_m.wh_id', $data['wh_id']);
+            $this->db->where('items_m.super_id', $data['wh_id']);
 
             if (!empty($data['storage_id']))
             $this->db->where('items_m.storage_id', $data['storage_id']);
@@ -121,7 +118,7 @@ class Item_model extends CI_Model {
             $this->db->where('items_m.sku', $data['sku']);
         if (!empty($data['sku_size']))
             $this->db->where('items_m.sku_size', $data['sku_size']);
-        $this->db->select('items_m.`id`, items_m.`sku`, items_m.`name`, items_m.`description`,items_m.`type`,items_m.`wh_id`,  items_m.`sku_size`,items_m.`item_path`,items_m.`less_qty`,items_m.`alert_day`,items_m.`color`,items_m.`length`,items_m.`width`,items_m.`height`,items_m.`weight`,items_m.`expire_block`,storage_id,entry_date,items_m.added_by');
+        $this->db->select('items_m.`id`, items_m.`sku`, items_m.`name`, items_m.`description`,items_m.`type`,items_m.`wh_id`,  items_m.`sku_size`,items_m.`item_path`,items_m.`less_qty`,items_m.`alert_day`,items_m.`color`,items_m.`length`,items_m.`width`,items_m.`height`,items_m.`weight`,items_m.`expire_block`,storage_id,entry_date,items_m.added_by,items_m.super_id');
         $this->db->from('items_m');
       //  $this->db->join('storage_table', 'items_m.storage_id = storage_table.id');
         $this->db->order_by('items_m.id', 'DESC');
@@ -179,7 +176,7 @@ class Item_model extends CI_Model {
             $this->db->where('items_m.sku', $data['sku']);
         if (!empty($data['sku_size']))
             $this->db->where('items_m.sku_size', $data['sku_size']);
-        $this->db->where('items_m.super_id', $this->session->userdata('user_details')['super_id']);
+       // $this->db->where('items_m.super_id', $this->session->userdata('user_details')['super_id']);
         $this->db->select('COUNT(items_m.id) as sh_count');
 
         $this->db->from('items_m');
